@@ -40,24 +40,7 @@ jobs:
         run: python run.py test --skip-build --keep-files --quiet
 
       - name: Generate coverage report
-        run: python run.py report --xml
-
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-xml
-          path: ./coverage.xml
-          if-no-files-found: error
-
-      - name: Append coverage summary
-        shell: pwsh
-        run: |
-          Add-Content $env:GITHUB_STEP_SUMMARY "### Coverage"
-          Add-Content $env:GITHUB_STEP_SUMMARY ""
-          $out = & python run.py report --cli 2>&1
-          Add-Content $env:GITHUB_STEP_SUMMARY "```"
-          Add-Content $env:GITHUB_STEP_SUMMARY $out
-          Add-Content $env:GITHUB_STEP_SUMMARY "```"
+        run: python run.py report --cli
 
   build-docs:
     runs-on: windows-2022
