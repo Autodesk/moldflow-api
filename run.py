@@ -212,7 +212,7 @@ def build_mo():
                     po = polib.pofile(po_file)
                     po.save_as_mofile(mo_file)
 
-        logging.info('.mo file built successfully.')
+        logging.info('.mo files built successfully.')
     except Exception as err:
         logging.error(
             "Failed to build .mo files: '%s'.\n"
