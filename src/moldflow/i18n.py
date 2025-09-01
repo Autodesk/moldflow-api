@@ -30,16 +30,18 @@ def get_text() -> Callable[[str], str]:
     """
     Return the active gettext function.
 
-    Falls back to identity if not yet installed so call sites are safe
-    before initialization.
+    Preference order:
+    1) builtins._ if present and callable (e.g., set by gettext.install)
+    2) internal translator if previously installed via install_translation
+    3) identity function
     """
-    if _translator is not None:
-        return _translator
-
-    # Try builtins._ if someone installed via gettext.install directly
+    # Prefer a globally installed builtins._ first so callers that patch it
+    # (e.g., tests) always take effect.
     builtin_fn = getattr(builtins, "_", None)
-
     if callable(builtin_fn):
         return builtin_fn
+
+    if _translator is not None:
+        return _translator
 
     return lambda s: s
