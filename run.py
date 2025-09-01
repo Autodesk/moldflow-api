@@ -145,13 +145,13 @@ def build_package(install=True):
         install_package()
 
 
-def publish(skip_build=False):
+def publish(skip_build=False, testpypi=False):
     """Publish package"""
 
     # Restrict publishing to GitHub Actions workflow
-    if os.environ.get('GITHUB_ACTIONS') != 'true':
+    if os.environ.get('GITHUB_ACTIONS') != 'true' and not testpypi:
         raise RuntimeError(
-            'Publishing to PyPI is restricted to the GitHub Actions manual workflow. '
+            'Publishing to PyPI is restricted to the GitHub Actions manual workflow.'
             'Please use the "Publish to PyPI (manual)" workflow.'
         )
 
@@ -167,7 +167,7 @@ def publish(skip_build=False):
 
     logging.info('Package is valid')
 
-    twine_args = '--verbose'
+    twine_args = '--repository testpypi --verbose' if testpypi else '--verbose'
 
     run_command(
         [sys.executable] + f'-m twine upload {twine_args} {DIST_FILES}'.split(' '),
@@ -579,8 +579,9 @@ def main():
 
         elif args.get('publish'):
             skip_build = args.get('--skip-build') or args.get('-s')
+            testpypi = args.get('--testpypi') or args.get('-t')
 
-            publish(skip_build=skip_build)
+            publish(skip_build=skip_build, testpypi=testpypi)
 
         elif args.get('clean-up'):
             clean_up()
