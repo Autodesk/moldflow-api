@@ -37,7 +37,7 @@ jobs:
         run: python run.py lint --skip-build
 
       - name: Run tests
-        run: python run.py test --skip-build --keep-files
+        run: python run.py test --skip-build --keep-files --quiet
 
       - name: Generate coverage report
         run: python run.py report --xml
