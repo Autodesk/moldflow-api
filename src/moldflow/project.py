@@ -138,7 +138,8 @@ class Project:
             selected (bool): Export selected items only or all.
             results (bool): Export results too.
             criteria_file (str): Export criteria file. - Deprecated value is ignored
-            restrict (bool): Restrict export based on criteria contents. - Deprecated value is ignored
+            restrict (bool): Restrict export based on criteria contents. - Deprecated
+                value is ignored
             skip_cad (bool): Skip CAD Data.
 
         Returns:

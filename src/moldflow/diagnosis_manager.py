@@ -257,16 +257,20 @@ class DiagnosisManager:
 
         Args:
             element_only (bool):
-                True - to get element counts summary only, which includes TrianglesCount, NodesCount BeamsCount, MeshVolume and RunnerVolume
+                True - to get element counts summary only, which includes TrianglesCount,
+                    NodesCount, BeamsCount, MeshVolume and RunnerVolume
                 False - to get all mesh summary
 
             inc_beams (bool):
-                True - to get mesh summary including beam elements. Multiple cavities connected by beams will be counted as one region
-                False - to get mesh summary without beam elements. Multiple cavities connected by beams will be counted as separate regions
+                True - to get mesh summary including beam elements. Multiple cavities connected by
+                    beams will be counted as one region
+                False - to get mesh summary without beam elements. Multiple cavities connected by
+                    beams will be counted as separate regions
 
             inc_match (bool):
                 True - to get mesh summary including match ratios
-                False - to get mesh summary without match ratios. This will be faster when match ratios are not needed
+                False - to get mesh summary without match ratios. This will be faster when match
+                    ratios are not needed
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_summary")
         check_type(element_only, bool)
@@ -864,7 +868,8 @@ class DiagnosisManager:
         Generates centroid closeness diagnostics
 
         Args:
-            assign_layer (bool): Push the elements within the diagnosis range into a diagnostics layer
+            assign_layer (bool): Push the elements within the diagnosis range into a
+                diagnostics layer
             visible (bool): Show/hide the selected mesh diagnosis.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_centroid_closeness")
@@ -897,7 +902,8 @@ class DiagnosisManager:
         Generates cooling circuit validity diagnostics
 
         Args:
-            assign_layer (bool): Push the elements within the diagnosis range into a diagnostics layer
+            assign_layer (bool): Push the elements within the diagnosis range into a
+                diagnostics layer
             visible (bool): Show/hide the selected mesh diagnosis.
         """
         process_log(
@@ -912,7 +918,8 @@ class DiagnosisManager:
         Generates bubbler baffle check diagnostics
 
         Args:
-            assign_layer (bool): Push the elements within the diagnosis range into a diagnostics layer
+            assign_layer (bool): Push the elements within the diagnosis range into a
+                diagnostics layer
             visible (bool): Show/hide the selected mesh diagnosis.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_bubbler_baffle_check")
@@ -925,7 +932,8 @@ class DiagnosisManager:
         Generates trapped beam diagnostics
 
         Args:
-            assign_layer (bool): Push the elements within the diagnosis range into a diagnostics layer
+            assign_layer (bool): Push the elements within the diagnosis range into a
+                diagnostics layer
             visible (bool): Show/hide the selected mesh diagnosis.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_trapped_beam")

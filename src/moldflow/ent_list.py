@@ -61,7 +61,8 @@ class EntList:
         Converts a predicate into a list of entities
 
         Args:
-            predicate (Predicate | None): Predicate object that defines the criterion for inclusion of an entity.
+            predicate (Predicate | None): Predicate object that defines the criterion for
+                inclusion of an entity.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="select_from_predicate")
         if predicate is not None:

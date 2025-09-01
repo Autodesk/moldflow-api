@@ -50,7 +50,8 @@ class CADManager:
 
         Args:
             faces (EntList | None): EntList object containing the faces to be modified
-            transit_faces (EntList | None): EntList object containing the transit faces to be preserved
+            transit_faces (EntList | None): EntList object containing the transit faces
+                to be preserved
             distance (float): distance along input faces' normal direction
 
         Returns:
@@ -78,7 +79,8 @@ class CADManager:
 
         Args:
             faces (EntList | None): EntList object containing the faces to be modified
-            transit_faces (EntList | None): EntList object containing the transit faces to be preserved
+            transit_faces (EntList | None): EntList object containing the transit
+                faces to be preserved
             vector (Vector | None): Vector object that specifies the direction
 
         Returns:

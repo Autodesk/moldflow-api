@@ -69,7 +69,9 @@ def _parse_version(ver: str) -> tuple:
     return tuple(nums)
 
 
-def _process_pypi_releases(releases: dict, current_parsed: tuple) -> Tuple[Optional[str], Optional[str]]:
+def _process_pypi_releases(
+    releases: dict, current_parsed: tuple
+) -> Tuple[Optional[str], Optional[str]]:
     """
     Process release data from PyPI to find updates.
 

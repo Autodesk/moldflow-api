@@ -41,7 +41,13 @@ from .localization import set_language
 from .logger import process_log, configure_file_logging
 from .common import LogMessage, SystemUnits
 from .constants import DEFAULT_LOG_FILE
-from .helper import check_type, check_range, get_enum_value, check_is_positive, check_is_non_negative
+from .helper import (
+    check_type,
+    check_range,
+    get_enum_value,
+    check_is_positive,
+    check_is_non_negative,
+)
 from .com_proxy import safe_com
 from .errors import raise_synergy_error
 

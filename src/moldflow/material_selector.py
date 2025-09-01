@@ -48,8 +48,8 @@ class MaterialSelector:
             index (int): material index in the database that uniquely identifies this material;
                 the easiest way to ascertain the material index is to record a macro
                 that selects the material from the database
-            material (MaterialIndex | int): 0 to select the material as the first molding material and
-                    1 to select it as the second molding material
+            material (MaterialIndex | int): 0 to select the material as the first molding material
+                and 1 to select it as the second molding material
 
         Returns:
             True if successful; False otherwise
@@ -70,10 +70,10 @@ class MaterialSelector:
         Allows the user to selects a material from a dialog for the current study
 
         Args:
-            material (MaterialIndex | int): 0 to select the material as the first molding material and
-                      1 to select it as the second molding material
+            material (MaterialIndex | int): 0 to select the material as the first molding material
+                and 1 to select it as the second molding material
             process_id (int): process ID of the client application that is requesting the dialog;
-                        this is the process ID of the application that is running the script
+                this is the process ID of the application that is running the script
 
         Returns:
             True if successful; False otherwise
@@ -89,8 +89,8 @@ class MaterialSelector:
         Allows the user to query the current material file name of the current study
 
         Args:
-            material (MaterialIndex | int): 0 to select the material as the first molding material and
-                      1 to select it as the second molding material
+            material (MaterialIndex | int): 0 to select the material as the first molding material
+                and 1 to select it as the second molding material
 
         Returns:
             Material File Name if successful; "" otherwise
@@ -105,8 +105,8 @@ class MaterialSelector:
         Allows the user to query the current material file type of the current study
 
         Args:
-            material (MaterialIndex | int): 0 to select the material as the first molding material and
-                      1 to select it as the second molding material
+            material (MaterialIndex | int): 0 to select the material as the first molding material
+                and 1 to select it as the second molding material
 
         Returns:
             Material File Type if successful; "" otherwise
@@ -121,8 +121,8 @@ class MaterialSelector:
         Allows the user to query the current material index of the current study
 
         Args:
-            material (MaterialIndex | int): 0 to select the material as the first molding material and
-                      1 to select it as the second molding material
+            material (MaterialIndex | int): 0 to select the material as the first molding material
+                and 1 to select it as the second molding material
 
         Returns:
             Material Index if successful; -1 otherwise

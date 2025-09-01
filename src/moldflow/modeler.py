@@ -855,8 +855,9 @@ class Modeler:
             pt1 (Vector): The first point defining the plane.
             pt2 (Vector): The second point defining the plane.
             pt3 (Vector): The third point defining the plane.
-            copy (bool): Specify True to create a copy of the rotated entities. False to move the original entities
-            merge (bool): Specify True to merge the rotated entities after rotation
+            copy (bool): Specify True to create a copy of the rotated entities.
+                False to move the original entities
+            merge (bool): Specify True to merge the rotated entities after rotation.
 
         Returns:
             bool: True if the operation was successful, False otherwise.

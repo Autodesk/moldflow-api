@@ -288,7 +288,8 @@ class MeshEditor:
         Moves nodes to a new location or by an offset
         Args:
             nodes (EntList | None): EntList object containing the nodes to be moved
-            vector (Vector | None): Vector object that specifies the destination location or an offset vector
+            vector (Vector | None): Vector object that specifies the destination location or an
+                offset vector
             loc (bool): specify True to specify a location and False to to specify an offset vector
         Returns:
             True if successful; False otherwise.
@@ -314,7 +315,8 @@ class MeshEditor:
         Args:
             node1 (EntList | None): EntList object containing the first node
             node2 (EntList | None): EntList object containing the second node
-            to_align (EntList | None): EntList object containing nodes that are to be aligned between node1 and node2
+            to_align (EntList | None): EntList object containing nodes that are to be
+                aligned between node1 and node2
 
         Returns:
             True if operation is successful; False otherwise
@@ -368,7 +370,8 @@ class MeshEditor:
         Flips triangle normals
 
         Args:
-            tris (EntList | None): EntList object containing the triangles whose normals are to be flipped
+            tris (EntList | None): EntList object containing the triangles whose normals are
+                to be flipped
 
         Returns:
             True if operation is successful; False otherwise
@@ -384,7 +387,8 @@ class MeshEditor:
 
         Args:
             seed_tri (EntList | None): EntList object containing the seed triangle
-            tris (EntList | None): EntList object containing the triangles whose normals are to be aligned
+            tris (EntList | None): EntList object containing the triangles whose normals are
+                to be aligned
 
         Returns:
             Number of triangles whose normals were aligned
@@ -405,7 +409,8 @@ class MeshEditor:
         If fill_type provided, fill a "hole" in the mesh by creating new triangles
 
         Args:
-            nodes (EntList | None): EntList ordered sequence of nodes defining the outer boundary of the hole
+            nodes (EntList | None): EntList ordered sequence of nodes defining the outer
+                boundary of the hole
             fill_type (int, optional): Default is 0, triangles around the hole will be bent.
 
         Returns:
@@ -1102,7 +1107,8 @@ class MeshEditor:
 
         Args:
             tolerance (float): specifies the tolerance for merging nodes
-            fusion (bool): specify True to disallow merges between nodes that are not on the same element
+            fusion (bool): specify True to disallow merges between nodes that are not
+                on the same element
             bad_tri (bool): specify True to merge bad triangles
             squeeze (bool): specify True to squeeze the mesh
             remove_dup_elements (bool): specify True to remove duplicate elements
@@ -1132,8 +1138,10 @@ class MeshEditor:
 
         Args:
             target (EntList | None): EntList object containing the target node
-            nodes (EntList | None): EntList object containing the set of nodes to be merged to the target node
-            fusion (bool): specify True to disallow merges between nodes that are not on the same element
+            nodes (EntList | None): EntList object containing the set of nodes to be merged
+                to the target node
+            fusion (bool): specify True to disallow merges between nodes that are not on
+                the same element
             use_mid (bool): specify True to merge nodes to midpoint
 
         Returns:

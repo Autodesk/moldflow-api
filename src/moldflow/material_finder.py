@@ -39,7 +39,8 @@ class MaterialFinder:
 
         Args:
             material_database (MaterialDatabase | int): The material database to set.
-            material_database_type (MaterialDatabaseType | str): The type of material database to set.
+            material_database_type (MaterialDatabaseType | str): The type of material
+                database to set.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_data_domain")
         material_database = get_enum_value(material_database, MaterialDatabase)
