@@ -1,0 +1,4 @@
+Synergy
+=======
+
+.. automodule:: moldflow.synergy

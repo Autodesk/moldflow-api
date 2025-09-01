@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  release:
+    types: [ published ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-2022]
+        python-version: ['3.10', '3.11', '3.12', '3.13']
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: SPDX headers check (check-only)
+        run: python scripts/check_spdx.py --check-only
+
+      - name: Localization check
+        run: python scripts/check_localization.py --check-only --path src/moldflow --locale-path src/moldflow/locale
+
+      - name: Build package
+        run: python run.py build --install
+
+      - name: Run linting
+        run: python run.py lint --skip-build
+
+      - name: Run tests
+        run: python run.py test --skip-build --keep-files --quiet
+
+      - name: Generate coverage report
+        run: python run.py report --cli
+
+  build-docs:
+    runs-on: windows-2022
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Build documentation
+        run: python run.py build-docs

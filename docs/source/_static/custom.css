@@ -1,0 +1,40 @@
+.bd-sidebar-secondary, .headerlink{
+    display: none;
+}
+
+button#pst-back-to-top {
+    display: none;
+}
+
+.bd-article {
+    min-height: 41em;
+}
+
+/* Add space before the first section heading after the page title */
+.bd-article > section:nth-of-type(2) { margin-top: 1.25rem; }
+
+.bd-sidebar-primary::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+
+.logo {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.logo::after {
+    content: "Moldflow API";
+    font-size: 1em;
+}
+
+html[data-theme="dark"] .logo::after {
+    color: #F8F8F8;
+}
+
+html[data-theme="light"] .logo::after {
+    color: #080808;
+}
+
+.logo:hover {
+    text-decoration: none;
+}

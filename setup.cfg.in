@@ -1,0 +1,43 @@
+[metadata]
+name = moldflow
+version = {VERSION}
+author = Autodesk Inc.
+description = Moldflow API Library
+long_description = file: README.md
+long_description_content_type = text/markdown
+license = Apache-2.0
+license_files = LICENSE, THIRD_PARTY_NOTICES.md
+url = https://github.com/Autodesk/moldflow-api
+project_urls =
+    Documentation = https://autodesk.github.io/moldflow-api
+    Source = https://github.com/Autodesk/moldflow-api
+    Issues = https://github.com/Autodesk/moldflow-api/issues
+    Security = https://www.autodesk.com/trust/security/vulnerability-disclosure-policy
+classifiers =
+    Development Status :: 5 - Production/Stable
+    Intended Audience :: Manufacturing
+    Intended Audience :: Science/Research
+    Operating System :: Microsoft :: Windows
+    Programming Language :: Python :: 3
+    Programming Language :: Python :: 3.10
+    Programming Language :: Python :: 3.11
+    Programming Language :: Python :: 3.12
+    Programming Language :: Python :: 3.13
+    Topic :: Scientific/Engineering
+    Topic :: Software Development :: Libraries :: Python Modules
+keywords = moldflow, autodesk, cae, simulation, manufacturing, injection molding, plastic injection, analysis, automation, api, synergy
+
+[options]
+package_dir =
+    = src
+packages = find:
+python_requires = >=3.10, <3.14
+include_package_data = True
+install_requires =
+    pywin32==311; platform_system=='Windows'
+
+[options.packages.find]
+where = src
+
+[options.package_data]
+moldflow = locale/**/LC_MESSAGES/*.mo

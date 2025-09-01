@@ -1,0 +1,17 @@
+[run]
+branch = True
+source_pkgs =
+    moldflow
+
+[paths]
+source =
+    src/moldflow
+    */site-packages/moldflow
+
+[report]
+fail_under = 93
+show_missing = True
+precision = 2
+
+[html]
+title = Moldflow API Unit Test Coverage

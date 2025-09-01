@@ -1,0 +1,157 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ja-JP\n"
+
+msgid "Checking file extension {file_name}"
+msgstr "ファイル拡張子 {file_name} を確認しています"
+
+msgid "Checking index {index} is in range"
+msgstr "インデックス {index} が範囲内であることを確認しています"
+
+msgid "Checking {value} is greater than {min_value}"
+msgstr "{value} が {min_value} より大きいことを確認しています"
+
+msgid "Checking {value} is in expected values"
+msgstr "{value} が期待される値のいずれかであることを確認しています"
+
+msgid "Checking {value} is in range {min_value} to {max_value}"
+msgstr "{value} が {min_value} から {max_value} の範囲内であることを確認しています"
+
+msgid "Checking {value} is less than {max_value}"
+msgstr "{value} が {max_value} より小さいことを確認しています"
+
+msgid "Checking {value} is negative"
+msgstr "{value} が負であることを確認しています"
+
+msgid "Checking {value} is non-negative"
+msgstr "{value} が負でないことを確認しています"
+
+msgid "Checking {value} is non-zero"
+msgstr "{value} がゼロ以外であることを確認しています"
+
+msgid "Checking {value} is positive"
+msgstr "{value} が正であることを確認しています"
+
+msgid "Checking {value} is {name}"
+msgstr "{value} が {name} であることを確認しています"
+
+msgid "Could not initialize with Instance ID: {value}"
+msgstr "インスタンス ID {value} で初期化できませんでした"
+
+msgid "Executing {name}"
+msgstr "{name} を実行しています"
+
+msgid "Failed to initialize Synergy: Synergy not found"
+msgstr "Synergy の初期化に失敗しました: Synergy が見つかりません"
+
+msgid "Getting {name}"
+msgstr "{name} を取得しています"
+
+msgid "Getting {name} at index {value}"
+msgstr "インデックス {value} の {name} を取得しています"
+
+msgid "Initializing {name}"
+msgstr "{name} を初期化しています"
+
+msgid "Invalid Attribute: {attribute} is not supported"
+msgstr "無効な属性: {attribute} はサポートされていません"
+
+msgid "Invalid FileType: {file_name}, must be {extensions}"
+msgstr "無効なファイルタイプ: {file_name}、{extensions} である必要があります"
+
+msgid "Invalid Index: out of range"
+msgstr "無効なインデックス: 範囲外です"
+
+msgid "Invalid Type: must be {expected_types}, not {variable_type}"
+msgstr "無効な型: {variable_type} ではなく {expected_types} である必要があります"
+
+msgid "Invalid Value: {reason}"
+msgstr "無効な値: {reason}"
+
+msgid "Logger was not setup"
+msgstr "ロガーが設定されていませんでした"
+
+msgid "Save Error"
+msgstr "保存エラー"
+
+msgid "Save Error: Could not save {saving} to {file_name}"
+msgstr "保存エラー: {saving} を {file_name} に保存できませんでした"
+
+msgid "Save Error: Failed to save {saving} to {file_name}"
+msgstr "保存エラー: {saving} を {file_name} に保存できませんでした"
+
+msgid "Setting {name} to {value}"
+msgstr "{name} を {value} に設定しています"
+
+msgid "Test String"
+msgstr "テスト文字列"
+
+msgid "Using prompts will use pop-up import options and will always show logs"
+msgstr "プロンプトを使用するとポップアップのインポートオプションが使用され、常にログが表示されます"
+
+msgid "Using prompts will use pop-up import options instead of the ones provided."
+msgstr "プロンプトを使用すると、提供されたオプションではなくポップアップのインポートオプションが使用されます"
+
+msgid "Using {method} {product_key} for locale"
+msgstr "ロケールに {method} {product_key} を使用します"
+
+msgid "Valid Input"
+msgstr "有効な入力"
+
+msgid "Valid Input Type"
+msgstr "有効な入力タイプ"
+
+msgid "both {first} and {second} must be provided together"
+msgstr "{first} と {second} は同時に指定する必要があります"
+
+msgid "cannot be empty"
+msgstr "空にすることはできません"
+
+msgid "found {min_value} must be less than {max_value}"
+msgstr "見つかった {min_value} は {max_value} より小さくなければなりません"
+
+msgid "found {value}, must be between {min_value} and {max_value}"
+msgstr "見つかった {value} は {min_value} と {max_value} の間でなければなりません"
+
+msgid "found {value}, must be greater than or equal to {min_value}"
+msgstr "見つかった {value} は {min_value} 以上でなければなりません"
+
+msgid "found {value}, must be greater than {min_value}"
+msgstr "見つかった {value} は {min_value} より大きくなければなりません"
+
+msgid "found {value}, must be less than or equal to {max_value}"
+msgstr "見つかった {value} は {max_value} 以下でなければなりません"
+
+msgid "found {value}, must be less than {max_value}"
+msgstr "見つかった {value} は {max_value} より小さくなければなりません"
+
+msgid "found {value}, must be non-negative"
+msgstr "見つかった {value} は負であってはなりません"
+
+msgid "found {value}, must be non-zero"
+msgstr "見つかった {value} はゼロ以外でなければなりません"
+
+msgid "found {value}, must be one of {expected_values}"
+msgstr "見つかった {value} は {expected_values} のいずれかでなければなりません"
+
+msgid "found {value}, must be positive"
+msgstr "見つかった {value} は正でなければなりません"
+
+msgid "{file_name} does not have a valid file extension, will use {default}"
+msgstr "{file_name} には有効なファイル拡張子がありません。{default} を使用します"
+
+msgid "{name} is {value}"
+msgstr "{name} は {value} です"
+
+msgid "{name} parameter will be ignored"
+msgstr "パラメータ {name} は無視されます"
+
+msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+msgstr "{value} は {enum_name} に文書化されていません。これにより関数呼び出しが失敗する可能性があります"
+
+msgid "{value} does not have a valid file extension, must be {extensions}"
+msgstr "{value} には有効なファイル拡張子がありません。{extensions} である必要があります"
+
+msgid "{value} is not a valid {enum_name}"
+msgstr "{value}は有効な{enum_name}ではありません"

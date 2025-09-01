@@ -1,0 +1,157 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: en-US\n"
+
+msgid "Checking file extension {file_name}"
+msgstr "Checking file extension {file_name}"
+
+msgid "Checking index {index} is in range"
+msgstr "Checking index {index} is in range"
+
+msgid "Checking {value} is greater than {min_value}"
+msgstr "Checking {value} is greater than {min_value}"
+
+msgid "Checking {value} is in expected values"
+msgstr "Checking {value} is in expected values"
+
+msgid "Checking {value} is in range {min_value} to {max_value}"
+msgstr "Checking {value} is in range {min_value} to {max_value}"
+
+msgid "Checking {value} is less than {max_value}"
+msgstr "Checking {value} is less than {max_value}"
+
+msgid "Checking {value} is negative"
+msgstr "Checking {value} is negative"
+
+msgid "Checking {value} is non-negative"
+msgstr "Checking {value} is non-negative"
+
+msgid "Checking {value} is non-zero"
+msgstr "Checking {value} is non-zero"
+
+msgid "Checking {value} is positive"
+msgstr "Checking {value} is positive"
+
+msgid "Checking {value} is {name}"
+msgstr "Checking {value} is {name}"
+
+msgid "Could not initialize with Instance ID: {value}"
+msgstr "Could not initialize with Instance ID: {value}"
+
+msgid "Executing {name}"
+msgstr "Executing {name}"
+
+msgid "Failed to initialize Synergy: Synergy not found"
+msgstr "Failed to initialize Synergy: Synergy not found"
+
+msgid "Getting {name}"
+msgstr "Getting {name}"
+
+msgid "Getting {name} at index {value}"
+msgstr "Getting {name} at index {value}"
+
+msgid "Initializing {name}"
+msgstr "Initializing {name}"
+
+msgid "Invalid Attribute: {attribute} is not supported"
+msgstr "Invalid Attribute: {attribute} is not supported"
+
+msgid "Invalid FileType: {file_name}, must be {extensions}"
+msgstr "Invalid FileType: {file_name}, must be {extensions}"
+
+msgid "Invalid Index: out of range"
+msgstr "Invalid Index: out of range"
+
+msgid "Invalid Type: must be {expected_types}, not {variable_type}"
+msgstr "Invalid Type: must be {expected_types}, not {variable_type}"
+
+msgid "Invalid Value: {reason}"
+msgstr "Invalid Value: {reason}"
+
+msgid "Logger was not setup"
+msgstr "Logger was not setup"
+
+msgid "Save Error"
+msgstr "Save Error"
+
+msgid "Save Error: Could not save {saving} to {file_name}"
+msgstr "Save Error: Could not save {saving} to {file_name}"
+
+msgid "Save Error: Failed to save {saving} to {file_name}"
+msgstr "Save Error: Failed to save {saving} to {file_name}"
+
+msgid "Setting {name} to {value}"
+msgstr "Setting {name} to {value}"
+
+msgid "Test String"
+msgstr "Test String"
+
+msgid "Using prompts will use pop-up import options and will always show logs"
+msgstr "Using prompts will use pop-up import options and will always show logs"
+
+msgid "Using prompts will use pop-up import options instead of the ones provided."
+msgstr "Using prompts will use pop-up import options instead of the ones provided."
+
+msgid "Using {method} {product_key} for locale"
+msgstr "Using {method} {product_key} for locale"
+
+msgid "Valid Input"
+msgstr "Valid Input"
+
+msgid "Valid Input Type"
+msgstr "Valid Input Type"
+
+msgid "both {first} and {second} must be provided together"
+msgstr "both {first} and {second} must be provided together"
+
+msgid "cannot be empty"
+msgstr "cannot be empty"
+
+msgid "found {min_value} must be less than {max_value}"
+msgstr "found {min_value} must be less than {max_value}"
+
+msgid "found {value}, must be between {min_value} and {max_value}"
+msgstr "found {value}, must be between {min_value} and {max_value}"
+
+msgid "found {value}, must be greater than or equal to {min_value}"
+msgstr "found {value}, must be greater than or equal to {min_value}"
+
+msgid "found {value}, must be greater than {min_value}"
+msgstr "found {value}, must be greater than {min_value}"
+
+msgid "found {value}, must be less than or equal to {max_value}"
+msgstr "found {value}, must be less than or equal to {max_value}"
+
+msgid "found {value}, must be less than {max_value}"
+msgstr "found {value}, must be less than {max_value}"
+
+msgid "found {value}, must be non-negative"
+msgstr "found {value}, must be non-negative"
+
+msgid "found {value}, must be non-zero"
+msgstr "found {value}, must be non-zero"
+
+msgid "found {value}, must be one of {expected_values}"
+msgstr "found {value}, must be one of {expected_values}"
+
+msgid "found {value}, must be positive"
+msgstr "found {value}, must be positive"
+
+msgid "{file_name} does not have a valid file extension, will use {default}"
+msgstr "{file_name} does not have a valid file extension, will use {default}"
+
+msgid "{name} is {value}"
+msgstr "{name} is {value}"
+
+msgid "{name} parameter will be ignored"
+msgstr "{name} parameter will be ignored"
+
+msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+msgstr "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+
+msgid "{value} does not have a valid file extension, must be {extensions}"
+msgstr "{value} does not have a valid file extension, must be {extensions}"
+
+msgid "{value} is not a valid {enum_name}"
+msgstr "{value} is not a valid {enum_name}"
