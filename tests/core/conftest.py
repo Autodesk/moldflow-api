@@ -13,13 +13,13 @@ TEST_TRANSLATION_DICT = {
     "deu": "Testzeichenfolge",
     "enu": "Test String",
     "esn": "Cadena de prueba",
-    "fra": "Strime de test",
+    "fra": "Chaîne de test",
     "ita": "Stringa di prova",
     "jpn": "テスト文字列",
     "kor": "테스트 문자열",
     "ptg": "String de teste",
     "chs": "测试字符串",
-    "cht": "測試字符串",
+    "cht": "測試字串",
 }
 
 ENV_LANG = os.getenv(LOCALE_ENVIRONMENT_VARIABLE_NAME, DEFAULT_LANG)
