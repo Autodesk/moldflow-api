@@ -21,7 +21,7 @@ Test Methods:
 
 import os
 import pytest
-from moldflow.localization import set_language, get_localization
+from moldflow.localization import set_language
 from moldflow.constants import LOCALE_ENVIRONMENT_VARIABLE_NAME
 from tests.core.conftest import TEST_STRING, TEST_TRANSLATION_DICT, DEFAULT_LANG, ENV_LANG
 from tests.conftest import TEST_VERSION, VALID_STR
@@ -38,8 +38,7 @@ class TestLocalization:
         """
         Test set_language function.
         """
-        set_language(locale=locale)
-        _ = get_localization()
+        _ = set_language(locale=locale)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[locale]
 
     @pytest.mark.parametrize("version", VALID_STR)
@@ -47,8 +46,7 @@ class TestLocalization:
         """
         Test set_language function with invalid version.
         """
-        set_language(version=version)
-        _ = get_localization()
+        _ = set_language(version=version)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[ENV_LANG]
 
     @pytest.mark.usefixtures("environment_locale")
@@ -57,8 +55,7 @@ class TestLocalization:
         """
         Test set_language function with invalid version.
         """
-        set_language(version=version)
-        _ = get_localization()
+        _ = set_language(version=version)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[DEFAULT_LANG]
 
     @pytest.mark.parametrize("locale", VALID_STR)
@@ -66,24 +63,21 @@ class TestLocalization:
         """
         Test set_language function with invalid locale.
         """
-        set_language(version=TEST_VERSION, locale=locale)
-        _ = get_localization()
+        _ = set_language(version=TEST_VERSION, locale=locale)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[DEFAULT_LANG]
 
     def test_set_language_none(self):
         """
         Test set_language function with invalid locale.
         """
-        set_language(version=TEST_VERSION, locale=None)
-        _ = get_localization()
+        _ = set_language(version=TEST_VERSION, locale=None)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[ENV_LANG]
 
     def test_set_language_empty(self):
         """
         Test set_language function with invalid locale.
         """
-        set_language(version=TEST_VERSION)
-        _ = get_localization()
+        _ = set_language(version=TEST_VERSION)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[ENV_LANG]
 
     @pytest.mark.usefixtures("environment_locale")
@@ -91,16 +85,14 @@ class TestLocalization:
         """
         Test set_language function with invalid locale.
         """
-        set_language(version=TEST_VERSION)
-        _ = get_localization()
+        _ = set_language(version=TEST_VERSION)
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[DEFAULT_LANG]
 
     def test_set_language_no_param(self):
         """
         Test set_language function with invalid locale.
         """
-        set_language()
-        _ = get_localization()
+        _ = set_language()
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[ENV_LANG]
 
     @pytest.mark.parametrize("locale", list(TEST_TRANSLATION_DICT.keys()))
@@ -109,7 +101,6 @@ class TestLocalization:
         Test set_language function.
         """
         os.environ[LOCALE_ENVIRONMENT_VARIABLE_NAME] = locale
-        set_language()
-        _ = get_localization()
+        _ = set_language()
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[locale]
         del os.environ[LOCALE_ENVIRONMENT_VARIABLE_NAME]

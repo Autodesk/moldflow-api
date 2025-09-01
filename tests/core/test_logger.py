@@ -21,7 +21,6 @@ from unittest.mock import patch
 import os
 import pytest
 from moldflow.common import LogMessage
-from moldflow.localization import get_localization
 import moldflow.logger
 from moldflow.logger import get_logger, process_log, configure_file_logging, set_is_logging
 from moldflow.constants import DEFAULT_LOG_FILE
@@ -33,7 +32,6 @@ class TestLogger:
     Test suite for Logger.
     """
 
-    _ = get_localization()
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 

@@ -224,12 +224,12 @@ class LocalizationChecker:
                     if child.args and isinstance(child.args[0], ast.Constant) and isinstance(child.args[0].value, str):
                         strings.append((child.args[0].value, child.lineno, "_() call"))
 
-                # Check for get_localization()() calls
+                # Check for get_text()() calls
                 elif (isinstance(child.func, ast.Call) and 
                       isinstance(child.func.func, ast.Name) and 
-                      child.func.func.id == "get_localization"):
+                      child.func.func.id == "get_text"):
                     if child.args and isinstance(child.args[0], ast.Constant) and isinstance(child.args[0].value, str):
-                        strings.append((child.args[0].value, child.lineno, "get_localization()() call"))
+                        strings.append((child.args[0].value, child.lineno, "get_text()() call"))
 
                 # Check for process_log calls to see which enum messages are actually used
                 elif isinstance(child.func, ast.Name) and child.func.id == "process_log":

@@ -5,7 +5,7 @@ import logging
 from enum import Enum
 from unittest.mock import Mock
 import pytest
-from moldflow.localization import set_language, get_localization
+from moldflow.localization import set_language
 from moldflow.logger import set_is_logging
 from moldflow.constants import DEFAULT_THREE_LETTER_CODE
 
@@ -82,8 +82,7 @@ def _():
     """
     A pytest fixture that provides a mock object for the gettext translation function.
     """
-    set_language(version=TEST_VERSION, locale=DEFAULT_THREE_LETTER_CODE)
-    return get_localization()
+    return set_language(version=TEST_VERSION, locale=DEFAULT_THREE_LETTER_CODE)
 
 
 @pytest.fixture(autouse=True)

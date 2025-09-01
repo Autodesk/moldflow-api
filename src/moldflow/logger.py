@@ -5,8 +5,8 @@
 Logging module for Moldflow.
 """
 
-import gettext
 import logging
+from .i18n import get_text
 from .common import LogMessage
 from .constants import DEFAULT_LOG_FILE
 
@@ -146,7 +146,7 @@ def process_log(logger_name: str, message_log: LogMessage | str, dump=None, **kw
     """
     if _IS_LOGGING:
         logger = get_logger(logger_name)
-        _ = gettext.gettext
+        _ = get_text()
 
         message = message_log
         level = logging.INFO

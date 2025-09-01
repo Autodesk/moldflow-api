@@ -4,7 +4,6 @@
 """Localization module for Moldflow."""
 
 import os
-import gettext
 import winreg
 
 from .constants import (
@@ -20,9 +19,8 @@ from .constants import (
     LOCALE_LOCATION,
 )
 from .common import LogMessage
+from .i18n import install_translation, get_text
 from .logger import process_log
-
-_ = gettext.gettext
 
 
 def get_locale(product_name: str = "Moldflow Synergy", version: str = ""):
@@ -114,7 +112,6 @@ def set_language(product_name: str = "Moldflow Synergy", version: str = "", loca
     Returns:
         function: The gettext translation function for the specified language.
     """
-    global _
     if not locale:
         locale = get_locale(product_name, version).lower()
     try:
@@ -123,16 +120,6 @@ def set_language(product_name: str = "Moldflow Synergy", version: str = "", loca
         locale = DEFAULT_BCP_47_STD
 
     locale_file_name_custom = f"{LOCALE_FILE_NAME}.{locale}"
-    translation = gettext.translation(locale_file_name_custom, LOCALE_DIR, [locale])
-    translation.install()
-    _ = translation.gettext
+    install_translation(locale_file_name_custom, LOCALE_DIR, [locale])
 
-
-def get_localization():
-    """
-    Get the localization function for the current language.
-
-    Returns:
-        function: The gettext translation function for the current language.
-    """
-    return _
+    return get_text()

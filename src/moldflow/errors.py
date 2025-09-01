@@ -4,7 +4,7 @@
 """Custom exceptions and messages for Moldflow API."""
 
 from typing import NoReturn
-from .localization import get_localization
+from .i18n import get_text
 from .common import ValueErrorReason, ErrorMessage
 from .exceptions import SaveError, SynergyError
 
@@ -21,7 +21,7 @@ def raise_type_error(variable, types: tuple | str) -> NoReturn:
     Raises:
         TypeError: If the variable is not an instance of the specified type(s).
     """
-    _ = get_localization()
+    _ = get_text()
     if isinstance(types, tuple):
         expected_types = " or ".join(type.__name__ for type in types)
     else:
@@ -45,7 +45,7 @@ def raise_value_error(reason: ValueErrorReason | str, **kwargs) -> NoReturn:
     Raises:
         ValueError: With a localized custom error message.
     """
-    _ = get_localization()
+    _ = get_text()
     if isinstance(reason, ValueErrorReason):
         reason = reason.value
     localised_reason = _(reason).format(**kwargs)
@@ -61,7 +61,7 @@ def raise_index_error() -> NoReturn:
     Raises:
         IndexError: If the index is out of range.
     """
-    _ = get_localization()
+    _ = get_text()
     err_msg = ErrorMessage.INDEX_ERROR.value
     raise IndexError(_(err_msg))
 
@@ -78,7 +78,7 @@ def raise_save_error(saving: str, file_name: str) -> NoReturn:
     Raises:
         SaveError: If the save operation fails.
     """
-    _ = get_localization()
+    _ = get_text()
     err_msg = ErrorMessage.SAVE_ERROR.value
     localised_err_msg = _(err_msg).format(saving=saving, file_name=file_name)
     raise SaveError(localised_err_msg)
@@ -90,7 +90,7 @@ def raise_attribute_error(attribute: str) -> NoReturn:
     Args:
         attribute (str): The attribute or method name that is missing.
     """
-    _ = get_localization()
+    _ = get_text()
     err_msg = ErrorMessage.ATTRIBUTE_ERROR.value
     localised_err_msg = _(err_msg).format(attribute=attribute)
     raise AttributeError(localised_err_msg)
@@ -100,7 +100,7 @@ def raise_synergy_error() -> NoReturn:
     """
     Raise a SynergyError with a localised custom error message.
     """
-    _ = get_localization()
+    _ = get_text()
     err_msg = ErrorMessage.SYNERGY_ERROR.value
     localised_err_msg = _(err_msg)
     raise SynergyError(localised_err_msg)
