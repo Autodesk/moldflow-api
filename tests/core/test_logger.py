@@ -23,6 +23,7 @@ import pytest
 from moldflow.common import LogMessage
 import moldflow.logger
 from moldflow.logger import get_logger, process_log, configure_file_logging, set_is_logging
+from moldflow.i18n import get_text
 from moldflow.constants import DEFAULT_LOG_FILE
 
 
@@ -113,20 +114,20 @@ class TestLogger:
 
     @pytest.mark.parametrize("is_logging", [True, False])
     @pytest.mark.parametrize(
-        "message, name, value, expected_output",
+        "message, name, value",
         [
-            (LogMessage.CLASS_INIT, "synergy", None, "Initializing synergy"),
-            (LogMessage.PROPERTY_GET, "test2", None, "Getting test2"),
-            (LogMessage.PROPERTY_SET, "test3", 50, "Setting test3 to 50"),
-            (LogMessage.FUNCTION_CALL, "test4", None, "Executing test4"),
-            (LogMessage.VALID_INPUT, "", None, "Valid Input"),
-            (LogMessage.VALID_TYPE, "", None, "Valid Input Type"),
-            (LogMessage.HELPER_CHECK, "this", "that", "Checking that is this"),
-            ("Hello This is a custom message", None, None, "Hello This is a custom message"),
+            (LogMessage.CLASS_INIT, "synergy", None),
+            (LogMessage.PROPERTY_GET, "test2", None),
+            (LogMessage.PROPERTY_SET, "test3", 50),
+            (LogMessage.FUNCTION_CALL, "test4", None),
+            (LogMessage.VALID_INPUT, "", None),
+            (LogMessage.VALID_TYPE, "", None),
+            (LogMessage.HELPER_CHECK, "this", "that"),
+            ("Hello This is a custom message", None, None),
         ],
     )
     # pylint: disable-next=R0913, R0917
-    def test_process_log(self, message, name, value, expected_output, caplog, is_logging):
+    def test_process_log(self, message, name, value, caplog, is_logging):
         """
         Test process_log function.
         """
@@ -134,6 +135,14 @@ class TestLogger:
         moldflow_logger.propagate = True
         set_is_logging(is_logging)
         if is_logging:
+            # Compute expected localized message
+            _ = get_text()
+            if isinstance(message, LogMessage):
+                template = message.value[0]
+            else:
+                template = message
+            expected_output = _(template).format(name=name, value=value)
+
             process_log(__name__, message, name=name, value=value, location=value, product_key=name)
             assert expected_output in caplog.text
         else:

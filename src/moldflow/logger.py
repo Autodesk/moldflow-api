@@ -154,6 +154,7 @@ def process_log(logger_name: str, message_log: LogMessage | str, dump=None, **kw
         # If message is LogMessage (intended)
         if isinstance(message_log, LogMessage):
             level = message_log.value[1]
+            # Translate message template, then format with kwargs for localized logs
             message = _(message_log.value[0]).format(**kwargs)
         logger.log(level, message)
 
