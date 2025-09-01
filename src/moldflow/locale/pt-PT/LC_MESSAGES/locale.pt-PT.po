@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: pt-PT\n"
+
+msgid "Checking file extension {file_name}"
+msgstr "A verificar a extensão do ficheiro {file_name}"
+
+msgid "Checking index {index} is in range"
+msgstr "A verificar se o índice {index} está no intervalo"
+
+msgid "Checking {value} is greater than {min_value}"
+msgstr "A verificar se {value} é maior que {min_value}"
+
+msgid "Checking {value} is in expected values"
+msgstr "A verificar se {value} está entre os valores esperados"
+
+msgid "Checking {value} is in range {min_value} to {max_value}"
+msgstr "A verificar se {value} está no intervalo de {min_value} a {max_value}"
+
+msgid "Checking {value} is less than {max_value}"
+msgstr "A verificar se {value} é menor que {max_value}"
+
+msgid "Checking {value} is negative"
+msgstr "A verificar se {value} é negativo"
+
+msgid "Checking {value} is non-negative"
+msgstr "A verificar se {value} não é negativo"
+
+msgid "Checking {value} is non-zero"
+msgstr "A verificar se {value} é diferente de zero"
+
+msgid "Checking {value} is positive"
+msgstr "A verificar se {value} é positivo"
+
+msgid "Checking {value} is {name}"
+msgstr "A verificar se {value} é {name}"
+
+msgid "Could not initialize with Instance ID: {value}"
+msgstr "Não foi possível iniciar com o ID de instância: {value}"
+
+msgid "Executing {name}"
+msgstr "Executando {name}"
+
+msgid "Failed to initialize Synergy: Synergy not found"
+msgstr "Falha ao iniciar o Synergy: Synergy não encontrado"
+
+msgid "Getting {name}"
+msgstr "Obtendo {name}"
+
+msgid "Getting {name} at index {value}"
+msgstr "Obtendo {name} no índice {value}"
+
+msgid "Initializing {name}"
+msgstr "Inicializando {name}"
+
+msgid "Invalid Attribute: {attribute} is not supported"
+msgstr "Atributo inválido: {attribute} não é suportado"
+
+msgid "Invalid FileType: {file_name}, must be {extensions}"
+msgstr "Tipo de ficheiro inválido: {file_name}, deve ser {extensions}"
+
+msgid "Invalid Index: out of range"
+msgstr "Índice inválido: fora do intervalo"
+
+msgid "Invalid Type: must be {expected_types}, not {variable_type}"
+msgstr "Tipo inválido: deve ser {expected_types}, não {variable_type}"
+
+msgid "Invalid Value: {reason}"
+msgstr "Valor inválido: {reason}"
+
+msgid "Logger was not setup"
+msgstr "Logger não foi configurado"
+
+msgid "Save Error"
+msgstr "Erro ao guardar"
+
+msgid "Save Error: Could not save {saving} to {file_name}"
+msgstr "Erro ao guardar: não foi possível guardar {saving} em {file_name}"
+
+msgid "Save Error: Failed to save {saving} to {file_name}"
+msgstr "Erro ao guardar: falha ao guardar {saving} em {file_name}"
+
+msgid "Setting {name} to {value}"
+msgstr "Configuração {name} para {value}"
+
+msgid "Test String"
+msgstr "String de teste"
+
+msgid "Using prompts will use pop-up import options and will always show logs"
+msgstr "Ao usar avisos, serão usadas opções de importação em pop‑up e os registos serão sempre apresentados"
+
+msgid "Using prompts will use pop-up import options instead of the ones provided."
+msgstr "Ao usar avisos, serão usadas opções de importação em pop‑up em vez das fornecidas"
+
+msgid "Using {method} {product_key} for locale"
+msgstr "Usando {method} {product_key} para localidade"
+
+msgid "Valid Input"
+msgstr "Entrada válida"
+
+msgid "Valid Input Type"
+msgstr "Tipo de entrada válido"
+
+msgid "cannot be empty"
+msgstr "não pode estar vazio"
+
+msgid "found {min_value} must be less than {max_value}"
+msgstr "encontrado {min_value}, deve ser menor que {max_value}"
+
+msgid "found {value}, must be between {min_value} and {max_value}"
+msgstr "encontrado {value}, deve estar entre {min_value} e {max_value}"
+
+msgid "found {value}, must be greater than or equal to {min_value}"
+msgstr "encontrado {value}, deve ser maior ou igual a {min_value}"
+
+msgid "found {value}, must be greater than {min_value}"
+msgstr "encontrado {value}, deve ser maior que {min_value}"
+
+msgid "found {value}, must be less than or equal to {max_value}"
+msgstr "encontrado {value}, deve ser menor ou igual a {max_value}"
+
+msgid "found {value}, must be less than {max_value}"
+msgstr "encontrado {value}, deve ser menor que {max_value}"
+
+msgid "found {value}, must be non-negative"
+msgstr "encontrado {value}, deve ser não negativo"
+
+msgid "found {value}, must be non-zero"
+msgstr "encontrado {value}, deve ser diferente de zero"
+
+msgid "found {value}, must be one of {expected_values}"
+msgstr "encontrado {value}, deve ser um de {expected_values}"
+
+msgid "found {value}, must be positive"
+msgstr "encontrado {value}, deve ser positivo"
+
+msgid "{file_name} does not have a valid file extension, will use {default}"
+msgstr "{file_name} não tem uma extensão válida; será usado {default}"
+
+msgid "{name} is {value}"
+msgstr "{name} é {value}"
+
+msgid "{name} parameter will be ignored"
+msgstr "O parâmetro {name} será ignorado"
+
+msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+msgstr "O valor {value} não se encontra documentado em {enum_name}; isto pode fazer falhar a chamada da função"
+
+msgid "{value} does not have a valid file extension, must be {extensions}"
+msgstr "O valor {value} não tem uma extensão válida; deve ser {extensions}"
+
+msgid "{value} is not a valid {enum_name}"
+msgstr "{value} não é um {enum_name} válido"

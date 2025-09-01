@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: ko-KR\n"
+
+msgid "Checking file extension {file_name}"
+msgstr "파일 확장자 {file_name} 확인 중"
+
+msgid "Checking index {index} is in range"
+msgstr "인덱스 {index}가 범위 내에 있는지 확인 중"
+
+msgid "Checking {value} is greater than {min_value}"
+msgstr "{value}가 {min_value}보다 큰지 확인 중"
+
+msgid "Checking {value} is in expected values"
+msgstr "{value}가 예상 값 중 하나인지 확인 중"
+
+msgid "Checking {value} is in range {min_value} to {max_value}"
+msgstr "{value}가 {min_value}부터 {max_value} 범위에 있는지 확인 중"
+
+msgid "Checking {value} is less than {max_value}"
+msgstr "{value}가 {max_value}보다 작은지 확인 중"
+
+msgid "Checking {value} is negative"
+msgstr "{value}가 음수인지 확인 중"
+
+msgid "Checking {value} is non-negative"
+msgstr "{value}가 음수가 아닌지 확인 중"
+
+msgid "Checking {value} is non-zero"
+msgstr "{value}가 0이 아닌지 확인 중"
+
+msgid "Checking {value} is positive"
+msgstr "{value}가 양수인지 확인 중"
+
+msgid "Checking {value} is {name}"
+msgstr "{value}가 {name}인지 확인 중"
+
+msgid "Could not initialize with Instance ID: {value}"
+msgstr "인스턴스 ID {value}로 초기화할 수 없습니다"
+
+msgid "Executing {name}"
+msgstr "{name} 실행 중"
+
+msgid "Failed to initialize Synergy: Synergy not found"
+msgstr "Synergy 초기화 실패: Synergy를 찾을 수 없음"
+
+msgid "Getting {name}"
+msgstr "{name} 가져오는 중"
+
+msgid "Getting {name} at index {value}"
+msgstr "인덱스 {value}에서 {name} 가져오는 중"
+
+msgid "Initializing {name}"
+msgstr "{name} 초기화 중"
+
+msgid "Invalid Attribute: {attribute} is not supported"
+msgstr "잘못된 속성: {attribute}는 지원되지 않습니다"
+
+msgid "Invalid FileType: {file_name}, must be {extensions}"
+msgstr "잘못된 파일 형식: {file_name}, {extensions}여야 합니다"
+
+msgid "Invalid Index: out of range"
+msgstr "잘못된 인덱스: 범위를 벗어났습니다"
+
+msgid "Invalid Type: must be {expected_types}, not {variable_type}"
+msgstr "잘못된 유형: {variable_type}가 아닌 {expected_types}여야 합니다"
+
+msgid "Invalid Value: {reason}"
+msgstr "잘못된 값: {reason}"
+
+msgid "Logger was not setup"
+msgstr "로거가 설정되지 않았습니다"
+
+msgid "Save Error"
+msgstr "저장 오류"
+
+msgid "Save Error: Could not save {saving} to {file_name}"
+msgstr "저장 오류: {saving}을(를) {file_name}에 저장할 수 없습니다"
+
+msgid "Save Error: Failed to save {saving} to {file_name}"
+msgstr "저장 오류: {saving}을(를) {file_name}에 저장하지 못했습니다"
+
+msgid "Setting {name} to {value}"
+msgstr "{name}을(를) {value}(으)로 설정 중"
+
+msgid "Test String"
+msgstr "테스트 문자열"
+
+msgid "Using prompts will use pop-up import options and will always show logs"
+msgstr "프롬프트를 사용하면 팝업 가져오기 옵션이 사용되며 항상 로그가 표시됩니다"
+
+msgid "Using prompts will use pop-up import options instead of the ones provided."
+msgstr "프롬프트를 사용하면 제공된 옵션 대신 팝업 가져오기 옵션이 사용됩니다"
+
+msgid "Using {method} {product_key} for locale"
+msgstr "로캘에 {method} {product_key} 사용"
+
+msgid "Valid Input"
+msgstr "유효한 입력"
+
+msgid "Valid Input Type"
+msgstr "유효한 입력 유형"
+
+msgid "cannot be empty"
+msgstr "비워 둘 수 없습니다"
+
+msgid "found {min_value} must be less than {max_value}"
+msgstr "찾은 {min_value}는 {max_value}보다 작아야 합니다"
+
+msgid "found {value}, must be between {min_value} and {max_value}"
+msgstr "찾은 {value}는 {min_value}와 {max_value} 사이여야 합니다"
+
+msgid "found {value}, must be greater than or equal to {min_value}"
+msgstr "찾은 {value}는 {min_value} 이상이어야 합니다"
+
+msgid "found {value}, must be greater than {min_value}"
+msgstr "찾은 {value}는 {min_value}보다 커야 합니다"
+
+msgid "found {value}, must be less than or equal to {max_value}"
+msgstr "찾은 {value}는 {max_value} 이하이어야 합니다"
+
+msgid "found {value}, must be less than {max_value}"
+msgstr "찾은 {value}는 {max_value}보다 작아야 합니다"
+
+msgid "found {value}, must be non-negative"
+msgstr "찾은 {value}는 음수가 아니어야 합니다"
+
+msgid "found {value}, must be non-zero"
+msgstr "찾은 {value}는 0이 아니어야 합니다"
+
+msgid "found {value}, must be one of {expected_values}"
+msgstr "찾은 {value}는 {expected_values} 중 하나여야 합니다"
+
+msgid "found {value}, must be positive"
+msgstr "찾은 {value}는 양수여야 합니다"
+
+msgid "{file_name} does not have a valid file extension, will use {default}"
+msgstr "{file_name}에는 유효한 파일 확장자가 없습니다. {default}를 사용합니다"
+
+msgid "{name} is {value}"
+msgstr "{name}은(는) {value}입니다"
+
+msgid "{name} parameter will be ignored"
+msgstr "{name} 매개변수는 무시됩니다"
+
+msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+msgstr "{value}는 {enum_name}에 문서화되어 있지 않습니다. 이로 인해 함수 호출이 실패할 수 있습니다"
+
+msgid "{value} does not have a valid file extension, must be {extensions}"
+msgstr "{value}에는 유효한 파일 확장자가 없습니다. {extensions}여야 합니다"
+
+msgid "{value} is not a valid {enum_name}"
+msgstr "{value}는 유효한 {enum_name}이 아닙니다"

@@ -1,0 +1,3 @@
+include src/moldflow/version.json
+recursive-include src/moldflow/locale **/LC_MESSAGES/*.*.mo
+include THIRD_PARTY_NOTICES.md

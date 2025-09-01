@@ -1,0 +1,4 @@
+Modeler
+=======
+
+.. automodule:: moldflow.modeler

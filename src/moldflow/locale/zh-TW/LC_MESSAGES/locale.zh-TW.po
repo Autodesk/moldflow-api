@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: zh-TW\n"
+
+msgid "Checking file extension {file_name}"
+msgstr "正在檢查檔案副檔名 {file_name}"
+
+msgid "Checking index {index} is in range"
+msgstr "正在檢查索引 {index} 是否在範圍內"
+
+msgid "Checking {value} is greater than {min_value}"
+msgstr "正在檢查 {value} 是否大於 {min_value}"
+
+msgid "Checking {value} is in expected values"
+msgstr "正在檢查 {value} 是否在預期值內"
+
+msgid "Checking {value} is in range {min_value} to {max_value}"
+msgstr "正在檢查 {value} 是否位於 {min_value} 到 {max_value} 的範圍內"
+
+msgid "Checking {value} is less than {max_value}"
+msgstr "正在檢查 {value} 是否小於 {max_value}"
+
+msgid "Checking {value} is negative"
+msgstr "正在檢查 {value} 是否為負"
+
+msgid "Checking {value} is non-negative"
+msgstr "正在檢查 {value} 是否為非負"
+
+msgid "Checking {value} is non-zero"
+msgstr "正在檢查 {value} 是否不為零"
+
+msgid "Checking {value} is positive"
+msgstr "正在檢查 {value} 是否為正"
+
+msgid "Checking {value} is {name}"
+msgstr "正在檢查 {value} 是否為 {name}"
+
+msgid "Could not initialize with Instance ID: {value}"
+msgstr "無法使用執行個體 ID {value} 進行初始化"
+
+msgid "Executing {name}"
+msgstr "正在執行 {name}"
+
+msgid "Failed to initialize Synergy: Synergy not found"
+msgstr "初始化 Synergy 失敗：找不到 Synergy"
+
+msgid "Getting {name}"
+msgstr "正在取得 {name}"
+
+msgid "Getting {name} at index {value}"
+msgstr "正在於索引 {value} 取得 {name}"
+
+msgid "Initializing {name}"
+msgstr "正在初始化 {name}"
+
+msgid "Invalid Attribute: {attribute} is not supported"
+msgstr "無效的屬性：不支援 {attribute}"
+
+msgid "Invalid FileType: {file_name}, must be {extensions}"
+msgstr "無效的檔案類型：{file_name}，必須為 {extensions}"
+
+msgid "Invalid Index: out of range"
+msgstr "無效的索引：超出範圍"
+
+msgid "Invalid Type: must be {expected_types}, not {variable_type}"
+msgstr "無效的型別：必須為 {expected_types}，而非 {variable_type}"
+
+msgid "Invalid Value: {reason}"
+msgstr "無效的值：{reason}"
+
+msgid "Logger was not setup"
+msgstr "記錄器未設定"
+
+msgid "Save Error"
+msgstr "儲存錯誤"
+
+msgid "Save Error: Could not save {saving} to {file_name}"
+msgstr "儲存錯誤：無法將 {saving} 儲存至 {file_name}"
+
+msgid "Save Error: Failed to save {saving} to {file_name}"
+msgstr "儲存錯誤：將 {saving} 儲存到 {file_name} 失敗"
+
+msgid "Setting {name} to {value}"
+msgstr "正在將 {name} 設定為 {value}"
+
+msgid "Test String"
+msgstr "測試字串"
+
+msgid "Using prompts will use pop-up import options and will always show logs"
+msgstr "使用提示將使用快顯匯入選項，並且一律顯示記錄"
+
+msgid "Using prompts will use pop-up import options instead of the ones provided."
+msgstr "使用提示將會使用快顯匯入選項，而非所提供的選項"
+
+msgid "Using {method} {product_key} for locale"
+msgstr "使用 {method} {product_key} 做為地區設定"
+
+msgid "Valid Input"
+msgstr "有效輸入"
+
+msgid "Valid Input Type"
+msgstr "有效的輸入型別"
+
+msgid "cannot be empty"
+msgstr "不能為空"
+
+msgid "found {min_value} must be less than {max_value}"
+msgstr "找到 {min_value}，必須小於 {max_value}"
+
+msgid "found {value}, must be between {min_value} and {max_value}"
+msgstr "找到{value}，必須在{min_value}和{max_value}之間"
+
+msgid "found {value}, must be greater than or equal to {min_value}"
+msgstr "找到{value}，必須大於或等於{min_value}"
+
+msgid "found {value}, must be greater than {min_value}"
+msgstr "找到{value}，必須大於{min_value}"
+
+msgid "found {value}, must be less than or equal to {max_value}"
+msgstr "找到{value}，必須小於或等於{max_value}"
+
+msgid "found {value}, must be less than {max_value}"
+msgstr "找到{value}，必須小於{max_value}"
+
+msgid "found {value}, must be non-negative"
+msgstr "找到{value}，必須是非負的"
+
+msgid "found {value}, must be non-zero"
+msgstr "找到{value}，必須不為零"
+
+msgid "found {value}, must be one of {expected_values}"
+msgstr "找到 {value}，必須為 {expected_values} 之一"
+
+msgid "found {value}, must be positive"
+msgstr "找到{value}，必須是積極的"
+
+msgid "{file_name} does not have a valid file extension, will use {default}"
+msgstr "{file_name} 沒有有效的副檔名，將使用 {default}"
+
+msgid "{name} is {value}"
+msgstr "{name} 為 {value}"
+
+msgid "{name} parameter will be ignored"
+msgstr "將忽略參數 {name}"
+
+msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
+msgstr "在 {enum_name} 中找不到 {value} 的記載，這可能會導致函式呼叫失敗"
+
+msgid "{value} does not have a valid file extension, must be {extensions}"
+msgstr "{value} 沒有有效的副檔名；必須為 {extensions}"
+
+msgid "{value} is not a valid {enum_name}"
+msgstr "{value} 不是有效的 {enum_name}"

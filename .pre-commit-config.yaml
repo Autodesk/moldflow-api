@@ -1,0 +1,27 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        args: [--line-length=100, -S, -C]
+        types: [python]
+        exclude_types: [markdown]
+        exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.3.0
+    hooks:
+      - id: trailing-whitespace
+        exclude_types: [markdown]
+        exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
+      - id: end-of-file-fixer
+        exclude_types: [markdown]
+        exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
+      - id: no-commit-to-branch
+        args: [--branch, main]
+        exclude_types: [markdown]
+        exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
+      - id: pretty-format-json
+        args: [--autofix]
+        exclude_types: [markdown]
+        exclude: \.(svg|jpe?g|png|webp|gif|bmp)$

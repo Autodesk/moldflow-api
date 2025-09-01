@@ -1,0 +1,20 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: moldflow-api
+Upstream-Contact: Autodesk Inc.
+Source: https://github.com/Autodesk/moldflow-api
+
+Files: *
+Copyright: 2025 Autodesk, Inc.
+License: Apache-2.0
+
+Files: docs/*
+Copyright: 2025 Autodesk, Inc.
+License: Apache-2.0
+
+Files: tests/*
+Copyright: 2025 Autodesk, Inc.
+License: Apache-2.0
+
+Files: .github/*
+Copyright: 2025 Autodesk, Inc.
+License: Apache-2.0
