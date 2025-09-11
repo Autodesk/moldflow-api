@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log
-from .helper import check_type, _mf_array_to_list
+from .helper import check_type
 from .com_proxy import safe_com, flag_com_method
 from .common import LogMessage
 
@@ -54,17 +54,7 @@ class StringArray:
         check_type(value, str)
         self.string_array.AddString(value)
 
-    def to_list(self) -> list[str]:
-        """
-        Convert the string array to a list of strings.
-
-        Returns:
-            list[str]: The list of strings.
-        """
-        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
-        return _mf_array_to_list(self)
-
-    def from_list(self, values: list[str]) -> None:
+    def from_list(self, values: list[str]) -> int:
         """
         Convert a list of strings to a string array.
 
@@ -77,7 +67,7 @@ class StringArray:
         for value in values:
             check_type(value, str)
 
-        self.string_array.FromVBSArray(list(values))
+        return self.string_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:
