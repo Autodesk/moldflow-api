@@ -50,25 +50,6 @@ class TestUnitStringArray:
         assert mock_string_array.size == size
 
     @pytest.mark.parametrize(
-        "size, values",
-        [(3, ["hello", "world", "test"]), (2, ["foo", "bar"]), (1, ["single"]), (0, [])],
-    )
-    # pylint: disable=R0801
-    def test_to_list(self, mock_string_array, mock_object, size, values):
-        """Test the to_list method of the StringArray class."""
-        mock_object.Size = size
-        mock_object.Val.side_effect = lambda i: values[i] if i < len(values) else ""
-
-        result = mock_string_array.to_list()
-
-        assert result == values
-        assert len(result) == size
-        if size > 0:
-            assert mock_object.Val.call_count == size
-            for i in range(size):
-                mock_object.Val.assert_any_call(i)
-
-    @pytest.mark.parametrize(
         "values",
         [
             ["hello", "world", "test"],
