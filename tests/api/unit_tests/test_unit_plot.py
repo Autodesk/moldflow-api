@@ -441,7 +441,7 @@ class TestUnitPlot:
     @pytest.mark.parametrize(
         "pascal_name, property_name, value",
         [("SetMeshFill", "mesh_fill", x) for x in [-1.0, 2.0, 3.0]]
-        + [("SetColorBands", "color_bands", x) for x in [1, 65, 128]]
+        + [("SetColorBands", "color_bands", x) for x in [-1, 0, 257, 300]]
         + [("SetHistogramNumberOfBars", "histogram_number_of_bars", x) for x in [-1, -2, -3, -4]],
     )
     # pylint: disable-next=R0913, R0917
