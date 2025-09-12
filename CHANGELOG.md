@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
-- Fix return types for `from_list` functions in data clases
+- Fix return types for `from_list` functions in data classes
 - Fix color band range options to 1 to 256
 
 ### Security
