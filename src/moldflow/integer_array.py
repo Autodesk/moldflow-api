@@ -67,12 +67,15 @@ class IntegerArray:
         vb_array = self.integer_array.ToVBSArray()
         return list(vb_array)
 
-    def from_list(self, values: list[int]) -> None:
+    def from_list(self, values: list[int]) -> int:
         """
         Convert a list of integers to an integer array.
 
         Args:
             values (list[int]): The list of integers to convert.
+
+        Returns:
+            int: The number of elements added to the array.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
 
@@ -80,7 +83,7 @@ class IntegerArray:
         for value in values:
             check_type(value, int)
 
-        self.integer_array.FromVBSArray(list(values))
+        return self.integer_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:
