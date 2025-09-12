@@ -54,6 +54,15 @@ class StringArray:
         check_type(value, str)
         self.string_array.AddString(value)
 
+    def to_list(self) -> list[str]:
+        """
+        Convert the string array to a list of strings.
+        Returns:
+            list[str]: The list of strings.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
+        return _mf_array_to_list(self)
+
     def from_list(self, values: list[str]) -> int:
         """
         Convert a list of strings to a string array.
