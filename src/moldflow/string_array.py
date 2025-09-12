@@ -69,7 +69,7 @@ class StringArray:
 
         Args:
             values (list[str]): The list of strings to convert.
-        
+
         Returns:
             int: The number of elements added to the array.
         """
