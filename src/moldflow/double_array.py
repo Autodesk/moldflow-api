@@ -73,6 +73,9 @@ class DoubleArray:
 
         Args:
             values (list[float]): The list of floats to convert.
+        
+        Returns:
+            int: The number of elements added to the array.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
 

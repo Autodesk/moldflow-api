@@ -69,6 +69,9 @@ class StringArray:
 
         Args:
             values (list[str]): The list of strings to convert.
+        
+        Returns:
+            int: The number of elements added to the array.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
         check_type(values, (list, tuple))
