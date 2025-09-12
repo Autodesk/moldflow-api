@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log
-from .helper import check_type
+from .helper import check_type, _mf_array_to_list
 from .com_proxy import safe_com, flag_com_method
 from .common import LogMessage
 
