@@ -7,7 +7,7 @@ import winreg
 import os
 
 # Constants for color bands
-COLOR_BAND_RANGE = tuple(list(range(2, 65)) + [256])
+COLOR_BAND_RANGE = tuple(list(range(0, 265)))
 
 # Localization constants
 DEFAULT_THREE_LETTER_CODE = "enu"
