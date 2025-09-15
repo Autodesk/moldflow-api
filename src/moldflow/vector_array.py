@@ -38,9 +38,9 @@ class VectorArray:
         Adds a vector (x, y, z) to the end of the array.
 
         Args:
-            x [float | int]: The x component.
-            y [float | int]: The y component.
-            z [float | int]: The z component.
+            x (float | int): The x component.
+            y (float | int): The y component.
+            z (float | int): The z component.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_xyz")
         check_type(x, (float, int))
@@ -64,7 +64,7 @@ class VectorArray:
         Get the x component of the vector at the index.
 
         Args:
-            index [int]: index between 0 and vector_array.size-1 (inclusive)
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
             The x component of the vector at offset index.
@@ -79,7 +79,7 @@ class VectorArray:
         Get the y component of the vector at the index.
 
         Args:
-            index [int]: index between 0 and vector_array.size-1 (inclusive)
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
             The y component of the vector at offset index.
@@ -94,7 +94,7 @@ class VectorArray:
         Get the z component of the vector at the index.
 
         Args:
-            index [int]: index between 0 and vector_array.size-1 (inclusive)
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
             The z component of the vector at offset index.
