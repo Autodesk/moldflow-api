@@ -31,9 +31,9 @@ class Vector:
         Set the x, y, z components of the vector.
 
         Args:
-            x [int | float]: The x component.
-            y [int | float]: The y component.
-            z [int | float]: The z component.
+            x (float | int): The x component.
+            y (float | int): The y component.
+            z (float | int): The z component.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_xyz")
         check_type(x, (int, float))
@@ -59,7 +59,7 @@ class Vector:
         Set the x component of the vector.
 
         Args:
-            value [int | float]: The x component to set.
+            value (float | int): The x component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="x", value=value)
         check_type(value, (int, float))
@@ -83,7 +83,7 @@ class Vector:
         Set the y component of the vector.
 
         Args:
-            value [int | float]: The y component to set.
+            value (float | int): The y component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="y", value=value)
         check_type(value, (int, float))
@@ -107,7 +107,7 @@ class Vector:
         Set the z component of the vector.
 
         Args:
-            value [int | float]: The z component to set.
+            value (float | int): The z component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="z", value=value)
         check_type(value, (int, float))
