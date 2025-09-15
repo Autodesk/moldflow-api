@@ -12,6 +12,7 @@ from tests.conftest import INVALID_INT
 
 
 @pytest.mark.unit
+@pytest.mark.integer_array
 class TestUnitIntegerArray:
     """
     Unit Test suite for the IntegerArray class.

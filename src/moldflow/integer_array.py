@@ -35,10 +35,10 @@ class IntegerArray:
         Get the value at the specified index.
 
         Args:
-            index (int): The index of the value to get.
+            index (int): index between 0 and integer_array.size-1 (inclusive)
 
         Returns:
-            int: The value at the specified index.
+            The value at the specified index.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="val")
         check_type(index, int)
@@ -46,7 +46,7 @@ class IntegerArray:
 
     def add_integer(self, value: int) -> None:
         """
-        Add a integer value to the array.
+        Adds an integer value to the end of the array.
 
         Args:
             value (int): The value to add.
@@ -60,19 +60,22 @@ class IntegerArray:
         Convert the integer array to a list of integers.
 
         Returns:
-            list[int]: The list of integers.
+            The list of integers.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
 
         vb_array = self.integer_array.ToVBSArray()
         return list(vb_array)
 
-    def from_list(self, values: list[int]) -> None:
+    def from_list(self, values: list[int] | tuple[int]) -> int:
         """
         Convert a list of integers to an integer array.
 
         Args:
-            values (list[int]): The list of integers to convert.
+            values (list[int] | tuple[int]): The list of integers to convert.
+
+        Returns:
+            The number of elements added.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
 
@@ -80,7 +83,7 @@ class IntegerArray:
         for value in values:
             check_type(value, int)
 
-        self.integer_array.FromVBSArray(list(values))
+        return self.integer_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:
@@ -88,7 +91,7 @@ class IntegerArray:
         Get the size of the array.
 
         Returns:
-            int: The size of the array.
+            The size of the array.
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="size")
         return self.integer_array.Size
