@@ -12,6 +12,7 @@ from tests.conftest import INVALID_FLOAT
 
 
 @pytest.mark.unit
+@pytest.mark.double_array
 class TestUnitDoubleArray:
     """
     Unit Test Suite for the DoubleArray class.
