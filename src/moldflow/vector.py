@@ -18,7 +18,7 @@ class Vector:
         Initialize the Vector with a Vector instance from COM.
 
         Args:
-            vector: The Vector instance.
+            _vector: The Vector instance.
         """
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="Vector")
         self.vector = safe_com(_vector)

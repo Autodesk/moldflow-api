@@ -97,9 +97,9 @@ class TestIntegrationVector:
         vector.z = new_z
         self._check_vector_values(vector, new_x, new_y, new_z)
 
-    def test_deepcopy(self, vector: Vector):
+    def test_reference_behavior(self, vector: Vector):
         """
-        Test deepcopy of Vector.
+        Test reference behavior of Vector.
         """
         vector.set_xyz(1.0, 2.0, 3.0)
         vector_copy = vector
