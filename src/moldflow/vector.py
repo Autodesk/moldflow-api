@@ -26,7 +26,7 @@ class Vector:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="Vector")
         self.vector = safe_com(_vector)
 
-    def set_xyz(self, x: int | float, y: int | float, z: int | float) -> None:
+    def set_xyz(self, x: float | int, y: float | int, z: float | int) -> None:
         """
         Set the x, y, z components of the vector.
 
@@ -36,9 +36,9 @@ class Vector:
             z (float | int): The z component.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_xyz")
-        check_type(x, (int, float))
-        check_type(y, (int, float))
-        check_type(z, (int, float))
+        check_type(x, (float, int))
+        check_type(y, (float, int))
+        check_type(z, (float, int))
         self.vector.SetXYZ(x, y, z)
 
     @property
@@ -54,7 +54,7 @@ class Vector:
         return self.vector.X
 
     @x.setter
-    def x(self, value: int | float) -> None:
+    def x(self, value: float | int) -> None:
         """
         Set the x component of the vector.
 
@@ -62,7 +62,7 @@ class Vector:
             value (float | int): The x component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="x", value=value)
-        check_type(value, (int, float))
+        check_type(value, (float, int))
         self.vector.X = value
 
     @property
@@ -78,7 +78,7 @@ class Vector:
         return self.vector.Y
 
     @y.setter
-    def y(self, value: int | float) -> None:
+    def y(self, value: float | int) -> None:
         """
         Set the y component of the vector.
 
@@ -86,7 +86,7 @@ class Vector:
             value (float | int): The y component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="y", value=value)
-        check_type(value, (int, float))
+        check_type(value, (float, int))
         self.vector.Y = value
 
     @property
@@ -102,7 +102,7 @@ class Vector:
         return self.vector.Z
 
     @z.setter
-    def z(self, value: int | float) -> None:
+    def z(self, value: float | int) -> None:
         """
         Set the z component of the vector.
 
@@ -110,5 +110,5 @@ class Vector:
             value (float | int): The z component to set.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="z", value=value)
-        check_type(value, (int, float))
+        check_type(value, (float, int))
         self.vector.Z = value
