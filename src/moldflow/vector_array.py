@@ -51,7 +51,7 @@ class VectorArray:
     @property
     def size(self) -> int:
         """
-        Returns the number of vectors in the array. [read-only]
+        Returns the number of vectors in the array.
 
         Returns:
             The size of the vector array.
