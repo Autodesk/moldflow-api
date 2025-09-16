@@ -34,10 +34,10 @@ class StringArray:
         Get the value at the specified index.
 
         Args:
-            index (int): The index of the value to get.
+            index (int): index between 0 and string_array.size-1 (inclusive).
 
         Returns:
-            str: The value at the specified index.
+            The value at the specified index.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="val")
         check_type(index, int)
@@ -45,7 +45,7 @@ class StringArray:
 
     def add_string(self, value: str) -> None:
         """
-        Add a string value to the array.
+        Adds a string value to the end of the array.
 
         Args:
             value (str): The value to add.
@@ -59,17 +59,20 @@ class StringArray:
         Convert the string array to a list of strings.
 
         Returns:
-            list[str]: The list of strings.
+            The list of values.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
         return _mf_array_to_list(self)
 
-    def from_list(self, values: list[str]) -> None:
+    def from_list(self, values: list[str] | tuple[str, ...]) -> int:
         """
         Convert a list of strings to a string array.
 
         Args:
-            values (list[str]): The list of strings to convert.
+            values (list[str] | tuple[str, ...]): The list of strings to convert.
+
+        Returns:
+            The number of elements added.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
         check_type(values, (list, tuple))
@@ -77,7 +80,7 @@ class StringArray:
         for value in values:
             check_type(value, str)
 
-        self.string_array.FromVBSArray(list(values))
+        return self.string_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:
@@ -85,7 +88,7 @@ class StringArray:
         Get the size of the array.
 
         Returns:
-            int: The size of the array.
+            The size of the array.
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="size")
         return self.string_array.Size
