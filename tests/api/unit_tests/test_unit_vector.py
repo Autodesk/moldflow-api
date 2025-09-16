@@ -10,6 +10,7 @@ from moldflow import Vector
 
 
 @pytest.mark.unit
+@pytest.mark.vector
 class TestUnitVector:
     """
     Test suite for the Vector class.
