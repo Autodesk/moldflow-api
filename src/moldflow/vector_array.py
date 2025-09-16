@@ -28,19 +28,19 @@ class VectorArray:
 
     def clear(self) -> None:
         """
-        Clear the vector array.
+        Resets a vector array - the size of the array is 0 subsequent to this call.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="clear")
         self.vector_array.Clear()
 
-    def add_xyz(self, x: float, y: float, z: float) -> None:
+    def add_xyz(self, x: float | int, y: float | int, z: float | int) -> None:
         """
-        Add a vector to the array with x, y, z values.
+        Adds a vector (x, y, z) to the end of the array.
 
         Args:
-            x (float): The x value.
-            y (float): The y value.
-            z (float): The z value.
+            x (float | int): The x component.
+            y (float | int): The y component.
+            z (float | int): The z component.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_xyz")
         check_type(x, (float, int))
@@ -51,23 +51,23 @@ class VectorArray:
     @property
     def size(self) -> int:
         """
-        Get the size of the vector array.
+        Returns the number of vectors in the array.
 
         Returns:
-            int: The size of the vector array.
+            The size of the vector array.
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="size")
         return self.vector_array.Size
 
     def x(self, index: int) -> float:
         """
-        Get the x value of the vector at the index.
+        Get the x component of the vector at the index.
 
         Args:
-            index (int): The index of the vector.
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
-            float: The x value of the vector.
+            The x component of the vector at offset index.
         """
         process_log(__name__, LogMessage.PROPERTY_PARAM_GET, locals(), name="x", value=index)
         check_type(index, int)
@@ -76,13 +76,13 @@ class VectorArray:
 
     def y(self, index: int) -> float:
         """
-        Get the y value of the vector at the index.
+        Get the y component of the vector at the index.
 
         Args:
-            index (int): The index of the vector.
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
-            float: The y value of the vector.
+            The y component of the vector at offset index.
         """
         process_log(__name__, LogMessage.PROPERTY_PARAM_GET, locals(), name="y", value=index)
         check_type(index, int)
@@ -91,13 +91,13 @@ class VectorArray:
 
     def z(self, index: int) -> float:
         """
-        Get the z value of the vector at the index.
+        Get the z component of the vector at the index.
 
         Args:
-            index (int): The index of the vector.
+            index (int): index between 0 and vector_array.size-1 (inclusive)
 
         Returns:
-            float: The z value of the vector.
+            The z component of the vector at offset index.
         """
         process_log(__name__, LogMessage.PROPERTY_PARAM_GET, locals(), name="z", value=index)
         check_type(index, int)
