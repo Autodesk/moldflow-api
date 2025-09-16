@@ -26,7 +26,7 @@ class TestIntegrationIntegerArray:
 
     def _check_integer_array_size(self, integer_array: IntegerArray, expected_size: int):
         """
-        Verify the size of the double array.
+        Verify the size of the integer array.
         """
         assert integer_array.size == expected_size
 
@@ -46,7 +46,7 @@ class TestIntegrationIntegerArray:
 
     def test_add_integer_single_value(self, integer_array: IntegerArray):
         """
-        Test adding a single double value to the array.
+        Test adding a single integer value to the array.
         """
         self._check_integer_array_size(integer_array, 0)
 
@@ -57,7 +57,7 @@ class TestIntegrationIntegerArray:
     @pytest.mark.parametrize("values", [VALID_INT])
     def test_add_integer_multiple_values(self, integer_array: IntegerArray, values: list[int]):
         """
-        Test adding multiple double values to the array.
+        Test adding multiple integer values to the array.
         """
         self._check_integer_array_size(integer_array, 0)
 
@@ -100,7 +100,7 @@ class TestIntegrationIntegerArray:
 
     def test_to_list_empty_array(self, integer_array: IntegerArray):
         """
-        Test converting an empty double array to a list.
+        Test converting an empty integer array to a list.
         """
         result = integer_array.to_list()
         assert result == []
@@ -109,7 +109,7 @@ class TestIntegrationIntegerArray:
     @pytest.mark.parametrize("values", [VALID_INT])
     def test_to_list_populated_array(self, integer_array: IntegerArray, values: list[int]):
         """
-        Test converting a populated double array to a list.
+        Test converting a populated integer array to a list.
         """
         # Add values to array
         for value in values:
@@ -125,7 +125,7 @@ class TestIntegrationIntegerArray:
 
     def test_from_list_empty_list(self, integer_array: IntegerArray):
         """
-        Test creating a double array from an empty list.
+        Test creating a integer array from an empty list.
         """
         integer_array.from_list([])
         self._check_integer_array_size(integer_array, 0)
@@ -134,7 +134,7 @@ class TestIntegrationIntegerArray:
     @pytest.mark.parametrize("values", [VALID_INT])
     def test_from_list_populated_list(self, integer_array: IntegerArray, values: list[int] | tuple):
         """
-        Test creating a double array from a populated list.
+        Test creating a integer array from a populated list.
         """
         integer_array.from_list(values)
 
