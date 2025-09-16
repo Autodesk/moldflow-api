@@ -10,6 +10,7 @@ from moldflow import VectorArray
 
 
 @pytest.mark.unit
+@pytest.mark.vector_array
 class TestUnitVectorArray:
     """
     Test suite for the VectorArray class.
