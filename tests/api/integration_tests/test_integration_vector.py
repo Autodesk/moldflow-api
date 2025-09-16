@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 Autodesk, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Integration tests for Vector Wrapper Class of moldflow-api module.
 
