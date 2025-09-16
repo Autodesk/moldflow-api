@@ -70,10 +70,12 @@ class TestUnitDoubleArray:
             (1.0, 2.5, 3.7),
         ],  # integers should also work
     )
-    # pylint: disable=R0801
     def test_from_list(self, mock_double_array, mock_object, values):
         """Test the from_list method of the DoubleArray class."""
-        mock_double_array.from_list(values)
+        mock_object.FromVBSArray.return_value = len(values)
+        result = mock_double_array.from_list(values)
+        assert isinstance(result, int)
+        assert result == len(values)
         mock_object.FromVBSArray.assert_called_once_with(list(values))
 
     @pytest.mark.parametrize("invalid_values", INVALID_MOCK_WITH_NONE)
