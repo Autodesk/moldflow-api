@@ -67,12 +67,12 @@ class IntegerArray:
         vb_array = self.integer_array.ToVBSArray()
         return list(vb_array)
 
-    def from_list(self, values: list[int] | tuple[int]) -> int:
+    def from_list(self, values: list[int] | tuple[int, ...]) -> int:
         """
         Convert a list of integers to an integer array.
 
         Args:
-            values (list[int] | tuple[int]): The list of integers to convert.
+            values (list[int] | tuple[int, ...]): The list of integers to convert.
 
         Returns:
             The number of elements added.

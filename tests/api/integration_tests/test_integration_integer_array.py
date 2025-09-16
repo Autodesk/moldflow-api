@@ -125,7 +125,7 @@ class TestIntegrationIntegerArray:
 
     def test_from_list_empty_list(self, integer_array: IntegerArray):
         """
-        Test creating a integer array from an empty list.
+        Test creating an integer array from an empty list.
         """
         integer_array.from_list([])
         self._check_integer_array_size(integer_array, 0)
@@ -134,7 +134,7 @@ class TestIntegrationIntegerArray:
     @pytest.mark.parametrize("values", [VALID_INT])
     def test_from_list_populated_list(self, integer_array: IntegerArray, values: list[int] | tuple):
         """
-        Test creating a integer array from a populated list.
+        Test creating an integer array from a populated list.
         """
         integer_array.from_list(values)
 
