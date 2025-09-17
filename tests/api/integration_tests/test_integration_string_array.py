@@ -30,7 +30,7 @@ class TestIntegrationStringArray:
         """
         assert string_array.size == expected_size
 
-    def _check_value_at_index(self, string_array: StringArray, index: int, expected_value: float):
+    def _check_value_at_index(self, string_array: StringArray, index: int, expected_value: str):
         """
         Verify the value at a specific index in the array.
         """

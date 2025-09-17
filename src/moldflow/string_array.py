@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log
-from .helper import check_type, _mf_array_to_list
+from .helper import check_type
 from .com_proxy import safe_com, flag_com_method
 from .common import LogMessage
 
@@ -62,7 +62,7 @@ class StringArray:
             The list of values.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
-        return _mf_array_to_list(self)
+        return [self.val(i) for i in range(self.size)]
 
     def from_list(self, values: list[str] | tuple[str, ...]) -> int:
         """
