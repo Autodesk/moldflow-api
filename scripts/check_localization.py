@@ -48,6 +48,7 @@ class PoEntry:
         msgstr (str): The translated string.
         line_no (int): The line number in the .po file where this entry appears.
     """
+
     msgid: str
     msgstr: str
     line_no: int
@@ -64,10 +65,11 @@ class LocalizationFix:
         line_no (int): The line number in the source file.
         context (str): Description of where or how the string was found.
     """
+
     string_value: str
     source_file: str
     line_no: int
-    context: str  # Description of where the string was found
+    context: str
 
 
 class PoFileParser:
