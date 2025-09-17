@@ -86,6 +86,7 @@ DOCS_SOURCE_DIR = os.path.join(DOCS_DIR, 'source')
 DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
+SCRIPTS_DIR = os.path.join(ROOT_DIR, 'scripts')
 
 # Files
 PYLINT_CONFIG_FILE = os.path.join(ROOT_DIR, '.pylint.toml')
@@ -96,7 +97,7 @@ COVERAGE_CONFIG_FILE = os.path.join(ROOT_DIR, '.coverage-config')
 COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
-PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py"]
+PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py", SCRIPTS_DIR]
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):

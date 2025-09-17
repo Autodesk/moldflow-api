@@ -35,37 +35,37 @@ SKIP_PATTERNS = {
     '*.mo',
 }
 
+
 def get_gitignore_spec(repo_root: str) -> pathspec.PathSpec:
     """Load .gitignore patterns."""
     gitignore_file = os.path.join(repo_root, '.gitignore')
     if os.path.exists(gitignore_file):
-        with open(gitignore_file, 'r') as f:
+        with open(gitignore_file, 'r', encoding='utf-8') as f:
             return pathspec.PathSpec.from_lines(
-                pathspec.patterns.GitWildMatchPattern, 
-                f.readlines()
+                pathspec.patterns.GitWildMatchPattern, f.readlines()
             )
     return pathspec.PathSpec([])
+
 
 def should_skip(path: str, gitignore_spec: pathspec.PathSpec) -> bool:
     """Check if a file should be skipped."""
     # Convert to relative path for gitignore matching
     rel_path = os.path.relpath(path, start=str(Path(__file__).parent.parent))
-    
+
     # Check gitignore patterns
     if gitignore_spec.match_file(rel_path):
         return True
-        
+
     # Check our custom skip patterns
     parts = Path(path).parts
-    return any(
-        any(part.startswith(skip.rstrip('/')) for part in parts)
-        for skip in SKIP_PATTERNS
-    )
+    return any(any(part.startswith(skip.rstrip('/')) for part in parts) for skip in SKIP_PATTERNS)
+
 
 def has_spdx_header(content: str) -> bool:
     """Check if file already has an SPDX header."""
     first_lines = content.split('\n')[:3]
     return any('SPDX-License-Identifier' in line for line in first_lines)
+
 
 def find_python_files(start_dir: str, gitignore_spec: pathspec.PathSpec) -> List[str]:
     """Find all Python files in the directory tree."""
@@ -79,6 +79,7 @@ def find_python_files(start_dir: str, gitignore_spec: pathspec.PathSpec) -> List
                 if not should_skip(full_path, gitignore_spec):
                     python_files.append(full_path)
     return python_files
+
 
 def main():
     """Main entry point."""
@@ -109,6 +110,7 @@ def main():
         return 1
     print(f"Checked {len(python_files)} files; all have SPDX headers")
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(main())
