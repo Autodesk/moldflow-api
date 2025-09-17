@@ -40,8 +40,14 @@ from typing import Dict, List, Tuple
 
 @dataclass
 class PoEntry:
-    """Entry in a .po file."""
+    """
+    Represents an entry in a gettext .po file.
 
+    Attributes:
+        msgid (str): The message ID (original string in English).
+        msgstr (str): The translated string.
+        line_no (int): The line number in the .po file where this entry appears.
+    """
     msgid: str
     msgstr: str
     line_no: int
@@ -49,8 +55,15 @@ class PoEntry:
 
 @dataclass
 class LocalizationFix:
-    """Fix for a localization issue."""
+    """
+    Represents a proposed fix for a localization issue.
 
+    Attributes:
+        string_value (str): The string that requires localization.
+        source_file (str): The source file where the string was found.
+        line_no (int): The line number in the source file.
+        context (str): Description of where or how the string was found.
+    """
     string_value: str
     source_file: str
     line_no: int
