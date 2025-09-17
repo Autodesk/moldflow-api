@@ -68,33 +68,6 @@ def has_spdx_header(content: str) -> bool:
     first_lines = content.split('\n')[:3]
     return any('SPDX-License-Identifier' in line for line in first_lines)
 
-def add_spdx_header(file_path: str) -> bool:
-    """Add SPDX header to a file if it doesn't have one."""
-    try:
-        with open(file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
-            
-        if has_spdx_header(content):
-            print(f"Skipping {file_path} - already has SPDX header")
-            return False
-            
-        # If there's a shebang, preserve it
-        if content.startswith('#!'):
-            shebang, rest = content.split('\n', 1)
-            new_content = f"{shebang}\n{SPDX_HEADER}{rest}"
-        else:
-            new_content = SPDX_HEADER + content
-            
-        with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-            
-        print(f"Added SPDX header to {file_path}")
-        return True
-        
-    except Exception as e:
-        print(f"Error processing {file_path}: {e}", file=sys.stderr)
-        return False
-
 def find_python_files(start_dir: str, gitignore_spec: pathspec.PathSpec) -> List[str]:
     """Find all Python files in the directory tree."""
     python_files = []
@@ -110,10 +83,6 @@ def find_python_files(start_dir: str, gitignore_spec: pathspec.PathSpec) -> List
 
 def main():
     """Main entry point."""
-    parser = argparse.ArgumentParser(description="SPDX header checker/adder")
-    parser.add_argument("--check-only", action="store_true", help="Only check, do not modify files")
-    args = parser.parse_args()
-
     # Get repository root (assumes script is in scripts/ directory)
     repo_root = str(Path(__file__).parent.parent)
 
@@ -124,33 +93,23 @@ def main():
     python_files = find_python_files(repo_root, gitignore_spec)
 
     missing = []
-    modified = 0
 
-    if args.check_only:
-        for file_path in python_files:
-            try:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                if not has_spdx_header(content):
-                    missing.append(file_path)
-            except Exception as e:  # pragma: no cover
-                print(f"Error reading {file_path}: {e}", file=sys.stderr)
-        if missing:
-            print("Files missing SPDX headers:")
-            for p in missing:
-                print(f"  {p}")
-            print(f"\nChecked {len(python_files)} files; {len(missing)} missing headers")
-            return 1
-        print(f"Checked {len(python_files)} files; all have SPDX headers")
-        return 0
-    else:
-        for file_path in python_files:
-            if add_spdx_header(file_path):
-                modified += 1
-
-        print(f"\nProcessed {len(python_files)} files")
-        print(f"Added SPDX headers to {modified} files")
-        return 0
+    for file_path in python_files:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            if not has_spdx_header(content):
+                missing.append(file_path)
+        except Exception as e:  # pragma: no cover
+            print(f"Error reading {file_path}: {e}", file=sys.stderr)
+    if missing:
+        print("Files missing SPDX headers:")
+        for p in missing:
+            print(f"  {p}")
+        print(f"\nChecked {len(python_files)} files; {len(missing)} missing headers")
+        return 1
+    print(f"Checked {len(python_files)} files; all have SPDX headers")
+    return 0
 
 if __name__ == '__main__':
     main()
