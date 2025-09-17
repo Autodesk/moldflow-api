@@ -8,7 +8,6 @@ Script to add SPDX headers to Python source files.
 
 import os
 import sys
-import argparse
 from pathlib import Path
 from typing import List
 import pathspec
