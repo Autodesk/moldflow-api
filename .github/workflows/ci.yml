@@ -7,6 +7,29 @@ on:
     types: [ published ]
 
 jobs:
+  # Static checks that don't require building
+  static-checks:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: SPDX headers check
+        run: python scripts/check_spdx.py
+
+      - name: Localization check
+        run: python scripts/check_localization.py --check-only --path src/moldflow --locale-path src/moldflow/locale
+
+  # Build and test matrix
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -27,12 +50,6 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: SPDX headers check (check-only)
-        run: python scripts/check_spdx.py --check-only
-
-      - name: Localization check
-        run: python scripts/check_localization.py --check-only --path src/moldflow --locale-path src/moldflow/locale
-
       - name: Build package
         run: python run.py build --install
 
@@ -47,7 +64,6 @@ jobs:
 
   build-docs:
     runs-on: windows-2022
-    needs: test
 
     steps:
       - uses: actions/checkout@v5
