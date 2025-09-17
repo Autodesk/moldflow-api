@@ -27,8 +27,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
 
-      - name: SPDX headers check (check-only)
-        run: python scripts/check_spdx.py --check-only
+      - name: SPDX headers check
+        run: python scripts/check_spdx.py
 
       - name: Localization check
         run: python scripts/check_localization.py --check-only --path src/moldflow --locale-path src/moldflow/locale
