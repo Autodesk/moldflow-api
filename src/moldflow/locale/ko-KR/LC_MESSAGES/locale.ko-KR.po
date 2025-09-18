@@ -3,6 +3,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko-KR\n"
 
+msgid "OK"
+msgstr "확인"
+
+msgid "Cancel"
+msgstr "취소"
+
 msgid "Checking file extension {file_name}"
 msgstr "파일 확장자 {file_name} 확인 중"
 

@@ -3,6 +3,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-TW\n"
 
+msgid "OK"
+msgstr "確定"
+
+msgid "Cancel"
+msgstr "取消"
+
 msgid "Checking file extension {file_name}"
 msgstr "正在檢查檔案副檔名 {file_name}"
 

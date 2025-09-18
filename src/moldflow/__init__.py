@@ -102,9 +102,19 @@ from .common import TriClassification
 from .common import ViewModes
 from .common import UserPlotType
 
+from .message_box import (
+    MessageBox,
+    MessageBoxType,
+    MessageBoxResult,
+    MessageBoxOptions,
+    MessageBoxIcon,
+    MessageBoxModality,
+    MessageBoxDefaultButton,
+    MessageBoxReturn,
+)
+
 # Version checking and update functionality
 from .version_check import get_version, check_for_updates_on_import
-
 
 # Check for updates on import unless disabled
 check_for_updates_on_import()

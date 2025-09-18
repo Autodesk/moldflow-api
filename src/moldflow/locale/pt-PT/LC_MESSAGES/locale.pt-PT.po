@@ -3,6 +3,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: pt-PT\n"
 
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgid "Checking file extension {file_name}"
 msgstr "A verificar a extensão do ficheiro {file_name}"
 

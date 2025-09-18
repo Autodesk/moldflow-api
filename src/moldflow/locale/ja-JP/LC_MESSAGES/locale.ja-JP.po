@@ -3,6 +3,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ja-JP\n"
 
+msgid "OK"
+msgstr "OK"
+
+msgid "Cancel"
+msgstr "キャンセル"
+
 msgid "Checking file extension {file_name}"
 msgstr "ファイル拡張子 {file_name} を確認しています"
 
