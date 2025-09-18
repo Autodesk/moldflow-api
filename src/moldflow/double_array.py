@@ -35,44 +35,47 @@ class DoubleArray:
         Get the value at the specified index.
 
         Args:
-            index (int): The index of the value to get.
+            index (int): index between 0 and double_array.size-1 (inclusive).
 
         Returns:
-            float: The value at the specified index.
+            The value at the specified index.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="val")
         check_type(index, int)
         return self.double_array.Val(index)
 
-    def add_double(self, value: float) -> None:
+    def add_double(self, value: float | int) -> None:
         """
-        Add a double value to the array.
+        Adds a double value to the end of the array.
 
         Args:
-            value (float): The value to add.
+            value (float | int): The value to add.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_double")
         check_type(value, (int, float))
         self.double_array.AddDouble(value)
 
-    def to_list(self) -> list[float]:
+    def to_list(self) -> list[float | int]:
         """
         Convert the double array to a list of floats.
 
         Returns:
-            list[float]: The list of floats.
+            The list of values.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
 
         vb_array = self.double_array.ToVBSArray()
         return list(vb_array)
 
-    def from_list(self, values: list[float]) -> None:
+    def from_list(self, values: list[float | int] | tuple[float | int]) -> int:
         """
         Convert a list of floats to a double array.
 
         Args:
-            values (list[float]): The list of floats to convert.
+            values (list[float | int] | tuple[float | int]): The list of floats to convert.
+
+        Returns:
+            The number of elements added.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
 
@@ -80,7 +83,7 @@ class DoubleArray:
         for value in values:
             check_type(value, (int, float))
 
-        self.double_array.FromVBSArray(list(values))
+        return self.double_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:
@@ -88,7 +91,7 @@ class DoubleArray:
         Get the size of the array.
 
         Returns:
-            int: The size of the array.
+            The size of the array.
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="size")
         return self.double_array.Size
