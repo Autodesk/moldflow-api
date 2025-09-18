@@ -13,11 +13,14 @@ from enum import Enum, auto
 from typing import Optional, Union, Callable, TypeAlias
 from dataclasses import dataclass
 import ctypes
-from dataclasses import dataclass
 import platform
 from ctypes import windll, wintypes, byref, create_unicode_buffer, c_int, c_wchar_p, WINFUNCTYPE
 import struct
 from .i18n import get_text
+
+# Helper alias for pointer-sized integer type used by Win32 callbacks
+# pylint: disable=invalid-name
+INT_PTR = ctypes.c_void_p
 
 
 # Win32 MessageBox flags (from winuser.h)
@@ -231,7 +234,7 @@ ID_TO_RESULT = {
 
 
 @dataclass(frozen=True)
-class MessageBoxOptions:
+class MessageBoxOptions:  # pylint: disable=too-many-instance-attributes
     """
     Optional advanced options for MessageBox.
 
@@ -277,10 +280,8 @@ class MessageBoxOptions:
                 size = int(size)
             except Exception:
                 size = 9
-        if size < 6:
-            size = 6
-        if size > 24:
-            size = 24
+        # Clamp font size between sensible bounds
+        size = max(6, min(size, 24))
         object.__setattr__(self, "font_size_pt", size)
 
         # Owner HWND must be non-negative
@@ -350,37 +351,54 @@ class MessageBox:
     def info(
         cls, text: str, title: Optional[str] = None, options: Optional[MessageBoxOptions] = None
     ) -> MessageBoxResult:
-        return cls(text, MessageBoxType.INFO, title, options).show()  # type: ignore[return-value]
+        """
+        Show an informational message box with an OK button.
+        """
+        inst = cls(text, MessageBoxType.INFO, title, options)
+        return inst.show()  # type: ignore[return-value]
 
     @classmethod
     def warning(
         cls, text: str, title: Optional[str] = None, options: Optional[MessageBoxOptions] = None
     ) -> MessageBoxResult:
-        return cls(text, MessageBoxType.WARNING, title, options).show()  # type: ignore[return-value]
+        """
+        Show a warning message box with an OK button.
+        """
+        inst = cls(text, MessageBoxType.WARNING, title, options)
+        return inst.show()  # type: ignore[return-value]
 
     @classmethod
     def error(
         cls, text: str, title: Optional[str] = None, options: Optional[MessageBoxOptions] = None
     ) -> MessageBoxResult:
-        return cls(text, MessageBoxType.ERROR, title, options).show()  # type: ignore[return-value]
+        """
+        Show an error message box with an OK button.
+        """
+        inst = cls(text, MessageBoxType.ERROR, title, options)
+        return inst.show()  # type: ignore[return-value]
 
     @classmethod
     def confirm_yes_no(
         cls, text: str, title: Optional[str] = None, options: Optional[MessageBoxOptions] = None
     ) -> MessageBoxResult:
+        """
+        Show a confirmation message box with Yes/No buttons.
+        """
         return cls(text, MessageBoxType.YES_NO, title, options).show()  # type: ignore[return-value]
 
     @classmethod
-    def prompt_text(
+    def prompt_text(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         cls,
         prompt: str,
         title: Optional[str] = None,
-        *,
         default_text: Optional[str] = None,
         placeholder: Optional[str] = None,
         validator: Optional[Callable[[str], bool]] = None,
         options: Optional[MessageBoxOptions] = None,
     ) -> Optional[str]:
+        """
+        Show a text input dialog.
+        """
         opts = options or MessageBoxOptions()
         # Merge provided options with overrides for input UX
         opts = MessageBoxOptions(
@@ -402,7 +420,10 @@ class MessageBox:
         return cls(prompt, MessageBoxType.INPUT, title, opts).show()  # type: ignore[return-value]
 
     def _show_standard_dialog(self) -> MessageBoxResult:
-        from ctypes import windll, c_wchar_p, c_int
+        """
+        Show a standard Win32 MessageBox dialog and return the result.
+        """
+        # Use module-level ctypes imports to avoid reimport and name shadowing
 
         # Base type from box_type via module-level mapping dict
         base_tuple = MAPPING_MESSAGEBOX_TYPE.get(
@@ -419,8 +440,11 @@ class MessageBox:
         if self.options.default_button:
             flag, required = DEFAULT_BUTTON_TO_FLAG.get(self.options.default_button, (0, 1))
             if button_count < required:
+                # The error message is intentionally descriptive; allow a
+                # slightly longer line here rather than make it unreadable.
+                # pylint: disable=line-too-long
                 raise ValueError(
-                    f"default_button {self.options.default_button.name} requires at least {required} buttons for type {self.box_type.name}"
+                    f"default_button {self.options.default_button.name} requires >={required} buttons for {self.box_type.name}"
                 )
             u_type |= flag
 
@@ -460,6 +484,9 @@ class MessageBox:
         return MessageBoxResult.CANCEL
 
     def _show_input_dialog(self) -> Optional[str]:
+        """
+        Show a text input dialog.
+        """
         dialog = _Win32InputDialog(self.title, self.text, self.options)
         return dialog.run()
 
@@ -485,6 +512,7 @@ class _Win32InputDialog:
     WS_BORDER = WIN_WS_BORDER
 
     ES_AUTOHSCROLL = WIN_ES_AUTOHSCROLL
+    ES_PASSWORD = WIN_ES_PASSWORD
     SS_LEFT = WIN_SS_LEFT
     BS_DEFPUSHBUTTON = WIN_BS_DEFPUSHBUTTON
     BS_PUSHBUTTON = WIN_BS_PUSHBUTTON
@@ -497,24 +525,34 @@ class _Win32InputDialog:
         self.prompt = prompt
         self.options = options
         self._result_text: Optional[str] = None
+        # Template buffer is created when running the dialog; initialize attribute
+        self._template_buffer: Optional[bytes] = None
 
     def _wcs(self, s: str) -> bytes:
+        """Return a UTF-16LE encoded, null-terminated bytestring for s."""
         return s.encode("utf-16le") + b"\x00\x00"
 
     def _align_dword(self, buf: bytearray) -> None:
+        """Pad buffer until its length is a multiple of 4 (DWORD alignment)."""
         while len(buf) % 4 != 0:
             buf += b"\x00"
 
     def _pack_word(self, buf: bytearray, val: int) -> None:
+        """Pack a 16-bit unsigned value into the buffer."""
         buf += struct.pack("<H", val & 0xFFFF)
 
     def _pack_dword(self, buf: bytearray, val: int) -> None:
+        """Pack a 32-bit unsigned value into the buffer."""
         buf += struct.pack("<I", val & 0xFFFFFFFF)
 
     def _pack_short(self, buf: bytearray, val: int) -> None:
+        """Pack a 16-bit signed value into the buffer."""
         buf += struct.pack("<h", val & 0xFFFF)
 
     def _build_template(self) -> bytes:
+        # The dialog template is relatively verbose; allow pylint to accept the
+        # complexity here rather than refactor the Win32 packing code.
+        # pylint: disable=too-many-locals,too-many-statements
         # Dialog units and layout
         cx = self.options.width_dlu if self.options.width_dlu is not None else 240
         cy = self.options.height_dlu if self.options.height_dlu is not None else 70
@@ -627,6 +665,10 @@ class _Win32InputDialog:
         return bytes(buf)
 
     def run(self) -> Optional[str]:
+        """Create and run the modal dialog; return the entered text or None."""
+        # The dialog procedure and Win32 interop are inherently complex; relax
+        # a few pylint rules for this method.
+        # pylint: disable=too-many-locals,too-many-branches,too-many-statements,invalid-name
         user32 = windll.user32
         kernel32 = windll.kernel32
 
@@ -636,12 +678,12 @@ class _Win32InputDialog:
             template_bytes
         )
 
-        DLGPROC = WINFUNCTYPE(
-            wintypes.INT_PTR, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
+        dlgproc_type = WINFUNCTYPE(
+            INT_PTR, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
         )
 
-        @DLGPROC
-        def _dlgproc(hwnd, msg, wparam, lparam):
+        @dlgproc_type
+        def _dlgproc(hwnd, msg, wparam, _lparam):
             if msg == self.WM_INITDIALOG:
                 # Set focus to edit control and prefill text / placeholder
                 h_edit = user32.GetDlgItem(hwnd, self.ID_EDIT)
@@ -730,10 +772,10 @@ class _Win32InputDialog:
                     return 1
             return 0
 
-        hInstance = kernel32.GetModuleHandleW(None)
+        h_instance = kernel32.GetModuleHandleW(None)
         owner = self.options.owner_hwnd or user32.GetActiveWindow()
         res = user32.DialogBoxIndirectParamW(
-            hInstance, byref(self._template_buffer), owner, _dlgproc, 0
+            h_instance, byref(self._template_buffer), owner, _dlgproc, 0
         )
         # res is IDOK/IDCANCEL or -1 on failure
         if res == -1:

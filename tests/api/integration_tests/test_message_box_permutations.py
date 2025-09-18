@@ -1,7 +1,9 @@
+"""Integration tests for message box permutations (Windows only)."""
+
 import platform
 import threading
 import time
-from ctypes import windll, wintypes, c_wchar_p
+from ctypes import windll, c_wchar_p
 
 import pytest
 
@@ -71,6 +73,8 @@ def _iter_types_and_defaults():
 
 
 def test_message_box_permutations():
+    """Exercise combinations of types, icons, default buttons and modality."""
+
     icons = [
         None,
         MessageBoxIcon.INFORMATION,
@@ -90,16 +94,19 @@ def test_message_box_permutations():
                     title = f"Test: {box_type.name}"
                     # Auto click to allow unattended run
                     _click_dialog_button_async(title, click_id)
-                    result = MessageBox(
-                        f"{box_type.name} - {getattr(icon,'name','NONE')} - {getattr(default_button,'name','BUTTON1')} - {getattr(modality,'name','APPLICATION')}",
-                        box_type,
-                        title=title,
-                        options=opts,
-                    ).show()
+                    msg = (
+                        f"{box_type.name} - {getattr(icon, 'name', 'NONE')} - "
+                        f"{getattr(default_button, 'name', 'BUTTON1')} - "
+                        f"{getattr(modality, 'name', 'APPLICATION')}"
+                    )
+                    result = MessageBox(msg, box_type, title=title, options=opts).show()
                     assert isinstance(result, MessageBoxResult)
 
 
 def test_message_box_input_variants():
+    """
+    Exercise input dialog with various options.
+    """
     variants = [
         MessageBoxOptions(default_text="auto"),
         MessageBoxOptions(default_text="auto", is_password=True),
