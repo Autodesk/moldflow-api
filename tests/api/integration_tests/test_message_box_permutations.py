@@ -1,11 +1,14 @@
 """Integration tests for message box permutations (Windows only)."""
 
-import platform
+# These tests perform UI automation and include short-lived closures and
+# complex helper logic. Suppress a few linter warnings that are noisy for
+# this test file and do not improve correctness:
+# pylint: disable=cell-var-from-loop,unused-argument,too-many-branches,too-many-statements
+
 import threading
 import time
-from ctypes import windll, c_wchar_p
-
-import pytest
+import ctypes
+from ctypes import windll, c_wchar_p, wintypes
 
 from moldflow import (
     MessageBox,
@@ -17,12 +20,9 @@ from moldflow import (
     MessageBoxModality,
 )
 
-
-pytestmark = pytest.mark.skipif(platform.system() != "Windows", reason="Windows-only UI test")
-
-
 # Win32 constants for automation
 WM_COMMAND = 0x0111
+BM_CLICK = 0x00F5
 IDOK = 1
 IDCANCEL = 2
 IDYES = 6
@@ -38,11 +38,84 @@ def _click_dialog_button_async(dialog_title: str, button_id: int, delay_s: float
         # Wait a moment for the dialog to appear
         time.sleep(delay_s)
         # Try to find and click for up to ~5 seconds
-        for _ in range(50):
+        for _ in range(100):
             hwnd = user32.FindWindowW(None, c_wchar_p(dialog_title))
             if hwnd:
-                user32.PostMessageW(hwnd, WM_COMMAND, button_id, 0)
-                return
+                # Try to find child button control and click it directly
+                try:
+                    hbtn = user32.GetDlgItem(hwnd, button_id)
+                    if hbtn:
+                        user32.SendMessageW(hbtn, BM_CLICK, 0, 0)
+                        return
+
+                    children = []
+
+                    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+                    def _child_enum_proc(hchild, _):
+                        # Get class name
+                        cname_buf = ctypes.create_unicode_buffer(256)
+                        user32.GetClassNameW(hchild, cname_buf, 256)
+                        cname = cname_buf.value
+                        # Get text
+                        tbuf = ctypes.create_unicode_buffer(512)
+                        user32.GetWindowTextW(hchild, tbuf, 512)
+                        text = tbuf.value
+                        # Get control id
+                        try:
+                            cid = user32.GetDlgCtrlID(hchild)
+                        except Exception:
+                            cid = 0
+                        children.append((hchild, cname, text, cid))
+                        return True
+
+                    user32.EnumChildWindows(hwnd, _child_enum_proc, 0)
+
+                    # Try to click first Button child
+                    for hchild, cname, _, _ in children:
+                        if cname and cname.lower().startswith("button"):
+                            user32.SendMessageW(hchild, BM_CLICK, 0, 0)
+                            return
+
+                except Exception:
+                    # Fallback to posting WM_COMMAND
+                    try:
+                        user32.PostMessageW(hwnd, WM_COMMAND, button_id, 0)
+                        return
+                    except Exception:
+                        pass
+            else:
+                # Fallback: enumerate top-level windows and try to find one whose
+                # title contains the dialog title as a substring (more tolerant).
+                try:
+                    found = []
+
+                    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+                    def _enum_proc(h, _):
+                        buf = ctypes.create_unicode_buffer(512)
+                        user32.GetWindowTextW(h, buf, 512)
+                        txt = buf.value
+                        if txt and dialog_title in txt:
+                            found.append(h)
+                            return False  # stop enumeration
+                        return True
+
+                    user32.EnumWindows(_enum_proc, 0)
+                    if found:
+                        hwnd = found[0]
+                        try:
+                            hbtn = user32.GetDlgItem(hwnd, button_id)
+                            if hbtn:
+                                user32.SendMessageW(hbtn, BM_CLICK, 0, 0)
+                                return
+                        except Exception:
+                            try:
+                                user32.PostMessageW(hwnd, WM_COMMAND, button_id, 0)
+                                return
+                            except Exception:
+                                pass
+                except Exception:
+                    # EnumWindows may fail in some restricted contexts; ignore
+                    pass
             time.sleep(0.1)
 
     threading.Thread(target=_worker, daemon=True).start()
