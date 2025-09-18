@@ -449,9 +449,7 @@ class MessageBox:
         text = (self.text or "").strip()
         # Do not translate titles
         title = (self.title or "").strip()
-        result = windll.user32.MessageBoxW(
-            owner, c_wchar_p(text), c_wchar_p(title), c_int(u_type)
-        )
+        result = windll.user32.MessageBoxW(owner, c_wchar_p(text), c_wchar_p(title), c_int(u_type))
         if result == -1:
             err = windll.kernel32.GetLastError()
             raise ctypes.WinError(err)
@@ -570,11 +568,7 @@ class _Win32InputDialog:
         # 2) Edit control
         self._align_dword(buf)
         edit_style = (
-            self.WS_CHILD
-            | self.WS_VISIBLE
-            | self.WS_BORDER
-            | self.ES_AUTOHSCROLL
-            | self.WS_TABSTOP
+            self.WS_CHILD | self.WS_VISIBLE | self.WS_BORDER | self.ES_AUTOHSCROLL | self.WS_TABSTOP
         )
         if self.options.is_password:
             edit_style |= self.ES_PASSWORD
@@ -694,7 +688,13 @@ class _Win32InputDialog:
                         x = rect.left + (owner_cx - dlg_w) // 2
                         y = rect.top + (owner_cy - dlg_h) // 2
                         user32.SetWindowPos(
-                            hwnd, 0, x, y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE
+                            hwnd,
+                            0,
+                            x,
+                            y,
+                            0,
+                            0,
+                            WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE,
                         )
                 except Exception:
                     pass

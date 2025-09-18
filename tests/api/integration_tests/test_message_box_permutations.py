@@ -71,18 +71,31 @@ def _iter_types_and_defaults():
 
 
 def test_message_box_permutations():
-    icons = [None, MessageBoxIcon.INFORMATION, MessageBoxIcon.WARNING, MessageBoxIcon.ERROR, MessageBoxIcon.QUESTION]
+    icons = [
+        None,
+        MessageBoxIcon.INFORMATION,
+        MessageBoxIcon.WARNING,
+        MessageBoxIcon.ERROR,
+        MessageBoxIcon.QUESTION,
+    ]
     modalities = [None, MessageBoxModality.TASK, MessageBoxModality.SYSTEM]
 
     for box_type, default_buttons, click_id in _iter_types_and_defaults():
         for icon in icons:
             for default_button in default_buttons:
                 for modality in modalities:
-                    opts = MessageBoxOptions(icon=icon, default_button=default_button, modality=modality)
+                    opts = MessageBoxOptions(
+                        icon=icon, default_button=default_button, modality=modality
+                    )
                     title = f"Test: {box_type.name}"
                     # Auto click to allow unattended run
                     _click_dialog_button_async(title, click_id)
-                    result = MessageBox(f"{box_type.name} - {getattr(icon,'name','NONE')} - {getattr(default_button,'name','BUTTON1')} - {getattr(modality,'name','APPLICATION')}", box_type, title=title, options=opts).show()
+                    result = MessageBox(
+                        f"{box_type.name} - {getattr(icon,'name','NONE')} - {getattr(default_button,'name','BUTTON1')} - {getattr(modality,'name','APPLICATION')}",
+                        box_type,
+                        title=title,
+                        options=opts,
+                    ).show()
                     assert isinstance(result, MessageBoxResult)
 
 
@@ -96,5 +109,7 @@ def test_message_box_input_variants():
     for i, opts in enumerate(variants, 1):
         title = f"Test: INPUT #{i}"
         _click_dialog_button_async(title, IDOK)
-        value = MessageBox("Enter sample text", MessageBoxType.INPUT, title=title, options=opts).show()
+        value = MessageBox(
+            "Enter sample text", MessageBoxType.INPUT, title=title, options=opts
+        ).show()
         assert isinstance(value, (str, type(None)))
