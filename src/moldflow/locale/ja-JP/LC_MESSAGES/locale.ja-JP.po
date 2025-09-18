@@ -3,9 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ja-JP\n"
 
-msgid "OK"
-msgstr "OK"
-
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -77,6 +74,9 @@ msgstr "無効な値: {reason}"
 
 msgid "Logger was not setup"
 msgstr "ロガーが設定されていませんでした"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "Save Error"
 msgstr "保存エラー"

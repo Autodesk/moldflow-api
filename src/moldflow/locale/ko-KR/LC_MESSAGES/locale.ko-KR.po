@@ -3,9 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko-KR\n"
 
-msgid "OK"
-msgstr "확인"
-
 msgid "Cancel"
 msgstr "취소"
 
@@ -77,6 +74,9 @@ msgstr "잘못된 값: {reason}"
 
 msgid "Logger was not setup"
 msgstr "로거가 설정되지 않았습니다"
+
+msgid "OK"
+msgstr "확인"
 
 msgid "Save Error"
 msgstr "저장 오류"

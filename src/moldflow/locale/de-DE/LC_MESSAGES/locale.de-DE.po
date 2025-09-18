@@ -3,6 +3,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: de-DE\n"
 
+msgid "Cancel"
+msgstr "Abbrechen"
+
 msgid "Checking file extension {file_name}"
 msgstr "Überprüfen der Dateierweiterung {file_name}"
 
@@ -71,6 +74,9 @@ msgstr "Ungültiger Wert: {reason}"
 
 msgid "Logger was not setup"
 msgstr "Logger wurde nicht eingerichtet"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "Save Error"
 msgstr "Speicherfehler"
@@ -155,9 +161,3 @@ msgstr "{value} hat keine gültige Dateierweiterung; muss {extensions} sein"
 
 msgid "{value} is not a valid {enum_name}"
 msgstr "{value} ist kein gültiges {enum_name}"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Cancel"
-msgstr "Abbrechen"

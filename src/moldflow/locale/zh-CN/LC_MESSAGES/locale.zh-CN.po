@@ -3,9 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-CN\n"
 
-msgid "OK"
-msgstr "确定"
-
 msgid "Cancel"
 msgstr "取消"
 
@@ -77,6 +74,9 @@ msgstr "无效的值：{reason}"
 
 msgid "Logger was not setup"
 msgstr "没有设置记录器"
+
+msgid "OK"
+msgstr "确定"
 
 msgid "Save Error"
 msgstr "保存错误"

@@ -3,9 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: it-IT\n"
 
-msgid "OK"
-msgstr "OK"
-
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -77,6 +74,9 @@ msgstr "Valore non valido: {reason}"
 
 msgid "Logger was not setup"
 msgstr "Logger non è stato configurato"
+
+msgid "OK"
+msgstr "OK"
 
 msgid "Save Error"
 msgstr "Errore di salvataggio"
