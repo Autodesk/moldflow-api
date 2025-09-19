@@ -8,11 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial public release
-- Python API wrapper for Moldflow Synergy
-- Comprehensive test suite
-- Documentation with examples
-- CI/CD pipeline for automated testing and publishing
+- Added convenience class for showing message boxes and text input dialogs via Win32
 
 ### Changed
 - N/A
