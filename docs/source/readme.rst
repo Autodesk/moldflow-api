@@ -480,6 +480,268 @@ Iterate Plots and Export Overlays
 More Advanced Examples
 ======================
 
+Derived Results
+---------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import UserPlotType, TransformScalarOperations
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    # ABS Temperature:K = Bulk temperature:13 + 273
+    ds_id = pm.find_dataset_id_by_name("Bulk temperature")
+    all_times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, all_times)
+    target_time = 13.0
+    closest_time = min(all_times.to_list(), key=lambda t: abs(t - target_time))
+    indp = synergy.create_double_array(); indp.add_double(closest_time)
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    pm.get_scalar_data(ds_id, indp, ent, vals)
+
+    dt.scalar(ent, vals, TransformScalarOperations.ADD, 273.0, ent, vals)
+
+    up = pm.create_user_plot()
+    up.set_name("ABS Temperature")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_dept_unit_name("K")
+    up.set_scalar_data(ent, vals)
+    up.build()
+
+Vector difference with absolute value
+-------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformOperations, TransformFunctions, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    name = "Average velocity"  # 3-component vector
+    ds_id = pm.find_dataset_id_by_name(name)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    t1, t2 = 1.1, 2.0
+    c1 = min(times.to_list(), key=lambda t: abs(t - t1))
+    c2 = min(times.to_list(), key=lambda t: abs(t - t2))
+
+    def get_vec_at(t):
+        indp = synergy.create_double_array(); indp.add_double(t)
+        ent = synergy.create_integer_array()
+        vx = synergy.create_double_array(); vy = synergy.create_double_array(); vz = synergy.create_double_array()
+        pm.get_vector_data(ds_id, indp, ent, vx, vy, vz)
+        return ent, (vx, vy, vz)
+
+    ent1, (v1x, v1y, v1z) = get_vec_at(c1)
+    ent2, (v2x, v2y, v2z) = get_vec_at(c2)
+
+    vdx = synergy.create_double_array(); vdy = synergy.create_double_array(); vdz = synergy.create_double_array()
+    for a, b, out in [(v1x, v2x, vdx), (v1y, v2y, vdy), (v1z, v2z, vdz)]:
+        dt.op(ent1, a, TransformOperations.SUBTRACT, ent2, b, ent1, out)
+        dt.func(TransformFunctions.ABSOLUTE, ent1, out, ent1, out)
+
+    up = pm.create_user_plot()
+    up.set_name("Difference in Velocity")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_vector_as_displacement(False)
+    up.set_dept_unit_name("m/s")
+    up.set_vector_data(ent1, vdx, vdy, vdz)
+    up.build()
+
+Use diagnostics as inputs
+--------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformOperations, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    diag = synergy.diagnosis_manager
+    dt = synergy.data_transform
+
+    ent_d = synergy.create_integer_array()
+    thk = synergy.create_double_array()
+    count = diag.get_thickness_diagnosis(0.0, 0.0, False, ent_d, thk)
+    if count <= 0:
+        raise RuntimeError("No thickness diagnostic data")
+
+    flf_id = pm.find_dataset_id_by_name("Frozen layer fraction (end of filling)")
+    ent_f = synergy.create_integer_array()
+    flf = synergy.create_double_array()
+    pm.get_scalar_data(flf_id, None, ent_f, flf)
+
+    out = synergy.create_double_array()
+    dt.op(ent_d, thk, TransformOperations.MULTIPLY, ent_f, flf, ent_d, out)
+
+    up = pm.create_user_plot()
+    up.set_name("Frozen layer (mm)")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_dept_unit_name("mm")
+    up.set_scalar_data(ent_d, out)
+    up.build()
+
+Operate on current plot
+-----------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformFunctions, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    viewer = synergy.viewer
+    dt = synergy.data_transform
+
+    active = viewer.active_plot
+    if active is None:
+        raise RuntimeError("No active plot")
+    ds_id = active.data_id
+
+    cols = pm.get_data_nb_components(ds_id)
+    dtype = pm.get_data_type(ds_id)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    indp = None
+    if times.size > 0:
+        indp = synergy.create_double_array(); indp.add_double(times.to_list()[0])
+
+    ent = synergy.create_integer_array()
+    arrs = [synergy.create_double_array() for _ in range(max(cols, 1))]
+
+    if cols == 1:
+        pm.get_scalar_data(ds_id, indp, ent, arrs[0])
+    elif cols == 3:
+        pm.get_vector_data(ds_id, indp, ent, arrs[0], arrs[1], arrs[2])
+    elif cols == 6:
+        pm.get_tensor_data(ds_id, indp, ent, *arrs)
+    else:
+        raise RuntimeError("Unsupported component count")
+
+    for a in arrs[:cols]:
+        dt.func(TransformFunctions.ABSOLUTE, ent, a, ent, a)
+
+    up = pm.create_user_plot()
+    up.set_name("ABS of current plot")
+    up.set_data_type(UserPlotType.ELEMENT_DATA if dtype == "ELDT" else UserPlotType.NODE_DATA)
+    up.set_vector_as_displacement(dtype == "NDDT")
+    if cols == 1:
+        up.set_scalar_data(ent, arrs[0])
+    elif cols == 3:
+        up.set_vector_data(ent, arrs[0], arrs[1], arrs[2])
+    elif cols == 6:
+        up.set_tensor_data(ent, *arrs[:6])
+    up.build()
+
+Normalize by max at a time
+--------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformScalarOperations, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    name = "Pressure"
+    ds_id = pm.find_dataset_id_by_name(name)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    target_time = 3.5
+    closest = min(times.to_list(), key=lambda t: abs(t - target_time))
+    indp = synergy.create_double_array(); indp.add_double(closest)
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    pm.get_scalar_data(ds_id, indp, ent, vals)
+
+    max_v = max(vals.to_list())
+    out = synergy.create_double_array()
+    dt.scalar(ent, vals, TransformScalarOperations.DIVIDE, max_v, ent, out)
+
+    up = pm.create_user_plot()
+    up.set_name("Pre/Max")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_dept_unit_name("%")
+    up.set_scalar_data(ent, out)
+    up.build()
+
+Average/min/max diagnostics to console
+--------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    diag = synergy.diagnosis_manager
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    count = diag.get_aspect_ratio_diagnosis(0.0, 0.0, True, False, ent, vals)
+    if count > 0:
+        data = vals.to_list()
+        ave = sum(data) / len(data)
+        print(f"Average aspect ratio: {ave:.3f}")
+
+Entity selection strings
+------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    el = synergy.create_entity_list()
+    el.select_from_string("N1:2 N5 N8:9")
+    print(el.size)
+    print(el.convert_to_string())
+
+Save/load intermediate data
+---------------------------
+
+.. code-block:: python
+
+    def save_tab_file(cols, dtype, ent_arr, dbl_arrs, path):
+        ids = ent_arr.to_list()
+        comps = [a.to_list() for a in dbl_arrs[:cols]]
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(f"{cols}\t{dtype}\t{len(ids)}\n")
+            for i, eid in enumerate(ids):
+                row = "\t".join([str(eid)] + [str(comps[c][i]) for c in range(cols)])
+                f.write(row + "\n")
+
+    def load_tab_file(path, synergy):
+        with open(path, "r", encoding="utf-8") as f:
+            header = f.readline().rstrip("\n").split("\t")
+            cols, dtype, rows = int(header[0]), header[1], int(header[2])
+            ids, comps = [], [[] for _ in range(cols)]
+            for _ in range(rows):
+                parts = f.readline().rstrip("\n").split("\t")
+                ids.append(int(parts[0]))
+                for c in range(cols):
+                    comps[c].append(float(parts[c+1]))
+        ent = synergy.create_integer_array(); ent.from_list(ids)
+        dbls = [synergy.create_double_array() for _ in range(6)]
+        for c in range(cols):
+            dbls[c].from_list(comps[c])
+        return cols, dtype, ent, dbls
+
 Configure Import Options Before CAD Import
 ------------------------------------------
 
@@ -759,6 +1021,350 @@ Runner Generator
     rg.sprue_diameter = 6.0; rg.sprue_taper_angle = 2.0
     ok = rg.generate()
     print(f"Runner generated: {ok}")
+
+Coolant Endpoints
+-----------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    modeler = synergy.modeler
+    proped = synergy.property_editor
+
+    # Property set/type and fields (from Synergy definitions)
+    COOLANT_ENDPOINT_PROP_TYPE = 50520  # raw ID allowed by the API
+    FIELD_ENDPOINT_NAME = 71350
+    FIELD_INLET_NDBC = 71351
+    FIELD_OUTLET_NDBC = 71352
+
+    # Find next free property id for this type
+    next_prop_id = 1
+    while True:
+        existing = modeler.find_property(COOLANT_ENDPOINT_PROP_TYPE, next_prop_id)
+        if existing is None:
+            break
+        next_prop_id += 1
+
+    def create_coolant_endpoint(name: str, inlet_ndbc_index: int | float, outlet_ndbc_index: int | float):
+        nonlocal next_prop_id
+        name = name or "Default"
+
+        prop = proped.create_property(COOLANT_ENDPOINT_PROP_TYPE, next_prop_id, True)
+        prop.set_field_description(FIELD_ENDPOINT_NAME, name)
+
+        d_in = synergy.create_double_array(); d_in.add_double(float(inlet_ndbc_index))
+        prop.set_field_values(FIELD_INLET_NDBC, d_in)
+
+        d_out = synergy.create_double_array(); d_out.add_double(float(outlet_ndbc_index))
+        prop.set_field_values(FIELD_OUTLET_NDBC, d_out)
+
+        proped.commit_changes("")
+        next_prop_id += 1
+
+    # Example: create multiple endpoints (name, inlet_ndbc, outlet_ndbc)
+    endpoints = [
+        ("EP-1", 101, 201),
+        ("EP-2", 102, 202),
+    ]
+    for nm, inlet_idx, outlet_idx in endpoints:
+        create_coolant_endpoint(nm, inlet_idx, outlet_idx)
+
+Coolant inlet nodes and NDBC at XYZ
+-----------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    sd = synergy.study_doc
+    modeler = synergy.modeler
+    proped = synergy.property_editor
+    bc = synergy.boundary_conditions
+
+    # Property set depends on mesh type (dual-domain vs 3D), mirroring VBScript logic
+    COOLANT_PROP_SET = 40020
+    if sd.mesh_type == "3D":
+        COOLANT_PROP_SET = 40021
+
+    # Find first free property id for this type
+    next_id = 1
+    while True:
+        if modeler.find_property(COOLANT_PROP_SET, next_id) is None:
+            break
+        next_id += 1
+
+    # Create property set and assign default coolant (ID: 20010, index 1) to field 20022
+    prop = proped.create_property(COOLANT_PROP_SET, next_id, True)
+    d = synergy.create_double_array(); d.from_list([20010.0, 1.0])
+    prop.set_field_values(20022, d)
+    proped.commit_changes("")
+
+    # Points are provided as (x,y,z)
+    points = [
+        (0.0, 0.0, 0.0),
+        (10.0, 0.0, 0.0),
+    ]
+
+    for (x, y, z) in points:
+        # Create node at XYZ
+        v = synergy.create_vector(); v.set_xyz(x, y, z)
+        nodes = modeler.create_node_by_xyz(v)
+
+        # Create NDBC with a direction vector (matches VB: -1, 0, 0)
+        n = synergy.create_vector(); n.set_xyz(-1.0, 0.0, 0.0)
+        bc.create_ndbc(nodes, n, COOLANT_PROP_SET, prop)
+
+    proped.commit_changes("")
+
+Export cooling circuits to CAD-like lines
+-----------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    sd = synergy.study_doc
+    proj = synergy.project
+
+    # Traverse coolant circuits from NDBC nodes through 1D beams, no branching assumed
+    def iterate_nodes():
+        node = sd.get_first_node()
+        while node:
+            yield node
+            node = sd.get_next_node(node)
+
+    def node_label(ent):
+        # StudyDoc entity wrappers can be converted to string via convert_to_string()
+        # Expected format like "N123"; strip leading letter(s)
+        s = ent.convert_to_string()
+        return int("".join(ch for ch in s if ch.isdigit()))
+
+    # Build a map of node label -> coords and connected 1D beams
+    coords = {}
+    for n in iterate_nodes():
+        v = sd.get_node_coord(n)
+        coords[node_label(n)] = (v.x, v.y, v.z)
+
+    # Gather 1D elements (beams) with their two node labels
+    beams = []
+    b = sd.get_first_beam()
+    while b:
+        nodes = sd.get_elem_nodes(b)
+        # nodes is an EntList of two node entities
+        # Convert to two node labels
+        labels = []
+        n_it = sd.get_first_node()  # reuse API to iterate nodes in EntList
+        # Simpler: select_from_string on the elem nodes list and convert
+        labels_str = nodes.convert_to_string().split()
+        for s in labels_str:
+            if s and (s[0] in ("N", "n")):
+                labels.append(int(s[1:]))
+        if len(labels) == 2:
+            beams.append(tuple(labels))
+        b = sd.get_next_beam(b)
+
+    # Helper to find next node in a chain given current and visited
+    from collections import defaultdict
+    adjacency = defaultdict(list)
+    for a, b in beams:
+        adjacency[a].append(b)
+        adjacency[b].append(a)
+
+    # Find simple paths per coolant circuit using NDBC starts (property type filtered externally if needed)
+    # For a minimal example, treat any node with degree 1 as an endpoint to trace paths
+    endpoints = [n for n, nbrs in adjacency.items() if len(nbrs) == 1]
+    visited_nodes = set()
+    paths = []
+    for start in endpoints:
+        if start in visited_nodes:
+            continue
+        path = [start]
+        visited_nodes.add(start)
+        prev = -1
+        cur = start
+        while True:
+            nxts = [x for x in adjacency[cur] if x != prev]
+            nxt = None
+            for cand in nxts:
+                if cand not in visited_nodes:
+                    nxt = cand
+                    break
+            if nxt is None:
+                break
+            path.append(nxt)
+            visited_nodes.add(nxt)
+            prev, cur = cur, nxt
+        if len(path) > 1:
+            paths.append(path)
+
+    # Write a simple DXF-like polyline per path (pure text, not invoking external beam2cad)
+    # Coordinates are exported in millimeters as in the VB example
+    def write_polylines_to_dxf(paths, coords, out_path):
+        def mm(x):
+            return x * 1000.0
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write("0\nSECTION\n2\nENTITIES\n")
+            for path in paths:
+                f.write("0\nPOLYLINE\n8\nCOOLING\n66\n1\n70\n0\n")
+                for nlbl in path:
+                    x, y, z = coords.get(nlbl, (0.0, 0.0, 0.0))
+                    f.write("0\nVERTEX\n8\nCOOLING\n10\n{:.6f}\n20\n{:.6f}\n30\n{:.6f}\n".format(mm(x), mm(y), mm(z)))
+                f.write("0\nSEQEND\n")
+            f.write("0\nENDSEC\n0\nEOF\n")
+
+    # Choose output location under the project path
+    project = synergy.project
+    base = project.path
+    out_file = base + "\\cooling_channels.dxf"
+    write_polylines_to_dxf(paths, coords, out_file)
+    print(f"Cooling channels exported: {out_file}")
+
+Build PowerPoint Report (using python-pptx)
+-------------------------------------------
+
+This example emulates a report workflow directly from Python, using python-pptx to author a PPTX. See python-pptx on PyPI: https://pypi.org/project/python-pptx
+
+.. code-block:: python
+
+    import os
+    import tempfile
+    from moldflow import Synergy
+    from moldflow.common import StandardViews
+
+    # pip install python-pptx
+    from pptx import Presentation
+    from pptx.util import Inches, Pt
+
+    synergy = Synergy()
+    sd = synergy.study_doc
+    pm = synergy.plot_manager
+    viewer = synergy.viewer
+    project = synergy.project
+
+    def capture_plot_image(plot, orientation: str | None, width_px=1600, height_px=900) -> str:
+        if orientation and orientation.upper() != "CURRENT":
+            mapping = {
+                "ISOMETRIC": StandardViews.ISOMETRIC,
+                "FRONT": StandardViews.FRONT,
+                "RIGHT": StandardViews.RIGHT,
+                "LEFT": StandardViews.LEFT,
+                "TOP": StandardViews.TOP,
+                "BACK": StandardViews.BACK,
+            }
+            sv = mapping.get(orientation.upper())
+            if sv is not None:
+                viewer.go_to_standard_view(sv)
+            viewer.fit()
+
+        tmp = tempfile.NamedTemporaryFile(prefix="mf_plot_", suffix=".png", delete=False)
+        tmp.close()
+        viewer.save_image(tmp.name, x=width_px, y=height_px, result=True, legend=True, axis=False)
+        return tmp.name
+
+    prs = Presentation()
+    title_layout = prs.slide_layouts[0]
+    title_only_layout = prs.slide_layouts[5]
+
+    def add_title(slide, text: str):
+        if slide.shapes.title is not None:
+            slide.shapes.title.text = text
+            slide.shapes.title.text_frame.paragraphs[0].font.size = Pt(28)
+
+    def add_picture_centered(slide, image_path: str, max_width_in=10.0, top_in=1.5):
+        pic = slide.shapes.add_picture(image_path, Inches(0), Inches(top_in))
+        page_w = prs.slide_width
+        max_w = Inches(max_width_in)
+        if pic.width > max_w:
+            scale = max_w / pic.width
+            pic.width = int(pic.width * scale)
+            pic.height = int(pic.height * scale)
+        pic.left = int((page_w - pic.width) / 2)
+        return pic
+
+    slide = prs.slides.add_slide(title_layout)
+    add_title(slide, f"Report: {sd.study_name}")
+    if slide.placeholders and len(slide.placeholders) > 1:
+        slide.placeholders[1].text = f"Project: {project.path}"
+
+    geo_slide = prs.slides.add_slide(title_only_layout)
+    add_title(geo_slide, "Geometry Overview")
+    viewer.reset(); viewer.go_to_standard_view(StandardViews.ISOMETRIC); viewer.fit()
+    geo_img = capture_plot_image(plot=None, orientation="CURRENT")
+    add_picture_centered(geo_slide, geo_img)
+
+    diag = synergy.diagnosis_manager
+    summary = diag.get_mesh_summary(element_only=False)
+    mesh_slide = prs.slides.add_slide(title_only_layout)
+    add_title(mesh_slide, "Mesh Summary")
+    tf = mesh_slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(3)).text_frame
+    tf.word_wrap = True
+    lines = [
+        f"Nodes: {summary.nodes_count}",
+        f"Triangles: {summary.triangles_count}",
+        f"Tetras: {summary.tetras_count}",
+        f"Beams: {summary.beams_count}",
+        f"AspectRatio avg/min/max: {summary.ave_aspect_ratio:.3f} / {summary.min_aspect_ratio:.3f} / {summary.max_aspect_ratio:.3f}",
+    ]
+    for i, line in enumerate(lines):
+        p = tf.add_paragraph() if i else tf.paragraphs[0]
+        p.text = line
+        p.font.size = Pt(16)
+
+    def add_plot_slide(plot_obj, title: str, orientation: str = "ISOMETRIC"):
+        slide = prs.slides.add_slide(title_only_layout)
+        add_title(slide, title)
+        viewer.show_plot(plot_obj)
+        img = capture_plot_image(plot_obj, orientation)
+        add_picture_centered(slide, img)
+        try:
+            os.remove(img)
+        except Exception:
+            pass
+
+    def add_plot_four_views(plot_obj, title: str):
+        slide = prs.slides.add_slide(title_only_layout)
+        add_title(slide, f"{title} - Four Views")
+        views = ["ISOMETRIC", "FRONT", "LEFT", "TOP"]
+        cols = 2
+        x0, y0 = Inches(0.7), Inches(1.3)
+        cell_w, cell_h = Inches(4.5), Inches(3.2)
+        viewer.show_plot(plot_obj)
+        for idx, v in enumerate(views):
+            img = capture_plot_image(plot_obj, v, width_px=1200, height_px=800)
+            col = idx % cols
+            row = idx // cols
+            left = x0 + col * (cell_w + Inches(0.2))
+            top = y0 + row * (cell_h + Inches(0.2))
+            pic = slide.shapes.add_picture(img, left, top)
+            if pic.width > cell_w:
+                scale = cell_w / pic.width
+                pic.width = int(pic.width * scale)
+                pic.height = int(pic.height * scale)
+            if pic.height > cell_h:
+                scale = cell_h / pic.height
+                pic.width = int(pic.width * scale)
+                pic.height = int(pic.height * scale)
+            try:
+                os.remove(img)
+            except Exception:
+                pass
+
+    plot = pm.get_first_plot(); count = 0
+    while plot:
+        name = plot.name
+        add_plot_slide(plot, name, orientation="ISOMETRIC")
+        if count < 2:
+            add_plot_four_views(plot, name)
+        plot = pm.get_next_plot(plot)
+        count += 1
+
+    out_path = os.path.join(project.path, f"{os.path.splitext(sd.study_name)[0]}_report.pptx")
+    prs.save(out_path)
+    print(f"Report saved: {out_path}")
 
 Study Document
 --------------
