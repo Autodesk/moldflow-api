@@ -18,6 +18,7 @@ from ctypes import windll, wintypes, byref, create_unicode_buffer, c_int, c_wcha
 import signal
 import struct
 from .i18n import get_text
+from .logger import get_logger
 
 # This module intentionally contains a large amount of Windows interop glue
 # and UI layout code.
@@ -328,7 +329,10 @@ class MessageBoxOptions:  # pylint: disable=too-many-instance-attributes
         if not isinstance(size, int):
             try:
                 size = int(size)
-            except Exception:
+            except Exception as exc:
+                logger = get_logger("message_box")
+                if logger:
+                    logger.debug("Font size parse failed; defaulting to 9: %s", exc)
                 size = 9
         # Clamp font size between sensible bounds
         size = max(6, min(size, 24))
@@ -752,8 +756,10 @@ class _Win32InputDialog:
                 wintypes.LPARAM,
             ]
             user32.RegisterClassW.restype = wintypes.ATOM
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Win32 prototype binding failed: %s", exc)
 
         # Register window class once
         class_name = "MF_InputDialogWindow"
@@ -782,8 +788,10 @@ class _Win32InputDialog:
                         # late WM_COMMAND or automation posts to drain safely.
                         try:
                             inst._on_destroy()
-                        except Exception:
-                            pass
+                        except Exception as exc:
+                            logger = get_logger("message_box")
+                            if logger:
+                                logger.debug("_on_destroy raised: %s", exc)
                     return 0
                 if msg == 0x0082:  # WM_NCDESTROY
                     try:
@@ -792,8 +800,10 @@ class _Win32InputDialog:
                         _Win32InputDialog._hwnd_to_inst.pop(hwnd, None)
                         # Ensure the modal loop unblocks even if no further messages arrive
                         user32.PostQuitMessage(0)
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        logger = get_logger("message_box")
+                        if logger:
+                            logger.debug("WM_NCDESTROY cleanup failed: %s", exc)
                     return 0
                 if inst is None:
                     return user32.DefWindowProcW(hwnd, msg, wparam, lparam)
@@ -804,8 +814,10 @@ class _Win32InputDialog:
                     # Make label background match dialog background for a flat look
                     try:
                         windll.gdi32.SetBkMode(wparam, 1)  # TRANSPARENT
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        logger = get_logger("message_box")
+                        if logger:
+                            logger.debug("SetBkMode transparent failed: %s", exc)
                     return getattr(_Win32InputDialog, "_bg_brush", 0)
                 if msg == _Win32InputDialog.WM_COMMAND:
                     cid = wparam & 0xFFFF
@@ -856,8 +868,10 @@ class _Win32InputDialog:
                 user32.LoadCursorW.restype = wintypes.HCURSOR
                 # Second parameter is MAKEINTRESOURCE on system cursors; accept as void*
                 user32.LoadCursorW.argtypes = [wintypes.HINSTANCE, ctypes.c_void_p]
-            except Exception:
-                pass
+            except Exception as exc:
+                logger = get_logger("message_box")
+                if logger:
+                    logger.debug("RegisterClassEx/LoadCursor prototype bind failed: %s", exc)
 
             hInstance = kernel32.GetModuleHandleW(None)
             wcx = WNDCLASSEX()
@@ -887,8 +901,11 @@ class _Win32InputDialog:
             # Cache background brush so STATIC controls can paint with same bg
             try:
                 _Win32InputDialog._bg_brush = int(wcx.hbrBackground)  # type: ignore[attr-defined]
-            except Exception:
+            except Exception as exc:
                 _Win32InputDialog._bg_brush = 0  # type: ignore[attr-defined]
+                logger = get_logger("message_box")
+                if logger:
+                    logger.debug("Caching bg brush failed: %s", exc)
 
         # Create window
         style = (
@@ -953,14 +970,18 @@ class _Win32InputDialog:
         def _sigint_handler(_signum, _frame):
             try:
                 user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
-            except Exception:
-                pass
+            except Exception as exc:
+                logger = get_logger("message_box")
+                if logger:
+                    logger.debug("Posting WM_CLOSE on SIGINT failed: %s", exc)
 
         try:
             self._prev_sigint = signal.getsignal(signal.SIGINT)  # type: ignore[attr-defined]
             signal.signal(signal.SIGINT, _sigint_handler)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Setting SIGINT handler failed: %s", exc)
 
         # Native console control handler (fires immediately even while Python blocks)
         try:
@@ -970,16 +991,20 @@ class _Win32InputDialog:
             def _console_ctrl_handler(_ctrl_type):  # CTRL_C_EVENT, CTRL_BREAK_EVENT, etc.
                 try:
                     user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
-                except Exception:
-                    pass
+                except Exception as exc:
+                    logger = get_logger("message_box")
+                    if logger:
+                        logger.debug("Posting WM_CLOSE on console control failed: %s", exc)
                 return True
 
             kernel32.SetConsoleCtrlHandler.restype = wintypes.BOOL
             kernel32.SetConsoleCtrlHandler.argtypes = [HANDLER_ROUTINE, wintypes.BOOL]
             kernel32.SetConsoleCtrlHandler(_console_ctrl_handler, True)
             self._console_ctrl_handler = _console_ctrl_handler  # type: ignore[attr-defined]
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Setting console control handler failed: %s", exc)
 
         # Create child controls
         self.h_static = user32.CreateWindowExW(  # type: ignore[attr-defined]
@@ -1190,8 +1215,10 @@ class _Win32InputDialog:
                             gdi32.SelectObject(hdc_static, prev2)
                     finally:
                         user32.ReleaseDC(self.h_static, hdc_static)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Applying default GUI font failed: %s", exc)
 
         # Defaults
         if self.options.default_text:
@@ -1201,8 +1228,10 @@ class _Win32InputDialog:
                 user32.SendMessageW(
                     self.h_edit, WIN_EM_SETCUEBANNER, 1, c_wchar_p(self.options.placeholder)
                 )
-            except Exception:
-                pass
+            except Exception as exc:
+                logger = get_logger("message_box")
+                if logger:
+                    logger.debug("Setting placeholder text failed: %s", exc)
         if self.options.char_limit is not None:
             user32.SendMessageW(self.h_edit, WIN_EM_LIMITTEXT, self.options.char_limit, 0)
 
@@ -1225,14 +1254,18 @@ class _Win32InputDialog:
                 user32.SetWindowPos(
                     hwnd, 0, x, y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE
                 )
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Centering dialog over owner failed: %s", exc)
 
         user32.ShowWindow(hwnd, 5)  # SW_SHOW
         try:
             user32.UpdateWindow(hwnd)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("UpdateWindow failed: %s", exc)
         if self.h_edit:
             user32.SetFocus(self.h_edit)
 
@@ -1256,15 +1289,19 @@ class _Win32InputDialog:
             prev = getattr(self, "_prev_sigint", None)
             if prev is not None:
                 signal.signal(signal.SIGINT, prev)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Restoring SIGINT handler failed: %s", exc)
         # Remove native console handler
         try:
             handler = getattr(self, "_console_ctrl_handler", None)
             if handler is not None:
                 kernel32.SetConsoleCtrlHandler(handler, False)
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Removing console control handler failed: %s", exc)
         return self._result_text
 
     # Helper methods for WNDPROC
@@ -1320,8 +1357,10 @@ class _Win32InputDialog:
             btn_y = edit_y + cur_edit_h + spacing * 2
             user32.SetWindowPos(self.h_ok, 0, ok_x, btn_y, btn_w, btn_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
             user32.SetWindowPos(self.h_cancel, 0, cancel_x, btn_y, btn_w, btn_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
-        except Exception:
-            pass
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Resize reflow failed: %s", exc)
 
     def _validate_live(self) -> None:
         user32 = windll.user32
@@ -1330,6 +1369,9 @@ class _Win32InputDialog:
         user32.GetWindowTextW(self.h_edit, buf, length + 1)  # type: ignore[attr-defined]
         try:
             is_valid = bool(self.options.validator(buf.value)) if self.options.validator else True
-        except Exception:
+        except Exception as exc:
+            logger = get_logger("message_box")
+            if logger:
+                logger.debug("Validator raised exception: %s", exc)
             is_valid = True
         user32.EnableWindow(self.h_ok, wintypes.BOOL(1 if is_valid else 0))  # type: ignore[attr-defined]
