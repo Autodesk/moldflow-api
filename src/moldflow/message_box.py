@@ -678,6 +678,8 @@ class _Win32InputDialog:
         self._pack_word(buf, 0)  # empty text
         self._pack_word(buf, 0)  # no extra data
 
+        _ = get_text()
+
         # 3) OK button (default)
         self._align_dword(buf)
         self._pack_dword(
@@ -693,7 +695,6 @@ class _Win32InputDialog:
         self._pack_short(buf, btn_y)
         self._pack_short(buf, btn_w)
         self._pack_short(buf, btn_h)
-        _ = get_text()
         self._pack_word(buf, self.ID_OK)
         self._pack_word(buf, 0xFFFF)
         self._pack_word(buf, WIN_CLASS_BUTTON)
