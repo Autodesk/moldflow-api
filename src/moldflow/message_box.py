@@ -753,7 +753,9 @@ class _Win32InputDialog:
         # Register window class once
         class_name = "MF_InputDialogWindow"
         if not hasattr(_Win32InputDialog, "_class_registered"):
-            WNDPROC = WINFUNCTYPE(wintypes.LRESULT, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
+            WNDPROC = WINFUNCTYPE(
+                wintypes.LRESULT, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
+            )
 
             @WNDPROC
             def _wndproc(hwnd, msg, wparam, lparam):
@@ -807,7 +809,11 @@ class _Win32InputDialog:
                     # stale messages after controls are destroyed.
                     if lparam not in (inst.h_edit, inst.h_ok, inst.h_cancel):
                         return 0
-                    if notify == WIN_EN_CHANGE and inst.options.validator is not None and lparam == inst.h_edit:
+                    if (
+                        notify == WIN_EN_CHANGE
+                        and inst.options.validator is not None
+                        and lparam == inst.h_edit
+                    ):
                         inst._validate_live()
                         return 0
                     if cid == inst.ID_OK:
@@ -874,7 +880,14 @@ class _Win32InputDialog:
                 _Win32InputDialog._bg_brush = 0  # type: ignore[attr-defined]
 
         # Create window
-        style = self.WS_CAPTION | self.WS_SYSMENU | WIN_WS_POPUP | WIN_WS_THICKFRAME | WIN_WS_MINIMIZEBOX | WIN_WS_MAXIMIZEBOX
+        style = (
+            self.WS_CAPTION
+            | self.WS_SYSMENU
+            | WIN_WS_POPUP
+            | WIN_WS_THICKFRAME
+            | WIN_WS_MINIMIZEBOX
+            | WIN_WS_MAXIMIZEBOX
+        )
         ex_style = WIN_WS_EX_DLGMODALFRAME | WIN_WS_EX_CONTROLPARENT
         # Avoid cross-thread/process owner interactions; keep window independent
         owner = 0
@@ -926,12 +939,12 @@ class _Win32InputDialog:
 
         # Allow Ctrl+C in the console to close the window gracefully (both
         # Python-level SIGINT and native console control handler for immediate response)
+        def _sigint_handler(_signum, _frame):
+            try:
+                user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
+            except Exception:
+                pass
         try:
-            def _sigint_handler(_signum, _frame):
-                try:
-                    user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
-                except Exception:
-                    pass
             self._prev_sigint = signal.getsignal(signal.SIGINT)  # type: ignore[attr-defined]
             signal.signal(signal.SIGINT, _sigint_handler)
         except Exception:
@@ -971,7 +984,9 @@ class _Win32InputDialog:
             hInstance,
             None,
         )
-        edit_style = self.WS_CHILD | self.WS_VISIBLE | self.WS_BORDER | self.ES_AUTOHSCROLL | self.WS_TABSTOP
+        edit_style = (
+            self.WS_CHILD | self.WS_VISIBLE | self.WS_BORDER | self.ES_AUTOHSCROLL | self.WS_TABSTOP
+        )
         if self.options.is_password:
             edit_style |= self.ES_PASSWORD
         self.h_edit = user32.CreateWindowExW(  # type: ignore[attr-defined]
@@ -1043,6 +1058,7 @@ class _Win32InputDialog:
                         ("tmOverhang", ctypes.c_long),
                         ("tmDigitizedAspectX", ctypes.c_long),
                         ("tmDigitizedAspectY", ctypes.c_long),
+                        # Next four fields are WCHAR in the Win32 API, keep for structure parity
                         ("tmFirstChar", ctypes.c_wchar),
                         ("tmLastChar", ctypes.c_wchar),
                         ("tmDefaultChar", ctypes.c_wchar),
@@ -1061,8 +1077,7 @@ class _Win32InputDialog:
                         tm = TEXTMETRICW()
                         if gdi32.GetTextMetricsW(hdc_edit, ctypes.byref(tm)):
                             desired_h = int(tm.tmHeight + tm.tmExternalLeading + 6)
-                            if desired_h < 18:
-                                desired_h = 18
+                            desired_h = max(desired_h, 18)
                             # Resize edit control to the desired height and keep x/width constant
                             user32.SetWindowPos(
                                 self.h_edit,
@@ -1075,8 +1090,24 @@ class _Win32InputDialog:
                             )
                             # Reposition buttons directly below the edit
                             new_btn_y = edit_y + desired_h + spacing * 2
-                            user32.SetWindowPos(self.h_ok, 0, ok_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
-                            user32.SetWindowPos(self.h_cancel, 0, cancel_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                            user32.SetWindowPos(
+                                self.h_ok,
+                                0,
+                                ok_x,
+                                new_btn_y,
+                                0,
+                                0,
+                                WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
+                            )
+                            user32.SetWindowPos(
+                                self.h_cancel,
+                                0,
+                                cancel_x,
+                                new_btn_y,
+                                0,
+                                0,
+                                WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
+                            )
                         if prev:
                             gdi32.SelectObject(hdc_edit, prev)
                     finally:
@@ -1122,8 +1153,24 @@ class _Win32InputDialog:
                                 WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
                             )
                             new_btn_y = new_edit_y + edit_h + spacing * 2
-                            user32.SetWindowPos(self.h_ok, 0, ok_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
-                            user32.SetWindowPos(self.h_cancel, 0, cancel_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                            user32.SetWindowPos(
+                                self.h_ok,
+                                0,
+                                ok_x,
+                                new_btn_y,
+                                0,
+                                0,
+                                WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
+                            )
+                            user32.SetWindowPos(
+                                self.h_cancel,
+                                0,
+                                cancel_x,
+                                new_btn_y,
+                                0,
+                                0,
+                                WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
+                            )
                         if prev2:
                             gdi32.SelectObject(hdc_static, prev2)
                     finally:
@@ -1136,7 +1183,9 @@ class _Win32InputDialog:
             user32.SetWindowTextW(self.h_edit, c_wchar_p(self.options.default_text))
         if self.options.placeholder:
             try:
-                user32.SendMessageW(self.h_edit, WIN_EM_SETCUEBANNER, 1, c_wchar_p(self.options.placeholder))
+                user32.SendMessageW(
+                    self.h_edit, WIN_EM_SETCUEBANNER, 1, c_wchar_p(self.options.placeholder)
+                )
             except Exception:
                 pass
             if self.options.char_limit is not None:
@@ -1158,7 +1207,9 @@ class _Win32InputDialog:
                 user32.GetWindowRect(hwnd, byref(wnd_rect))
                 x = rect.left + (owner_cx - (wnd_rect.right - wnd_rect.left)) // 2
                 y = rect.top + (owner_cy - (wnd_rect.bottom - wnd_rect.top)) // 2
-                user32.SetWindowPos(hwnd, 0, x, y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE)
+                user32.SetWindowPos(
+                    hwnd, 0, x, y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE
+                )
         except Exception:
             pass
 
