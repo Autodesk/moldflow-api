@@ -19,6 +19,10 @@ import signal
 import struct
 from .i18n import get_text
 
+# This module intentionally contains a large amount of Windows interop glue
+# and UI layout code.
+# pylint: disable=too-many-lines,line-too-long
+
 # Fallbacks for missing wintypes aliases on some Python versions
 if not hasattr(wintypes, "LRESULT"):
     # LONG_PTR
@@ -827,6 +831,8 @@ class _Win32InputDialog:
             _Win32InputDialog._WNDPROC = _wndproc  # type: ignore[attr-defined]
 
             class WNDCLASSEX(ctypes.Structure):
+                """WNDCLASSEX structure"""
+
                 _fields_ = [
                     ("cbSize", wintypes.UINT),
                     ("style", wintypes.UINT),
@@ -868,8 +874,12 @@ class _Win32InputDialog:
             wcx.lpszMenuName = None
             wcx.lpszClassName = class_name
             wcx.hIconSm = None
-            atom = user32.RegisterClassExW(ctypes.byref(wcx))
-            # If already registered, atom==0 with last error 1410 (ERROR_CLASS_ALREADY_EXISTS)
+            res = user32.RegisterClassExW(ctypes.byref(wcx))
+            # If already registered, res==0 with last error 1410 (ERROR_CLASS_ALREADY_EXISTS)
+            if not res:
+                err = kernel32.GetLastError()
+                if err != 1410:  # ERROR_CLASS_ALREADY_EXISTS
+                    raise ctypes.WinError(err)
             _Win32InputDialog._class_registered = True  # type: ignore[attr-defined]
             _Win32InputDialog._class_name = class_name  # type: ignore[attr-defined]
             _Win32InputDialog._hwnd_to_inst = {}  # type: ignore[attr-defined]
