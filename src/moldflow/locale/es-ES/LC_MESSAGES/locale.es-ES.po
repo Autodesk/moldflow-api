@@ -90,6 +90,9 @@ msgstr "Error al guardar: No se pudo guardar {saving} en {file_name}"
 msgid "Setting {name} to {value}"
 msgstr "Configurar {name} a {value}"
 
+msgid "Submit"
+msgstr "Aceptar"
+
 msgid "Test String"
 msgstr "Cadena de prueba"
 

@@ -90,6 +90,9 @@ msgstr "Save Error: Failed to save {saving} to {file_name}"
 msgid "Setting {name} to {value}"
 msgstr "Setting {name} to {value}"
 
+msgid "Submit"
+msgstr "Submit"
+
 msgid "Test String"
 msgstr "Test String"
 

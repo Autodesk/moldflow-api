@@ -90,6 +90,9 @@ msgstr "저장 오류: {saving}을(를) {file_name}에 저장하지 못했습니
 msgid "Setting {name} to {value}"
 msgstr "{name}을(를) {value}(으)로 설정 중"
 
+msgid "Submit"
+msgstr "확인"
+
 msgid "Test String"
 msgstr "테스트 문자열"
 

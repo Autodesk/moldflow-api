@@ -90,6 +90,9 @@ msgstr "Erreur d'enregistrement : échec de l'enregistrement de {saving} dans {f
 msgid "Setting {name} to {value}"
 msgstr "Définition de {name} sur {value}"
 
+msgid "Submit"
+msgstr "Valider"
+
 msgid "Test String"
 msgstr "Chaîne de test"
 

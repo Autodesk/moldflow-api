@@ -90,6 +90,9 @@ msgstr "保存错误：将{saving}保存到{file_name}失败"
 msgid "Setting {name} to {value}"
 msgstr "将{name}设置为{value}"
 
+msgid "Submit"
+msgstr "确定"
+
 msgid "Test String"
 msgstr "测试字符串"
 

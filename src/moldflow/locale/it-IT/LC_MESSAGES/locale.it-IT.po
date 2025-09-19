@@ -90,6 +90,9 @@ msgstr "Errore di salvataggio: salvataggio di {saving} in {file_name} non riusci
 msgid "Setting {name} to {value}"
 msgstr "Impostazione di {name} su {value}"
 
+msgid "Submit"
+msgstr "Conferma"
+
 msgid "Test String"
 msgstr "Stringa di prova"
 

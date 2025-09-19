@@ -90,6 +90,9 @@ msgstr "Speicherfehler: Speichern von {saving} in {file_name} fehlgeschlagen"
 msgid "Setting {name} to {value}"
 msgstr "Einstellung {name} auf {value}"
 
+msgid "Submit"
+msgstr "Senden"
+
 msgid "Test String"
 msgstr "Testzeichenfolge"
 
