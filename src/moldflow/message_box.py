@@ -1014,10 +1014,11 @@ class _Win32InputDialog:
             hInstance,
             None,
         )
+        _ = get_text()
         self.h_ok = user32.CreateWindowExW(  # type: ignore[attr-defined]
             0,
             c_wchar_p("BUTTON"),
-            c_wchar_p(get_text()("Submit")),
+            c_wchar_p(_("Submit")),
             self.WS_CHILD | self.WS_VISIBLE | self.WS_TABSTOP | self.BS_DEFPUSHBUTTON,
             ok_x,
             btn_y,
@@ -1031,7 +1032,7 @@ class _Win32InputDialog:
         self.h_cancel = user32.CreateWindowExW(  # type: ignore[attr-defined]
             0,
             c_wchar_p("BUTTON"),
-            c_wchar_p(get_text()("Cancel")),
+            c_wchar_p(_("Cancel")),
             self.WS_CHILD | self.WS_VISIBLE | self.WS_TABSTOP | self.BS_PUSHBUTTON,
             cancel_x,
             btn_y,
@@ -1201,8 +1202,8 @@ class _Win32InputDialog:
                 )
             except Exception:
                 pass
-            if self.options.char_limit is not None:
-                user32.SendMessageW(self.h_edit, WIN_EM_LIMITTEXT, self.options.char_limit, 0)
+        if self.options.char_limit is not None:
+            user32.SendMessageW(self.h_edit, WIN_EM_LIMITTEXT, self.options.char_limit, 0)
 
         # Initial validation
         if self.options.validator is not None:
