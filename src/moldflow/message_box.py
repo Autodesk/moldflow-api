@@ -21,7 +21,7 @@ from .i18n import get_text
 
 # This module intentionally contains a large amount of Windows interop glue
 # and UI layout code.
-# pylint: disable=too-many-lines,line-too-long
+# pylint: disable=C0301,C0302,R0902,W0212,R0911,R0914,R0902,W0201
 
 # Fallbacks for missing wintypes aliases on some Python versions
 if not hasattr(wintypes, "LRESULT"):
@@ -1057,6 +1057,8 @@ class _Win32InputDialog:
 
                 # Adjust edit height to match font metrics so caret is visually centered
                 class TEXTMETRICW(ctypes.Structure):
+                    """TEXTMETRICW structure"""
+
                     _fields_ = [
                         ("tmHeight", ctypes.c_long),
                         ("tmAscent", ctypes.c_long),
@@ -1289,7 +1291,6 @@ class _Win32InputDialog:
             rect = wintypes.RECT()
             user32.GetClientRect(self.hwnd, byref(rect))  # type: ignore[attr-defined]
             cx = rect.right - rect.left
-            cy = rect.bottom - rect.top
 
             margin = getattr(self, "_layout_margin", 24)
             spacing = getattr(self, "_layout_spacing", 12)
