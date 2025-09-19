@@ -45,7 +45,8 @@ def _click_dialog_button_async(dialog_title: str, button_id: int, delay_s: float
                 try:
                     hbtn = user32.GetDlgItem(hwnd, button_id)
                     if hbtn:
-                        user32.SendMessageW(hbtn, BM_CLICK, 0, 0)
+                        # Prefer PostMessage to avoid synchronous reentrancy
+                        user32.PostMessageW(hbtn, BM_CLICK, 0, 0)
                         return
 
                     children = []
@@ -73,7 +74,7 @@ def _click_dialog_button_async(dialog_title: str, button_id: int, delay_s: float
                     # Try to click first Button child
                     for hchild, cname, _, _ in children:
                         if cname and cname.lower().startswith("button"):
-                            user32.SendMessageW(hchild, BM_CLICK, 0, 0)
+                            user32.PostMessageW(hchild, BM_CLICK, 0, 0)
                             return
 
                 except Exception:
@@ -105,7 +106,7 @@ def _click_dialog_button_async(dialog_title: str, button_id: int, delay_s: float
                         try:
                             hbtn = user32.GetDlgItem(hwnd, button_id)
                             if hbtn:
-                                user32.SendMessageW(hbtn, BM_CLICK, 0, 0)
+                                user32.PostMessageW(hbtn, BM_CLICK, 0, 0)
                                 return
                         except Exception:
                             try:

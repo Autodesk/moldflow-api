@@ -15,12 +15,47 @@ from dataclasses import dataclass
 import ctypes
 import platform
 from ctypes import windll, wintypes, byref, create_unicode_buffer, c_int, c_wchar_p, WINFUNCTYPE
+import signal
 import struct
 from .i18n import get_text
 
+# Fallbacks for missing wintypes aliases on some Python versions
+if not hasattr(wintypes, "LRESULT"):
+    # LONG_PTR
+    wintypes.LRESULT = ctypes.c_ssize_t  # type: ignore[attr-defined]
+if not hasattr(wintypes, "HMENU"):
+    wintypes.HMENU = ctypes.c_void_p  # type: ignore[attr-defined]
+if not hasattr(wintypes, "HCURSOR"):
+    wintypes.HCURSOR = ctypes.c_void_p  # type: ignore[attr-defined]
+if not hasattr(wintypes, "HICON"):
+    wintypes.HICON = ctypes.c_void_p  # type: ignore[attr-defined]
+if not hasattr(wintypes, "HBRUSH"):
+    wintypes.HBRUSH = ctypes.c_void_p  # type: ignore[attr-defined]
+if not hasattr(wintypes, "HINSTANCE"):
+    wintypes.HINSTANCE = ctypes.c_void_p  # type: ignore[attr-defined]
+
+# Extra Win32 constants used by CreateWindowEx path
+WIN_WM_SETFONT = 0x0030
+WIN_WS_EX_DLGMODALFRAME = 0x00000001
+WIN_WS_EX_CONTROLPARENT = 0x00010000
+WIN_DEFAULT_CHARSET = 1
+WIN_OUT_DEFAULT_PRECIS = 0
+WIN_CLIP_DEFAULT_PRECIS = 0
+WIN_CLEARTYPE_QUALITY = 5
+WIN_DEFAULT_PITCH = 0
+WIN_FF_DONTCARE = 0
+WIN_FW_NORMAL = 400
+WIN_LOGPIXELSY = 90
+WIN_WM_CLOSE = 0x0010
+WIN_WM_KEYDOWN = 0x0100
+WIN_VK_RETURN = 0x0D
+WIN_VK_ESCAPE = 0x1B
+
 # Helper alias for pointer-sized integer type used by Win32 callbacks
+# Return type for DLGPROC should be an integer type matching pointer size,
+# not a pointer type. Using a pointer type here can corrupt the stack on 64-bit.
 # pylint: disable=invalid-name
-INT_PTR = ctypes.c_void_p
+INT_PTR = ctypes.c_ssize_t
 
 
 # Win32 MessageBox flags (from winuser.h)
@@ -65,12 +100,16 @@ WIN_DS_SETFONT = 0x00000040
 WIN_DS_MODALFRAME = 0x00000080
 WIN_WS_CAPTION = 0x00C00000
 WIN_WS_SYSMENU = 0x00080000
+WIN_WS_POPUP = 0x80000000
 
 WIN_WS_CHILD = 0x40000000
 WIN_WS_VISIBLE = 0x10000000
 WIN_WS_TABSTOP = 0x00010000
 WIN_WS_GROUP = 0x00020000
 WIN_WS_BORDER = 0x00800000
+WIN_WS_THICKFRAME = 0x00040000
+WIN_WS_MINIMIZEBOX = 0x00020000
+WIN_WS_MAXIMIZEBOX = 0x00010000
 
 WIN_ES_AUTOHSCROLL = 0x00000080
 WIN_ES_PASSWORD = 0x00000020
@@ -81,11 +120,17 @@ WIN_BS_PUSHBUTTON = 0x00000000
 # Window messages
 WIN_WM_INITDIALOG = 0x0110
 WIN_WM_COMMAND = 0x0111
+WIN_WM_CTLCOLORSTATIC = 0x0138
 
 # Edit control helpers
 WIN_EM_SETCUEBANNER = 0x1501
 WIN_EN_CHANGE = 0x0300
 WIN_EM_LIMITTEXT = 0x00C5
+
+# DrawText flags
+WIN_DT_WORDBREAK = 0x0010
+WIN_DT_CALCRECT = 0x0400
+WIN_DT_NOPREFIX = 0x0800
 
 # SetWindowPos flags and system metrics
 WIN_SWP_NOSIZE = 0x0001
@@ -94,9 +139,10 @@ WIN_SWP_NOACTIVATE = 0x0010
 WIN_SM_CXSCREEN = 0
 WIN_SM_CYSCREEN = 1
 
-# Predefined control classes
-WIN_CLASS_BUTTON = 0x0081
-WIN_CLASS_EDIT = 0x0080
+# Predefined control classes (atoms from winuser.h)
+# 0x0080: BUTTON, 0x0081: EDIT, 0x0082: STATIC
+WIN_CLASS_BUTTON = 0x0080
+WIN_CLASS_EDIT = 0x0081
 WIN_CLASS_STATIC = 0x0082
 
 # Control IDs
@@ -564,11 +610,16 @@ class _Win32InputDialog:
 
         ok_x = cx - margin - (btn_w * 2 + spacing)
         cancel_x = cx - margin - btn_w
-        btn_y = cy - margin - btn_h
+        # Position the edit box a bit lower from the label
+        edit_y = margin + static_h + 8
+        # Move the buttons up: place them below the edit with extra spacing
+        btn_y = edit_y + edit_h + spacing * 2
 
         buf = bytearray()
 
-        style = self.DS_MODALFRAME | self.DS_SETFONT | self.WS_CAPTION | self.WS_SYSMENU
+        style = (
+            self.DS_MODALFRAME | self.DS_SETFONT | self.WS_CAPTION | self.WS_SYSMENU | WIN_WS_POPUP
+        )
         self._pack_dword(buf, style)  # style
         self._pack_dword(buf, 0)  # dwExtendedStyle
         self._pack_word(buf, 4)  # cdit: static, edit, OK, Cancel
@@ -665,120 +716,555 @@ class _Win32InputDialog:
         return bytes(buf)
 
     def run(self) -> Optional[str]:
-        """Create and run the modal dialog; return the entered text or None."""
-        # The dialog procedure and Win32 interop are inherently complex; relax
-        # a few pylint rules for this method.
+        """Create and run a modal input window using CreateWindowEx."""
         # pylint: disable=too-many-locals,too-many-branches,too-many-statements,invalid-name
         user32 = windll.user32
+        gdi32 = windll.gdi32
         kernel32 = windll.kernel32
 
-        template_bytes = self._build_template()
-        # Keep buffer alive by storing on self
-        self._template_buffer = (wintypes.BYTE * len(template_bytes)).from_buffer_copy(
-            template_bytes
-        )
+        # Win32 function prototypes used
+        try:
+            user32.CreateWindowExW.restype = wintypes.HWND
+            user32.CreateWindowExW.argtypes = [
+                wintypes.DWORD,
+                c_wchar_p,
+                c_wchar_p,
+                wintypes.DWORD,
+                ctypes.c_int,
+                ctypes.c_int,
+                ctypes.c_int,
+                ctypes.c_int,
+                wintypes.HWND,
+                wintypes.HMENU,
+                wintypes.HINSTANCE,
+                wintypes.LPVOID,
+            ]
+            user32.DefWindowProcW.restype = wintypes.LRESULT
+            user32.DefWindowProcW.argtypes = [
+                wintypes.HWND,
+                wintypes.UINT,
+                wintypes.WPARAM,
+                wintypes.LPARAM,
+            ]
+            user32.RegisterClassW.restype = wintypes.ATOM
+        except Exception:
+            pass
 
-        dlgproc_type = WINFUNCTYPE(
-            INT_PTR, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM
-        )
+        # Register window class once
+        class_name = "MF_InputDialogWindow"
+        if not hasattr(_Win32InputDialog, "_class_registered"):
+            WNDPROC = WINFUNCTYPE(wintypes.LRESULT, wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM)
 
-        @dlgproc_type
-        def _dlgproc(hwnd, msg, wparam, _lparam):
-            if msg == self.WM_INITDIALOG:
-                # Set focus to edit control and prefill text / placeholder
-                h_edit = user32.GetDlgItem(hwnd, self.ID_EDIT)
-                user32.SetFocus(h_edit)
-                # Default text
-                if self.options.default_text:
-                    user32.SetWindowTextW(h_edit, c_wchar_p(self.options.default_text))
-                # Placeholder (cue banner) if available
-                if self.options.placeholder:
+            @WNDPROC
+            def _wndproc(hwnd, msg, wparam, lparam):
+                # Retrieve instance from map if present
+                inst = _Win32InputDialog._hwnd_to_inst.get(hwnd)
+                if msg == WIN_WM_CLOSE:
+                    windll.user32.DestroyWindow(hwnd)
+                    return 0
+                if msg == WIN_WM_KEYDOWN and inst is not None:
+                    if wparam == WIN_VK_RETURN:
+                        inst._on_ok()
+                        return 0
+                    if wparam == WIN_VK_ESCAPE:
+                        inst._on_cancel()
+                        return 0
+                if msg == 0x0002:  # WM_DESTROY
+                    if inst is not None:
+                        # Defer destruction finalization slightly to allow any
+                        # late WM_COMMAND or automation posts to drain safely.
+                        try:
+                            inst._on_destroy()
+                        except Exception:
+                            pass
+                    return 0
+                if msg == 0x0082:  # WM_NCDESTROY
                     try:
-                        # wParam=BOOL drawWhenNotFocused=1
-                        user32.SendMessageW(
-                            h_edit, WIN_EM_SETCUEBANNER, 1, c_wchar_p(self.options.placeholder)
-                        )
+                        if inst is not None:
+                            inst._done = True  # type: ignore[attr-defined]
+                        _Win32InputDialog._hwnd_to_inst.pop(hwnd, None)
+                        # Ensure the modal loop unblocks even if no further messages arrive
+                        user32.PostQuitMessage(0)
                     except Exception:
                         pass
-                # Validator initial state
-                if self.options.validator is not None:
+                    return 0
+                if inst is None:
+                    return user32.DefWindowProcW(hwnd, msg, wparam, lparam)
+                if msg == 0x0005:  # WM_SIZE
+                    inst._on_size()
+                    return 0
+                if msg == WIN_WM_CTLCOLORSTATIC:
+                    # Make label background match dialog background for a flat look
                     try:
-                        is_valid = bool(self.options.validator(self.options.default_text or ""))
+                        windll.gdi32.SetBkMode(wparam, 1)  # TRANSPARENT
                     except Exception:
-                        is_valid = True
-                    user32.EnableWindow(
-                        user32.GetDlgItem(hwnd, self.ID_OK), wintypes.BOOL(1 if is_valid else 0)
-                    )
-                # Character limit
-                if self.options.char_limit is not None:
-                    user32.SendMessageW(h_edit, WIN_EM_LIMITTEXT, self.options.char_limit, 0)
+                        pass
+                    return getattr(_Win32InputDialog, "_bg_brush", 0)
+                if msg == _Win32InputDialog.WM_COMMAND:
+                    cid = wparam & 0xFFFF
+                    notify = (wparam >> 16) & 0xFFFF
+                    # Ignore commands from unknown HWNDs to avoid processing
+                    # stale messages after controls are destroyed.
+                    if lparam not in (inst.h_edit, inst.h_ok, inst.h_cancel):
+                        return 0
+                    if notify == WIN_EN_CHANGE and inst.options.validator is not None and lparam == inst.h_edit:
+                        inst._validate_live()
+                        return 0
+                    if cid == inst.ID_OK:
+                        inst._on_ok()
+                        return 0
+                    if cid == inst.ID_CANCEL:
+                        inst._on_cancel()
+                        return 0
+                return user32.DefWindowProcW(hwnd, msg, wparam, lparam)
 
-                # Center dialog over owner
-                try:
-                    owner_hwnd = self.options.owner_hwnd or user32.GetActiveWindow()
-                    if owner_hwnd:
-                        rect = wintypes.RECT()
-                        user32.GetWindowRect(owner_hwnd, byref(rect))
-                        owner_cx = rect.right - rect.left
-                        owner_cy = rect.bottom - rect.top
+            _Win32InputDialog._WNDPROC = _wndproc  # type: ignore[attr-defined]
 
-                        dlg_rect = wintypes.RECT()
-                        user32.GetWindowRect(hwnd, byref(dlg_rect))
-                        dlg_w = dlg_rect.right - dlg_rect.left
-                        dlg_h = dlg_rect.bottom - dlg_rect.top
+            class WNDCLASSEX(ctypes.Structure):
+                _fields_ = [
+                    ("cbSize", wintypes.UINT),
+                    ("style", wintypes.UINT),
+                    ("lpfnWndProc", WNDPROC),
+                    ("cbClsExtra", ctypes.c_int),
+                    ("cbWndExtra", ctypes.c_int),
+                    ("hInstance", wintypes.HINSTANCE),
+                    ("hIcon", wintypes.HICON),
+                    ("hCursor", wintypes.HCURSOR),
+                    ("hbrBackground", wintypes.HBRUSH),
+                    ("lpszMenuName", c_wchar_p),
+                    ("lpszClassName", c_wchar_p),
+                    ("hIconSm", wintypes.HICON),
+                ]
 
-                        x = rect.left + (owner_cx - dlg_w) // 2
-                        y = rect.top + (owner_cy - dlg_h) // 2
-                        user32.SetWindowPos(
-                            hwnd,
-                            0,
-                            x,
-                            y,
-                            0,
-                            0,
-                            WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE,
-                        )
-                except Exception:
-                    pass
-                return 0
-            if msg == self.WM_COMMAND:
-                cid = wparam & 0xFFFF
-                notify_code = (wparam >> 16) & 0xFFFF
-                # Live validation
-                if notify_code == WIN_EN_CHANGE and self.options.validator is not None:
-                    h_edit = user32.GetDlgItem(hwnd, self.ID_EDIT)
-                    length = user32.GetWindowTextLengthW(h_edit)
-                    buf = create_unicode_buffer(length + 1)
-                    user32.GetWindowTextW(h_edit, buf, length + 1)
-                    try:
-                        is_valid = bool(self.options.validator(buf.value))
-                    except Exception:
-                        is_valid = True
-                    user32.EnableWindow(
-                        user32.GetDlgItem(hwnd, self.ID_OK), wintypes.BOOL(1 if is_valid else 0)
-                    )
-                if cid == self.ID_OK:
-                    # Read text
-                    h_edit = user32.GetDlgItem(hwnd, self.ID_EDIT)
-                    length = user32.GetWindowTextLengthW(h_edit)
-                    buf = create_unicode_buffer(length + 1)
-                    user32.GetWindowTextW(h_edit, buf, length + 1)
-                    self._result_text = buf.value
-                    user32.EndDialog(hwnd, self.ID_OK)
-                    return 1
-                if cid == self.ID_CANCEL:
-                    self._result_text = None
-                    user32.EndDialog(hwnd, self.ID_CANCEL)
-                    return 1
-            return 0
+            # Prototypes for class registration
+            try:
+                user32.RegisterClassExW.restype = wintypes.ATOM
+                user32.RegisterClassExW.argtypes = [ctypes.POINTER(WNDCLASSEX)]
+                user32.LoadCursorW.restype = wintypes.HCURSOR
+                # Second parameter is MAKEINTRESOURCE on system cursors; accept as void*
+                user32.LoadCursorW.argtypes = [wintypes.HINSTANCE, ctypes.c_void_p]
+            except Exception:
+                pass
 
-        h_instance = kernel32.GetModuleHandleW(None)
-        owner = self.options.owner_hwnd or user32.GetActiveWindow()
-        res = user32.DialogBoxIndirectParamW(
-            h_instance, byref(self._template_buffer), owner, _dlgproc, 0
+            hInstance = kernel32.GetModuleHandleW(None)
+            wcx = WNDCLASSEX()
+            wcx.cbSize = ctypes.sizeof(WNDCLASSEX)
+            wcx.style = 0
+            wcx.lpfnWndProc = _Win32InputDialog._WNDPROC  # type: ignore[attr-defined]
+            wcx.cbClsExtra = 0
+            wcx.cbWndExtra = 0
+            wcx.hInstance = hInstance
+            wcx.hIcon = None
+            # IDC_ARROW = 32512 (0x7F00). Pass as MAKEINTRESOURCE via c_void_p
+            wcx.hCursor = windll.user32.LoadCursorW(None, ctypes.c_void_p(32512))
+            # Use COLOR_WINDOW+1 to avoid theme brush quirks under automation
+            wcx.hbrBackground = ctypes.c_void_p(5 + 1)
+            wcx.lpszMenuName = None
+            wcx.lpszClassName = class_name
+            wcx.hIconSm = None
+            atom = user32.RegisterClassExW(ctypes.byref(wcx))
+            # If already registered, atom==0 with last error 1410 (ERROR_CLASS_ALREADY_EXISTS)
+            _Win32InputDialog._class_registered = True  # type: ignore[attr-defined]
+            _Win32InputDialog._class_name = class_name  # type: ignore[attr-defined]
+            _Win32InputDialog._hwnd_to_inst = {}  # type: ignore[attr-defined]
+            # Cache background brush so STATIC controls can paint with same bg
+            try:
+                _Win32InputDialog._bg_brush = int(wcx.hbrBackground)  # type: ignore[attr-defined]
+            except Exception:
+                _Win32InputDialog._bg_brush = 0  # type: ignore[attr-defined]
+
+        # Create window
+        style = self.WS_CAPTION | self.WS_SYSMENU | WIN_WS_POPUP | WIN_WS_THICKFRAME | WIN_WS_MINIMIZEBOX | WIN_WS_MAXIMIZEBOX
+        ex_style = WIN_WS_EX_DLGMODALFRAME | WIN_WS_EX_CONTROLPARENT
+        # Avoid cross-thread/process owner interactions; keep window independent
+        owner = 0
+
+        # Size and layout (pixels)
+        # Slightly larger default size so action buttons are always visible
+        cx = int(self.options.width_dlu if self.options.width_dlu is not None else 420)
+        cy = int(self.options.height_dlu if self.options.height_dlu is not None else 220)
+        margin = 36
+        static_h = 22
+        edit_h = 22
+        btn_w, btn_h = 96, 28
+        spacing = 16
+
+        ok_x = cx - margin - (btn_w * 2 + spacing)
+        cancel_x = cx - margin - btn_w
+        edit_y = margin + static_h + 8
+        btn_y = edit_y + edit_h + spacing * 2
+
+        # Persist layout metrics for resize handling
+        self._layout_margin = margin  # type: ignore[attr-defined]
+        self._layout_spacing = spacing  # type: ignore[attr-defined]
+        self._layout_edit_h = edit_h  # type: ignore[attr-defined]
+        self._layout_btn_w = btn_w  # type: ignore[attr-defined]
+        self._layout_btn_h = btn_h  # type: ignore[attr-defined]
+
+        hInstance = kernel32.GetModuleHandleW(None)
+        hwnd = user32.CreateWindowExW(
+            ex_style,
+            c_wchar_p(getattr(_Win32InputDialog, "_class_name", class_name)),
+            c_wchar_p(self.title),
+            style,
+            100,
+            100,
+            cx,
+            cy,
+            None,
+            None,
+            hInstance,
+            None,
         )
-        # res is IDOK/IDCANCEL or -1 on failure
-        if res == -1:
+        if not hwnd:
             err = kernel32.GetLastError()
             raise ctypes.WinError(err)
-        return self._result_text if res == self.ID_OK else None
+
+        # Map hwnd to instance
+        _Win32InputDialog._hwnd_to_inst[hwnd] = self  # type: ignore[attr-defined]
+        self.hwnd = hwnd  # type: ignore[attr-defined]
+
+        # Allow Ctrl+C in the console to close the window gracefully (both
+        # Python-level SIGINT and native console control handler for immediate response)
+        try:
+            def _sigint_handler(_signum, _frame):
+                try:
+                    user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
+                except Exception:
+                    pass
+            self._prev_sigint = signal.getsignal(signal.SIGINT)  # type: ignore[attr-defined]
+            signal.signal(signal.SIGINT, _sigint_handler)
+        except Exception:
+            pass
+
+        # Native console control handler (fires immediately even while Python blocks)
+        try:
+            HANDLER_ROUTINE = WINFUNCTYPE(wintypes.BOOL, wintypes.DWORD)
+
+            @HANDLER_ROUTINE
+            def _console_ctrl_handler(_ctrl_type):  # CTRL_C_EVENT, CTRL_BREAK_EVENT, etc.
+                try:
+                    user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
+                except Exception:
+                    pass
+                return True
+
+            kernel32.SetConsoleCtrlHandler.restype = wintypes.BOOL
+            kernel32.SetConsoleCtrlHandler.argtypes = [HANDLER_ROUTINE, wintypes.BOOL]
+            kernel32.SetConsoleCtrlHandler(_console_ctrl_handler, True)
+            self._console_ctrl_handler = _console_ctrl_handler  # type: ignore[attr-defined]
+        except Exception:
+            pass
+
+        # Create child controls
+        self.h_static = user32.CreateWindowExW(  # type: ignore[attr-defined]
+            0,
+            c_wchar_p("STATIC"),
+            c_wchar_p(self.prompt),
+            self.WS_CHILD | self.WS_VISIBLE | self.SS_LEFT,
+            margin,
+            margin,
+            cx - 2 * margin,
+            static_h,
+            hwnd,
+            wintypes.HMENU(0),
+            hInstance,
+            None,
+        )
+        edit_style = self.WS_CHILD | self.WS_VISIBLE | self.WS_BORDER | self.ES_AUTOHSCROLL | self.WS_TABSTOP
+        if self.options.is_password:
+            edit_style |= self.ES_PASSWORD
+        self.h_edit = user32.CreateWindowExW(  # type: ignore[attr-defined]
+            0,
+            c_wchar_p("EDIT"),
+            c_wchar_p(""),
+            edit_style,
+            margin,
+            edit_y,
+            cx - 2 * margin,
+            edit_h,
+            hwnd,
+            wintypes.HMENU(self.ID_EDIT),
+            hInstance,
+            None,
+        )
+        self.h_ok = user32.CreateWindowExW(  # type: ignore[attr-defined]
+            0,
+            c_wchar_p("BUTTON"),
+            c_wchar_p(get_text()("Submit")),
+            self.WS_CHILD | self.WS_VISIBLE | self.WS_TABSTOP | self.BS_DEFPUSHBUTTON,
+            ok_x,
+            btn_y,
+            btn_w,
+            btn_h,
+            hwnd,
+            wintypes.HMENU(self.ID_OK),
+            hInstance,
+            None,
+        )
+        self.h_cancel = user32.CreateWindowExW(  # type: ignore[attr-defined]
+            0,
+            c_wchar_p("BUTTON"),
+            c_wchar_p(get_text()("Cancel")),
+            self.WS_CHILD | self.WS_VISIBLE | self.WS_TABSTOP | self.BS_PUSHBUTTON,
+            cancel_x,
+            btn_y,
+            btn_w,
+            btn_h,
+            hwnd,
+            wintypes.HMENU(self.ID_CANCEL),
+            hInstance,
+            None,
+        )
+
+        # Apply a system dialog font for consistent look and spacing
+        try:
+            DEFAULT_GUI_FONT = 17
+            hfont = windll.gdi32.GetStockObject(DEFAULT_GUI_FONT)
+            if hfont:
+                # Send WM_SETFONT to children so they repaint with the font
+                for hchild in (self.h_static, self.h_edit, self.h_ok, self.h_cancel):  # type: ignore[attr-defined]
+                    if hchild:
+                        user32.SendMessageW(hchild, WIN_WM_SETFONT, hfont, 1)
+                # Keep a reference so it survives until window is destroyed
+                self._hfont = hfont  # type: ignore[attr-defined]
+
+                # Adjust edit height to match font metrics so caret is visually centered
+                class TEXTMETRICW(ctypes.Structure):
+                    _fields_ = [
+                        ("tmHeight", ctypes.c_long),
+                        ("tmAscent", ctypes.c_long),
+                        ("tmDescent", ctypes.c_long),
+                        ("tmInternalLeading", ctypes.c_long),
+                        ("tmExternalLeading", ctypes.c_long),
+                        ("tmAveCharWidth", ctypes.c_long),
+                        ("tmMaxCharWidth", ctypes.c_long),
+                        ("tmWeight", ctypes.c_long),
+                        ("tmOverhang", ctypes.c_long),
+                        ("tmDigitizedAspectX", ctypes.c_long),
+                        ("tmDigitizedAspectY", ctypes.c_long),
+                        ("tmFirstChar", ctypes.c_wchar),
+                        ("tmLastChar", ctypes.c_wchar),
+                        ("tmDefaultChar", ctypes.c_wchar),
+                        ("tmBreakChar", ctypes.c_wchar),
+                        ("tmItalic", ctypes.c_ubyte),
+                        ("tmUnderlined", ctypes.c_ubyte),
+                        ("tmStruckOut", ctypes.c_ubyte),
+                        ("tmPitchAndFamily", ctypes.c_ubyte),
+                        ("tmCharSet", ctypes.c_ubyte),
+                    ]
+
+                hdc_edit = user32.GetDC(self.h_edit)
+                if hdc_edit:
+                    try:
+                        prev = gdi32.SelectObject(hdc_edit, hfont)
+                        tm = TEXTMETRICW()
+                        if gdi32.GetTextMetricsW(hdc_edit, ctypes.byref(tm)):
+                            desired_h = int(tm.tmHeight + tm.tmExternalLeading + 6)
+                            if desired_h < 18:
+                                desired_h = 18
+                            # Resize edit control to the desired height and keep x/width constant
+                            user32.SetWindowPos(
+                                self.h_edit,
+                                0,
+                                margin,
+                                edit_y,
+                                cx - 2 * margin,
+                                desired_h,
+                                WIN_SWP_NOZORDER,
+                            )
+                            # Reposition buttons directly below the edit
+                            new_btn_y = edit_y + desired_h + spacing * 2
+                            user32.SetWindowPos(self.h_ok, 0, ok_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                            user32.SetWindowPos(self.h_cancel, 0, cancel_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                        if prev:
+                            gdi32.SelectObject(hdc_edit, prev)
+                    finally:
+                        user32.ReleaseDC(self.h_edit, hdc_edit)
+
+                # Recalculate static height for long titles and wrap
+                hdc_static = user32.GetDC(self.h_static)
+                if hdc_static:
+                    try:
+                        prev2 = gdi32.SelectObject(hdc_static, hfont)
+                        rect = wintypes.RECT()
+                        rect.left = 0
+                        rect.top = 0
+                        rect.right = cx - 2 * margin
+                        rect.bottom = 1000
+                        user32.DrawTextW(
+                            hdc_static,
+                            c_wchar_p(self.prompt),
+                            -1,
+                            byref(rect),
+                            WIN_DT_WORDBREAK | WIN_DT_CALCRECT | WIN_DT_NOPREFIX,
+                        )
+                        new_static_h = max(static_h, rect.bottom - rect.top)
+                        if new_static_h != static_h:
+                            # Resize static and move controls below it
+                            user32.SetWindowPos(
+                                self.h_static,
+                                0,
+                                margin,
+                                margin,
+                                cx - 2 * margin,
+                                new_static_h,
+                                WIN_SWP_NOZORDER,
+                            )
+                            new_edit_y = margin + new_static_h + 8
+                            user32.SetWindowPos(
+                                self.h_edit,
+                                0,
+                                margin,
+                                new_edit_y,
+                                0,
+                                0,
+                                WIN_SWP_NOSIZE | WIN_SWP_NOZORDER,
+                            )
+                            new_btn_y = new_edit_y + edit_h + spacing * 2
+                            user32.SetWindowPos(self.h_ok, 0, ok_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                            user32.SetWindowPos(self.h_cancel, 0, cancel_x, new_btn_y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER)
+                        if prev2:
+                            gdi32.SelectObject(hdc_static, prev2)
+                    finally:
+                        user32.ReleaseDC(self.h_static, hdc_static)
+        except Exception:
+            pass
+
+        # Defaults
+        if self.options.default_text:
+            user32.SetWindowTextW(self.h_edit, c_wchar_p(self.options.default_text))
+        if self.options.placeholder:
+            try:
+                user32.SendMessageW(self.h_edit, WIN_EM_SETCUEBANNER, 1, c_wchar_p(self.options.placeholder))
+            except Exception:
+                pass
+            if self.options.char_limit is not None:
+                user32.SendMessageW(self.h_edit, WIN_EM_LIMITTEXT, self.options.char_limit, 0)
+
+        # Initial validation
+        if self.options.validator is not None:
+            self._validate_live()
+
+        # Center over owner
+        try:
+            owner_hwnd = owner or user32.GetActiveWindow()
+            if owner_hwnd:
+                rect = wintypes.RECT()
+                user32.GetWindowRect(owner_hwnd, byref(rect))
+                owner_cx = rect.right - rect.left
+                owner_cy = rect.bottom - rect.top
+                wnd_rect = wintypes.RECT()
+                user32.GetWindowRect(hwnd, byref(wnd_rect))
+                x = rect.left + (owner_cx - (wnd_rect.right - wnd_rect.left)) // 2
+                y = rect.top + (owner_cy - (wnd_rect.bottom - wnd_rect.top)) // 2
+                user32.SetWindowPos(hwnd, 0, x, y, 0, 0, WIN_SWP_NOSIZE | WIN_SWP_NOZORDER | WIN_SWP_NOACTIVATE)
+        except Exception:
+            pass
+
+        user32.ShowWindow(hwnd, 5)  # SW_SHOW
+        try:
+            user32.UpdateWindow(hwnd)
+        except Exception:
+            pass
+        if self.h_edit:
+            user32.SetFocus(self.h_edit)
+
+        # Modal loop
+        self._done = False  # type: ignore[attr-defined]
+        msg = wintypes.MSG()
+        while not self._done:
+            ret = user32.GetMessageW(byref(msg), 0, 0, 0)
+            if ret == 0:  # WM_QUIT
+                break
+            if ret == -1:
+                break
+            # Let the system process default button (Enter), Esc, and Tab order
+            if not user32.IsDialogMessageW(hwnd, byref(msg)):
+                user32.TranslateMessage(byref(msg))
+                user32.DispatchMessageW(byref(msg))
+
+        # No owner to restore
+        # Restore previous SIGINT handler
+        try:
+            prev = getattr(self, "_prev_sigint", None)
+            if prev is not None:
+                signal.signal(signal.SIGINT, prev)
+        except Exception:
+            pass
+        # Remove native console handler
+        try:
+            handler = getattr(self, "_console_ctrl_handler", None)
+            if handler is not None:
+                kernel32.SetConsoleCtrlHandler(handler, False)
+        except Exception:
+            pass
+        return self._result_text
+
+    # Helper methods for WNDPROC
+    def _on_ok(self) -> None:
+        user32 = windll.user32
+        length = user32.GetWindowTextLengthW(self.h_edit)  # type: ignore[attr-defined]
+        buf = create_unicode_buffer(length + 1)
+        user32.GetWindowTextW(self.h_edit, buf, length + 1)  # type: ignore[attr-defined]
+        self._result_text = buf.value
+        user32.DestroyWindow(self.hwnd)  # type: ignore[attr-defined]
+        self._done = True  # type: ignore[attr-defined]
+
+    def _on_cancel(self) -> None:
+        user32 = windll.user32
+        self._result_text = None
+        user32.DestroyWindow(self.hwnd)  # type: ignore[attr-defined]
+        self._done = True  # type: ignore[attr-defined]
+
+    def _on_destroy(self) -> None:
+        self._done = True  # type: ignore[attr-defined]
+
+    def _on_size(self) -> None:
+        # Reflow controls on window resize
+        try:
+            user32 = windll.user32
+            rect = wintypes.RECT()
+            user32.GetClientRect(self.hwnd, byref(rect))  # type: ignore[attr-defined]
+            cx = rect.right - rect.left
+            cy = rect.bottom - rect.top
+
+            margin = getattr(self, "_layout_margin", 24)
+            spacing = getattr(self, "_layout_spacing", 12)
+            btn_w = getattr(self, "_layout_btn_w", 88)
+            btn_h = getattr(self, "_layout_btn_h", 26)
+
+            # Static keeps same height; stretch width
+            # Measure static height
+            static_rect = wintypes.RECT()
+            user32.GetWindowRect(self.h_static, byref(static_rect))  # type: ignore[attr-defined]
+            static_h = static_rect.bottom - static_rect.top
+            user32.SetWindowPos(self.h_static, 0, margin, margin, cx - 2 * margin, static_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
+
+            # Edit stretches horizontally, stays below static
+            edit_y = margin + static_h + 8
+            # Preserve current edit height
+            cur_edit_rect = wintypes.RECT()
+            user32.GetWindowRect(self.h_edit, byref(cur_edit_rect))  # type: ignore[attr-defined]
+            cur_edit_h = cur_edit_rect.bottom - cur_edit_rect.top
+            user32.SetWindowPos(self.h_edit, 0, margin, edit_y, cx - 2 * margin, cur_edit_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
+
+            # Buttons right-aligned
+            cancel_x = cx - margin - btn_w
+            ok_x = cancel_x - spacing - btn_w
+            btn_y = edit_y + cur_edit_h + spacing * 2
+            user32.SetWindowPos(self.h_ok, 0, ok_x, btn_y, btn_w, btn_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
+            user32.SetWindowPos(self.h_cancel, 0, cancel_x, btn_y, btn_w, btn_h, WIN_SWP_NOZORDER)  # type: ignore[attr-defined]
+        except Exception:
+            pass
+
+    def _validate_live(self) -> None:
+        user32 = windll.user32
+        length = user32.GetWindowTextLengthW(self.h_edit)  # type: ignore[attr-defined]
+        buf = create_unicode_buffer(length + 1)
+        user32.GetWindowTextW(self.h_edit, buf, length + 1)  # type: ignore[attr-defined]
+        try:
+            is_valid = bool(self.options.validator(buf.value)) if self.options.validator else True
+        except Exception:
+            is_valid = True
+        user32.EnableWindow(self.h_ok, wintypes.BOOL(1 if is_valid else 0))  # type: ignore[attr-defined]
