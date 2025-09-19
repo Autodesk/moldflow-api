@@ -2,6 +2,8 @@
 branch = True
 source_pkgs =
     moldflow
+omit =
+    src/moldflow/message_box.py
 
 [paths]
 source =
