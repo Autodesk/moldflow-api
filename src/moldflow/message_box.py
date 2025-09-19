@@ -944,6 +944,7 @@ class _Win32InputDialog:
                 user32.PostMessageW(self.hwnd, WIN_WM_CLOSE, 0, 0)  # type: ignore[attr-defined]
             except Exception:
                 pass
+
         try:
             self._prev_sigint = signal.getsignal(signal.SIGINT)  # type: ignore[attr-defined]
             signal.signal(signal.SIGINT, _sigint_handler)
