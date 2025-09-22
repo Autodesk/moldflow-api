@@ -358,20 +358,21 @@ class MessageBox:
     MessageBox convenience class.
 
     Example:
-        from moldflow import MessageBox, MessageBoxType
+        .. code-block:: python
+            from moldflow import MessageBox, MessageBoxType
 
-        # Information message
-        MessageBox("Operation completed.", MessageBoxType.INFO).show()
+            # Information message
+            MessageBox("Operation completed.", MessageBoxType.INFO).show()
 
-        # Yes/No prompt
-        result = MessageBox("Proceed with analysis?", MessageBoxType.YES_NO).show()
-        if result == MessageBoxResult.YES:
-            ...
+            # Yes/No prompt
+            result = MessageBox("Proceed with analysis?", MessageBoxType.YES_NO).show()
+            if result == MessageBoxResult.YES:
+                ...
 
-        # Text input
-        material_id = MessageBox("Enter your material ID:", MessageBoxType.INPUT).show()
-        if material_id:
-            ...
+            # Text input
+            material_id = MessageBox("Enter your material ID:", MessageBoxType.INPUT).show()
+            if material_id:
+                ...
     """
 
     def __init__(
