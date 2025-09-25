@@ -5,15 +5,14 @@
 """
 Test for BoundaryConditions Wrapper Class of moldflow-api module.
 """
-from unittest.mock import Mock, patch
-from win32com.client import VARIANT
-import pythoncom
+from unittest.mock import Mock
 import pytest
 from moldflow import BoundaryConditions
 from moldflow.common import AnalysisType
 from moldflow.ent_list import EntList
 from moldflow.vector import Vector
 from moldflow.prop import Property
+from moldflow.constants import VARIANT_NULL_IDISPATCH
 
 
 @pytest.mark.unit
@@ -829,32 +828,28 @@ class TestUnitBoundaryConditions:
         """
         Test the create_ndbc method of BoundaryConditions class.
         """
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            nodes = Mock(spec=EntList)
-            nodes.ent_list = Mock()
-            normal = Mock(spec=Vector)
-            normal.vector = Mock()
-            if prop is not None:
-                prop.prop = Mock()
-            mock_object.CreateNDBC.return_value = expected
-            result = mock_boundary_conditions.create_ndbc(nodes, normal, prop_type, prop)
-            if expected is not None:
-                assert result.ent_list == expected
-                assert isinstance(result, EntList)
-            else:
-                assert result is None
+        nodes = Mock(spec=EntList)
+        nodes.ent_list = Mock()
+        normal = Mock(spec=Vector)
+        normal.vector = Mock()
+        if prop is not None:
+            prop.prop = Mock()
+        mock_object.CreateNDBC.return_value = expected
+        result = mock_boundary_conditions.create_ndbc(nodes, normal, prop_type, prop)
+        if expected is not None:
+            assert result.ent_list == expected
+            assert isinstance(result, EntList)
+        else:
+            assert result is None
 
-            if prop is not None:
-                mock_object.CreateNDBC.assert_called_once_with(
-                    nodes.ent_list, normal.vector, prop_type, prop.prop
-                )
-            else:
-                mock_object.CreateNDBC.assert_called_once_with(
-                    nodes.ent_list, normal.vector, prop_type, mock_func()
-                )
+        if prop is not None:
+            mock_object.CreateNDBC.assert_called_once_with(
+                nodes.ent_list, normal.vector, prop_type, prop.prop
+            )
+        else:
+            mock_object.CreateNDBC.assert_called_once_with(
+                nodes.ent_list, normal.vector, prop_type, VARIANT_NULL_IDISPATCH
+            )
 
     @pytest.mark.parametrize(
         "nodes, normal, prop_type, prop",
@@ -896,32 +891,28 @@ class TestUnitBoundaryConditions:
         """
         Test the create_ndbc_at_xyz method of BoundaryConditions class.
         """
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            coord = Mock(spec=Vector)
-            coord.vector = Mock()
-            normal = Mock(spec=Vector)
-            normal.vector = Mock()
-            if prop is not None:
-                prop.prop = Mock()
-            mock_object.CreateNDBCAtXYZ.return_value = expected
-            result = mock_boundary_conditions.create_ndbc_at_xyz(coord, normal, prop_type, prop)
-            if expected is not None:
-                assert result.ent_list == expected
-                assert isinstance(result, EntList)
-            else:
-                assert result is None
+        coord = Mock(spec=Vector)
+        coord.vector = Mock()
+        normal = Mock(spec=Vector)
+        normal.vector = Mock()
+        if prop is not None:
+            prop.prop = Mock()
+        mock_object.CreateNDBCAtXYZ.return_value = expected
+        result = mock_boundary_conditions.create_ndbc_at_xyz(coord, normal, prop_type, prop)
+        if expected is not None:
+            assert result.ent_list == expected
+            assert isinstance(result, EntList)
+        else:
+            assert result is None
 
-            if prop is not None:
-                mock_object.CreateNDBCAtXYZ.assert_called_once_with(
-                    coord.vector, normal.vector, prop_type, prop.prop
-                )
-            else:
-                mock_object.CreateNDBCAtXYZ.assert_called_once_with(
-                    coord.vector, normal.vector, prop_type, mock_func()
-                )
+        if prop is not None:
+            mock_object.CreateNDBCAtXYZ.assert_called_once_with(
+                coord.vector, normal.vector, prop_type, prop.prop
+            )
+        else:
+            mock_object.CreateNDBCAtXYZ.assert_called_once_with(
+                coord.vector, normal.vector, prop_type, VARIANT_NULL_IDISPATCH
+            )
 
     @pytest.mark.parametrize("expected", [4, 1])
     def test_move_ndbc(self, mock_boundary_conditions, mock_object, expected):

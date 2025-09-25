@@ -5,11 +5,10 @@
 Unit Test for MaterialFinder Wrapper Class of moldflow-api module.
 """
 
-from unittest.mock import Mock, patch
-from win32com.client import VARIANT
-import pythoncom
+from unittest.mock import Mock
 import pytest
 from moldflow import MaterialFinder, MaterialDatabase, MaterialDatabaseType, Property
+from moldflow.constants import VARIANT_NULL_IDISPATCH
 from tests.api.unit_tests.conftest import VALID_MOCK
 
 
@@ -267,19 +266,15 @@ class TestUnitMaterialFinder:
             Asserts GetNextMaterial method of MaterialFinder is not called for None material value.
             Asserts a ValueError.
         """
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            mock_current_material = None
-            mock_next_material = Mock()
-            mock_material_finder.material_finder.GetNextMaterial.return_value = mock_next_material
-            result = mock_material_finder.get_next_material(mock_current_material)
-            assert isinstance(result, Property)
-            assert result.prop == mock_next_material
-            mock_material_finder.material_finder.GetNextMaterial.assert_called_once_with(
-                mock_func()
-            )
+        mock_current_material = None
+        mock_next_material = Mock()
+        mock_material_finder.material_finder.GetNextMaterial.return_value = mock_next_material
+        result = mock_material_finder.get_next_material(mock_current_material)
+        assert isinstance(result, Property)
+        assert result.prop == mock_next_material
+        mock_material_finder.material_finder.GetNextMaterial.assert_called_once_with(
+            VARIANT_NULL_IDISPATCH
+        )
 
     @pytest.mark.parametrize("material_database_type", ["System", "User"])
     def test_file_type(self, mock_material_finder: MaterialFinder, material_database_type):

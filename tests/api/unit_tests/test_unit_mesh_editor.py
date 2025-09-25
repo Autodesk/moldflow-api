@@ -6,11 +6,10 @@
 Test for MeshEditor Wrapper Class of moldflow-api module.
 """
 
-from unittest.mock import Mock, patch
-from win32com.client import VARIANT
-import pythoncom
+from unittest.mock import Mock
 import pytest
 from moldflow import MeshEditor, EntList, Property, Vector
+from moldflow.constants import VARIANT_NULL_IDISPATCH
 from tests.api.unit_tests.conftest import VALID_MOCK
 from tests.conftest import (
     INVALID_BOOL,
@@ -115,20 +114,16 @@ class TestUnitMeshEditor:
         """
         Test stitching free edges using MeshEditor.
         """
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            mock_object.StitchFreeEdges.return_value = expected
-            mock_object.StitchFreeEdges2.return_value = expected
-            if nodes is None:
-                result = mock_mesh_editor.stitch_free_edges(nodes, 1.0)
-                mock_object.StitchFreeEdges2.assert_called_once_with(mock_func(), 1.0)
-            else:
-                nodes.ent_list = Mock()
-                result = mock_mesh_editor.stitch_free_edges(nodes, 1.0)
-                mock_object.StitchFreeEdges2.assert_called_once_with(nodes.ent_list, 1.0)
-            assert result == expected
+        mock_object.StitchFreeEdges.return_value = expected
+        mock_object.StitchFreeEdges2.return_value = expected
+        if nodes is None:
+            result = mock_mesh_editor.stitch_free_edges(nodes, 1.0)
+            mock_object.StitchFreeEdges2.assert_called_once_with(VARIANT_NULL_IDISPATCH, 1.0)
+        else:
+            nodes.ent_list = Mock()
+            result = mock_mesh_editor.stitch_free_edges(nodes, 1.0)
+            mock_object.StitchFreeEdges2.assert_called_once_with(nodes.ent_list, 1.0)
+        assert result == expected
 
     @pytest.mark.parametrize(
         "tolerance, nodes",
@@ -200,46 +195,41 @@ class TestUnitMeshEditor:
         """
         Test inserting a node in a triangle using MeshEditor.
         """
+        expected1 = 1
+        expected2 = 2
+        node1.size = 3
+        result1 = None
+        result2 = None
+        result3 = None
+        if node1:
+            node1.ent_list = Mock()
+            result1 = node1.ent_list
+        if node2:
+            node2.ent_list = Mock()
+            result2 = node2.ent_list
+        else:
+            result2 = VARIANT_NULL_IDISPATCH
+        if node3:
+            node3.ent_list = Mock()
+            result3 = node3.ent_list
+        else:
+            result3 = VARIANT_NULL_IDISPATCH
 
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            expected1 = 1
-            expected2 = 2
-            node1.size = 3
-            result1 = None
-            result2 = None
-            result3 = None
-            if node1:
-                node1.ent_list = Mock()
-                result1 = node1.ent_list
-            if node2:
-                node2.ent_list = Mock()
-                result2 = node2.ent_list
-            else:
-                result2 = mock_func()
-            if node3:
-                node3.ent_list = Mock()
-                result3 = node3.ent_list
-            else:
-                result3 = mock_func()
+        mock_object.InsertNodeInTri2.return_value = expected1
+        mock_object.InsertNodeInTri.return_value = expected2
 
-            mock_object.InsertNodeInTri2.return_value = expected1
-            mock_object.InsertNodeInTri.return_value = expected2
+        result = mock_mesh_editor.insert_node_in_tri(node1, node2, node3)
 
-            result = mock_mesh_editor.insert_node_in_tri(node1, node2, node3)
-
-            if node2 is None and node3 is None:
-                assert result.ent_list == expected1
-                assert result.ent_list != expected2
-                mock_object.InsertNodeInTri2.assert_called_once_with(result1)
-                mock_object.InsertNodeInTri.assert_not_called()
-            else:
-                assert result.ent_list == expected2
-                assert result.ent_list != expected1
-                mock_object.InsertNodeInTri.assert_called_once_with(result1, result2, result3)
-                mock_object.InsertNodeInTri2.assert_not_called()
+        if node2 is None and node3 is None:
+            assert result.ent_list == expected1
+            assert result.ent_list != expected2
+            mock_object.InsertNodeInTri2.assert_called_once_with(result1)
+            mock_object.InsertNodeInTri.assert_not_called()
+        else:
+            assert result.ent_list == expected2
+            assert result.ent_list != expected1
+            mock_object.InsertNodeInTri.assert_called_once_with(result1, result2, result3)
+            mock_object.InsertNodeInTri2.assert_not_called()
 
     @pytest.mark.parametrize(
         "node1, node2, node3",
@@ -729,37 +719,32 @@ class TestUnitMeshEditor:
         """
         Test creating a tetrahedron using MeshEditor.
         """
-
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            mock_object.CreateTet.return_value = 1
-            node1 = Mock(spec=EntList)
-            node1.ent_list = Mock()
-            node2 = Mock(spec=EntList)
-            node2.ent_list = Mock()
-            node3 = Mock(spec=EntList)
-            node3.ent_list = Mock()
-            node4 = Mock(spec=EntList)
-            node4.ent_list = Mock()
-            if property_value is not None:
-                property_value.prop = Mock()
-            result = mock_mesh_editor.create_tet(node1, node2, node3, node4, property_value)
-            assert isinstance(result, EntList)
-            assert result.ent_list == 1
-            if property_value is not None:
-                mock_object.CreateTet.assert_called_once_with(
-                    node1.ent_list,
-                    node2.ent_list,
-                    node3.ent_list,
-                    node4.ent_list,
-                    property_value.prop,
-                )
-            else:
-                mock_object.CreateTet.assert_called_once_with(
-                    node1.ent_list, node2.ent_list, node3.ent_list, node4.ent_list, mock_func()
-                )
+        mock_object.CreateTet.return_value = 1
+        node1 = Mock(spec=EntList)
+        node1.ent_list = Mock()
+        node2 = Mock(spec=EntList)
+        node2.ent_list = Mock()
+        node3 = Mock(spec=EntList)
+        node3.ent_list = Mock()
+        node4 = Mock(spec=EntList)
+        node4.ent_list = Mock()
+        if property_value is not None:
+            property_value.prop = Mock()
+        result = mock_mesh_editor.create_tet(node1, node2, node3, node4, property_value)
+        assert isinstance(result, EntList)
+        assert result.ent_list == 1
+        if property_value is not None:
+            mock_object.CreateTet.assert_called_once_with(
+                node1.ent_list, node2.ent_list, node3.ent_list, node4.ent_list, property_value.prop
+            )
+        else:
+            mock_object.CreateTet.assert_called_once_with(
+                node1.ent_list,
+                node2.ent_list,
+                node3.ent_list,
+                node4.ent_list,
+                VARIANT_NULL_IDISPATCH,
+            )
 
     @pytest.mark.parametrize(
         "node1, node2, node3, node4, prop",
@@ -833,31 +818,26 @@ class TestUnitMeshEditor:
         """
         Test creating a triangle using MeshEditor.
         """
-
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            mock_object.CreateTri.return_value = 1
-            node1 = Mock(spec=EntList)
-            node1.ent_list = Mock()
-            node2 = Mock(spec=EntList)
-            node2.ent_list = Mock()
-            node3 = Mock(spec=EntList)
-            node3.ent_list = Mock()
-            if property_value is not None:
-                property_value.prop = Mock()
-            result = mock_mesh_editor.create_tri(node1, node2, node3, property_value)
-            assert isinstance(result, EntList)
-            assert result.ent_list == 1
-            if property_value is not None:
-                mock_object.CreateTri.assert_called_once_with(
-                    node1.ent_list, node2.ent_list, node3.ent_list, property_value.prop
-                )
-            else:
-                mock_object.CreateTri.assert_called_once_with(
-                    node1.ent_list, node2.ent_list, node3.ent_list, mock_func()
-                )
+        mock_object.CreateTri.return_value = 1
+        node1 = Mock(spec=EntList)
+        node1.ent_list = Mock()
+        node2 = Mock(spec=EntList)
+        node2.ent_list = Mock()
+        node3 = Mock(spec=EntList)
+        node3.ent_list = Mock()
+        if property_value is not None:
+            property_value.prop = Mock()
+        result = mock_mesh_editor.create_tri(node1, node2, node3, property_value)
+        assert isinstance(result, EntList)
+        assert result.ent_list == 1
+        if property_value is not None:
+            mock_object.CreateTri.assert_called_once_with(
+                node1.ent_list, node2.ent_list, node3.ent_list, property_value.prop
+            )
+        else:
+            mock_object.CreateTri.assert_called_once_with(
+                node1.ent_list, node2.ent_list, node3.ent_list, VARIANT_NULL_IDISPATCH
+            )
 
     @pytest.mark.parametrize(
         "node1, node2, node3, prop",
@@ -1062,52 +1042,47 @@ class TestUnitMeshEditor:
         """
         Test creating a wedge using MeshEditor.
         """
-
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            expected = Mock(spec=EntList)
-            mock_object.CreateWedge.return_value = expected
-            nodes1 = Mock(spec=EntList)
-            nodes1.ent_list = Mock()
-            nodes2 = Mock(spec=EntList)
-            nodes2.ent_list = Mock()
-            nodes3 = Mock(spec=EntList)
-            nodes3.ent_list = Mock()
-            nodes4 = Mock(spec=EntList)
-            nodes4.ent_list = Mock()
-            nodes5 = Mock(spec=EntList)
-            nodes5.ent_list = Mock()
-            nodes6 = Mock(spec=EntList)
-            nodes6.ent_list = Mock()
-            if property_value is not None:
-                property_value.prop = Mock()
-            result = mock_mesh_editor.create_wedge(
-                nodes1, nodes2, nodes3, nodes4, nodes5, nodes6, property_value
+        expected = Mock(spec=EntList)
+        mock_object.CreateWedge.return_value = expected
+        nodes1 = Mock(spec=EntList)
+        nodes1.ent_list = Mock()
+        nodes2 = Mock(spec=EntList)
+        nodes2.ent_list = Mock()
+        nodes3 = Mock(spec=EntList)
+        nodes3.ent_list = Mock()
+        nodes4 = Mock(spec=EntList)
+        nodes4.ent_list = Mock()
+        nodes5 = Mock(spec=EntList)
+        nodes5.ent_list = Mock()
+        nodes6 = Mock(spec=EntList)
+        nodes6.ent_list = Mock()
+        if property_value is not None:
+            property_value.prop = Mock()
+        result = mock_mesh_editor.create_wedge(
+            nodes1, nodes2, nodes3, nodes4, nodes5, nodes6, property_value
+        )
+        assert isinstance(result, EntList)
+        assert result.ent_list == expected
+        if property_value is not None:
+            mock_object.CreateWedge.assert_called_once_with(
+                nodes1.ent_list,
+                nodes2.ent_list,
+                nodes3.ent_list,
+                nodes4.ent_list,
+                nodes5.ent_list,
+                nodes6.ent_list,
+                property_value.prop,
             )
-            assert isinstance(result, EntList)
-            assert result.ent_list == expected
-            if property_value is not None:
-                mock_object.CreateWedge.assert_called_once_with(
-                    nodes1.ent_list,
-                    nodes2.ent_list,
-                    nodes3.ent_list,
-                    nodes4.ent_list,
-                    nodes5.ent_list,
-                    nodes6.ent_list,
-                    property_value.prop,
-                )
-            else:
-                mock_object.CreateWedge.assert_called_once_with(
-                    nodes1.ent_list,
-                    nodes2.ent_list,
-                    nodes3.ent_list,
-                    nodes4.ent_list,
-                    nodes5.ent_list,
-                    nodes6.ent_list,
-                    mock_func(),
-                )
+        else:
+            mock_object.CreateWedge.assert_called_once_with(
+                nodes1.ent_list,
+                nodes2.ent_list,
+                nodes3.ent_list,
+                nodes4.ent_list,
+                nodes5.ent_list,
+                nodes6.ent_list,
+                VARIANT_NULL_IDISPATCH,
+            )
 
     @pytest.mark.parametrize(
         "node1, node2, node3, node4, node5, node6, prop",
@@ -1742,31 +1717,24 @@ class TestUnitMeshEditor:
         """
         Test converting mesh to beam elements
         """
-
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            start_node = Mock(spec=EntList)
-            start_node.ent_list = Mock()
-            if property_value is not None:
-                property_value.prop = Mock()
-            junction = True
-            num_branch = 1
-            mock_object.ConvertToBeams.return_value = expected
-            result = mock_mesh_editor.convert_to_beams(
-                start_node, property_value, junction, num_branch
+        start_node = Mock(spec=EntList)
+        start_node.ent_list = Mock()
+        if property_value is not None:
+            property_value.prop = Mock()
+        junction = True
+        num_branch = 1
+        mock_object.ConvertToBeams.return_value = expected
+        result = mock_mesh_editor.convert_to_beams(start_node, property_value, junction, num_branch)
+        assert result is expected
+        assert isinstance(result, int)
+        if property_value is not None:
+            mock_object.ConvertToBeams.assert_called_once_with(
+                start_node.ent_list, property_value.prop, junction, num_branch
             )
-            assert result is expected
-            assert isinstance(result, int)
-            if property_value is not None:
-                mock_object.ConvertToBeams.assert_called_once_with(
-                    start_node.ent_list, property_value.prop, junction, num_branch
-                )
-            else:
-                mock_object.ConvertToBeams.assert_called_once_with(
-                    start_node.ent_list, mock_func(), junction, num_branch
-                )
+        else:
+            mock_object.ConvertToBeams.assert_called_once_with(
+                start_node.ent_list, VARIANT_NULL_IDISPATCH, junction, num_branch
+            )
 
     @pytest.mark.parametrize(
         "start_node, prop, junction, num_branch",
@@ -1966,37 +1934,28 @@ class TestUnitMeshEditor:
         """
         Test extruding triangles with MeshEditor
         """
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            offset_tri = Mock(spec=EntList)
-            offset_tri.ent_list = Mock()
-            dist = 1.5
-            scale = 1.5
-            smooth_nb = True
-            create_new_body = False
-            if property_value is not None:
-                property_value.prop = Mock()
-            mock_object.ExtrudeTriangles.return_value = expected
-            result = mock_mesh_editor.extrude_triangles(
-                offset_tri, dist, scale, smooth_nb, create_new_body, property_value
+        offset_tri = Mock(spec=EntList)
+        offset_tri.ent_list = Mock()
+        dist = 1.5
+        scale = 1.5
+        smooth_nb = True
+        create_new_body = False
+        if property_value is not None:
+            property_value.prop = Mock()
+        mock_object.ExtrudeTriangles.return_value = expected
+        result = mock_mesh_editor.extrude_triangles(
+            offset_tri, dist, scale, smooth_nb, create_new_body, property_value
+        )
+        assert result is expected
+        assert isinstance(result, bool)
+        if property_value is not None:
+            mock_object.ExtrudeTriangles.assert_called_once_with(
+                offset_tri.ent_list, dist, scale, smooth_nb, create_new_body, property_value.prop
             )
-            assert result is expected
-            assert isinstance(result, bool)
-            if property_value is not None:
-                mock_object.ExtrudeTriangles.assert_called_once_with(
-                    offset_tri.ent_list,
-                    dist,
-                    scale,
-                    smooth_nb,
-                    create_new_body,
-                    property_value.prop,
-                )
-            else:
-                mock_object.ExtrudeTriangles.assert_called_once_with(
-                    offset_tri.ent_list, dist, scale, smooth_nb, create_new_body, mock_func()
-                )
+        else:
+            mock_object.ExtrudeTriangles.assert_called_once_with(
+                offset_tri.ent_list, dist, scale, smooth_nb, create_new_body, VARIANT_NULL_IDISPATCH
+            )
 
     @pytest.mark.parametrize(
         "offset_tri, dist, scale, smooth_nb, create_new_body, prop",

@@ -6,9 +6,6 @@
 Test for Modeler Wrapper Class of moldflow-api module.
 """
 
-from unittest.mock import patch
-from win32com.client import VARIANT
-import pythoncom
 import pytest
 from moldflow import Modeler
 from moldflow.boundary_list import BoundaryList
@@ -16,6 +13,7 @@ from moldflow.common import CurveInitPosition, LCSType
 from moldflow.ent_list import EntList
 from moldflow.logger import set_is_logging
 from moldflow.prop import Property
+from moldflow.constants import VARIANT_NULL_IDISPATCH
 from tests.api.unit_tests.conftest import INVALID_MOCK_WITH_NONE, VALID_MOCK
 from tests.conftest import (
     INVALID_INT,
@@ -827,25 +825,20 @@ class TestUnitModeler:
         """
         Test modeler functions methods with return.
         """
+        getattr(mock_object, pascal_name).return_value = expected
+        result = getattr(mock_modeler, property_name)(*args)
 
-        with patch(
-            "moldflow.helper.variant_null_idispatch",
-            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
-        ) as mock_func:
-            getattr(mock_object, pascal_name).return_value = expected
-            result = getattr(mock_modeler, property_name)(*args)
+        for n, arg in enumerate(passed_args):
+            if arg is None:
+                passed_args[n] = VARIANT_NULL_IDISPATCH
 
-            for n, arg in enumerate(passed_args):
-                if arg is None:
-                    passed_args[n] = mock_func()
-
-            getattr(mock_object, pascal_name).assert_called_once_with(*passed_args)
-            if return_type is not None:
-                assert isinstance(result, return_type)
-            if class_return:
-                assert getattr(result, class_return) == expected
-            else:
-                assert result == expected
+        getattr(mock_object, pascal_name).assert_called_once_with(*passed_args)
+        if return_type is not None:
+            assert isinstance(result, return_type)
+        if class_return:
+            assert getattr(result, class_return) == expected
+        else:
+            assert result == expected
 
     @pytest.mark.parametrize(
         "property_name, pascal_name, args, invalid_val",
