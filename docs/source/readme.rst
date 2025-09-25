@@ -498,7 +498,8 @@ Derived Results
     pm.get_indp_values(ds_id, all_times)
     target_time = 13.0
     closest_time = min(all_times.to_list(), key=lambda t: abs(t - target_time))
-    indp = synergy.create_double_array(); indp.add_double(closest_time)
+    indp = synergy.create_double_array()
+    indp.add_double(closest_time)
 
     ent = synergy.create_integer_array()
     vals = synergy.create_double_array()
@@ -535,16 +536,21 @@ Vector difference with absolute value
     c2 = min(times.to_list(), key=lambda t: abs(t - t2))
 
     def get_vec_at(t):
-        indp = synergy.create_double_array(); indp.add_double(t)
+        indp = synergy.create_double_array()
+        indp.add_double(t)
         ent = synergy.create_integer_array()
-        vx = synergy.create_double_array(); vy = synergy.create_double_array(); vz = synergy.create_double_array()
+        vx = synergy.create_double_array()
+        vy = synergy.create_double_array()
+        vz = synergy.create_double_array()
         pm.get_vector_data(ds_id, indp, ent, vx, vy, vz)
         return ent, (vx, vy, vz)
 
     ent1, (v1x, v1y, v1z) = get_vec_at(c1)
     ent2, (v2x, v2y, v2z) = get_vec_at(c2)
 
-    vdx = synergy.create_double_array(); vdy = synergy.create_double_array(); vdz = synergy.create_double_array()
+    vdx = synergy.create_double_array()
+    vdy = synergy.create_double_array()
+    vdz = synergy.create_double_array()
     for a, b, out in [(v1x, v2x, vdx), (v1y, v2y, vdy), (v1z, v2z, vdz)]:
         dt.op(ent1, a, TransformOperations.SUBTRACT, ent2, b, ent1, out)
         dt.func(TransformFunctions.ABSOLUTE, ent1, out, ent1, out)
@@ -616,7 +622,8 @@ Operate on current plot
     pm.get_indp_values(ds_id, times)
     indp = None
     if times.size > 0:
-        indp = synergy.create_double_array(); indp.add_double(times.to_list()[0])
+        indp = synergy.create_double_array()
+        indp.add_double(times.to_list()[0])
 
     ent = synergy.create_integer_array()
     arrs = [synergy.create_double_array() for _ in range(max(cols, 1))]
@@ -664,7 +671,8 @@ Normalize by max at a time
     pm.get_indp_values(ds_id, times)
     target_time = 3.5
     closest = min(times.to_list(), key=lambda t: abs(t - target_time))
-    indp = synergy.create_double_array(); indp.add_double(closest)
+    indp = synergy.create_double_array()
+    indp.add_double(closest)
 
     ent = synergy.create_integer_array()
     vals = synergy.create_double_array()
@@ -736,7 +744,8 @@ Save/load intermediate data
                 ids.append(int(parts[0]))
                 for c in range(cols):
                     comps[c].append(float(parts[c+1]))
-        ent = synergy.create_integer_array(); ent.from_list(ids)
+        ent = synergy.create_integer_array()
+        ent.from_list(ids)
         dbls = [synergy.create_double_array() for _ in range(6)]
         for c in range(cols):
             dbls[c].from_list(comps[c])
@@ -884,9 +893,12 @@ Data Transform
 
     synergy = Synergy()
     dt = synergy.data_transform
-    ia = synergy.create_integer_array(); ia.from_list([1, 2, 3])
-    da = synergy.create_double_array(); da.from_list([0.5, 1.5, 2.5])
-    ib = synergy.create_integer_array(); db = synergy.create_double_array()
+    ia = synergy.create_integer_array()
+    ia.from_list([1, 2, 3])
+    da = synergy.create_double_array()
+    da.from_list([0.5, 1.5, 2.5])
+    ib = synergy.create_integer_array()
+    db = synergy.create_double_array()
     ok = dt.scalar(ia, da, TransformScalarOperations.MULTIPLY, 2.0, ib, db)
     print(f"Scalar transform ok: {ok}")
 
@@ -977,7 +989,8 @@ Modeler
 
     synergy = Synergy()
     modeler = synergy.modeler
-    v = synergy.create_vector(); v.set_xyz(0.0, 0.0, 0.0)
+    v = synergy.create_vector()
+    v.set_xyz(0.0, 0.0, 0.0)
     node_list = modeler.create_node_by_xyz(v)
     print("Created node list")
 
@@ -991,7 +1004,8 @@ Mold Surface Generator
     synergy = Synergy()
     msg = synergy.mold_surface_generator
     msg.centered = True
-    dim = synergy.create_vector(); dim.set_xyz(100.0, 80.0, 60.0)
+    dim = synergy.create_vector()
+    dim.set_xyz(100.0, 80.0, 60.0)
     msg.dimensions = dim
     ok = msg.generate()
     print(f"Mold surface generated: {ok}")
@@ -1017,8 +1031,11 @@ Runner Generator
 
     synergy = Synergy()
     rg = synergy.runner_generator
-    rg.sprue_x = 0.0; rg.sprue_y = 0.0; rg.sprue_length = 30.0
-    rg.sprue_diameter = 6.0; rg.sprue_taper_angle = 2.0
+    rg.sprue_x = 0.0
+    rg.sprue_y = 0.0
+    rg.sprue_length = 30.0
+    rg.sprue_diameter = 6.0
+    rg.sprue_taper_angle = 2.0
     ok = rg.generate()
     print(f"Runner generated: {ok}")
 
@@ -1054,10 +1071,12 @@ Coolant Endpoints
         prop = proped.create_property(COOLANT_ENDPOINT_PROP_TYPE, next_prop_id, True)
         prop.set_field_description(FIELD_ENDPOINT_NAME, name)
 
-        d_in = synergy.create_double_array(); d_in.add_double(float(inlet_ndbc_index))
+        d_in = synergy.create_double_array()
+        d_in.add_double(float(inlet_ndbc_index))
         prop.set_field_values(FIELD_INLET_NDBC, d_in)
 
-        d_out = synergy.create_double_array(); d_out.add_double(float(outlet_ndbc_index))
+        d_out = synergy.create_double_array()
+        d_out.add_double(float(outlet_ndbc_index))
         prop.set_field_values(FIELD_OUTLET_NDBC, d_out)
 
         proped.commit_changes("")
@@ -1098,7 +1117,8 @@ Coolant inlet nodes and NDBC at XYZ
 
     # Create property set and assign default coolant (ID: 20010, index 1) to field 20022
     prop = proped.create_property(COOLANT_PROP_SET, next_id, True)
-    d = synergy.create_double_array(); d.from_list([20010.0, 1.0])
+    d = synergy.create_double_array()
+    d.from_list([20010.0, 1.0])
     prop.set_field_values(20022, d)
     proped.commit_changes("")
 
@@ -1110,11 +1130,13 @@ Coolant inlet nodes and NDBC at XYZ
 
     for (x, y, z) in points:
         # Create node at XYZ
-        v = synergy.create_vector(); v.set_xyz(x, y, z)
+        v = synergy.create_vector()
+        v.set_xyz(x, y, z)
         nodes = modeler.create_node_by_xyz(v)
 
         # Create NDBC with a direction vector (matches VB: -1, 0, 0)
-        n = synergy.create_vector(); n.set_xyz(-1.0, 0.0, 0.0)
+        n = synergy.create_vector()
+        n.set_xyz(-1.0, 0.0, 0.0)
         bc.create_ndbc(nodes, n, COOLANT_PROP_SET, prop)
 
     proped.commit_changes("")
@@ -1292,7 +1314,9 @@ This example emulates a report workflow directly from Python, using python-pptx 
 
     geo_slide = prs.slides.add_slide(title_only_layout)
     add_title(geo_slide, "Geometry Overview")
-    viewer.reset(); viewer.go_to_standard_view(StandardViews.ISOMETRIC); viewer.fit()
+    viewer.reset()
+    viewer.go_to_standard_view(StandardViews.ISOMETRIC)
+    viewer.fit()
     geo_img = capture_plot_image(plot=None, orientation="CURRENT")
     add_picture_centered(geo_slide, geo_img)
 
@@ -1353,7 +1377,8 @@ This example emulates a report workflow directly from Python, using python-pptx 
             except Exception:
                 pass
 
-    plot = pm.get_first_plot(); count = 0
+    plot = pm.get_first_plot()
+    count = 0
     while plot:
         name = plot.name
         add_plot_slide(plot, name, orientation="ISOMETRIC")
@@ -1389,8 +1414,10 @@ System Messages
 
     synergy = Synergy()
     sm = synergy.system_message
-    sa = synergy.create_string_array(); sa.from_list(["Diameter", "Length"])
-    da = synergy.create_double_array(); da.from_list([6.0, 30.0])
+    sa = synergy.create_string_array()
+    sa.from_list(["Diameter", "Length"])
+    da = synergy.create_double_array()
+    da.from_list([6.0, 30.0])
     msg = sm.get_data_message(100, sa, da, SystemUnits.METRIC)
     print(msg)
 
@@ -1402,10 +1429,15 @@ Arrays and Geometry Helpers
     from moldflow import Synergy
 
     synergy = Synergy()
-    ia = synergy.create_integer_array(); ia.from_list([1, 2, 3]); print(ia.size)
-    da = synergy.create_double_array(); da.from_list([0.1, 0.2])
-    sa = synergy.create_string_array(); sa.from_list(["A", "B"])
-    vec = synergy.create_vector(); vec.set_xyz(1.0, 2.0, 3.0)
+    ia = synergy.create_integer_array()
+    ia.from_list([1, 2, 3])
+    print(ia.size)
+    da = synergy.create_double_array()
+    da.from_list([0.1, 0.2])
+    sa = synergy.create_string_array()
+    sa.from_list(["A", "B"])
+    vec = synergy.create_vector()
+    vec.set_xyz(1.0, 2.0, 3.0)
     va = synergy.create_vector_array()
 
 API Reference
