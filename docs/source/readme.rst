@@ -480,7 +480,7 @@ Iterate Plots and Export Overlays
 More Advanced Examples
 ======================
 
-Derived Results
+Derived results from existing plots (absolute temperature)
 ---------------
 
 .. code-block:: python
@@ -492,7 +492,7 @@ Derived Results
     pm = synergy.plot_manager
     dt = synergy.data_transform
 
-    # ABS Temperature:K = Bulk temperature:13 + 273
+    # Absolute temperature:K = Bulk temperature:13 + 273
     ds_id = pm.find_dataset_id_by_name("Bulk temperature")
     all_times = synergy.create_double_array()
     pm.get_indp_values(ds_id, all_times)
@@ -508,7 +508,7 @@ Derived Results
     dt.scalar(ent, vals, TransformScalarOperations.ADD, 273.0, ent, vals)
 
     up = pm.create_user_plot()
-    up.set_name("ABS Temperature")
+    up.set_name("Absolute Temperature")
     up.set_data_type(UserPlotType.ELEMENT_DATA)
     up.set_dept_unit_name("K")
     up.set_scalar_data(ent, vals)
