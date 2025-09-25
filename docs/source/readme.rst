@@ -1103,7 +1103,7 @@ Coolant inlet nodes and NDBC at XYZ
     proped = synergy.property_editor
     bc = synergy.boundary_conditions
 
-    # Property set depends on mesh type (dual-domain vs 3D), mirroring VBScript logic
+    # Property set depends on mesh type (dual-domain vs 3D)
     COOLANT_PROP_SET = 40020
     if sd.mesh_type == "3D":
         COOLANT_PROP_SET = 40021
@@ -1134,7 +1134,7 @@ Coolant inlet nodes and NDBC at XYZ
         v.set_xyz(x, y, z)
         nodes = modeler.create_node_by_xyz(v)
 
-        # Create NDBC with a direction vector (matches VB: -1, 0, 0)
+        # Create NDBC with a direction vector
         n = synergy.create_vector()
         n.set_xyz(-1.0, 0.0, 0.0)
         bc.create_ndbc(nodes, n, COOLANT_PROP_SET, prop)
@@ -1224,7 +1224,7 @@ Export cooling circuits to CAD-like lines
             paths.append(path)
 
     # Write a simple DXF-like polyline per path (pure text, not invoking external beam2cad)
-    # Coordinates are exported in millimeters as in the VB example
+    # Coordinates are exported in millimeters
     def write_polylines_to_dxf(paths, coords, out_path):
         def mm(x):
             return x * 1000.0
