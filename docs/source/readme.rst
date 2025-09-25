@@ -1269,17 +1269,8 @@ This example emulates a report workflow directly from Python, using python-pptx 
 
     def capture_plot_image(plot, orientation: str | None, width_px=1600, height_px=900) -> str:
         if orientation and orientation.upper() != "CURRENT":
-            mapping = {
-                "ISOMETRIC": StandardViews.ISOMETRIC,
-                "FRONT": StandardViews.FRONT,
-                "RIGHT": StandardViews.RIGHT,
-                "LEFT": StandardViews.LEFT,
-                "TOP": StandardViews.TOP,
-                "BACK": StandardViews.BACK,
-            }
-            sv = mapping.get(orientation.upper())
-            if sv is not None:
-                viewer.go_to_standard_view(sv)
+            target = orientation.title() if isinstance(orientation, str) else orientation
+            viewer.go_to_standard_view(target)
             viewer.fit()
 
         tmp = tempfile.NamedTemporaryFile(prefix="mf_plot_", suffix=".png", delete=False)
