@@ -96,7 +96,7 @@ jobs:
           $packageName = 'moldflow'
 
           try {
-            $resp = Invoke-WebRequest -Uri "https://test.pypi.org/pypi/$packageName/json" -UseBasicParsing -ErrorAction Stop
+            $resp = Invoke-WebRequest -Uri "https://pypi.org/pypi/$packageName/json" -UseBasicParsing -ErrorAction Stop
             $data = $resp.Content | ConvertFrom-Json
             $versions = @($data.releases.PSObject.Properties.Name)
           } catch {
@@ -130,9 +130,9 @@ jobs:
         if: ${{ github.event.inputs.docs_only != 'true' && steps.pypi_check.outputs.exists == 'false' }}
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          python run.py publish --skip-build --testpypi
+          python run.py publish --skip-build
 
       - name: Create GitHub Release
         if: ${{ github.event.inputs.docs_only != 'true' && steps.pypi_check.outputs.exists == 'false' }}
