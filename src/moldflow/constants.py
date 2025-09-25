@@ -5,6 +5,8 @@
 
 import winreg
 import os
+from win32com.client import VARIANT
+import pythoncom
 
 # Constants for color bands
 COLOR_BAND_RANGE = tuple(list(range(2, 65)) + [256])
@@ -23,6 +25,9 @@ LOCALE_LOCATION = "SOFTWARE\\Autodesk\\{product_name}\\{version}\\Environment"
 # Environment variable constants
 LOCALE_ENVIRONMENT_VARIABLE_NAME = "MFSYN_LOCALE"
 LOCALE_REGISTRY_VARIABLE_NAME = "MFSYN_LOCALE"
+
+# VARIANT constants
+VARIANT_NULL_IDISPATCH = VARIANT(pythoncom.VT_DISPATCH, None)
 
 # BCP-47 standard constants
 THREE_LETTER_TO_BCP_47 = {

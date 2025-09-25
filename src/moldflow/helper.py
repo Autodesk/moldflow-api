@@ -7,11 +7,10 @@ Helper functions for the Moldflow Wrapper Library.
 
 from enum import Enum
 import os
-from win32com.client import VARIANT
-import pythoncom
 from .errors import raise_type_error, raise_value_error, raise_index_error
 from .common import ValueErrorReason, LogMessage
 from .logger import process_log
+from .constants import VARIANT_NULL_IDISPATCH
 
 
 def get_enum_value(value, enum: Enum):
@@ -312,11 +311,6 @@ def _mf_array_to_list(array_instance):
     return [array_instance.val(i) for i in range(array_instance.size)]
 
 
-def variant_null_idispatch():
-    """Return a VARIANT representing a null IDispatch pointer (VT_DISPATCH, None)."""
-    return VARIANT(pythoncom.VT_DISPATCH, None)
-
-
 def coerce_optional_dispatch(value, attr_name: str | None = None):
     """
     Coerce an optional COM object argument declared as VTS_DISPATCH.
@@ -333,7 +327,7 @@ def coerce_optional_dispatch(value, attr_name: str | None = None):
         VARIANT: The coerced value.
     """
     if value is None:
-        return variant_null_idispatch()
+        return VARIANT_NULL_IDISPATCH
     if attr_name:
         value = getattr(value, attr_name)
     return value
