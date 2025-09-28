@@ -11,6 +11,7 @@ from moldflow import MeshType, ImportUnits, MDLKernel, MDLContactMeshType, CADBo
 
 
 @pytest.mark.unit
+@pytest.mark.import_options
 class TestUnitImportOptions:
     """
     Test suite for the ImportOptions class.
