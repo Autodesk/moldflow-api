@@ -50,7 +50,6 @@ class TestIntegrationImportOptions:
         Test that ImportOptions can be set correctly.
         """
         for value, expected_value in import_options_set_options[attribute].items():
-            print(attribute, value, type(value), expected_value, type(expected_value))
             setattr(import_options, attribute, value)
             assert getattr(import_options, attribute) == expected_value
 

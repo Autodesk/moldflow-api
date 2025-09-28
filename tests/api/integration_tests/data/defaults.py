@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-Data for testing defaults for Moldflow Synergy API classes.
+Default values for testing Moldflow Synergy API classes.
 """
 
 import_options_defaults = {
