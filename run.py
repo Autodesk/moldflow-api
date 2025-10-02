@@ -12,8 +12,8 @@ Usage:
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
-    run.py publish [-s | --skip-build] [--testpypi]
-    run.py release
+    run.py publish [-s | --skip-build] [(--testpypi | --repo-url=<url>)]
+    run.py release [--github-api-url=<url>]
     run.py report [-c | --cli] [-h | --html] [-x | --xml]
     run.py test [<tests>...] [-m <marker> | --marker=<marker>] [-s | --skip-build]
         [-k | --keep-files] [-q | --quiet] [--unit] [--integration] [--core] [--all]
@@ -49,6 +49,8 @@ Options:
     --unit                          Run only unit tests.
     --integration                   Run only integration tests.
     --all                           Run all tests.
+    --repo-url=<url>                Custom PyPI repository URL.
+    --github-api-url=<url>          Custom GitHub API URL.
 """
 
 import os
@@ -148,7 +150,7 @@ def build_package(install=True):
         install_package()
 
 
-def publish(skip_build=False, testpypi=False):
+def publish(skip_build=False, testpypi=False, repo_url=None):
     """Publish package"""
 
     # Restrict publishing to GitHub Actions workflow
@@ -170,7 +172,11 @@ def publish(skip_build=False, testpypi=False):
 
     logging.info('Package is valid')
 
-    twine_args = '--repository testpypi --verbose' if testpypi else '--verbose'
+    if repo_url:
+        repo_url_arg = f'--repository-url {repo_url}'
+        twine_args = f'--verbose {repo_url_arg}'
+    else:
+        twine_args = '--repository testpypi --verbose' if testpypi else '--verbose'
 
     run_command(
         [sys.executable] + f'-m twine upload {twine_args} {DIST_FILES}'.split(' '),
@@ -182,7 +188,7 @@ def publish(skip_build=False, testpypi=False):
     )
 
 
-def create_release():
+def create_release(github_api_url=None):
     """
     Create Git tag and GitHub release via PyGithub.
 
@@ -211,7 +217,13 @@ def create_release():
     release_name = tag
 
     logging.info('Creating GitHub release %s on %s', tag, owner_repo)
-    gh = Github(token)
+
+    if github_api_url:
+        logging.info('Using custom GitHub API URL: %s', github_api_url)
+        gh = Github(token, base_url=github_api_url)
+    else:
+        gh = Github(token)
+
     repo = gh.get_repo(owner_repo)
 
     release = repo.create_git_tag_and_release(
@@ -648,12 +660,14 @@ def main():
 
         elif args.get('publish'):
             skip_build = args.get('--skip-build') or args.get('-s')
-            testpypi = args.get('--testpypi') or args.get('-t')
+            testpypi = args.get('--testpypi')
+            repo_url = args.get('--repo-url')
 
-            publish(skip_build=skip_build, testpypi=testpypi)
+            publish(skip_build=skip_build, testpypi=testpypi, repo_url=repo_url)
 
         elif args.get('release'):
-            create_release()
+            github_api_url = args.get('--github-api-url')
+            create_release(github_api_url=github_api_url)
 
         elif args.get('clean-up'):
             clean_up()
