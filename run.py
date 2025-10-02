@@ -60,6 +60,8 @@ import logging
 import platform
 import subprocess
 import shutil
+import glob
+from urllib.parse import urlparse
 
 import docopt
 from github import Github
@@ -159,6 +161,9 @@ def publish(skip_build=False, testpypi=False, repo_url=None):
             'Publishing to PyPI is restricted to the GitHub Actions manual workflow.'
             'Please use the "Publish to PyPI (manual)" workflow.'
         )
+    # Defensive check: don't allow both testpypi and explicit repo_url
+    if testpypi and repo_url:
+        raise RuntimeError('Options testpypi and repo_url are mutually exclusive.')
 
     if not skip_build:
         build_package()
@@ -168,18 +173,35 @@ def publish(skip_build=False, testpypi=False, repo_url=None):
     # First check the package
     logging.info('Checking package validity')
 
-    run_command([sys.executable] + f'-m twine check --strict {DIST_FILES}'.split(' '), ROOT_DIR)
+    # Expand distribution files using glob to avoid shell globbing
+    dist_files_list = glob.glob(DIST_FILES)
+    if not dist_files_list:
+        raise RuntimeError(f'No distribution files found in {DIST_DIR}')
+
+    # Use explicit args to avoid shell interpolation for the check step
+    run_command([sys.executable, '-m', 'twine', 'check', '--strict'] + dist_files_list, ROOT_DIR)
 
     logging.info('Package is valid')
 
+    # Validate repo URL if provided
     if repo_url:
-        repo_url_arg = f'--repository-url {repo_url}'
-        twine_args = f'--verbose {repo_url_arg}'
-    else:
-        twine_args = '--repository testpypi --verbose' if testpypi else '--verbose'
+        parsed = urlparse(repo_url)
+        # Only allow secure HTTPS URLs for repository uploads
+        if parsed.scheme != 'https' or not parsed.netloc:
+            raise RuntimeError(f'Invalid repository URL: {repo_url}. Only HTTPS URLs are allowed.')
+
+    # Build twine upload args safely as a list
+    twine_cmd = [sys.executable, '-m', 'twine', 'upload', '--verbose']
+
+    if repo_url:
+        twine_cmd += ['--repository-url', repo_url]
+    elif testpypi:
+        twine_cmd += ['--repository', 'testpypi']
+
+    twine_cmd += dist_files_list
 
     run_command(
-        [sys.executable] + f'-m twine upload {twine_args} {DIST_FILES}'.split(' '),
+        twine_cmd,
         ROOT_DIR,
         {
             'TWINE_USERNAME': os.environ.get('TWINE_USERNAME', ''),
@@ -662,6 +684,14 @@ def main():
             skip_build = args.get('--skip-build') or args.get('-s')
             testpypi = args.get('--testpypi')
             repo_url = args.get('--repo-url')
+
+            # Docopt groups are XOR, but validate explicitly and present a
+            # user-friendly message rather than a stack trace.
+            if testpypi and repo_url:
+                logging.error(
+                    'Options --testpypi and --repo-url are mutually exclusive. Provide only one.'
+                )
+                return 2
 
             publish(skip_build=skip_build, testpypi=testpypi, repo_url=repo_url)
 
