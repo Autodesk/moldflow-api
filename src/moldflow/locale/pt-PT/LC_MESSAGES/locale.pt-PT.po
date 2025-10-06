@@ -3,6 +3,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: pt-PT\n"
 
+msgid "Cancel"
+msgstr "Cancelar"
+
 msgid "Checking file extension {file_name}"
 msgstr "A verificar a extensão do ficheiro {file_name}"
 
@@ -72,6 +75,9 @@ msgstr "Valor inválido: {reason}"
 msgid "Logger was not setup"
 msgstr "Logger não foi configurado"
 
+msgid "OK"
+msgstr "OK"
+
 msgid "Save Error"
 msgstr "Erro ao guardar"
 
@@ -83,6 +89,9 @@ msgstr "Erro ao guardar: falha ao guardar {saving} em {file_name}"
 
 msgid "Setting {name} to {value}"
 msgstr "Configuração {name} para {value}"
+
+msgid "Submit"
+msgstr "Submeter"
 
 msgid "Test String"
 msgstr "String de teste"

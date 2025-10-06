@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- N/A
+- Added convenience class for showing message boxes and text input dialogs via Win32
 
 ### Changed
 - N/A

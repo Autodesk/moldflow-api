@@ -3,6 +3,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-CN\n"
 
+msgid "Cancel"
+msgstr "取消"
+
 msgid "Checking file extension {file_name}"
 msgstr "正在检查文件扩展名{file_name}"
 
@@ -72,6 +75,9 @@ msgstr "无效的值：{reason}"
 msgid "Logger was not setup"
 msgstr "没有设置记录器"
 
+msgid "OK"
+msgstr "确定"
+
 msgid "Save Error"
 msgstr "保存错误"
 
@@ -83,6 +89,9 @@ msgstr "保存错误：将{saving}保存到{file_name}失败"
 
 msgid "Setting {name} to {value}"
 msgstr "将{name}设置为{value}"
+
+msgid "Submit"
+msgstr "确定"
 
 msgid "Test String"
 msgstr "测试字符串"

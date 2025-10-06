@@ -38,6 +38,11 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 
+# Strings that are acceptable to remain identical across locales
+ALLOW_EQUAL_MSGSTR: set[str] = {
+    "OK",
+}
+
 @dataclass
 class PoEntry:
     msgid: str
@@ -357,9 +362,13 @@ class LocalizationChecker:
                     if not po_parser.has_string(msgid):
                         missing_translations.append(msgid)
                     else:
-                        # Check if translation is empty or same as source (untranslated)
+                        # Check if translation is empty or same as source (untranslated),
+                        # with an allowlist for locale-invariant tokens like "OK"
                         target_entry = po_parser.entries[msgid]
-                        if not target_entry.msgstr.strip() or target_entry.msgstr == msgid:
+                        if (
+                            not target_entry.msgstr.strip()
+                            or (target_entry.msgstr == msgid and msgid not in ALLOW_EQUAL_MSGSTR)
+                        ):
                             empty_translations.append(msgid)
 
             locale_stats[locale_name] = {
