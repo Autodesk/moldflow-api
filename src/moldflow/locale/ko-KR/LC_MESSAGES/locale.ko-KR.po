@@ -3,6 +3,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko-KR\n"
 
+msgid "Cancel"
+msgstr "취소"
+
 msgid "Checking file extension {file_name}"
 msgstr "파일 확장자 {file_name} 확인 중"
 
@@ -72,6 +75,9 @@ msgstr "잘못된 값: {reason}"
 msgid "Logger was not setup"
 msgstr "로거가 설정되지 않았습니다"
 
+msgid "OK"
+msgstr "확인"
+
 msgid "Save Error"
 msgstr "저장 오류"
 
@@ -83,6 +89,9 @@ msgstr "저장 오류: {saving}을(를) {file_name}에 저장하지 못했습니
 
 msgid "Setting {name} to {value}"
 msgstr "{name}을(를) {value}(으)로 설정 중"
+
+msgid "Submit"
+msgstr "확인"
 
 msgid "Test String"
 msgstr "테스트 문자열"
