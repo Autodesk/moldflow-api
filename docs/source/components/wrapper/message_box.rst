@@ -95,19 +95,19 @@ Options
      - Application (default), Task-modal, System-modal
    * - topmost
      - bool
-     - Keep message box on top
+     - Keep message box on top (standard MessageBox only)
    * - set_foreground
      - bool
-     - Force foreground
+     - Force foreground (standard MessageBox only)
    * - right_align / rtl_reading
      - bool
-     - Layout flags for right-to-left locales
+     - Layout flags for right-to-left locales (standard MessageBox only)
    * - help_button
      - bool
      - Show Help button
    * - owner_hwnd
      - int | None
-     - Owner window handle (improves modality/Z-order)
+     - Owner window handle (standard MessageBox only)
    * - default_text / placeholder
      - str | None
      - Prefill text and cue banner for input dialog
@@ -119,13 +119,13 @@ Options
      - Maximum characters accepted (client-side)
    * - width_dlu / height_dlu
      - int | None
-     - Size the input dialog (dialog units)
+     - Size the input dialog (pixels; DLUs in legacy template path)
    * - validator
      - Callable[[str], bool] | None
      - Enable OK only when input satisfies predicate
    * - font_face / font_size_pt
      - str / int
-     - Font for input dialog (default Segoe UI 9pt)
+     - Font for legacy template; CreateWindowEx path uses system dialog font
 
 API
 ---
@@ -135,5 +135,5 @@ API
 Notes
 -----
 
-- Localization: button captions ("OK", "Cancel"), title, and prompt are localized via the package i18n system.
+- Localization: action button captions (e.g., "OK", "Cancel", "Submit") are localized via the package i18n system. Title and prompt are not localized automatically.
 - Return type: ``MessageBox.show()`` returns ``MessageBoxReturn`` (``MessageBoxResult | str | None``).
