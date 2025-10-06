@@ -107,7 +107,7 @@ Options
      - Show Help button
    * - owner_hwnd
      - int | None
-     - Owner window handle (standard MessageBox only)
+     - Owner window handle (standard MessageBox only, improves modality/Z-order)
    * - default_text / placeholder
      - str | None
      - Prefill text and cue banner for input dialog
