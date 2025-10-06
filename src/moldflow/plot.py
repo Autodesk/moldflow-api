@@ -456,13 +456,11 @@ class Plot:
     @property
     def color_bands(self) -> int:
         """
-        The number of color bands or smooth coloring.
-            - values between 2 through 64: banded coloring with this number of colors
-            - 256: smooth coloring
+        The number of color bands.
+            - values between 1 through 256: banded coloring with this number of colors
 
-
-        :getter: Get the number of color bands or smooth coloring.
-        :setter: Set the number of color bands or smooth coloring.
+        :getter: Get the number of color bands.
+        :setter: Set the number of color bands.
         :type: int
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="color_bands")
@@ -471,9 +469,8 @@ class Plot:
     @color_bands.setter
     def color_bands(self, value: int) -> None:
         """
-        The number of color bands or smooth coloring.
-            - values between 2 through 64: banded coloring with this number of colors
-            - 256: smooth coloring
+        The number of color bands.
+            - values between 1 through 256: banded coloring with this number of colors
 
         Args:
             value (int): number of color bands or smooth coloring to set.

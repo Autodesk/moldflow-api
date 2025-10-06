@@ -8,11 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial public release
-- Python API wrapper for Moldflow Synergy
-- Comprehensive test suite
-- Documentation with examples
-- CI/CD pipeline for automated testing and publishing
+- N/A
 
 ### Changed
 - N/A
@@ -29,13 +25,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
-## [26.0.0] - 2025-XX-XX
+## [26.0.1] - 2025-09-12
 
 ### Added
-- Initial version aligned with Moldflow Synergy 2026
-- Basic API functionality
-- Windows support
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- Fix return types for `from_list` functions in data classes
+- Fix color band range options to 1 to 256
+
+### Security
+- N/A
+
+## [26.0.0] - 2025-09-01
+
+### Added
+- Initial version aligned with Moldflow Synergy 2026.0.1
 - Python 3.10-3.13 compatibility
 
-[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.0...HEAD
+[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.1...HEAD
+[26.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.1
 [26.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.0

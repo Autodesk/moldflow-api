@@ -82,8 +82,11 @@ class TestUnitStringArray:
     # pylint: disable=R0801
     def test_from_list(self, mock_string_array, mock_object, values):
         """Test the from_list method of the StringArray class."""
-        mock_string_array.from_list(values)
+        mock_object.FromVBSArray.return_value = len(values)
+        result = mock_string_array.from_list(values)
 
+        assert isinstance(result, int)
+        assert result == len(values)
         mock_object.FromVBSArray.assert_called_once()
 
     @pytest.mark.parametrize("invalid_values", INVALID_MOCK_WITH_NONE)
