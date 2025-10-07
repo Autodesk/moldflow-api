@@ -481,7 +481,7 @@ More Advanced Examples
 ======================
 
 Derived results from existing plots (absolute temperature)
----------------
+----------------------------------------------------------
 
 .. code-block:: python
 
