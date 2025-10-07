@@ -359,6 +359,7 @@ class MessageBox:
 
     Example:
         .. code-block:: python
+
             from moldflow import MessageBox, MessageBoxType
 
             # Information message
