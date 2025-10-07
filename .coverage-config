@@ -2,6 +2,9 @@
 branch = True
 source_pkgs =
     moldflow
+omit =
+    src/moldflow/message_box.py
+    */site-packages/moldflow/message_box.py
 
 [paths]
 source =
@@ -12,6 +15,9 @@ source =
 fail_under = 93
 show_missing = True
 precision = 2
+omit =
+    src/moldflow/message_box.py
+    */site-packages/moldflow/message_box.py
 
 [html]
 title = Moldflow API Unit Test Coverage
