@@ -57,7 +57,6 @@ class StringArray:
     def to_list(self) -> list[str]:
         """
         Convert the string array to a list of strings.
-
         Returns:
             The list of values.
         """
