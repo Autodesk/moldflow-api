@@ -480,6 +480,212 @@ Iterate Plots and Export Overlays
 More Advanced Examples
 ======================
 
+Derived results from existing plots (absolute temperature)
+----------------------------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import UserPlotType, TransformScalarOperations
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    # Absolute temperature:K = Bulk temperature:13 + 273
+    ds_id = pm.find_dataset_id_by_name("Bulk temperature")
+    all_times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, all_times)
+    target_time = 13.0
+    closest_time = min(all_times.to_list(), key=lambda t: abs(t - target_time))
+    indp = synergy.create_double_array()
+    indp.add_double(closest_time)
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    pm.get_scalar_data(ds_id, indp, ent, vals)
+
+    dt.scalar(ent, vals, TransformScalarOperations.ADD, 273.0, ent, vals)
+
+    up = pm.create_user_plot()
+    up.set_name("Absolute Temperature")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_dept_unit_name("K")
+    up.set_scalar_data(ent, vals)
+    up.build()
+
+Vector difference with absolute value
+-------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformOperations, TransformFunctions, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    name = "Average velocity"  # 3-component vector
+    ds_id = pm.find_dataset_id_by_name(name)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    t1, t2 = 1.1, 2.0
+    c1 = min(times.to_list(), key=lambda t: abs(t - t1))
+    c2 = min(times.to_list(), key=lambda t: abs(t - t2))
+
+    def get_vec_at(t):
+        indp = synergy.create_double_array()
+        indp.add_double(t)
+        ent = synergy.create_integer_array()
+        vx = synergy.create_double_array()
+        vy = synergy.create_double_array()
+        vz = synergy.create_double_array()
+        pm.get_vector_data(ds_id, indp, ent, vx, vy, vz)
+        return ent, (vx, vy, vz)
+
+    ent1, (v1x, v1y, v1z) = get_vec_at(c1)
+    ent2, (v2x, v2y, v2z) = get_vec_at(c2)
+
+    vdx = synergy.create_double_array()
+    vdy = synergy.create_double_array()
+    vdz = synergy.create_double_array()
+    for a, b, out in [(v1x, v2x, vdx), (v1y, v2y, vdy), (v1z, v2z, vdz)]:
+        dt.op(ent1, a, TransformOperations.SUBTRACT, ent2, b, ent1, out)
+        dt.func(TransformFunctions.ABSOLUTE, ent1, out, ent1, out)
+
+    up = pm.create_user_plot()
+    up.set_name("Difference in Velocity")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_vector_as_displacement(False)
+    up.set_dept_unit_name("m/s")
+    up.set_vector_data(ent1, vdx, vdy, vdz)
+    up.build()
+
+Operate on current plot
+-----------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformFunctions, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    viewer = synergy.viewer
+    dt = synergy.data_transform
+
+    active = viewer.active_plot
+    if active is None:
+        raise RuntimeError("No active plot")
+    ds_id = active.data_id
+
+    cols = pm.get_data_nb_components(ds_id)
+    dtype = pm.get_data_type(ds_id)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    indp = None
+    if times.size > 0:
+        indp = synergy.create_double_array()
+        indp.add_double(times.to_list()[0])
+
+    ent = synergy.create_integer_array()
+    arrs = [synergy.create_double_array() for _ in range(max(cols, 1))]
+
+    if cols == 1:
+        pm.get_scalar_data(ds_id, indp, ent, arrs[0])
+    elif cols == 3:
+        pm.get_vector_data(ds_id, indp, ent, arrs[0], arrs[1], arrs[2])
+    elif cols == 6:
+        pm.get_tensor_data(ds_id, indp, ent, *arrs)
+    else:
+        raise RuntimeError("Unsupported component count")
+
+    for a in arrs[:cols]:
+        dt.func(TransformFunctions.ABSOLUTE, ent, a, ent, a)
+
+    up = pm.create_user_plot()
+    up.set_name("ABS of current plot")
+    up.set_data_type(UserPlotType.ELEMENT_DATA if dtype == "ELDT" else UserPlotType.NODE_DATA)
+    up.set_vector_as_displacement(dtype == "NDDT")
+    if cols == 1:
+        up.set_scalar_data(ent, arrs[0])
+    elif cols == 3:
+        up.set_vector_data(ent, arrs[0], arrs[1], arrs[2])
+    elif cols == 6:
+        up.set_tensor_data(ent, *arrs[:6])
+    up.build()
+
+Normalize by max at a time
+--------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+    from moldflow.common import TransformScalarOperations, UserPlotType
+
+    synergy = Synergy()
+    pm = synergy.plot_manager
+    dt = synergy.data_transform
+
+    name = "Pressure"
+    ds_id = pm.find_dataset_id_by_name(name)
+
+    times = synergy.create_double_array()
+    pm.get_indp_values(ds_id, times)
+    target_time = 3.5
+    closest = min(times.to_list(), key=lambda t: abs(t - target_time))
+    indp = synergy.create_double_array()
+    indp.add_double(closest)
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    pm.get_scalar_data(ds_id, indp, ent, vals)
+
+    max_v = max(vals.to_list())
+    out = synergy.create_double_array()
+    dt.scalar(ent, vals, TransformScalarOperations.DIVIDE, max_v, ent, out)
+
+    up = pm.create_user_plot()
+    up.set_name("Pre/Max")
+    up.set_data_type(UserPlotType.ELEMENT_DATA)
+    up.set_dept_unit_name("%")
+    up.set_scalar_data(ent, out)
+    up.build()
+
+Average/min/max diagnostics to console
+--------------------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    diag = synergy.diagnosis_manager
+
+    ent = synergy.create_integer_array()
+    vals = synergy.create_double_array()
+    count = diag.get_aspect_ratio_diagnosis(0.0, 0.0, True, False, ent, vals)
+    if count > 0:
+        data = vals.to_list()
+        ave = sum(data) / len(data)
+        print(f"Average aspect ratio: {ave:.3f}")
+
+Entity selection strings
+------------------------
+
+.. code-block:: python
+
+    from moldflow import Synergy
+
+    synergy = Synergy()
+    el = synergy.study_doc.create_entity_list()
+    el.select_from_string("N1:2 N5 N8:9")
+    print(el.size)
+    print(el.convert_to_string())
+
 Configure Import Options Before CAD Import
 ------------------------------------------
 
@@ -622,9 +828,12 @@ Data Transform
 
     synergy = Synergy()
     dt = synergy.data_transform
-    ia = synergy.create_integer_array(); ia.from_list([1, 2, 3])
-    da = synergy.create_double_array(); da.from_list([0.5, 1.5, 2.5])
-    ib = synergy.create_integer_array(); db = synergy.create_double_array()
+    ia = synergy.create_integer_array()
+    ia.from_list([1, 2, 3])
+    da = synergy.create_double_array()
+    da.from_list([0.5, 1.5, 2.5])
+    ib = synergy.create_integer_array()
+    db = synergy.create_double_array()
     ok = dt.scalar(ia, da, TransformScalarOperations.MULTIPLY, 2.0, ib, db)
     print(f"Scalar transform ok: {ok}")
 
@@ -715,7 +924,8 @@ Modeler
 
     synergy = Synergy()
     modeler = synergy.modeler
-    v = synergy.create_vector(); v.set_xyz(0.0, 0.0, 0.0)
+    v = synergy.create_vector()
+    v.set_xyz(0.0, 0.0, 0.0)
     node_list = modeler.create_node_by_xyz(v)
     print("Created node list")
 
@@ -729,7 +939,8 @@ Mold Surface Generator
     synergy = Synergy()
     msg = synergy.mold_surface_generator
     msg.centered = True
-    dim = synergy.create_vector(); dim.set_xyz(100.0, 80.0, 60.0)
+    dim = synergy.create_vector()
+    dim.set_xyz(100.0, 80.0, 60.0)
     msg.dimensions = dim
     ok = msg.generate()
     print(f"Mold surface generated: {ok}")
@@ -755,10 +966,208 @@ Runner Generator
 
     synergy = Synergy()
     rg = synergy.runner_generator
-    rg.sprue_x = 0.0; rg.sprue_y = 0.0; rg.sprue_length = 30.0
-    rg.sprue_diameter = 6.0; rg.sprue_taper_angle = 2.0
+    rg.sprue_x = 0.0
+    rg.sprue_y = 0.0
+    rg.sprue_length = 30.0
+    rg.sprue_diameter = 6.0
+    rg.sprue_taper_angle = 2.0
     ok = rg.generate()
     print(f"Runner generated: {ok}")
+
+Build PowerPoint Report (using python-pptx)
+-------------------------------------------
+
+This example emulates a report workflow directly from Python, using python-pptx to author a PPTX. See python-pptx on PyPI: https://pypi.org/project/python-pptx
+
+.. code-block:: python
+
+    import os
+    import tempfile
+    from moldflow import Synergy
+    from moldflow.common import StandardViews
+
+    # pip install python-pptx
+    from pptx import Presentation
+    from pptx.util import Inches, Pt
+
+    synergy = Synergy()
+    sd = synergy.study_doc
+    pm = synergy.plot_manager
+    viewer = synergy.viewer
+    project = synergy.project
+
+    # Ensure a visible viewport for captures
+    viewer.set_view_size(1600, 900)
+
+    # Result overlay flags
+    PLOT_RESULT = True
+    PLOT_LEGEND = True
+    PLOT_AXIS = True
+    PLOT_ROTATION = True
+    PLOT_SCALE_BAR = True
+    PLOT_PLOT_INFO = True
+    PLOT_STUDY_TITLE = True
+    PLOT_RULER = True
+    PLOT_LOGO = True
+
+    def capture_plot_image(plot, orientation: str | None, width_px=1600, height_px=900) -> str:
+        # Apply orientation and fit the view
+        if orientation and orientation.upper() != "CURRENT":
+            target = orientation.title() if isinstance(orientation, str) else orientation
+            viewer.go_to_standard_view(target)
+        # Show plot (if provided) or ensure geometry-only capture
+        if plot is not None:
+            viewer.show_plot(plot)
+            # Ensure plot is generated and a valid frame is visible
+            try:
+                plot.regenerate()
+            except Exception:
+                pass
+            try:
+                # Show the last frame if available
+                frames = viewer.get_number_frames_by_name(plot.name)
+                if isinstance(frames, int) and frames > 0:
+                    viewer.show_plot_frame(plot, frames - 1)
+            except Exception:
+                pass
+        else:
+            # Hide any active plot to avoid empty result layer when capturing geometry
+            ap = viewer.active_plot
+            if ap is not None:
+                viewer.hide_plot(ap)
+        viewer.fit()
+
+        tmp = tempfile.NamedTemporaryFile(prefix="mf_plot_", suffix=".png", delete=False)
+        tmp.close()
+
+        # Use full overlay flags when capturing results; turn them off for geometry-only
+        if plot is not None:
+            viewer.save_image(
+                tmp.name,
+                x=width_px,
+                y=height_px,
+                result=PLOT_RESULT,
+                legend=PLOT_LEGEND,
+                axis=PLOT_AXIS,
+                rotation=PLOT_ROTATION,
+                scale_bar=PLOT_SCALE_BAR,
+                plot_info=PLOT_PLOT_INFO,
+                study_title=PLOT_STUDY_TITLE,
+                ruler=PLOT_RULER,
+                logo=PLOT_LOGO,
+            )
+        else:
+            viewer.save_image(tmp.name, x=width_px, y=height_px, result=False, legend=False, axis=False)
+
+        return tmp.name
+
+    prs = Presentation()
+    title_layout = prs.slide_layouts[0]
+    title_only_layout = prs.slide_layouts[5]
+
+    def add_title(slide, text: str):
+        if slide.shapes.title is not None:
+            slide.shapes.title.text = text
+            slide.shapes.title.text_frame.paragraphs[0].font.size = Pt(28)
+
+    def add_picture_centered(slide, image_path: str, max_width_in=10.0, top_in=1.5):
+        pic = slide.shapes.add_picture(image_path, Inches(0), Inches(top_in))
+        page_w = prs.slide_width
+        max_w = Inches(max_width_in)
+        if pic.width > max_w:
+            scale = max_w / pic.width
+            pic.width = int(pic.width * scale)
+            pic.height = int(pic.height * scale)
+        pic.left = int((page_w - pic.width) / 2)
+        return pic
+
+    slide = prs.slides.add_slide(title_layout)
+    add_title(slide, f"Report: {sd.study_name}")
+    if slide.placeholders and len(slide.placeholders) > 1:
+        slide.placeholders[1].text = f"Project: {project.path}"
+
+    geo_slide = prs.slides.add_slide(title_only_layout)
+    add_title(geo_slide, "Geometry Overview")
+    viewer.reset()
+    viewer.go_to_standard_view(StandardViews.ISOMETRIC)
+    viewer.fit()
+    geo_img = capture_plot_image(plot=None, orientation="CURRENT")
+    add_picture_centered(geo_slide, geo_img)
+
+    diag = synergy.diagnosis_manager
+    summary = diag.get_mesh_summary(element_only=False)
+    mesh_slide = prs.slides.add_slide(title_only_layout)
+    add_title(mesh_slide, "Mesh Summary")
+    tf = mesh_slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(3)).text_frame
+    tf.word_wrap = True
+    lines = [
+        f"Nodes: {summary.nodes_count}",
+        f"Triangles: {summary.triangles_count}",
+        f"Tetras: {summary.tetras_count}",
+        f"Beams: {summary.beams_count}",
+        f"AspectRatio avg/min/max: {summary.ave_aspect_ratio:.3f} / {summary.min_aspect_ratio:.3f} / {summary.max_aspect_ratio:.3f}",
+    ]
+    for i, line in enumerate(lines):
+        p = tf.add_paragraph() if i else tf.paragraphs[0]
+        p.text = line
+        p.font.size = Pt(16)
+
+    def add_plot_slide(plot_obj, title: str, orientation: str = "ISOMETRIC"):
+        slide = prs.slides.add_slide(title_only_layout)
+        add_title(slide, title)
+        img = capture_plot_image(plot_obj, orientation)
+        if img:
+            add_picture_centered(slide, img)
+            try:
+                os.remove(img)
+            except Exception:
+                pass
+        else:
+            tx = slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(1.0)).text_frame
+            tx.text = "Skipped non-mesh/unsupported plot for 3D capture"
+            tx.paragraphs[0].font.size = Pt(14)
+
+    def add_plot_four_views(plot_obj, title: str):
+        slide = prs.slides.add_slide(title_only_layout)
+        add_title(slide, f"{title} - Four Views")
+        views = ["ISOMETRIC", "FRONT", "LEFT", "TOP"]
+        cols = 2
+        x0, y0 = Inches(0.7), Inches(1.3)
+        cell_w, cell_h = Inches(4.5), Inches(3.2)
+        for idx, v in enumerate(views):
+            img = capture_plot_image(plot_obj, v, width_px=1000, height_px=600)
+            col = idx % cols
+            row = idx // cols
+            left = x0 + col * (cell_w + Inches(0.2))
+            top = y0 + row * (cell_h + Inches(0.2))
+            if img:
+                pic = slide.shapes.add_picture(img, left, top)
+                if pic.width > cell_w:
+                    scale = cell_w / pic.width
+                    pic.width = int(pic.width * scale)
+                    pic.height = int(pic.height * scale)
+                if pic.height > cell_h:
+                    scale = cell_h / pic.height
+                    pic.width = int(pic.width * scale)
+                    pic.height = int(pic.height * scale)
+                try:
+                    os.remove(img)
+                except Exception:
+                    pass
+
+    plot = pm.get_first_plot()
+    count = 0
+    while plot:
+        name = plot.name
+        add_plot_slide(plot, name, orientation="ISOMETRIC")
+        if count < 2:
+            add_plot_four_views(plot, name)
+        plot = pm.get_next_plot(plot)
+        count += 1
+
+    out_path = os.path.join(project.path, f"{os.path.splitext(sd.study_name)[0]}_report.pptx")
+    prs.save(out_path)
+    print(f"Report saved: {out_path}")
 
 Study Document
 --------------
@@ -783,8 +1192,10 @@ System Messages
 
     synergy = Synergy()
     sm = synergy.system_message
-    sa = synergy.create_string_array(); sa.from_list(["Diameter", "Length"])
-    da = synergy.create_double_array(); da.from_list([6.0, 30.0])
+    sa = synergy.create_string_array()
+    sa.from_list(["Diameter", "Length"])
+    da = synergy.create_double_array()
+    da.from_list([6.0, 30.0])
     msg = sm.get_data_message(100, sa, da, SystemUnits.METRIC)
     print(msg)
 
@@ -796,10 +1207,15 @@ Arrays and Geometry Helpers
     from moldflow import Synergy
 
     synergy = Synergy()
-    ia = synergy.create_integer_array(); ia.from_list([1, 2, 3]); print(ia.size)
-    da = synergy.create_double_array(); da.from_list([0.1, 0.2])
-    sa = synergy.create_string_array(); sa.from_list(["A", "B"])
-    vec = synergy.create_vector(); vec.set_xyz(1.0, 2.0, 3.0)
+    ia = synergy.create_integer_array()
+    ia.from_list([1, 2, 3])
+    print(ia.size)
+    da = synergy.create_double_array()
+    da.from_list([0.1, 0.2])
+    sa = synergy.create_string_array()
+    sa.from_list(["A", "B"])
+    vec = synergy.create_vector()
+    vec.set_xyz(1.0, 2.0, 3.0)
     va = synergy.create_vector_array()
 
 API Reference
