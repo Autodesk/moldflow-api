@@ -73,7 +73,6 @@ ENCODING = 'utf-8'
 SITE_PACKAGES = 'moldflow-site-packages'
 VERSION_JSON = 'version.json'
 VERSION = ''
-BUILD_NUMBER = os.environ.get('BUILD_NUMBER', '0')
 
 # FILE TYPES
 PY_FILES_EXT = '.py'
@@ -588,14 +587,13 @@ def set_version():
 
     # Set global version for use in other functions
     global VERSION
-    patch_value = vers_json_dict.get('patch', BUILD_NUMBER)
-    VERSION = f"{vers_json_dict['major']}.{vers_json_dict['minor']}.{patch_value}"
+    VERSION = f"{vers_json_dict['major']}.{vers_json_dict['minor']}.{vers_json_dict['patch']}"
 
     # Create package version.json with complete version info
     package_version = {
         "major": vers_json_dict['major'],
         "minor": vers_json_dict['minor'],
-        "patch": patch_value,
+        "patch": vers_json_dict['patch'],
     }
 
     # Ensure package directory exists
