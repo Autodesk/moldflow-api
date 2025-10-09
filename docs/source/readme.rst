@@ -999,7 +999,7 @@ This example emulates a report workflow directly from Python, using python-pptx 
     # Ensure a visible viewport for captures
     viewer.set_view_size(1600, 900)
 
-    # Result overlay flags (emulate VB SaveImage3 defaults)
+    # Result overlay flags
     PLOT_RESULT = True
     PLOT_LEGEND = True
     PLOT_AXIS = True
@@ -1059,13 +1059,6 @@ This example emulates a report workflow directly from Python, using python-pptx 
         else:
             viewer.save_image(tmp.name, x=width_px, y=height_px, result=False, legend=False, axis=False)
 
-        # If capture produced an unexpectedly small file, fallback attempt with result=False
-        try:
-            if os.path.getsize(tmp.name) < 12000 and plot is not None:
-                # Fallback: capture without result overlay in case the plot layer isn't rendering
-                viewer.save_image(tmp.name, x=width_px, y=height_px, result=False, legend=False, axis=False)
-        except Exception:
-            pass
         return tmp.name
 
     prs = Presentation()
