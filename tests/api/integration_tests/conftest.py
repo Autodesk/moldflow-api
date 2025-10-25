@@ -61,26 +61,34 @@ FILE_SETS = generate_file_map()
 
 def pytest_generate_tests(metafunc):
     """
-    Automatically parametrize tests based on @pytest.mark.file_set(FileSet.<SET>).
+    Parametrize tests based on @pytest.mark.file_set(FileSet.<SET>).
 
-    Each test gets run once per (ModelType, file_path) in that FileSet.
+    Class-level parameterization ensures all tests for a model type
+    run together before switching models.
     """
-    if "study_file" in metafunc.fixturenames:
-        marker = metafunc.definition.get_closest_marker("file_set")
-        if not marker:
-            metafunc_name = metafunc.function.__name__
-            raise ValueError(
-                f"Test '{metafunc_name}' requires a @pytest.mark.file_set(FileSet.<SET>) marker."
-            )
+    if "study_file" not in metafunc.fixturenames or not metafunc.cls:
+        return
 
-        file_set = marker.args[0]
-        file_set_name = file_set.name
+    # Find marker on class
+    marker = None
+    marker_list = getattr(metafunc.cls, "pytestmark", [])
+    for m in marker_list:
+        if m.name == "file_set":
+            marker = m
+            break
 
-        # Parametrize over all model files in the chosen set
-        params = list(FILE_SETS[file_set_name].items())
-        metafunc.parametrize(
-            "study_file", params, ids=[f"{file_set}-{model_type.value}" for model_type, _ in params]
+    if not marker:
+        metafunc_name = metafunc.function.__name__
+        raise ValueError(
+            f"Test class '{metafunc_name}' requires a @pytest.mark.file_set(FileSet.<SET>) marker."
         )
+
+    file_set = marker.args[0]
+    file_set_name = file_set.name
+    params = list(FILE_SETS[file_set_name].items())
+    ids = [f"{file_set}-{model_type.value}" for model_type, _ in params]
+
+    metafunc.parametrize("study_file", params, ids=ids, scope="class")
 
 
 @pytest.fixture(scope="class", name="synergy")
