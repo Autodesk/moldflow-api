@@ -5,39 +5,17 @@
 Configuration and fixtures for integration tests.
 """
 
-from enum import Enum
 import json
 from pathlib import Path
 import pytest
 from moldflow import Synergy, Project, ItemType
-
-INTEGRATION_TESTS_DIR = Path(__file__).parent
-STUDY_FILES_DIR = INTEGRATION_TESTS_DIR / "study_files"
-DATA_DIR = INTEGRATION_TESTS_DIR / "data"
-
-
-class FileSet(Enum):
-    """
-    FileSet enum defines the different categories of study files.
-
-    RAW: Unmeshed Unanalyzed Files
-    MESHED: Meshed Unanalyzed Files
-    ANALYZED: Meshed Analyzed Files
-    """
-
-    # RAW = "Raw"
-    MESHED = "Meshed"
-    # ANALYZED = "Analyzed"
-
-
-class ModelType(Enum):
-    """
-    ModelType enum defines the different types of models in each file set.
-    """
-
-    DD = "dd_model"
-    MIDPLANE = "midplane_model"
-    THREE_D = "3d_model"
+from tests.api.integration_tests.constants import (
+    FileSet,
+    ModelType,
+    STUDY_FILES_DIR,
+    DATA_DIR,
+    DataFile,
+)
 
 
 def generate_file_map(
@@ -158,13 +136,14 @@ def expected_data_fixture(request):
     Load the expected data JSON file once per test class.
 
     Expects the test class to define a class attribute:
-    `json_file_name = "mesh_summary_data.json"` (for example)
+    `json_file_name = DataFile.MESH_SUMMARY` (for example)
     """
     json_file_name = getattr(request.cls, "json_file_name", None)
     if not json_file_name:
         pytest.skip("Test class missing `json_file_name` attribute.")
 
-    json_path = Path(DATA_DIR) / json_file_name
+    json_file = json_file_name.value if isinstance(json_file_name, DataFile) else json_file_name
+    json_path = Path(DATA_DIR) / json_file
     if not json_path.exists():
         pytest.skip(f"Expected data file not found: {json_path}")
 
