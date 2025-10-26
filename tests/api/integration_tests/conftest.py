@@ -92,9 +92,7 @@ def project_fixture(synergy: Synergy, request):
 
     file_set = marker.args[0]
 
-    project_path = (
-        Path(STUDY_FILES_DIR) / file_set.value / f"{file_set.value}.mpi"
-    )  # adjust naming pattern if needed
+    project_path = Path(STUDY_FILES_DIR) / file_set.value / f"{file_set.value}.mpi"
     project_handle = synergy.open_project(str(project_path))
     if not project_handle:
         raise RuntimeError(f"Failed to open project at {project_path}")
