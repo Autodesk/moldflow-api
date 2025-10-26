@@ -215,7 +215,7 @@ python run.py generate-test-data mesh_summary
 ```
 tests/api/integration_tests/
 ├── data/
-│   ├── mesh_summary_data2.json     # Generated expected values
+│   ├── mesh_summary_data.json     # Generated expected values
 │   └── data_generation/
 │       ├── generate_data.py        # Main generation script
 │       └── generate_data_helper.py # Helper functions and decorators
