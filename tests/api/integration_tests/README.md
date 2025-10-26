@@ -177,17 +177,119 @@ class TestIntegrationMeshSummary:
 
 ## Best Practices
 
-- Scope wisely: Use class scope for heavy fixtures like synergy or project.
+- **Scope wisely**: Use class scope for heavy fixtures like synergy or project.
+- **JSON-driven tests**: Keep expected values in JSON files inside tests/api/integration_tests/data/.
+- **Marking tests**: Always use @pytest.mark.file_set(FileSet.<SET>) on the class.
+- **Reusability**: Use study_with_project or opened_study fixtures to avoid duplicate project or study opening logic.
+- **Skip gracefully**: Use pytest.skip() if the expected data or study is missing for the current model.
 
-- JSON-driven tests: Keep expected values in JSON files inside tests/api/integration_tests/data/.
+# Test Data Generation
 
-- Marking tests: Always use @pytest.mark.file_set(FileSet.<SET>) on the class.
+The integration tests rely on expected data stored in JSON files. This data is generated from actual Moldflow Synergy projects to ensure accuracy and consistency.
 
-- Reusability: Use study_with_project or opened_study fixtures to avoid duplicate project or study opening logic.
+## Generation Commands
 
-- Skip gracefully: Use pytest.skip() if the expected data or study is missing for the current model.
+### Using run.py (Recommended)
 
-# Updating Baseline
+Generate all test data:
+```bash
+python run.py generate-test-data
+```
 
-## Manual
-## Automated
+Generate data for specific markers:
+```bash
+python run.py generate-test-data mesh_summary
+```
+
+## How It Works
+
+### Data Generation Process
+
+1. **Project Opening**: The generator opens Moldflow projects from the [study_files](/tests/api/integration_tests/study_files/) directory
+2. **Model Iteration**: For each project, it iterates through all available model types (dd_model, midplane_model, 3d_model)
+3. **Data Extraction**: Calls the appropriate API methods to extract data (e.g., mesh summary properties)
+4. **JSON Output**: Saves the extracted data to JSON files in the [data](/tests/api/integration_tests/data/) directory
+
+### File Structure
+
+```
+tests/api/integration_tests/
+├── data/
+│   ├── mesh_summary_data2.json     # Generated expected values
+│   └── data_generation/
+│       ├── generate_data.py        # Main generation script
+│       └── generate_data_helper.py # Helper functions and decorators
+├── study_files/
+│   └── Meshed/                     # Study files for data generation
+│       ├── Meshed.mpi             # Project file
+│       ├── dd_model.sdy           # Double-sided model
+│       ├── midplane_model.sdy     # Midplane model
+│       └── 3d_model.sdy           # 3D model
+└── constants.py                    # Enums and constants
+```
+
+### Adding New Data Generation
+
+To add generation for a new feature:
+
+1. **Create a generation function** in `generate_data.py`:
+```python
+@generate_json(json_file_name=DataFile.MY_FEATURE, file_set=FileSet.MESHED)
+def generate_my_feature(synergy: Synergy):
+    """Extract my feature data from a study."""
+    my_data = synergy.some_manager.get_my_data()
+    return {
+        "property1": my_data.property1,
+        "property2": my_data.property2,
+    }
+```
+
+2. **Add to GENERATE_FUNCTIONS** dictionary:
+```python
+GENERATE_FUNCTIONS = {
+    "mesh_summary": generate_mesh_summary,
+    "my_feature": generate_my_feature,  # Add this line
+}
+```
+
+3. **Add DataFile enum** in `constants.py`:
+```python
+class DataFile(Enum):
+    MESH_SUMMARY = "mesh_summary_data.json"
+    MY_FEATURE = "my_feature_data.json"  # Add this line
+```
+
+4. **Generate the data**:
+```bash
+python run.py generate-test-data my_feature
+```
+
+### Data File Format
+
+Generated JSON files follow this structure:
+```json
+{
+    "dd_model": {
+        "property1": value1,
+        "property2": value2
+    },
+    "midplane_model": {
+        "property1": value3,
+        "property2": value4
+    },
+    "3d_model": {
+        "property1": value5,
+        "property2": value6
+    }
+}
+```
+
+Each model type has its own section with the extracted data properties.
+
+## Best Practices for Data Generation
+
+- **Consistency**: Always use the `@generate_json` decorator for new generation functions
+- **Error Handling**: The decorator handles project opening/closing and error cleanup automatically
+- **Selective Generation**: Use markers to generate only specific data sets during development
+- **Version Control**: Commit generated JSON files to ensure consistent test data across environments
+- **Validation**: After generation, run the corresponding tests to verify the data is correct
