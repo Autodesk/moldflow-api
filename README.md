@@ -71,7 +71,7 @@ python run.py build-docs
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
 
-The documentation can be accessed locally by opening the [index.html](docs/build/html/index.html) in the [html](docs/build/html/) folder.
+The documentation can be accessed locally by opening the index.html in the docs/build/html/ folder.
 
 ### Running the Formatter
 
@@ -145,7 +145,7 @@ Key modules include:
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to contribute to this project. Here's a quick overview:
+We welcome contributions! Please see our [Contributing Guide](https://github.com/Autodesk/moldflow-api/blob/main/CONTRIBUTING.md) for details on how to contribute to this project. Here's a quick overview:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -161,15 +161,14 @@ We use [Semantic Versioning](https://semver.org/). For available versions, see t
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://github.com/Autodesk/moldflow-api/blob/main/LICENSE) file for details.
 
 ## Support
 
 - **Documentation**: [Full documentation available online](https://autodesk.github.io/moldflow-api)
 - **Issues**: Report bugs and request features through [GitHub Issues](https://github.com/Autodesk/moldflow-api/issues)
-- **Security**: For security issues, please see our [Security Policy](SECURITY.md)
-- **Discussions**: Join our [GitHub Discussions](https://github.com/Autodesk/moldflow-api/discussions) for questions and community support
+- **Security**: For security issues, please see our [Security Policy](https://github.com/Autodesk/moldflow-api/blob/main/SECURITY.md)
 
 ## Code of Conduct
 
-This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+This project adheres to the Contributor Covenant [code of conduct](https://github.com/Autodesk/moldflow-api/blob/main/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
