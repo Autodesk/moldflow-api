@@ -104,8 +104,7 @@ jobs:
           }
 
           $versionJson = Get-Content -Raw -Path version.json | ConvertFrom-Json
-          $patch = if ($env:BUILD_NUMBER) { $env:BUILD_NUMBER } else { "$($versionJson.patch)" }
-          $version = "$($versionJson.major).$($versionJson.minor).$patch"
+          $version = "$($versionJson.major).$($versionJson.minor).$($versionJson.patch)"
           $exists = if ($versions -contains $version) { 'true' } else { 'false' }
           Write-Output "Release $version exists on PyPI: $exists"
           "exists=$exists" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
