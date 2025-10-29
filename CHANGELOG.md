@@ -8,8 +8,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Added convenience class for showing message boxes and text input dialogs via Win32
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- N/A
+
+### Security
+- N/A
+
+## [26.0.3]
+
+### Added
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
 - Fixed README links
+
+### Security
+- N/A
+
+## [26.0.2] - 2025-10-10
+
+### Added
+- Added convenience class for showing message boxes and text input dialogs via Win32
+- Add more examples in the documentation
 
 ### Changed
 - N/A
@@ -53,6 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial version aligned with Moldflow Synergy 2026.0.1
 - Python 3.10-3.13 compatibility
 
-[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.1...HEAD
+[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.3...HEAD
+[26.0.3]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.3
+[26.0.2]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.2
 [26.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.1
 [26.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.0
