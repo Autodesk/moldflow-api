@@ -50,6 +50,7 @@ def generate_json(json_file_name: DataFile, file_set: FileSet | None = None):
             project = None
 
             try:
+                result_data = {}
                 # --- Open the project if a file set is provided ---
                 if file_set is not None:
                     project_path = Path(STUDY_FILES_DIR) / file_set.value / f"{file_set.value}.mpi"
@@ -57,8 +58,6 @@ def generate_json(json_file_name: DataFile, file_set: FileSet | None = None):
                     if not project_handle:
                         raise RuntimeError(f"Failed to open project at {project_path}")
                     project = synergy.project
-
-                    result_data = {}
 
                     # --- Loop through all model types ---
                     for model_type in ModelType:
@@ -71,6 +70,9 @@ def generate_json(json_file_name: DataFile, file_set: FileSet | None = None):
                         # Call the decorated function to collect data for this study
                         data = func(synergy=synergy, *args, **kwargs)
                         result_data[model_type.value] = data
+                
+                else:
+                    result_data = func(synergy=synergy, *args, **kwargs)
 
                 _json_dump(json_file_name, result_data)
 
