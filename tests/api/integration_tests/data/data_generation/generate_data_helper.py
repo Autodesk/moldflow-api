@@ -70,7 +70,7 @@ def generate_json(json_file_name: DataFile, file_set: FileSet | None = None):
                         # Call the decorated function to collect data for this study
                         data = func(synergy=synergy, *args, **kwargs)
                         result_data[model_type.value] = data
-                
+
                 else:
                     result_data = func(synergy=synergy, *args, **kwargs)
 

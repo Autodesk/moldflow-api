@@ -8,13 +8,20 @@ Configuration and fixtures for integration tests.
 import json
 from pathlib import Path
 import pytest
+import tempfile
 from moldflow import Synergy, Project, ItemType
 from tests.api.integration_tests.constants import (
     FileSet,
     ModelType,
     STUDY_FILES_DIR,
     DATA_DIR,
+    MID_DOE_MODEL_FILE,
+    MID_DOE_MODEL_NAME,
     DataFile,
+    DEFAULT_WINDOW_SIZE_X,
+    DEFAULT_WINDOW_SIZE_Y,
+    DEFAULT_WINDOW_POSITION_X,
+    DEFAULT_WINDOW_POSITION_Y,
 )
 
 
@@ -28,6 +35,10 @@ def generate_file_map(
     file_map = {}
     for file_set in FileSet:
         set_dir = Path(study_files_dir) / file_set.value
+        if file_set == FileSet.SINGLE:
+            file_map[file_set.name] = {MID_DOE_MODEL_NAME: str(set_dir / MID_DOE_MODEL_FILE)}
+            continue
+
         file_map[file_set.name] = {
             model_type: str(set_dir / f"{model_type.value}.sdy") for model_type in ModelType
         }
@@ -62,6 +73,15 @@ def pytest_generate_tests(metafunc):
         )
 
     file_set = marker.args[0]
+    if file_set == FileSet.SINGLE:
+        metafunc.parametrize(
+            "study_file",
+            [(MID_DOE_MODEL_NAME, FILE_SETS[file_set.name][MID_DOE_MODEL_NAME])],
+            ids=["Single"],
+            scope="class",
+        )
+        return
+
     file_set_name = file_set.name
     params = list(FILE_SETS[file_set_name].items())
     ids = [f"{file_set}-{model_type.value}" for model_type, _ in params]
@@ -75,8 +95,15 @@ def synergy_fixture():
     Fixture to create a real Synergy instance for integration testing.
     """
     synergy_instance = Synergy()
+    synergy_instance.set_application_window_pos(
+        DEFAULT_WINDOW_POSITION_X,
+        DEFAULT_WINDOW_POSITION_Y,
+        DEFAULT_WINDOW_SIZE_X,
+        DEFAULT_WINDOW_SIZE_Y,
+    )
     yield synergy_instance
-    synergy_instance.quit(False)
+    if synergy_instance.synergy is not None:
+        synergy_instance.quit(False)
 
 
 @pytest.fixture(scope="class", name="project")
@@ -115,7 +142,10 @@ def opened_study_fixture(project: Project, study_file):
     Opens a study file inside an already-open project.
     """
     model_type, _ = study_file
-    study = project.open_item_by_name(model_type.value, ItemType.STUDY)
+    if model_type == MID_DOE_MODEL_NAME:
+        study = project.open_item_by_name(model_type, ItemType.STUDY)
+    else:
+        study = project.open_item_by_name(model_type.value, ItemType.STUDY)
     return study
 
 
@@ -161,3 +191,18 @@ def expected_values_fixture(expected_data, study_file):
     if not model_data:
         pytest.skip(f"No expected values found for model type: {model_type.value}")
     return model_data
+
+
+@pytest.fixture(name="expected_values_general")
+def expected_values_general_fixture(expected_data):
+    """
+    Returns expected values for the general case.
+    """
+    return expected_data
+
+
+@pytest.fixture(scope="class")
+def temp_dir():
+    """Create a temporary directory for integration testing."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield tmpdir

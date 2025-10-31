@@ -57,7 +57,20 @@ def generate_mesh_summary(synergy: Synergy = None):
     }
 
 
-GENERATE_FUNCTIONS = {"mesh_summary": generate_mesh_summary}
+@generate_json(json_file_name=DataFile.SYNERGY, file_set=None)
+def generate_synergy_data(synergy: Synergy = None):
+    """
+    Generate data for the Synergy class.
+    Returns a dict with relevant properties.
+    """
+
+    build_number_parts = synergy.build_number.split(".")
+    build_number_major_minor = ".".join(build_number_parts[:2])
+
+    return {"version": synergy.version, "build_number": build_number_major_minor}
+
+
+GENERATE_FUNCTIONS = {"mesh_summary": generate_mesh_summary, "synergy": generate_synergy_data}
 
 
 def main():
