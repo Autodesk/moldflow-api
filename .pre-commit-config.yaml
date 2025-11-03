@@ -22,6 +22,6 @@ repos:
         exclude_types: [markdown]
         exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
       - id: pretty-format-json
-        args: [--autofix]
+        args: [--autofix, --no-sort-keys]
         exclude_types: [markdown]
         exclude: \.(svg|jpe?g|png|webp|gif|bmp)$
