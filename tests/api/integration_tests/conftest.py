@@ -94,7 +94,8 @@ def synergy_fixture():
     """
     Fixture to create a real Synergy instance for integration testing.
     """
-    synergy_instance = Synergy()
+    synergy_instance = Synergy(logging=False)
+    synergy_instance.silence(True)
     synergy_instance.set_application_window_pos(
         DEFAULT_WINDOW_POSITION_X,
         DEFAULT_WINDOW_POSITION_Y,
@@ -175,8 +176,14 @@ def expected_data_fixture(request):
     if not json_path.exists():
         pytest.skip(f"Expected data file not found: {json_path}")
 
-    with open(json_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(json_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError:
+        pytest.skip(
+            f"Expected data file is not valid JSON: {json_path}. \
+                 Please run the data generation script to create/update the file."
+        )
 
 
 @pytest.fixture(name="expected_values")

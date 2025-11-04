@@ -55,6 +55,10 @@ from tests.api.integration_tests.constants import (
     MID_DOE_MODEL_NAME,
     MID_DOE_MODEL_FILE,
     SYNERGY_WINDOW_TITLE,
+    DEFAULT_WINDOW_POSITION_X,
+    DEFAULT_WINDOW_POSITION_Y,
+    DEFAULT_WINDOW_SIZE_X,
+    DEFAULT_WINDOW_SIZE_Y,
 )
 
 SYNERGY_CLASSES_LIST = [
@@ -228,6 +232,13 @@ class TestIntegrationSynergy:
 
         assert (left, top, width, height) == (100, 100, 800, 600)
 
+        synergy.set_application_window_pos(
+            DEFAULT_WINDOW_POSITION_X,
+            DEFAULT_WINDOW_POSITION_Y,
+            DEFAULT_WINDOW_SIZE_X,
+            DEFAULT_WINDOW_SIZE_Y,
+        )
+
     @pytest.mark.parametrize(
         "synergy_class_name, synergy_class",
         SYNERGY_CLASSES_LIST,
@@ -271,7 +282,6 @@ class TestIntegrationSynergy:
     # TODO: open_archive
 
 
-@pytest.mark.skip(reason="Skipping test, requires manual intervention to export LMV shared views")
 @pytest.mark.integration
 @pytest.mark.synergy
 @pytest.mark.file_set(FileSet.SINGLE)

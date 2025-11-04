@@ -6,10 +6,8 @@ Constants for integration tests.
 """
 
 from pathlib import Path
-import json
 from enum import Enum
 
-SYNERGY_VERSION = None
 INTEGRATION_TESTS_DIR = Path(__file__).parent
 STUDY_FILES_DIR = INTEGRATION_TESTS_DIR / "study_files"
 DATA_DIR = INTEGRATION_TESTS_DIR / "data"
@@ -22,6 +20,9 @@ DEFAULT_WINDOW_SIZE_Y = 1440
 DEFAULT_WINDOW_POSITION_X = 0
 DEFAULT_WINDOW_POSITION_Y = 0
 
+SYNERGY_VERSION = "2026"
+SYNERGY_WINDOW_TITLE = f"Autodesk Moldflow Insight {SYNERGY_VERSION}"
+
 
 class DataFile(Enum):
     """
@@ -30,12 +31,6 @@ class DataFile(Enum):
 
     MESH_SUMMARY = "mesh_summary_data.json"
     SYNERGY = "synergy_data.json"
-
-
-with open(DATA_DIR / DataFile.SYNERGY.value, "r", encoding="utf-8") as f:
-    SYNERGY_DATA = json.load(f)
-SYNERGY_VERSION = SYNERGY_DATA["version"]
-SYNERGY_WINDOW_TITLE = f"Autodesk Moldflow Insight {SYNERGY_VERSION}"
 
 
 class FileSet(Enum):
