@@ -167,7 +167,7 @@ class TestIntegrationSynergy:
 
         result = synergy.open_recent_project(0)
         proj = synergy.project
-        # TODO: Need to update to assert True as soon as mainfrm is fixed
+        # TODO: Need to update to assert True as soon as API is fixed
         assert result is False
         proj = synergy.project
         assert proj is not None
@@ -221,9 +221,7 @@ class TestIntegrationSynergy:
         """
         result = synergy.set_application_window_pos(100, 100, 800, 600)
         assert isinstance(result, bool)
-        # time.sleep(1)  # give UI a moment to update
 
-        # Verify visually or via OS
         window = next((w for w in gw.getWindowsWithTitle(SYNERGY_WINDOW_TITLE) if w), None)
         assert window is not None
 

@@ -181,8 +181,8 @@ def expected_data_fixture(request):
             return json.load(f)
     except json.JSONDecodeError:
         pytest.skip(
-            f"Expected data file is not valid JSON: {json_path}. \
-                 Please run the data generation script to create/update the file."
+            f"Expected data file is not valid JSON: {json_path}. "
+            "Please run the data generation script to create/update the file."
         )
 
 
