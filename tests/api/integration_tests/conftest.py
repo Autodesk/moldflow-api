@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import pytest
 import tempfile
+import zipfile
 from moldflow import Synergy, Project, ItemType
 from tests.api.integration_tests.constants import (
     FileSet,
@@ -23,6 +24,15 @@ from tests.api.integration_tests.constants import (
     DEFAULT_WINDOW_POSITION_X,
     DEFAULT_WINDOW_POSITION_Y,
 )
+
+
+def unzip_study_files():
+    """
+    Unzip the study files.
+    """
+    for zip_file in STUDY_FILES_DIR.glob("*.zip"):
+        with zipfile.ZipFile(zip_file, 'r') as zip_ref:
+            zip_ref.extractall(STUDY_FILES_DIR)
 
 
 def generate_file_map(
@@ -45,6 +55,7 @@ def generate_file_map(
     return file_map
 
 
+unzip_study_files()
 FILE_SETS = generate_file_map()
 
 

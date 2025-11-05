@@ -1,9 +1,0 @@
-VERSION 1.0
-BEGIN PROJECT "Single"
-STUDY "mid_doe_model" mid_doe_model.sdy
-END PROJECT
-ORGANIZE 0
-BEGIN PROPERTIES
-END PROPERTIES
-Last Write Time: Fri Oct 31 22:39:26 2025
-
