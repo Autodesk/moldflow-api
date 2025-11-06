@@ -88,7 +88,7 @@ def pytest_generate_tests(metafunc):
         metafunc.parametrize(
             "study_file",
             [(MID_DOE_MODEL_NAME, FILE_SETS[file_set.name][MID_DOE_MODEL_NAME])],
-            ids=["Single"],
+            ids=[file_set.value],
             scope="class",
         )
         return

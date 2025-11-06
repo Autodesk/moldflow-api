@@ -38,15 +38,15 @@ class FileSet(Enum):
     FileSet enum defines the different categories of study files.
 
     SINGLE: Single Analyzed File for short tests
-    RAW: Unmeshed Unanalyzed Files
+    # RAW: Unmeshed Unanalyzed Files
     MESHED: Meshed Unanalyzed Files
-    ANALYZED: Meshed Analyzed Files
+    # ANALYZED: Meshed Analyzed Files
     """
 
-    SINGLE = "Single"
-    # RAW = "Raw"
-    MESHED = "Meshed"
-    # ANALYZED = "Analyzed"
+    SINGLE = "single_study"
+    # RAW = "raw_studies"
+    MESHED = "meshed_studies"
+    # ANALYZED = "analyzed_studies"
 
 
 class ModelType(Enum):
