@@ -18,17 +18,16 @@ from tests.api.integration_tests.constants import (
     METADATA_FILE,
     METADATA_FILE_NAME,
     Metadata,
-)
-from tests.api.integration_tests.data.data_generation.generate_data_logger import (
-    generate_data_logger,
-)
-from tests.api.integration_tests.constants import (
     TEMP_FILE_PREFIX,
     GENERATE_DATA_FUNCTION_PREFIX,
     GENERATE_DATA_FUNCTION_SUFFIX,
     DATA_FILE_SUFFIX,
     DATA_FILE_EXTENSION,
 )
+from tests.api.integration_tests.data.data_generation.generate_data_logger import (
+    generate_data_logger,
+)
+from tests.api.integration_tests.conftest import unzip_study_files
 
 
 def _json_dump(json_file_name: str, result_data: dict):

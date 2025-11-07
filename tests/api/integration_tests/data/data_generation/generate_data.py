@@ -19,10 +19,11 @@ from tests.api.integration_tests.data.data_generation.generate_data_helper impor
     get_available_markers,
     fetch_data_on_markers,
 )
-from tests.api.integration_tests.constants import FileSet
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
     generate_data_logger,
 )
+from tests.api.integration_tests.constants import FileSet
+from tests.api.integration_tests.conftest import unzip_study_files
 
 
 @generate_json(file_set=FileSet.MESHED)
@@ -86,6 +87,7 @@ def main():
 
     try:
         markers = args.get('<markers>') or []
+        unzip_study_files()
         generate_functions = get_generate_data_functions(globals())
 
         for marker in markers:
