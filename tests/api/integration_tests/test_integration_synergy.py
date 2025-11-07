@@ -163,7 +163,6 @@ class TestIntegrationSynergy:
         assert proj.project is None
 
         result = synergy.open_recent_project(0)
-        proj = synergy.project
         # TODO: Need to update to assert True as soon as API is fixed
         assert result is False
         proj = synergy.project

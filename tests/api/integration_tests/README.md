@@ -331,7 +331,7 @@ python run.py generate-test-data sample_case
 ```
 
 After running you should see:
-- Data file created: `tests/api/integration_tests/test_data/sample_case/sample_case_data.json`
+- Data file created: `tests/api/integration_tests/data/sample_case_data.json`
 - `metadata.json` updated to include `sample_case`
 
 ---

@@ -110,6 +110,9 @@ def generate_json(file_set: FileSet | None = None):
                     for model_type in ModelType:
                         study = project.open_item_by_name(model_type.value, ItemType.STUDY)
                         if not study:
+                            generate_data_logger.error(
+                                f"Skipped model type '{model_type.value}' during data generation for file set '{file_set.value}': study not found."
+                            )
                             continue
 
                         # Call the decorated function to collect data for this study
