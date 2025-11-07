@@ -18,7 +18,6 @@ from tests.api.integration_tests.constants import (
     DATA_DIR,
     MID_DOE_MODEL_FILE,
     MID_DOE_MODEL_NAME,
-    DataFile,
     DEFAULT_WINDOW_SIZE_X,
     DEFAULT_WINDOW_SIZE_Y,
     DEFAULT_WINDOW_POSITION_X,
@@ -175,15 +174,25 @@ def expected_data_fixture(request):
     """
     Load the expected data JSON file once per test class.
 
-    Expects the test class to define a class attribute:
-    `json_file_name = DataFile.MESH_SUMMARY` (for example)
-    """
-    json_file_name = getattr(request.cls, "json_file_name", None)
-    if not json_file_name:
-        pytest.skip("Test class missing `json_file_name` attribute.")
+    Automatically derives the JSON filename from pytest markers.
+    Looks for markers like @pytest.mark.mesh_summary or @pytest.mark.synergy
+    and converts them to filenames like "mesh_summary_data.json" or "synergy_data.json".
 
-    json_file = json_file_name.value if isinstance(json_file_name, DataFile) else json_file_name
-    json_path = Path(DATA_DIR) / json_file
+    Falls back to class attribute `json_file_name` if no suitable marker is found.
+    """
+    # Try to derive filename from pytest markers first
+    json_file_name = None
+    marker_list = getattr(request.cls, "pytestmark", [])
+
+    # Look for data-related markers (excluding common ones like 'integration', 'file_set')
+    excluded_markers = {'integration', 'file_set', 'parametrize'}
+    for marker in marker_list:
+        if marker.name not in excluded_markers:
+            # Convert marker name to filename: mesh_summary -> mesh_summary_data.json
+            json_file_name = f"{marker.name}_data.json"
+            break
+
+    json_path = Path(DATA_DIR) / json_file_name
     if not json_path.exists():
         pytest.skip(f"Expected data file not found: {json_path}")
 

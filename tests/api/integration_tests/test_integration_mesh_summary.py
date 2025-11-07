@@ -10,7 +10,7 @@ of the MeshSummary class with real Moldflow Synergy COM objects.
 
 import pytest
 from moldflow import MeshSummary, Synergy
-from tests.api.integration_tests.constants import FileSet, DataFile
+from tests.api.integration_tests.constants import FileSet
 
 
 @pytest.mark.integration
@@ -21,8 +21,6 @@ class TestIntegrationMeshSummary:
     Integration test suite for the MeshSummary class.
     Tests are run against meshed models to ensure mesh summary data is available.
     """
-
-    json_file_name = DataFile.MESH_SUMMARY
 
     @pytest.fixture
     def mesh_summary(self, synergy: Synergy, study_with_project):

@@ -1,6 +1,7 @@
 # Integration Tests for moldflow-api
 
-This document provides guidance on writing integration tests for the `moldflow-api` module using the new test structure and fixtures. The tests focus on real interactions with Moldflow Synergy COM objects and are designed to be reusable and parametrized over multiple models and file sets.
+This document provides a complete guide for writing and managing **integration tests** for the `moldflow-api` module.  
+It combines the marker-driven test suite conventions with the project fixtures and file-set model types used for real Moldflow Synergy COM interactions.
 
 ---
 
@@ -9,287 +10,354 @@ This document provides guidance on writing integration tests for the `moldflow-a
 1. [Overview](#overview)  
 2. [File Sets and Model Types](#file-sets-and-model-types)  
 3. [Fixtures](#fixtures)  
-4. [Writing a Test Suite](#writing-a-test-suite)  
-5. [Example Test Suite](#example-test-suite)  
-6. [Best Practices](#best-practices)  
+4. [Marker-Based Structure & Naming Conventions](#marker-based-structure--naming-conventions)  
+5. [Steps to Add a New Integration Test Suite](#steps-to-add-a-new-integration-test-suite)  
+6. [Baseline Data Handling](#baseline-data-handling)  
+7. [Generator Functions (generate_data.py)](#generator-functions-generatedatapy)  
+8. [Metadata Tracking](#metadata-tracking)  
+9. [Running Integration Tests](#running-integration-tests)  
+10. [Example Test Suite](#example-test-suite)  
+11. [Best Practices](#best-practices)  
+12. [Appendix: Quick Checklist](#appendix-quick-checklist)
 
 ---
 
 ## Overview
 
-The integration tests are designed to:
+Integration tests in this repo exercise **real interactions** with Moldflow Synergy COM objects (via the `Synergy` wrapper). They are written with `pytest` and organized per **marker**. Each marker is the canonical identifier for a test suite and governs:
 
-- Open a Moldflow project (Raw, Meshed, Analyzed).
-- Open individual study files (dd_model, midplane_model, 3d_model) inside the project.
-- Compare actual data with expected values stored in JSON files.
+- test file names
+- test class names
+- baseline JSON file names
+- generator function names
+- pytest markers and metadata entries
 
-The new fixtures and helpers make it easier to write reusable and parametrized tests without duplicating logic.
+**Important:** Markers are always **snake_case**. The marker's human-readable form inside class names uses **PascalCase** (see naming conventions).
 
 ---
 
 ## File Sets and Model Types
 
+Integration tests are parametrized over *file sets* and *model types* using enums.
+
 ### File Sets
 
-The `FileSet` enum defines different categories of study files. Currently supported:
+`FileSet` (example values used in decorators):
 
-| Enum           | Folder Name | Description |
-|----------------|-------------|-------------|
-| `FileSet.MESHED` | `Meshed`   | Contains sdy files that are meshed |
+| Enum value | Folder name | Description | Files |
+|------------|-------------|-------------|-------|
+| `FileSet.MESHED` | `meshed_studies` | Project containing meshed `.sdy` files (meshed studies) | dd_model.sdy <br> midplane_model.sdy <br> 3d_model.sdy |
+| `FileSet.SINGLE` | `single_study` | Project containing meshed `.sdy` files (single study) for general tests (non model type dependedent) | mid_doe.sdy |
 
-> Future expansions will include `RAW` or `ANALYZED`.
+> Future file sets may include `RAW`, `ANALYZED`, etc.
 
 ### Model Types
 
-The `ModelType` enum defines the types of models in each file set:
+`ModelType` specifies the study file types inside a project:
 
-| Enum               | Filename in FileSet folder |
-|-------------------|---------------------------|
-| `ModelType.DD`     | `dd_model`            |
-| `ModelType.MIDPLANE` | `midplane_model`     |
-| `ModelType.THREE_D` | `3d_model`           |
+| Enum value | Typical filename / key | Model Type |
+|------------|------------------------|------------|
+| `ModelType.DD` | `dd_model` | Dual Domain |
+| `ModelType.MIDPLANE` | `midplane_model` | Midplane |
+| `ModelType.THREE_D` | `3d_model` | 3D |
 
-These enums are used to parametrize tests automatically.
+These enums are used by fixtures to parametrize tests over the different models.
 
 ---
 
 ## Fixtures
 
-| Fixture | Scope | Purpose |
-|---------|-------|---------|
-| `synergy` | `class` | Creates a real `Synergy` instance for all tests in a class. Automatically cleans up after tests. |
-| `project` | `class` | Opens the project corresponding to the file set specified by `@pytest.mark.file_set(FileSet.<SET>)`. Uses the `synergy` fixture. |
-| `study_file` | `function` | Provides `(ModelType, file_path)` tuple for each parametrized test, automatically generated from the file set. |
-| `opened_study` | `function` | Opens the study inside the already opened project. Returns the study object. |
-| `study_with_project` | `function` | Convenience fixture combining `(ModelType, file_path, project, opened_study)`. |
-| `expected_data` | `class` | Loads expected values from a JSON file defined as `json_file_name` in the test class. |
-| `expected_values` | `function` | Provides expected values for the current model type. Skips test if no data exists. |
+The test framework provides several reusable fixtures to avoid duplication and to manage expensive operations (COM, project open):
 
-> **Note:** `synergy` and `project` are `class` scoped because creating a COM instance or opening a project is time expensive.
+| Fixture name | Scope | Purpose |
+|--------------|-------|---------|
+| `synergy` | `class` | Create & return a real `Synergy` instance. Teardown closes/quits the instance. |
+| `project` | `class` | Open a project folder corresponding to the `@pytest.mark.file_set(...)` decorator. Depends on `synergy`. |
+| `study_file` | `function` | Yields `(ModelType, file_path)` for each model in the project's file set (parameterized). |
+| `opened_study` | `function` | Open the study (within the already opened project) and return the study object. |
+| `study_with_project` | `function` | Convenience fixture that yields `(ModelType, file_path, project, opened_study)`. |
+| `expected_data` | `class` | Load baseline JSON for the marker/test class (from `json_file_name` attribute on the class). |
+| `expected_values` | `function` | Yield expected values for the current `ModelType`; skip the test if values missing. |
+
+**Notes:**
+
+- `synergy` and `project` are class-scoped to avoid repeatedly creating COM instances or reopening projects.
+- `@pytest.mark.file_set(FileSet.<SET>)` on the class indicates which project folder to open for that entire test class.
 
 ---
 
-## Writing a Test Suite
+## Marker-Based Structure & Naming Conventions (Very Important - Follow Strictly)
 
-### 1. Mark the class with file set and integration type
+Everything revolves around the marker. ***Follow these strictly***.
+
+### Marker definition
+- A **marker** is a lowercase `snake_case` identifier. Examples: `sample_case`, `thickness_marker`.
+
+### Naming rules
+
+| Component | Convention | Example (marker = `sample_case`) |
+|-----------|------------|----------------------------------|
+| Pytest marker | snake_case | `@pytest.mark.sample_case` |
+| Test file | `test_integration_<marker>.py` | `test_integration_sample_case.py` |
+| Test class | `TestIntegration<Marker>` (PascalCase for Marker) | `TestIntegrationSampleCase` |
+| Fixture (optional) | `<marker>` | `def sample_case(...):` |
+| Baseline data file | `<marker>_data.json` | `sample_case_data.json` |
+| Generator function | `generate_<marker>_data` | `generate_sample_case_data` |
+
+### Required class decorators
+Each integration test class **must** include:
 
 ```python
 @pytest.mark.integration
-@pytest.mark.file_set(FileSet.MESHED)
-class TestMyFeature:
-    json_file_name = "expected_data.json"
+@pytest.mark.<marker>           # e.g. @pytest.mark.sample_case
+@pytest.mark.file_set(FileSet.<SET>)  # e.g. FileSet.MESHED or FileSet.SINGLE
 ```
-The file_set marker determines which set of study files will be used.
 
-The json_file_name attribute points to a file in [data folder](/tests/api/integration_tests/data/) containing expected values.
+Example summary: marker `sample_case` → class `TestIntegrationSampleCase`, test file `test_integration_sample_case.py`.
 
-### 2. Use study_with_project for test functions
+---
+
+## Steps to Add a New Integration Test Suite
+
+Follow these steps to add a new integration suite for marker `my_marker` (replace with your snake_case name):
+
+1. **Add marker to `pytest.ini`**
+
+   In `pytest.ini`, under `markers`, add:
+
+   ```ini
+   markers =
+       my_marker: Description for my_marker tests
+   ```
+
+2. **Create the test file**
+
+   `tests/api/integration_tests/test_integration_my_marker.py`
+
+3. **Add the test class**
+
+   Use PascalCase for the Marker part:
+
+   ```python
+   import pytest
+   from moldflow.enums import FileSet, ModelType
+
+   @pytest.mark.integration
+   @pytest.mark.my_marker
+   @pytest.mark.file_set(FileSet.MESHED)
+   class TestIntegrationMyMarker:
+       json_file_name = "my_marker_data.json"  # the baseline JSON filename (convention)
+   ```
+
+4. **Define fixture (optional)**
+
+   If the test requires setup/teardown, name the fixture same as marker:
+
+   ```python
+   @pytest.fixture
+   def my_marker():
+       # setup
+       yield something
+       # teardown
+   ```
+
+5. **Write tests using parametrized fixtures**
+
+   Typical test signature:
+
+   ```python
+   def test_something(self, study_with_project, expected_values):
+       model_type, file_path, project, study = study_with_project
+       expected = expected_values.get(model_type.name)
+       if expected is None:
+           pytest.skip("No expected data for %s" % model_type)
+       actual = study.do_something()
+       assert actual == expected
+   ```
+
+6. **(Optional) Add a generator function** if baseline data is required (see next section).
+
+---
+
+## Baseline Data Handling
+
+Baseline data (= expected values) is stored per-marker and per-test (or grouped) in JSON files. The standard location:
+
+```
+tests/api/integration_tests/test_data/<marker>/<marker>_data.json
+```
+
+Example:
+```
+tests/api/integration_tests/test_data/sample_case/sample_case_data.json
+```
+
+### Generating / Updating baseline data
+
+Use the runner script to generate/update baselines:
+
+```bash
+python run.py generate-test-data <marker1> <marker2> ...
+```
+
+**Behavior:**
+- If you pass one or more markers, only those markers' baseline files are generated/updated.
+- If you pass **no markers**, **all** available test data baselines are regenerated.
+- Baseline files are **auto-created** the first time you run the generator; you **should not** hand-create them.
+- The generator will write the baseline JSON and also update `metadata.json` for the updated markers (see Metadata section).
+
+**Note:** The generator functions are expected to produce a `dict` (mapping of model -> expected data or other structure you use).
+
+---
+
+## Generator Functions (generate_data.py)
+
+All generator functions live in `generate_data.py`. The test runner locates and calls a generator by convention.
+
+### Naming convention
+
+```text
+generate_<marker>_data
+```
+
+Example for marker `sample_case`:
 
 ```python
-def test_something(self, study_with_project):
-    model_type, file_path, project, opened_study = study_with_project
-    # Now you can use project or opened_study
-```
-
-This fixture automatically provides the model type, file path, project handle, and the opened study object.
-
-### 3. Access expected values
-
-```python
-def test_mesh_summary(self, study_with_project, expected_values):
-    model_type, _, _, _ = study_with_project
-    mesh_summary_data = expected_values[model_type.value]
-    # Use mesh_summary_data to validate results
-```
-
-expected_values returns a dictionary specific to the current model type and the specified json file name at the class level.
-
-The json file structure needs to have all the ModelTypes.value (`dd_model`, `midplane_model`, `3d_model`) as keys, the value for the keys can be as required.
-
-```json
-{
-    "dd_model": {
-        // ...
-    },
-    "midplane_model": {
-        // ...
-    },
-    "3d_model": {
-        // ...
+def generate_sample_case_data():
+    return {
+        "DD": { "thickness": 2.3, "material": "ABS" },
+        "MIDPLANE": { ... },
+        "THREE_D": { ... }
     }
-}
 ```
 
-Skips the test if no expected data exists.
+### Requirements
 
-### 4. Create wrapper-specific fixtures
+- The function must return a Python `dict` containing the baseline content to write to `<marker>_data.json`.
+- The function should be idempotent: running it repeatedly should produce consistent results (unless intentionally changed).
+- Optionally, decorate with any project-specific decorator (e.g., `@generate_json`) if your project wiring expects that — but the runner primarily uses the naming convention to discover the function.
 
-For example, MeshSummary:
+---
 
-```python
-@pytest.fixture
-def mesh_summary(self, synergy, study_with_project):
-    model_type, file_path, _, _ = study_with_project
-    diagnosis_manager = synergy.diagnosis_manager
-    summary = diagnosis_manager.get_mesh_summary(
-        element_only=True, inc_beams=True, inc_match=True, recalculate=True
-    )
-    if summary is None:
-        pytest.skip(f"No mesh summary available for {model_type.value} model")
-    return summary
-```
+## Metadata Tracking
+
+`metadata.json` (located under `tests/api/integration_tests/test_data/` or repo root depending on your layout) keeps a simple audit of baseline updates.
+
+Each marker entry should include:
+
+- `last_updated` (ISO datetime)
+- `build_number` (if available)
+- `synergy_version` (or COM version info)
+- optionally, `generated_by` (username / CI job id)
+
+When the baseline generator runs for a marker, only that marker’s metadata entry is updated (others remain unchanged).
+
+---
+
+## Running Integration Tests
+
+| Task | Command |
+|------|---------|
+| Run all integration tests | `python run.py test --type integration` |
+| Run tests for a specific marker | `python run.py test --type integration --marker <marker>` |
+| Update / generate baseline data | `python run.py generate-test-data <marker1> <marker2> ...` |
+| Update all baselines | `python run.py generate-test-data` (no markers) |
+
+---
 
 ## Example Test Suite
 
-```python
-import pytest
-from moldflow import MeshSummary
-from tests.api.integration_tests.conftest import FileSet
+Complete example using marker `sample_case`.
 
-@pytest.mark.integration
-@pytest.mark.mesh_summary
-@pytest.mark.file_set(FileSet.MESHED)
-class TestIntegrationMeshSummary:
-    json_file_name = "mesh_summary_data.json"
+**1) Add marker to `pytest.ini`:**
 
-    @pytest.fixture
-    def mesh_summary(self, synergy, study_with_project):
-        model_type, file_path, _, _ = study_with_project
-        diagnosis_manager = synergy.diagnosis_manager
-        summary = diagnosis_manager.get_mesh_summary(
-            element_only=True, inc_beams=True, inc_match=True, recalculate=True
-        )
-        if summary is None:
-            pytest.skip(f"No mesh summary available for {model_type.value} model")
-        return summary
-
-    def test_aspect_ratio_properties(self, mesh_summary: MeshSummary, expected_values: dict):
-        min_ar = mesh_summary.min_aspect_ratio
-        max_ar = mesh_summary.max_aspect_ratio
-        ave_ar = mesh_summary.ave_aspect_ratio
-
-        assert isinstance(min_ar, float)
-        assert min_ar <= ave_ar <= max_ar
-        assert abs(min_ar - expected_values["min_aspect_ratio"]) < 0.01
+```ini
+markers =
+    sample_case: Tests for the sample_case integration suite
 ```
 
-> Parametrization is automatically handled based on the FileSet and ModelType.
+**2) `tests/api/integration_tests/test_integration_sample_case.py`:**
+
+```python
+import pytest
+from moldflow.enums import FileSet, ModelType
+
+@pytest.mark.integration
+@pytest.mark.sample_case
+@pytest.mark.file_set(FileSet.MESHED)
+class TestIntegrationSampleCase:
+    json_file_name = "sample_case_data.json"
+
+    @pytest.fixture
+    def sample_case(self):
+        # optional setup for this marker
+        yield
+        # optional teardown
+
+    def test_thickness_values(self, study_with_project, expected_values):
+        model_type, file_path, project, study = study_with_project
+        expected = expected_values.get(model_type.name)
+        if expected is None:
+            pytest.skip(f"No expected data for {model_type}")
+        actual = study.get_thickness_results()
+        assert actual == expected
+```
+
+**3) `generate_data.py`:**
+
+```python
+def generate_sample_case_data():
+    # open synergy / project / read values programmatically
+    return {
+        "DD": {"thickness": 2.3},
+        "MIDPLANE": {"thickness": 2.35},
+        "THREE_D": {"thickness": 2.31}
+    }
+```
+
+**4) Generate baseline:**
+
+```bash
+python run.py generate-test-data sample_case
+```
+
+After running you should see:
+- `tests/api/integration_tests/test_data/sample_case/sample_case_data.json`
+- `metadata.json` updated for `sample_case`
+
+---
 
 ## Best Practices
 
-- **Scope wisely**: Use class scope for heavy fixtures like synergy or project.
-- **JSON-driven tests**: Keep expected values in JSON files inside tests/api/integration_tests/data/.
-- **Marking tests**: Always use @pytest.mark.file_set(FileSet.<SET>) on the class.
-- **Reusability**: Use study_with_project or opened_study fixtures to avoid duplicate project or study opening logic.
-- **Skip gracefully**: Use pytest.skip() if the expected data or study is missing for the current model.
+- **Markers**: always snake_case (e.g., `sample_case`). Keep them descriptive but short.
+- **Class names**: use PascalCase for the Marker portion (e.g., `TestIntegrationSampleCase`).
+- **Generator functions**: return serializable dictionaries only (no complex objects).
+- **Metadata**: let the generator update `metadata.json` — do not edit manually.
+- **Keep test data minimal**: store only the essential expected values to make test output readable.
+- **Scope fixtures appropriately**: use class scope for expensive resources like COM instances.
+- **Parameterize where possible**: reduce duplication by using `study_file` and `study_with_project`.
+- **Document new markers**: add a short explanation in `pytest.ini`.
 
-# Test Data Generation
+---
 
-The integration tests rely on expected data stored in JSON files. This data is generated from actual Moldflow Synergy projects to ensure accuracy and consistency.
+## Appendix: Quick Checklist
 
-## Generation Commands
+- [ ] Add marker to `pytest.ini`
+- [ ] Create `test_integration_<marker>.py`
+- [ ] Add `TestIntegration<Marker>` class with required decorators
+- [ ] Set `json_file_name` on the class if needed
+- [ ] Add fixtures/tests
+- [ ] Create `generate_<marker>_data` in `generate_data.py` if baseline required
+- [ ] Run `python run.py generate-test-data <marker>` to generate baseline
+- [ ] Commit `tests/api/integration_tests/test_data/<marker>/<marker>_data.json` and related changes
 
-### Using run.py (Recommended)
+---
 
-Generate all test data:
-```bash
-python run.py generate-test-data
-```
+If you want, I can also:
 
-Generate data for specific markers:
-```bash
-python run.py generate-test-data mesh_summary
-```
+- Produce a minimal **template test file** you can copy/paste for a new marker.  
+- Produce a **generator function template** in `generate_data.py`.  
+- Add example `metadata.json` schema.
 
-## How It Works
+---
 
-### Data Generation Process
-
-1. **Project Opening**: The generator opens Moldflow projects from the [study_files](/tests/api/integration_tests/study_files/) directory
-2. **Model Iteration**: For each project, it iterates through all available model types (dd_model, midplane_model, 3d_model)
-3. **Data Extraction**: Calls the appropriate API methods to extract data (e.g., mesh summary properties)
-4. **JSON Output**: Saves the extracted data to JSON files in the [data](/tests/api/integration_tests/data/) directory
-
-### File Structure
-
-```
-tests/api/integration_tests/
-├── data/
-│   ├── mesh_summary_data.json     # Generated expected values
-│   └── data_generation/
-│       ├── generate_data.py        # Main generation script
-│       └── generate_data_helper.py # Helper functions and decorators
-├── study_files/
-│   └── Meshed/                     # Study files for data generation
-│       ├── Meshed.mpi             # Project file
-│       ├── dd_model.sdy           # Double-sided model
-│       ├── midplane_model.sdy     # Midplane model
-│       └── 3d_model.sdy           # 3D model
-└── constants.py                    # Enums and constants
-```
-
-### Adding New Data Generation
-
-To add generation for a new feature:
-
-1. **Create a generation function** in `generate_data.py`:
-```python
-@generate_json(json_file_name=DataFile.MY_FEATURE, file_set=FileSet.MESHED)
-def generate_my_feature(synergy: Synergy):
-    """Extract my feature data from a study."""
-    my_data = synergy.some_manager.get_my_data()
-    return {
-        "property1": my_data.property1,
-        "property2": my_data.property2,
-    }
-```
-
-2. **Add to GENERATE_FUNCTIONS** dictionary:
-```python
-GENERATE_FUNCTIONS = {
-    "mesh_summary": generate_mesh_summary,
-    "my_feature": generate_my_feature,  # Add this line
-}
-```
-
-3. **Add DataFile enum** in `constants.py`:
-```python
-class DataFile(Enum):
-    MESH_SUMMARY = "mesh_summary_data.json"
-    MY_FEATURE = "my_feature_data.json"  # Add this line
-```
-
-4. **Generate the data**:
-```bash
-python run.py generate-test-data my_feature
-```
-
-### Data File Format
-
-Generated JSON files follow this structure:
-```json
-{
-    "dd_model": {
-        "property1": value1,
-        "property2": value2
-    },
-    "midplane_model": {
-        "property1": value3,
-        "property2": value4
-    },
-    "3d_model": {
-        "property1": value5,
-        "property2": value6
-    }
-}
-```
-
-Each model type has its own section with the extracted data properties.
-
-## Best Practices for Data Generation
-
-- **Consistency**: Always use the `@generate_json` decorator for new generation functions
-- **Error Handling**: The decorator handles project opening/closing and error cleanup automatically
-- **Selective Generation**: Use markers to generate only specific data sets during development
-- **Version Control**: Commit generated JSON files to ensure consistent test data across environments
-- **Validation**: After generation, run the corresponding tests to verify the data is correct

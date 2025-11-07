@@ -45,7 +45,6 @@ from moldflow import (
     VectorArray,
     Viewer,
     SystemUnits,
-    MeshType,
 )
 from tests.conftest import VALID_BOOL
 from tests.api.integration_tests.constants import (
@@ -105,8 +104,6 @@ class TestIntegrationSynergy:
     Integration test suite for the Synergy class.
     Tests are run against meshed models to ensure all functionality is available.
     """
-
-    json_file_name = "synergy_data.json"
 
     def test_synergy_initialization(self, synergy: Synergy):
         """
