@@ -146,7 +146,7 @@ Follow these steps to add a new integration suite for marker `my_marker` (replac
    @pytest.mark.my_marker
    @pytest.mark.file_set(FileSet.MESHED)
    class TestIntegrationMyMarker:
-       json_file_name = "my_marker_data.json"  # the baseline JSON filename (convention)
+       ...
    ```
 
 4. **Define fixture (optional)**
@@ -181,15 +181,15 @@ Follow these steps to add a new integration suite for marker `my_marker` (replac
 
 ## Baseline Data Handling
 
-Baseline data (= expected values) is stored per-marker and per-test (or grouped) in JSON files. The standard location:
+Baseline data (= expected values) is stored per-marker in JSON files. The standard location:
 
 ```
-tests/api/integration_tests/test_data/<marker>/<marker>_data.json
+tests/api/integration_tests/data/<marker>_data.json
 ```
 
 Example:
 ```
-tests/api/integration_tests/test_data/sample_case/sample_case_data.json
+tests/api/integration_tests/data/sample_case_data.json
 ```
 
 ### Generating / Updating baseline data
@@ -202,11 +202,19 @@ python run.py generate-test-data <marker1> <marker2> ...
 
 **Behavior:**
 - If you pass one or more markers, only those markers' baseline files are generated/updated.
-- If you pass **no markers**, **all** available test data baselines are regenerated.
-- Baseline files are **auto-created** the first time you run the generator; you **should not** hand-create them.
+- If you pass **no markers**, **all** available test data baselines are generated/updated.
+- Baseline files are **auto-created** the first time you run the generator; Its advised not to hand-create/self-edit them to avoid inconsistencies.
 - The generator will write the baseline JSON and also update `metadata.json` for the updated markers (see Metadata section).
 
-**Note:** The generator functions are expected to produce a `dict` (mapping of model -> expected data or other structure you use).
+**Note:** The generator functions are expected to produce a `dict`.
+
+**Baseline Update Workflow**
+
+When we update the baseline:
+1. A new baseline is first written to a temporary file named `temp_<marker>_data.json`.
+2. Once **all marker generations** are successful, the data is committed to the permanent baseline files (`<marker>_data.json`).
+3. This ensures **atomic updates**, preventing partial baseline overwrites if any generation fails.
+
 
 ---
 
@@ -223,9 +231,10 @@ generate_<marker>_data
 Example for marker `sample_case`:
 
 ```python
+@generate_json(file_set=...)
 def generate_sample_case_data():
     return {
-        "DD": { "thickness": 2.3, "material": "ABS" },
+        "DD": { ... },
         "MIDPLANE": { ... },
         "THREE_D": { ... }
     }
@@ -235,20 +244,21 @@ def generate_sample_case_data():
 
 - The function must return a Python `dict` containing the baseline content to write to `<marker>_data.json`.
 - The function should be idempotent: running it repeatedly should produce consistent results (unless intentionally changed).
-- Optionally, decorate with any project-specific decorator (e.g., `@generate_json`) if your project wiring expects that — but the runner primarily uses the naming convention to discover the function.
 
 ---
 
 ## Metadata Tracking
 
-`metadata.json` (located under `tests/api/integration_tests/test_data/` or repo root depending on your layout) keeps a simple audit of baseline updates.
+`metadata.json` (located under `tests/api/integration_tests/data/`) keeps a simple audit of baseline updates.
 
-Each marker entry should include:
+For each marker entry includes:
 
-- `last_updated` (ISO datetime)
-- `build_number` (if available)
-- `synergy_version` (or COM version info)
-- optionally, `generated_by` (username / CI job id)
+| Key | Description |
+|------------|------|
+| `date` | Date of baseline generation/update [In **YYYY-MM-DD** format] |
+| `time` | Time of baseline generation/update [In **HH:MM:SS** format] |
+| `build_number` | Build Number of Synergy used to generate/update the baseline (eg 49.0.x, 49.1.198, etc) |
+| `version` | Synergy Version used for baseline update (eg 2026, 2027, etc) |
 
 When the baseline generator runs for a marker, only that marker’s metadata entry is updated (others remain unchanged).
 
@@ -258,8 +268,8 @@ When the baseline generator runs for a marker, only that marker’s metadata ent
 
 | Task | Command |
 |------|---------|
-| Run all integration tests | `python run.py test --type integration` |
-| Run tests for a specific marker | `python run.py test --type integration --marker <marker>` |
+| Run all integration tests | `python run.py test --integration` |
+| Run tests for a specific marker | `python run.py test -m <marker>` |
 | Update / generate baseline data | `python run.py generate-test-data <marker1> <marker2> ...` |
 | Update all baselines | `python run.py generate-test-data` (no markers) |
 
@@ -286,7 +296,6 @@ from moldflow.enums import FileSet, ModelType
 @pytest.mark.sample_case
 @pytest.mark.file_set(FileSet.MESHED)
 class TestIntegrationSampleCase:
-    json_file_name = "sample_case_data.json"
 
     @pytest.fixture
     def sample_case(self):
@@ -322,18 +331,17 @@ python run.py generate-test-data sample_case
 ```
 
 After running you should see:
-- `tests/api/integration_tests/test_data/sample_case/sample_case_data.json`
-- `metadata.json` updated for `sample_case`
+- Data file created: `tests/api/integration_tests/test_data/sample_case/sample_case_data.json`
+- `metadata.json` updated to include `sample_case`
 
 ---
 
 ## Best Practices
 
-- **Markers**: always snake_case (e.g., `sample_case`). Keep them descriptive but short.
+- **Markers**: always snake_case (e.g., `sample_case`). Keep them descriptive but short [Usually Synergy API class names].
 - **Class names**: use PascalCase for the Marker portion (e.g., `TestIntegrationSampleCase`).
 - **Generator functions**: return serializable dictionaries only (no complex objects).
 - **Metadata**: let the generator update `metadata.json` — do not edit manually.
-- **Keep test data minimal**: store only the essential expected values to make test output readable.
 - **Scope fixtures appropriately**: use class scope for expensive resources like COM instances.
 - **Parameterize where possible**: reduce duplication by using `study_file` and `study_with_project`.
 - **Document new markers**: add a short explanation in `pytest.ini`.
@@ -345,19 +353,9 @@ After running you should see:
 - [ ] Add marker to `pytest.ini`
 - [ ] Create `test_integration_<marker>.py`
 - [ ] Add `TestIntegration<Marker>` class with required decorators
-- [ ] Set `json_file_name` on the class if needed
 - [ ] Add fixtures/tests
 - [ ] Create `generate_<marker>_data` in `generate_data.py` if baseline required
 - [ ] Run `python run.py generate-test-data <marker>` to generate baseline
 - [ ] Commit `tests/api/integration_tests/test_data/<marker>/<marker>_data.json` and related changes
 
 ---
-
-If you want, I can also:
-
-- Produce a minimal **template test file** you can copy/paste for a new marker.  
-- Produce a **generator function template** in `generate_data.py`.  
-- Add example `metadata.json` schema.
-
----
-
