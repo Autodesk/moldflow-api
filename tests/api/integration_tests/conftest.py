@@ -12,50 +12,42 @@ import tempfile
 import zipfile
 from moldflow import Synergy, Project, ItemType
 from tests.api.integration_tests.constants import (
-    FileSet,
-    ModelType,
     STUDY_FILES_DIR,
     DATA_DIR,
-    MID_DOE_MODEL_FILE,
-    MID_DOE_MODEL_NAME,
     DEFAULT_WINDOW_SIZE_X,
     DEFAULT_WINDOW_SIZE_Y,
     DEFAULT_WINDOW_POSITION_X,
     DEFAULT_WINDOW_POSITION_Y,
+    PROJECT_ZIP_NAME_PATTERN,
+    PROJECT_PREFIX,
+    STUDY_FILE_EXTENSION,
+    PROJECT_EXTENSION,
 )
 
 
-def unzip_study_files():
+def get_study_files():
     """
-    Unzip the study files.
+    Unzip the study files and return a dictionary of project names and corresponding study files.
+    Projects selected of the form project_<file_set>.
+    Study files selected of the form <model_name>.sdy.
     """
-    for zip_file in STUDY_FILES_DIR.glob("*.zip"):
+    for zip_file in STUDY_FILES_DIR.glob(PROJECT_ZIP_NAME_PATTERN):
         with zipfile.ZipFile(zip_file, 'r') as zip_ref:
             zip_ref.extractall(STUDY_FILES_DIR)
 
-
-def generate_file_map(
-    study_files_dir: str = STUDY_FILES_DIR,
-) -> dict[FileSet, dict[ModelType, str]]:
-    """
-    Dynamically generate the global file map for all file sets and model types.
-    Path pattern: {study_files_dir}/{fileset.value}/{modeltype.value}.sdy
-    """
-    file_map = {}
-    for file_set in FileSet:
-        set_dir = Path(study_files_dir) / file_set.value
-        if file_set == FileSet.SINGLE:
-            file_map[file_set.name] = {MID_DOE_MODEL_NAME: str(set_dir / MID_DOE_MODEL_FILE)}
-            continue
-
-        file_map[file_set.name] = {
-            model_type: str(set_dir / f"{model_type.value}.sdy") for model_type in ModelType
-        }
-    return file_map
+    study_files = {}
+    for folders in STUDY_FILES_DIR.iterdir():
+        if folders.is_dir() and folders.name.startswith(PROJECT_PREFIX):
+            project_name = folders.name.replace(PROJECT_PREFIX, "")
+            study_files[project_name] = []
+            for model in folders.iterdir():
+                if model.name.endswith(STUDY_FILE_EXTENSION):
+                    model_name = model.name.replace(STUDY_FILE_EXTENSION, "")
+                    study_files[project_name].append(model_name)
+    return study_files
 
 
-unzip_study_files()
-FILE_SETS = generate_file_map()
+STUDY_FILES = get_study_files()
 
 
 def pytest_generate_tests(metafunc):
@@ -82,20 +74,10 @@ def pytest_generate_tests(metafunc):
             f"Test class '{metafunc_name}' requires a @pytest.mark.file_set(FileSet.<SET>) marker."
         )
 
-    file_set = marker.args[0]
-    if file_set == FileSet.SINGLE:
-        metafunc.parametrize(
-            "study_file",
-            [(MID_DOE_MODEL_NAME, FILE_SETS[file_set.name][MID_DOE_MODEL_NAME])],
-            ids=[file_set.value],
-            scope="class",
-        )
-        return
-
-    file_set_name = file_set.name
-    params = list(FILE_SETS[file_set_name].items())
-    ids = [f"{file_set}-{model_type.value}" for model_type, _ in params]
-
+    file_set = marker.args[0].value
+    study_files = STUDY_FILES[file_set]
+    params = study_files
+    ids = [f"{file_set}-{model}" for model in params]
     metafunc.parametrize("study_file", params, ids=ids, scope="class")
 
 
@@ -128,12 +110,14 @@ def project_fixture(synergy: Synergy, request):
             f"Test '{request.node.name}' requires a @pytest.mark.file_set(FileSet.<SET>) marker."
         )
 
-    file_set = marker.args[0]
+    file_set = marker.args[0].value
 
-    project_path = Path(STUDY_FILES_DIR) / file_set.value / f"{file_set.value}.mpi"
+    project_path = (
+        Path(STUDY_FILES_DIR) / f"{PROJECT_PREFIX}{file_set}" / f"{file_set}{PROJECT_EXTENSION}"
+    )
     project_handle = synergy.open_project(str(project_path))
     if not project_handle:
-        raise RuntimeError(f"Failed to open project at {project_path}")
+        raise RuntimeError(f"Failed to open project {file_set.value}{PROJECT_EXTENSION}")
     project = synergy.project
     yield project
     project.close(False)
@@ -142,7 +126,7 @@ def project_fixture(synergy: Synergy, request):
 @pytest.fixture(name="study_file")
 def study_file_fixture(request):
     """
-    Provides a single (ModelType, file_path) tuple for each parametrized test.
+    Provides a single model_name string for each parametrized test.
     """
     return request.param
 
@@ -152,21 +136,16 @@ def opened_study_fixture(project: Project, study_file):
     """
     Opens a study file inside an already-open project.
     """
-    model_type, _ = study_file
-    if model_type == MID_DOE_MODEL_NAME:
-        study = project.open_item_by_name(model_type, ItemType.STUDY)
-    else:
-        study = project.open_item_by_name(model_type.value, ItemType.STUDY)
+    study = project.open_item_by_name(study_file, ItemType.STUDY)
     return study
 
 
 @pytest.fixture(name="study_with_project")
 def study_with_project_fixture(project, study_file, opened_study):
     """
-    Provides (ModelType, file_path, project, opened_study) tuple for convenience.
+    Provides (model_name, project, opened_study) tuple for convenience.
     """
-    model_type, file_path = study_file
-    yield (model_type, file_path, project, opened_study)
+    yield (study_file, project, opened_study)
 
 
 @pytest.fixture(scope="class", name="expected_data")
@@ -177,8 +156,6 @@ def expected_data_fixture(request):
     Automatically derives the JSON filename from pytest markers.
     Looks for markers like @pytest.mark.mesh_summary or @pytest.mark.synergy
     and converts them to filenames like "mesh_summary_data.json" or "synergy_data.json".
-
-    Falls back to class attribute `json_file_name` if no suitable marker is found.
     """
     # Try to derive filename from pytest markers first
     json_file_name = None
@@ -209,23 +186,14 @@ def expected_data_fixture(request):
 @pytest.fixture(name="expected_values")
 def expected_values_fixture(expected_data, study_file):
     """
-    Returns expected values for the current study's model type.
+    Returns expected values for the current study.
 
     If no matching data exists, skips the test gracefully.
     """
-    model_type, _ = study_file
-    model_data = expected_data.get(model_type.value)
-    if not model_data:
-        pytest.skip(f"No expected values found for model type: {model_type.value}")
-    return model_data
-
-
-@pytest.fixture(name="expected_values_general")
-def expected_values_general_fixture(expected_data):
-    """
-    Returns expected values for the general case.
-    """
-    return expected_data
+    expected_val = expected_data.get(study_file)
+    if not expected_val:
+        pytest.skip(f"No expected values found for model name: {study_file}")
+    return expected_val
 
 
 @pytest.fixture(scope="class")

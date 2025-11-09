@@ -27,7 +27,7 @@ class TestIntegrationMeshSummary:
         """
         Fixture to create a real MeshSummary instance for integration testing.
         """
-        model_type, file_path, _, _ = study_with_project
+        model_name, _, _ = study_with_project
 
         # Get diagnosis manager and mesh summary
         diagnosis_manager = synergy.diagnosis_manager
@@ -36,7 +36,7 @@ class TestIntegrationMeshSummary:
         )
 
         if mesh_summary is None:
-            pytest.skip(f"No mesh summary available for {model_type.value} model: {file_path}")
+            pytest.skip(f"No mesh summary available for {model_name} model")
 
         return mesh_summary
 

@@ -7,27 +7,50 @@ Helper functions for generating JSON test data from Synergy projects.
 
 import json
 from datetime import datetime
+from dataclasses import dataclass
 from functools import wraps
 from pathlib import Path
 from moldflow import Synergy, ItemType
 from tests.api.integration_tests.constants import (
     FileSet,
-    ModelType,
     STUDY_FILES_DIR,
     DATA_DIR,
     METADATA_FILE,
     METADATA_FILE_NAME,
-    Metadata,
     TEMP_FILE_PREFIX,
     GENERATE_DATA_FUNCTION_PREFIX,
     GENERATE_DATA_FUNCTION_SUFFIX,
     DATA_FILE_SUFFIX,
     DATA_FILE_EXTENSION,
+    METADATA_DATE_FORMAT,
+    METADATA_TIME_FORMAT,
+    PROJECT_PREFIX,
+    PROJECT_EXTENSION,
 )
+from tests.api.integration_tests.conftest import STUDY_FILES
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
     generate_data_logger,
 )
-from tests.api.integration_tests.conftest import unzip_study_files
+
+
+@dataclass
+class Metadata:
+    """
+    Metadata class for storing metadata about the test data.
+    """
+
+    date: datetime
+    time: datetime
+    build_number: str
+    version: str
+
+    def to_dict(self):
+        return {
+            "date": self.date.strftime(METADATA_DATE_FORMAT),
+            "time": self.time.strftime(METADATA_TIME_FORMAT),
+            "build_number": self.build_number,
+            "version": self.version,
+        }
 
 
 def _json_dump(json_file_name: str, result_data: dict):
@@ -100,25 +123,29 @@ def generate_json(file_set: FileSet | None = None):
                 result_data = {}
                 # --- Open the project if a file set is provided ---
                 if file_set is not None:
-                    project_path = Path(STUDY_FILES_DIR) / file_set.value / f"{file_set.value}.mpi"
+                    file_set_name = file_set.value
+                    project_path = (
+                        Path(STUDY_FILES_DIR)
+                        / f"{PROJECT_PREFIX}{file_set_name}"
+                        / f"{file_set_name}{PROJECT_EXTENSION}"
+                    )
                     project_handle = synergy.open_project(str(project_path))
                     if not project_handle:
                         raise RuntimeError(f"Failed to open project at {project_path}")
                     project = synergy.project
 
-                    # --- Loop through all model types ---
-                    for model_type in ModelType:
-                        study = project.open_item_by_name(model_type.value, ItemType.STUDY)
+                    # --- Loop through all study files ---
+                    for study_file in STUDY_FILES[file_set_name]:
+                        study = project.open_item_by_name(study_file, ItemType.STUDY)
                         if not study:
                             generate_data_logger.error(
-                                f"Skipped model type '{model_type.value}' during data generation for file set '{file_set.value}': study not found."
+                                f"Skipped study file '{study_file}' during data generation for file set '{file_set}': study not found."
                             )
                             continue
 
                         # Call the decorated function to collect data for this study
                         data = func(synergy=synergy, *args, **kwargs)
-                        result_data[model_type.value] = data
-
+                        result_data[study_file] = data
                 else:
                     result_data = func(synergy=synergy, *args, **kwargs)
 
@@ -137,6 +164,9 @@ def generate_json(file_set: FileSet | None = None):
 
 
 def fetch_metadata(date_time: datetime):
+    """
+    Fetch the metadata from the Synergy instance.
+    """
     synergy = Synergy()
     metadata = Metadata(
         date=date_time, time=date_time, build_number=synergy.build_number, version=synergy.version
@@ -146,6 +176,9 @@ def fetch_metadata(date_time: datetime):
 
 
 def clean_up_temp_files():
+    """
+    Clean up the temporary files.
+    """
     for file_name in DATA_DIR.iterdir():
         if file_name.is_file() and file_name.name.startswith(TEMP_FILE_PREFIX):
             file_name.unlink()

@@ -47,17 +47,18 @@ from moldflow import (
     SystemUnits,
 )
 from tests.conftest import VALID_BOOL
+from tests.api.integration_tests.conftest import STUDY_FILES
 from tests.api.integration_tests.constants import (
     FileSet,
     TEST_PROJECT_NAME,
-    STUDY_FILES_DIR,
-    MID_DOE_MODEL_NAME,
-    MID_DOE_MODEL_FILE,
     SYNERGY_WINDOW_TITLE,
     DEFAULT_WINDOW_POSITION_X,
     DEFAULT_WINDOW_POSITION_Y,
     DEFAULT_WINDOW_SIZE_X,
     DEFAULT_WINDOW_SIZE_Y,
+    STUDY_FILES_DIR,
+    STUDY_FILE_EXTENSION,
+    PROJECT_PREFIX,
 )
 
 SYNERGY_CLASSES_LIST = [
@@ -112,7 +113,8 @@ class TestIntegrationSynergy:
         assert synergy is not None
         assert synergy.synergy is not None
 
-    def test_synergy_properties(self, synergy: Synergy, expected_values_general: dict):
+    @pytest.mark.file_set(FileSet.SINGLE)
+    def test_synergy_properties(self, synergy: Synergy, expected_data: dict):
         """
         Test Synergy properties return correct types.
         """
@@ -135,8 +137,8 @@ class TestIntegrationSynergy:
         # assert len(edition_val) > 0
         assert len(version_val) > 0
 
-        assert version_val == expected_values_general["version"]
-        assert expected_values_general["build_number"] in build_number_val
+        assert version_val == expected_data["version"]
+        assert expected_data["build_number"] in build_number_val
 
     def test_new_project_open_project_open_recent_project(self, synergy: Synergy, temp_dir):
         """
@@ -174,14 +176,17 @@ class TestIntegrationSynergy:
         """
         project_name = TEST_PROJECT_NAME
         project_path = Path(temp_dir, project_name)
-        file_path = Path(STUDY_FILES_DIR, FileSet.SINGLE.value, MID_DOE_MODEL_FILE)
         result = synergy.open_project(str(project_path))
-        result = synergy.import_file(str(file_path))
         assert result
-
+        study_project_name = FileSet.MESHED.value
+        project_path = Path(STUDY_FILES_DIR, f"{PROJECT_PREFIX}{study_project_name}")
+        for study_file in STUDY_FILES[study_project_name]:
+            study_path = Path(project_path, f"{study_file}{STUDY_FILE_EXTENSION}")
+            result = synergy.import_file(str(study_path))
+            assert result
         proj = synergy.project
         std = proj.get_first_study_name()
-        assert std == MID_DOE_MODEL_NAME
+        assert std == STUDY_FILES[study_project_name][0]
 
     def test_synergy_units_property(self, synergy: Synergy):
         """

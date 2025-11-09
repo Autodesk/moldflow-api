@@ -5,19 +5,20 @@
 Constants for integration tests.
 """
 
-from dataclasses import dataclass
-from datetime import datetime
 from pathlib import Path
 from enum import Enum
 
 INTEGRATION_TESTS_DIR = Path(__file__).parent
 STUDY_FILES_DIR = INTEGRATION_TESTS_DIR / "study_files"
 DATA_DIR = INTEGRATION_TESTS_DIR / "data"
+
+STUDIES_FILE_NAME = "studies.json"
+STUDIES_FILE = Path(STUDY_FILES_DIR) / STUDIES_FILE_NAME
+
 METADATA_FILE_NAME = "metadata.json"
 METADATA_FILE = Path(DATA_DIR) / METADATA_FILE_NAME
+
 TEST_PROJECT_NAME = "test_project"
-MID_DOE_MODEL_FILE = "mid_doe_model.sdy"
-MID_DOE_MODEL_NAME = "mid_doe_model"
 
 DEFAULT_WINDOW_SIZE_X = 2560
 DEFAULT_WINDOW_SIZE_Y = 1440
@@ -30,28 +31,18 @@ SYNERGY_WINDOW_TITLE = f"Autodesk Moldflow Insight {SYNERGY_VERSION}"
 METADATA_DATE_FORMAT = "%Y-%m-%d"
 METADATA_TIME_FORMAT = "%H:%M:%S"
 
-
 TEMP_FILE_PREFIX = "temp_"
 GENERATE_DATA_FUNCTION_PREFIX = "generate_"
 GENERATE_DATA_FUNCTION_SUFFIX = "_data"
+
 DATA_FILE_SUFFIX = "_data"
 DATA_FILE_EXTENSION = ".json"
 
+PROJECT_PREFIX = "project_"
+PROJECT_ZIP_NAME_PATTERN = f"{PROJECT_PREFIX}*.zip"
+PROJECT_EXTENSION = ".mpi"
 
-@dataclass
-class Metadata:
-    date: datetime
-    time: datetime
-    build_number: str
-    version: str
-
-    def to_dict(self):
-        return {
-            "date": self.date.strftime(METADATA_DATE_FORMAT),
-            "time": self.time.strftime(METADATA_TIME_FORMAT),
-            "build_number": self.build_number,
-            "version": self.version,
-        }
+STUDY_FILE_EXTENSION = ".sdy"
 
 
 class FileSet(Enum):
@@ -68,13 +59,3 @@ class FileSet(Enum):
     # RAW = "raw_studies"
     MESHED = "meshed_studies"
     # ANALYZED = "analyzed_studies"
-
-
-class ModelType(Enum):
-    """
-    ModelType enum defines the different types of models in each file set.
-    """
-
-    DD = "dd_model"
-    MIDPLANE = "midplane_model"
-    THREE_D = "3d_model"
