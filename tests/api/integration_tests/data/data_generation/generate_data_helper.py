@@ -195,11 +195,12 @@ def commit_data(metadata: dict):
         metadata (dict): The metadata to commit.
     """
     # Update metadata file
-    metadata_file_data = json.load(open(METADATA_FILE))
-    for marker, data in metadata.items():
-        metadata_file_data[marker] = data
-        generate_data_logger.track_generation(marker, METADATA_FILE_NAME)
-    _json_dump(METADATA_FILE_NAME, metadata_file_data)
+    with open(METADATA_FILE, "r", encoding="utf-8") as f:
+        metadata_file_data = json.load(f)
+        for marker, data in metadata.items():
+            metadata_file_data[marker] = data
+            generate_data_logger.track_generation(marker, METADATA_FILE_NAME)
+        _json_dump(METADATA_FILE_NAME, metadata_file_data)
 
     # Commit temporary files to final files
     for file_name in DATA_DIR.iterdir():
@@ -207,8 +208,9 @@ def commit_data(metadata: dict):
 
         if file_name.is_file() and file_name_str.startswith(TEMP_FILE_PREFIX):
             new_file_name = file_name_str[len(TEMP_FILE_PREFIX) :]
-            data = json.load(open(file_name))
-            _json_dump(new_file_name, data)
+            with open(file_name, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                _json_dump(new_file_name, data)
             file_name.unlink()
     # Print the beautiful summary
     generate_data_logger.print_summary(DATA_DIR)

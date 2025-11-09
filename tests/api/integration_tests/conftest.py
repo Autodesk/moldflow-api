@@ -117,7 +117,7 @@ def project_fixture(synergy: Synergy, request):
     )
     project_handle = synergy.open_project(str(project_path))
     if not project_handle:
-        raise RuntimeError(f"Failed to open project {file_set.value}{PROJECT_EXTENSION}")
+        raise RuntimeError(f"Failed to open project at {project_path}")
     project = synergy.project
     yield project
     project.close(False)

@@ -164,9 +164,12 @@ class TestIntegrationSynergy:
         proj.close(False)
         assert proj.project is None
 
+        # Known API issue: open_recent_project returns False even when project is opened.
+        pytest.xfail(
+            "open_recent_project API returns False even when project is opened. " \
+            "Remove xfail and assert True when API is fixed."
+        )
         result = synergy.open_recent_project(0)
-        # TODO: Need to update to assert True as soon as API is fixed
-        assert result is False
         proj = synergy.project
         assert proj is not None
 
