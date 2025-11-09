@@ -166,7 +166,7 @@ class TestIntegrationSynergy:
 
         # Known API issue: open_recent_project returns False even when project is opened.
         pytest.xfail(
-            "open_recent_project API returns False even when project is opened. " \
+            "open_recent_project API returns False even when project is opened. "
             "Remove xfail and assert True when API is fixed."
         )
         result = synergy.open_recent_project(0)
