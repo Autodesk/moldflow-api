@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import pytest
 import tempfile
+import shutil
 import zipfile
 from moldflow import Synergy, Project, ItemType
 from tests.api.integration_tests.constants import (
@@ -48,6 +49,24 @@ def get_study_files():
 
 
 STUDY_FILES = get_study_files()
+
+
+def teardown():
+    """
+    Fixture to teardown the study files.
+    """
+    for folder in STUDY_FILES_DIR.iterdir():
+        if folder.is_dir() and folder.name.startswith(PROJECT_PREFIX):
+            shutil.rmtree(folder)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def setup():
+    """
+    Fixture to get the study files.
+    """
+    yield
+    teardown()
 
 
 def pytest_generate_tests(metafunc):
