@@ -7,6 +7,7 @@ pathspec==0.12.1
 polib==1.2.0
 pre-commit==4.2.0
 pydata-sphinx-theme==0.16.1
+pygetwindow==0.0.9
 pylint==3.3.4
 pytest==8.3.4
 sphinx==8.1.3

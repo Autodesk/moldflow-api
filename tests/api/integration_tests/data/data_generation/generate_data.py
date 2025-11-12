@@ -9,15 +9,25 @@ Usage:
 """
 
 import docopt
-import logging
 import sys
+from datetime import datetime
 from moldflow import Synergy
-from tests.api.integration_tests.data.data_generation.generate_data_helper import generate_json
-from tests.api.integration_tests.constants import FileSet, DataFile
+from tests.api.integration_tests.data.data_generation.generate_data_helper import (
+    generate_json,
+    clean_up_temp_files,
+    get_generate_data_functions,
+    get_available_markers,
+    fetch_data_on_markers,
+)
+from tests.api.integration_tests.data.data_generation.generate_data_logger import (
+    generate_data_logger,
+)
+from tests.api.integration_tests.constants import FileSet
+from tests.api.integration_tests.conftest import get_study_files
 
 
-@generate_json(json_file_name=DataFile.MESH_SUMMARY, file_set=FileSet.MESHED)
-def generate_mesh_summary(synergy: Synergy = None):
+@generate_json(file_set=FileSet.MESHED)
+def generate_mesh_summary_data(synergy: Synergy = None):
     """
     Extract mesh summary data from a study.
     Returns a dict with relevant properties.
@@ -57,34 +67,43 @@ def generate_mesh_summary(synergy: Synergy = None):
     }
 
 
-GENERATE_FUNCTIONS = {"mesh_summary": generate_mesh_summary}
+@generate_json(file_set=None)
+def generate_synergy_data(synergy: Synergy = None):
+    """
+    Generate data for the Synergy class.
+    Returns a dict with relevant properties.
+    """
+
+    build_number_parts = synergy.build_number.split(".")
+    build_number_major_minor = ".".join(build_number_parts[:2])
+
+    return {"version": synergy.version, "build_number": build_number_major_minor}
 
 
 def main():
     """Main entry point for this script"""
     args = docopt.docopt(__doc__)
+    DATE_TIME = datetime.now()
 
     try:
         markers = args.get('<markers>') or []
+        get_study_files()
+        generate_functions = get_generate_data_functions(globals())
+
+        for marker in markers:
+            if marker not in generate_functions.keys():
+                generate_data_logger.error(f'Invalid marker: {marker}')
+                generate_data_logger.error(get_available_markers(generate_functions))
+                return 0
+
         if len(markers) > 0:
-
-            for marker in markers:
-                generate_function = GENERATE_FUNCTIONS.get(marker)
-
-                if generate_function:
-                    generate_function()
-                else:
-                    logging.error('FAILURE: No generate function found for marker: %s', marker)
-                    return 1
-
+            fetch_data_on_markers(markers, generate_functions, DATE_TIME)
         else:
-            logging.info('Generating all data')
-
-            for generate_function in GENERATE_FUNCTIONS.values():
-                generate_function()
+            fetch_data_on_markers(generate_functions.keys(), generate_functions, DATE_TIME)
 
     except Exception as err:
-        logging.error('FAILURE: %s', err, exc_info=True)
+        generate_data_logger.error(f'FAILURE: {err}')
+        clean_up_temp_files()
         return 1
 
     return 0

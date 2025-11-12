@@ -10,7 +10,7 @@ of the MeshSummary class with real Moldflow Synergy COM objects.
 
 import pytest
 from moldflow import MeshSummary, Synergy
-from tests.api.integration_tests.constants import FileSet, DataFile
+from tests.api.integration_tests.constants import FileSet
 
 
 @pytest.mark.integration
@@ -22,14 +22,12 @@ class TestIntegrationMeshSummary:
     Tests are run against meshed models to ensure mesh summary data is available.
     """
 
-    json_file_name = DataFile.MESH_SUMMARY
-
     @pytest.fixture
     def mesh_summary(self, synergy: Synergy, study_with_project):
         """
         Fixture to create a real MeshSummary instance for integration testing.
         """
-        model_type, file_path, _, _ = study_with_project
+        model_name, _, _ = study_with_project
 
         # Get diagnosis manager and mesh summary
         diagnosis_manager = synergy.diagnosis_manager
@@ -38,7 +36,7 @@ class TestIntegrationMeshSummary:
         )
 
         if mesh_summary is None:
-            pytest.skip(f"No mesh summary available for {model_type.value} model: {file_path}")
+            pytest.skip(f"No mesh summary available for {model_name} model")
 
         return mesh_summary
 
