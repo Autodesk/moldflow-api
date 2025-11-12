@@ -134,7 +134,6 @@ class TestIntegrationSynergy:
         assert units_val in [units.value for units in SystemUnits]
         assert len(build_val) > 0
         assert len(build_number_val) > 0
-        # assert len(edition_val) > 0
         assert len(version_val) > 0
 
         assert version_val == expected_data["version"]
