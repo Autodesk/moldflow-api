@@ -22,7 +22,15 @@ from tests.api.integration_tests.data.data_generation.generate_data_helper impor
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
     generate_data_logger,
 )
-from tests.api.integration_tests.constants import FileSet
+from tests.api.integration_tests.constants import (
+    FileSet,
+    MATERIAL_DB,
+    MATERIAL_DB_TYPE,
+    CUSTOM_PROPERTY_NAME,
+    CUSTOM_PROPERTY_ID,
+    CUSTOM_PROPERTY_TYPE,
+    FIELD_PROPERTIES,
+)
 from tests.api.integration_tests.conftest import get_study_files
 
 
@@ -78,6 +86,96 @@ def generate_synergy_data(synergy: Synergy = None):
     build_number_major_minor = ".".join(build_number_parts[:2])
 
     return {"version": synergy.version, "build_number": build_number_major_minor}
+
+
+@generate_json(file_set=None)
+def generate_material_property_data(synergy: Synergy = None):
+    """
+    Generate data for the Material Property class.
+    Returns a dict with relevant properties.
+    """
+    mf = synergy.material_finder
+    mf.set_data_domain(MATERIAL_DB, MATERIAL_DB_TYPE)
+    mat = mf.get_first_material()
+    properties = {}
+
+    properties["material_name"] = mat.name
+    properties["material_id"] = mat.id
+    properties["material_type"] = mat.type
+
+    field_id = mat.get_first_field()
+    while field_id != 0:
+
+        try:
+            field_values = mat.get_field_values(field_id)
+            field_values = field_values.to_list()
+        except AttributeError:
+            field_values = None
+
+        try:
+            field_units = mat.field_units(field_id)
+            field_units = field_units.to_list()
+        except AttributeError:
+            field_units = None
+
+        properties[f"field_{field_id}"] = {
+            "field_description": mat.get_field_description(field_id),
+            "field_values": field_values,
+            "field_units": field_units,
+            "field_writable": mat.is_field_writable(field_id),
+            "field_hidden": mat.is_field_hidden(field_id),
+        }
+
+        field_id = mat.get_next_field(field_id)
+
+    return properties
+
+
+@generate_json(file_set=None, synergy_required=False)
+def generate_custom_property_data():
+    """
+    Generate data for a new property.
+    Returns a dict with relevant properties.
+    """
+    properties_data = {
+        "property_name": CUSTOM_PROPERTY_NAME,
+        "property_id": CUSTOM_PROPERTY_ID,
+        "property_type": CUSTOM_PROPERTY_TYPE,
+        "original_field_data": {
+            "field_description": "",
+            "field_values": [],
+            "field_units": [],
+            "field_writable": True,
+            "field_hidden": False,
+        },
+        "hidden_field_data": {
+            "field_description": "",
+            "field_values": None,
+            "field_units": [],
+            "field_writable": False,
+            "field_hidden": True,
+        },
+    }
+
+    for index, field_properties in FIELD_PROPERTIES.items():
+        properties_data[f"field_data_{index}"] = {
+            "field_id": field_properties["id"],
+            "field_description": field_properties["description"],
+            "field_values": field_properties["values"],
+            "field_units": field_properties["units"],
+            "field_writable": field_properties["writable"],
+            "field_hidden": field_properties["hidden"],
+        }
+
+    return properties_data
+
+
+def generate_prop_data():
+    """
+    Generate data for the Property class specifically for tests on material and custom properties.
+    """
+    generate_material_property_data()
+    generate_custom_property_data()
 
 
 def main():

@@ -13,6 +13,7 @@ from tests.conftest import POSITIVE_INT, pad_and_zip, INVALID_INT, INVALID_STR, 
 
 
 @pytest.mark.unit
+@pytest.mark.prop
 class TestUnitProperty:
     """
     Unit Test suite for the Property class.

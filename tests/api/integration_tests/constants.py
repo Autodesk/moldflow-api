@@ -7,16 +7,21 @@ Constants for integration tests.
 
 from pathlib import Path
 from enum import Enum
+from moldflow import MaterialDatabase, MaterialDatabaseType
 
 INTEGRATION_TESTS_DIR = Path(__file__).parent
 STUDY_FILES_DIR = INTEGRATION_TESTS_DIR / "study_files"
 DATA_DIR = INTEGRATION_TESTS_DIR / "data"
+ROOT_DIR = INTEGRATION_TESTS_DIR.parent.parent.parent
 
 STUDIES_FILE_NAME = "studies.json"
 STUDIES_FILE = Path(STUDY_FILES_DIR) / STUDIES_FILE_NAME
 
 METADATA_FILE_NAME = "metadata.json"
 METADATA_FILE = Path(DATA_DIR) / METADATA_FILE_NAME
+
+CHILD_MARKERS_FILE_NAME = "child_markers.json"
+CHILD_MARKERS_FILE = Path(ROOT_DIR) / CHILD_MARKERS_FILE_NAME
 
 TEST_PROJECT_NAME = "test_project"
 
@@ -59,3 +64,40 @@ class FileSet(Enum):
     # RAW = "raw_studies"
     MESHED = "meshed_studies"
     # ANALYZED = "analyzed_studies"
+
+
+# --------------------------------------------------------------------------------------------------
+# Constants for property tests
+
+# Constants for material property tests
+MATERIAL_DB = MaterialDatabase.COOLANT
+MATERIAL_DB_TYPE = MaterialDatabaseType.SYSTEM
+
+# Constants for custom property tests
+CUSTOM_PROPERTY_DEFAULTS = False
+CUSTOM_PROPERTY_NAME = "Test Name"
+CUSTOM_PROPERTY_ID = 1
+CUSTOM_PROPERTY_TYPE = 10
+
+FIELD_PROPERTIES = {
+    1: {
+        "id": 20,
+        "description": "Test Description",
+        "values": [1, 2, 3],
+        "units": [],
+        "writable": True,
+        "hidden": False,
+    },
+    2: {
+        "id": 21,
+        "description": "Second Test Description",
+        "values": [4, 5, 6],
+        "units": [],
+        "writable": True,
+        "hidden": False,
+    },
+}
+
+FIELD_INDEX = 1  # Index for the field to be used for single field tests
+
+# --------------------------------------------------------------------------------------------------

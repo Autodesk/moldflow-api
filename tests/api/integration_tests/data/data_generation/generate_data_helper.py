@@ -26,6 +26,7 @@ from tests.api.integration_tests.constants import (
     METADATA_TIME_FORMAT,
     PROJECT_PREFIX,
     PROJECT_EXTENSION,
+    CHILD_MARKERS_FILE,
 )
 from tests.api.integration_tests.conftest import STUDY_FILES
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
@@ -101,7 +102,7 @@ def get_temp_file_name(marker: str):
     return f"{TEMP_FILE_PREFIX}{get_data_file_name(marker)}"
 
 
-def generate_json(file_set: FileSet | None = None):
+def generate_json(file_set: FileSet | None = None, synergy_required: bool = True):
     """
     Decorator to generate JSON test data from Synergy projects or directly from Synergy.
     The function name must follow the pattern: generate_<marker>_data
@@ -147,7 +148,10 @@ def generate_json(file_set: FileSet | None = None):
                         data = func(synergy=synergy, *args, **kwargs)
                         result_data[study_file] = data
                 else:
-                    result_data = func(synergy=synergy, *args, **kwargs)
+                    if synergy_required:
+                        result_data = func(synergy=synergy, *args, **kwargs)
+                    else:
+                        result_data = func(*args, **kwargs)
 
                 _json_dump(temp_file_name, result_data)
                 generate_data_logger.track_generation(marker, get_data_file_name(marker))
@@ -185,6 +189,19 @@ def clean_up_temp_files():
     return 0
 
 
+def _add_metadata_for_child_markers(metadata: dict):
+    """
+    Add additional metadata to the metadata file.
+    """
+    with open(CHILD_MARKERS_FILE, "r", encoding="utf-8") as f:
+        child_markers = json.load(f)
+    for parent_marker, child_markers in child_markers.items():
+        if parent_marker in metadata.keys():
+            for child_marker in child_markers:
+                metadata[child_marker] = metadata[parent_marker]
+    return metadata
+
+
 def commit_data(metadata: dict):
     """
     Commit the data to the data directory.
@@ -197,6 +214,7 @@ def commit_data(metadata: dict):
     # Update metadata file
     with open(METADATA_FILE, "r", encoding="utf-8") as f:
         metadata_file_data = json.load(f)
+        metadata = _add_metadata_for_child_markers(metadata)
         for marker, data in metadata.items():
             metadata_file_data[marker] = data
             generate_data_logger.track_generation(marker, METADATA_FILE_NAME)

@@ -22,6 +22,8 @@ from tests.api.integration_tests.constants import (
     PROJECT_PREFIX,
     STUDY_FILE_EXTENSION,
     PROJECT_EXTENSION,
+    DATA_FILE_EXTENSION,
+    DATA_FILE_SUFFIX,
 )
 
 
@@ -161,15 +163,22 @@ def expected_data_fixture(request):
     json_file_name = None
     marker_list = getattr(request.cls, "pytestmark", [])
 
-    # Look for data-related markers (excluding common ones like 'integration', 'file_set')
-    excluded_markers = {'integration', 'file_set', 'parametrize'}
+    # Look for json_file_name marker first
     for marker in marker_list:
-        if marker.name not in excluded_markers:
-            # Convert marker name to filename: mesh_summary -> mesh_summary_data.json
-            json_file_name = f"{marker.name}_data.json"
+        if marker.name == 'json_file_name':
+            json_file_name = marker.args[0]  # Get the first argument
             break
 
-    json_path = Path(DATA_DIR) / json_file_name
+    # If no json_file_name marker found, look for other markers
+    if json_file_name is None:
+        excluded_markers = {'integration', 'file_set', 'parametrize', 'json_file_name'}
+        for marker in marker_list:
+            if marker.name not in excluded_markers:
+                # Convert marker name to filename: mesh_summary -> mesh_summary_data.json
+                json_file_name = marker.name
+                break
+
+    json_path = Path(DATA_DIR) / f"{json_file_name}{DATA_FILE_SUFFIX}{DATA_FILE_EXTENSION}"
     if not json_path.exists():
         pytest.skip(f"Expected data file not found: {json_path}")
 
