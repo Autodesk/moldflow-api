@@ -192,7 +192,7 @@ def clean_up_temp_files():
 
 def read_json_file(file_path: Path):
     """
-    Read the child markers file and return the child markers.
+    Read and parse a JSON file, returning its contents as a dictionary.
     """
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -280,7 +280,7 @@ def fetch_data_on_markers(
     metadata_data = fetch_metadata(date_time)
 
     for marker in markers:
-        generate_function = generate_functions.get(marker, None)
+        generate_function = generate_functions.get(marker)
         if not generate_function:
             generate_data_logger.error(
                 f"Generator function for marker '{marker}' not found. Please check if the function exists."
