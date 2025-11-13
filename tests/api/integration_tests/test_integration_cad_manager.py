@@ -9,7 +9,6 @@ of the CADManager class with real Moldflow Synergy COM objects.
 """
 
 import pytest
-import time
 from moldflow import CADManager, Synergy, EntList
 from tests.api.integration_tests.constants import FileSet
 
@@ -73,7 +72,7 @@ class TestIntegrationCADManager:
         self, synergy: Synergy, cad_manager: CADManager
     ):
         """
-        Test the modify_cad_surfaces_by_normal method of the CADManager class.
+        Test the modify_cad_surfaces_by_normal method of the CADManager class with transit faces set to None.
         """
         faces = cad_manager.create_entity_list()
         faces.select_from_string("F443")
@@ -89,7 +88,7 @@ class TestIntegrationCADManager:
         self, synergy: Synergy, cad_manager: CADManager
     ):
         """
-        Test the modify_cad_surfaces_by_vector method of the CADManager class.
+        Test the modify_cad_surfaces_by_vector method of the CADManager class with transit faces set to None.
         """
         faces = cad_manager.create_entity_list()
         faces.select_from_string("F443")
@@ -104,21 +103,21 @@ class TestIntegrationCADManager:
 
     def test_modify_cad_surfaces_by_normal_none(self, cad_manager: CADManager):
         """
-        Test the modify_cad_surfaces_by_normal method of the CADManager class.
+        Test the modify_cad_surfaces_by_normal method of the CADManager class with everything set to None.
         """
         result = cad_manager.modify_cad_surfaces_by_normal(None, None, 1.0)
         assert result is False
 
     def test_modify_cad_surfaces_by_vector_none(self, cad_manager: CADManager):
         """
-        Test the modify_cad_surfaces_by_vector method of the CADManager class.
+        Test the modify_cad_surfaces_by_vector method of the CADManager class with everything set to None.
         """
         result = cad_manager.modify_cad_surfaces_by_vector(None, None, None)
         assert result is False
 
     def test_modify_cad_surfaces_by_normal_none_faces(self, cad_manager: CADManager):
         """
-        Test the modify_cad_surfaces_by_normal method of the CADManager class.
+        Test the modify_cad_surfaces_by_normal method of the CADManager class with faces set to None.
         """
         transit_faces = cad_manager.create_entity_list()
         result = cad_manager.modify_cad_surfaces_by_normal(None, transit_faces, 1.0)
@@ -128,7 +127,7 @@ class TestIntegrationCADManager:
         self, synergy: Synergy, cad_manager: CADManager
     ):
         """
-        Test the modify_cad_surfaces_by_vector method of the CADManager class.
+        Test the modify_cad_surfaces_by_vector method of the CADManager class with faces set to None.
         """
         vector = synergy.create_vector()
         vector.set_xyz(1.0, 1.0, 1.0)
