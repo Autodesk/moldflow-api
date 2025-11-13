@@ -1,1 +1,6 @@
-{}
+{
+  "prop": [
+    "material_property",
+    "custom_property"
+  ]
+}
