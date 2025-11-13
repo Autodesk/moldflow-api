@@ -172,11 +172,25 @@ def expected_data_fixture(request):
     # If no json_file_name marker found, look for other markers
     if json_file_name is None:
         excluded_markers = {'integration', 'file_set', 'parametrize', 'json_file_name'}
-        for marker in marker_list:
-            if marker.name not in excluded_markers:
-                # Convert marker name to filename: mesh_summary -> mesh_summary_data.json
-                json_file_name = marker.name
-                break
+        non_excluded_markers = [m.name for m in marker_list if m.name not in excluded_markers]
+
+        # If multiple non-excluded markers exist, it's ambiguous (likely parent-child scenario)
+        if len(non_excluded_markers) > 1:
+            pytest.fail(
+                f"Multiple markers found on test class '{request.cls.__name__}': {non_excluded_markers}. "
+                f"Please specify which baseline data to use with "
+                f"@pytest.mark.json_file_name('<marker>')."
+            )
+        elif len(non_excluded_markers) == 1:
+            # Exactly one marker found - use it
+            json_file_name = non_excluded_markers[0]
+        else:
+            # No markers found at all
+            pytest.fail(
+                f"Could not determine JSON filename for test class '{request.cls.__name__}'. "
+                f"Please add a marker (e.g., @pytest.mark.my_marker) or use "
+                f"@pytest.mark.json_file_name('<filename>')."
+            )
 
     json_path = Path(DATA_DIR) / f"{json_file_name}{DATA_FILE_SUFFIX}{DATA_FILE_EXTENSION}"
     if not json_path.exists():

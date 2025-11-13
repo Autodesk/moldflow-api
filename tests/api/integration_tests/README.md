@@ -193,7 +193,7 @@ Understanding which tests run with which marker is crucial:
 
 When using child markers, you **must** specify which baseline data file to use with the `@pytest.mark.json_file_name()` decorator:
 
-***Note:** The prefix and file extension `_data.json` will be automatically added, please don't include in the argument.*
+***Note:** The suffix and file extension `_data.json` will be automatically added, please don't include in the argument.*
 
 ```python
 @pytest.mark.json_file_name("material_property")
@@ -412,15 +412,25 @@ All generator functions live in `generate_data.py`. The test runner locates and 
 generate_<marker>_data
 ```
 
-Example for marker `sample_case`:
+### The `@generate_json` Decorator
+
+All generator functions must use the `@generate_json` decorator if they want json files generated for the marker name:
+
+**Parameters:**
+- `file_set` (FileSet | None): The file set to iterate over (e.g., `FileSet.MESHED`, `FileSet.SINGLE`), or `None` if no project files are needed.
+- `synergy_required` (bool): Whether a Synergy instance should be passed to the function. Default: `True`.
+  - If `True`: Function receives `synergy=<Synergy instance>` parameter
+  - If `False`: Function is called without Synergy (use for static data generation)
+
+**Example:**
 
 ```python
-@generate_json(file_set=...)
-def generate_sample_case_data():
+@generate_json(file_set=...)  # synergy_required is True by default
+def generate_sample_case_data(synergy: Synergy = None):
     return {
-        "DD": { ... },
-        "MIDPLANE": { ... },
-        "THREE_D": { ... }
+        "dd_model": { ... },
+        "midplane_model": { ... },
+        "3d_model": { ... }
     }
 ```
 
@@ -428,6 +438,7 @@ def generate_sample_case_data():
 
 - The function must return a Python `dict` containing the baseline content to write to `<marker>_data.json`.
 - The function should be idempotent: running it repeatedly should produce consistent results (unless intentionally changed).
+- Use `synergy_required=False` only when generating static test data that doesn't need Synergy instantiation.
 
 ---
 

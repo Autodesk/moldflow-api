@@ -108,7 +108,8 @@ def generate_json(file_set: FileSet | None = None, synergy_required: bool = True
     The function name must follow the pattern: generate_<marker>_data
 
     Args:
-        file_set (FileSet | None): The file set to loop through (SINGLE, MESHED), or None if no project needs to be opened.
+        file_set (FileSet | None): The file set to loop through (SINGLE, MESHED), or None if no project needed.
+        synergy_required (bool): Whether Synergy instance should be passed to the function. Default: True.
     """
 
     def decorator(func):
@@ -189,13 +190,31 @@ def clean_up_temp_files():
     return 0
 
 
+def read_json_file(file_path: Path):
+    """
+    Read and parse a JSON file, returning its contents as a dictionary.
+    """
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        generate_data_logger.error(f"File '{file_path}' not found.")
+        return
+    except json.JSONDecodeError:
+        generate_data_logger.error(f"File '{file_path}' is not valid JSON.")
+        return
+
+
 def _add_metadata_for_child_markers(metadata: dict):
     """
     Add additional metadata to the metadata file.
     """
-    with open(CHILD_MARKERS_FILE, "r", encoding="utf-8") as f:
-        child_markers = json.load(f)
-    for parent_marker, child_markers in child_markers.items():
+    if not CHILD_MARKERS_FILE.exists():
+        return metadata
+    child_markers_data = read_json_file(CHILD_MARKERS_FILE)
+    if not child_markers_data:
+        return metadata
+    for parent_marker, child_markers in child_markers_data.items():
         if parent_marker in metadata.keys():
             for child_marker in child_markers:
                 metadata[child_marker] = metadata[parent_marker]
@@ -212,13 +231,12 @@ def commit_data(metadata: dict):
         metadata (dict): The metadata to commit.
     """
     # Update metadata file
-    with open(METADATA_FILE, "r", encoding="utf-8") as f:
-        metadata_file_data = json.load(f)
-        metadata = _add_metadata_for_child_markers(metadata)
-        for marker, data in metadata.items():
-            metadata_file_data[marker] = data
-            generate_data_logger.track_generation(marker, METADATA_FILE_NAME)
-        _json_dump(METADATA_FILE_NAME, metadata_file_data)
+    metadata_file_data = read_json_file(METADATA_FILE)
+    metadata = _add_metadata_for_child_markers(metadata)
+    for marker, data in metadata.items():
+        metadata_file_data[marker] = data
+        generate_data_logger.track_generation(marker, METADATA_FILE_NAME)
+    _json_dump(METADATA_FILE_NAME, metadata_file_data)
 
     # Commit temporary files to final files
     for file_name in DATA_DIR.iterdir():
@@ -226,8 +244,8 @@ def commit_data(metadata: dict):
 
         if file_name.is_file() and file_name_str.startswith(TEMP_FILE_PREFIX):
             new_file_name = file_name_str[len(TEMP_FILE_PREFIX) :]
-            with open(file_name, "r", encoding="utf-8") as f:
-                data = json.load(f)
+            data = read_json_file(file_name)
+            if data:
                 _json_dump(new_file_name, data)
             file_name.unlink()
     # Print the beautiful summary
@@ -263,6 +281,11 @@ def fetch_data_on_markers(
 
     for marker in markers:
         generate_function = generate_functions.get(marker)
+        if not generate_function:
+            generate_data_logger.error(
+                f"Generator function for marker '{marker}' not found. Please check if the function exists."
+            )
+            continue
         metadata[marker] = metadata_data
         generate_function()
     commit_data(metadata)
