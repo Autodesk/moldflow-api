@@ -198,10 +198,10 @@ def read_json_file(file_path: Path):
         with open(file_path, "r", encoding="utf-8") as f:
             return json.load(f)
     except FileNotFoundError:
-        generate_data_logger.error(f"File '{file_path}' not found. ")
+        generate_data_logger.error(f"File '{file_path}' not found.")
         return
     except json.JSONDecodeError:
-        generate_data_logger.error(f"File '{file_path}' is not valid JSON. ")
+        generate_data_logger.error(f"File '{file_path}' is not valid JSON.")
         return
 
 
