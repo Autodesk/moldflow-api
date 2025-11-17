@@ -22,8 +22,8 @@ from tests.api.integration_tests.data.data_generation.generate_data_helper impor
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
     generate_data_logger,
 )
-from tests.api.integration_tests.constants import (
-    FileSet,
+from tests.api.integration_tests.constants import FileSet
+from tests.api.integration_tests.data.set_fields import (
     MATERIAL_DB,
     MATERIAL_DB_TYPE,
     CUSTOM_PROPERTY_NAME,

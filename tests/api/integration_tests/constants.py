@@ -7,7 +7,6 @@ Constants for integration tests.
 
 from pathlib import Path
 from enum import Enum
-from moldflow import MaterialDatabase, MaterialDatabaseType
 
 INTEGRATION_TESTS_DIR = Path(__file__).parent
 STUDY_FILES_DIR = INTEGRATION_TESTS_DIR / "study_files"
