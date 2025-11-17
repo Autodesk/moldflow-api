@@ -61,6 +61,7 @@ class FileSet(Enum):
     """
 
     SINGLE = "single_study"
+    CAD_MANAGER = "cad_manager_studies"
     # RAW = "raw_studies"
     MESHED = "meshed_studies"
     # ANALYZED = "analyzed_studies"
