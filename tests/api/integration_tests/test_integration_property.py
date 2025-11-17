@@ -191,7 +191,7 @@ class TestIntegrationCustomProperty:
         """
         Test the hiding of the field.
         """
-        hidden_data = expected_data[f"hidden_field_data"]
+        hidden_data = expected_data["hidden_field_data"]
         field_id = FIELD_PROPERTIES[FIELD_INDEX]["id"]
 
         # Set and test the updated properties
@@ -243,7 +243,7 @@ class TestIntegrationCustomProperty:
         original_data = expected_data["original_field_data"]
         updated_data_1 = expected_data["field_data_1"]
         updated_data_2 = expected_data["field_data_2"]
-        hidden_data = expected_data[f"hidden_field_data"]
+        hidden_data = expected_data["hidden_field_data"]
         field_id_1 = FIELD_PROPERTIES[1]["id"]
         field_id_2 = FIELD_PROPERTIES[2]["id"]
 
