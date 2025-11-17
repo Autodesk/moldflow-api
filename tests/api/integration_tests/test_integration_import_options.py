@@ -12,7 +12,7 @@ import pytest
 from moldflow import ImportOptions, Synergy
 from moldflow.common import MeshType, ImportUnits
 from tests.api.integration_tests.data.defaults import import_options_defaults
-from tests.api.integration_tests.data.set_options import import_options_set_options
+from tests.api.integration_tests.data.set_fields import import_options_set_options
 
 
 @pytest.mark.integration

@@ -10,8 +10,8 @@ of the Property class with real Moldflow Synergy COM objects.
 
 import pytest
 from moldflow import Synergy, Property, DoubleArray
-from tests.api.integration_tests.constants import (
-    FileSet,
+from tests.api.integration_tests.constants import FileSet
+from tests.api.integration_tests.data.set_fields import (
     MATERIAL_DB,
     MATERIAL_DB_TYPE,
     CUSTOM_PROPERTY_NAME,

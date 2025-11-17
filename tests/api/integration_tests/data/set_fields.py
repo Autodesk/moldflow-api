@@ -5,7 +5,15 @@
 Data for testing setting options for Moldflow Synergy API classes.
 """
 
-from moldflow.common import MeshType, ImportUnits, MDLKernel, MDLContactMeshType, CADBodyProperty
+from moldflow.common import (
+    MeshType,
+    ImportUnits,
+    MDLKernel,
+    MDLContactMeshType,
+    CADBodyProperty,
+    MaterialDatabase,
+    MaterialDatabaseType,
+)
 from tests.conftest import VALID_BOOL, NON_NEGATIVE_FLOAT, NON_NEGATIVE_INT
 
 
@@ -48,3 +56,39 @@ import_options_set_options = {
     "mdl_contact_mesh_type": enum_dict(MDLContactMeshType),
     "cad_body_property": enum_dict(CADBodyProperty),
 }
+
+# --------------------------------------------------------------------------------------------------
+# Constants for property tests
+
+# Constants for material property tests
+MATERIAL_DB = MaterialDatabase.COOLANT
+MATERIAL_DB_TYPE = MaterialDatabaseType.SYSTEM
+
+# Constants for custom property tests
+CUSTOM_PROPERTY_DEFAULTS = False
+CUSTOM_PROPERTY_NAME = "Test Name"
+CUSTOM_PROPERTY_ID = 1
+CUSTOM_PROPERTY_TYPE = 10
+
+FIELD_PROPERTIES = {
+    1: {
+        "id": 20,
+        "description": "Test Description",
+        "values": [1, 2, 3],
+        "units": [],
+        "writable": True,
+        "hidden": False,
+    },
+    2: {
+        "id": 21,
+        "description": "Second Test Description",
+        "values": [4, 5, 6],
+        "units": [],
+        "writable": True,
+        "hidden": False,
+    },
+}
+
+FIELD_INDEX = 1  # Index for the field to be used for single field tests
+
+# --------------------------------------------------------------------------------------------------
