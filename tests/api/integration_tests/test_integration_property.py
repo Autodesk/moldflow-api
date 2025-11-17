@@ -140,7 +140,7 @@ class TestIntegrationCustomProperty:
     Integration test suite for a new custom property for Property class.
     """
 
-    @pytest.fixture()
+    @pytest.fixture
     def custom_property(self, synergy: Synergy, study_with_project):
         """
         Fixture to create a new property.
