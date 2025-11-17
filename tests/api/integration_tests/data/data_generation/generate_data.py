@@ -18,6 +18,7 @@ from tests.api.integration_tests.data.data_generation.generate_data_helper impor
     get_generate_data_functions,
     get_available_markers,
     fetch_data_on_markers,
+    safe_array_to_list,
 )
 from tests.api.integration_tests.data.data_generation.generate_data_logger import (
     generate_data_logger,
@@ -106,17 +107,8 @@ def generate_material_property_data(synergy: Synergy = None):
     field_id = mat.get_first_field()
     while field_id != 0:
 
-        try:
-            field_values = mat.get_field_values(field_id)
-            field_values = field_values.to_list()
-        except AttributeError:
-            field_values = None
-
-        try:
-            field_units = mat.field_units(field_id)
-            field_units = field_units.to_list()
-        except AttributeError:
-            field_units = None
+        field_values = safe_array_to_list(mat.get_field_values(field_id))
+        field_units = safe_array_to_list(mat.field_units(field_id))
 
         properties[f"field_{field_id}"] = {
             "field_description": mat.get_field_description(field_id),

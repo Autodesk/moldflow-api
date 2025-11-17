@@ -5,7 +5,7 @@
 Data for testing setting options for Moldflow Synergy API classes.
 """
 
-from moldflow.common import (
+from moldflow import (
     MeshType,
     ImportUnits,
     MDLKernel,

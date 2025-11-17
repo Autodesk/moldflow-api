@@ -57,6 +57,28 @@ def _check_property_initialization(test_property: Property):
     assert isinstance(test_property, Property)
 
 
+def _check_fields(
+    test_property: Property,
+    expected_length: int,
+    fields_present: list[int],
+    fields_absent: list[int],
+):
+    """
+    Check the fields of the Property instance.
+    """
+    fields_list = []
+
+    field_id = test_property.get_first_field()
+    while field_id != 0:
+        fields_list.append(field_id)
+        field_id = test_property.get_next_field(field_id)
+
+    assert len(fields_list) == expected_length
+
+    assert set(fields_list) == set(fields_present)
+    assert not set(fields_absent) & set(fields_list)
+
+
 # Testing pre-existing materials as check
 # --------------------------------------------------------------------------------------------------
 @pytest.mark.integration
@@ -218,21 +240,11 @@ class TestIntegrationCustomProperty:
         double_array.from_list(FIELD_PROPERTIES[FIELD_INDEX]["values"])
         custom_property.set_field_values(field_id_to_delete, double_array)
 
-        fields = []
-        field_id = custom_property.get_first_field()
-        while field_id != 0:
-            fields.append(field_id)
-            field_id = custom_property.get_next_field(field_id)
-        assert len(fields) == 1
-        assert field_id_to_delete in fields
+        _check_fields(custom_property, 1, [field_id_to_delete], [])
 
         custom_property.delete_field(field_id_to_delete)
-        fields = []
-        field_id = custom_property.get_first_field()
-        while field_id != 0:
-            fields.append(field_id)
-            field_id = custom_property.get_next_field(field_id)
-        assert len(fields) == 0
+
+        _check_fields(custom_property, 0, [], [field_id_to_delete])
 
     def test_properties_with_two_fields(
         self, double_array: DoubleArray, custom_property: Property, expected_data: dict
@@ -267,23 +279,10 @@ class TestIntegrationCustomProperty:
         _check_properties(custom_property, field_id_1, hidden_data)
         _check_properties(custom_property, field_id_2, updated_data_2)
 
-        fields = []
-        field_id = custom_property.get_first_field()
-        while field_id != 0:
-            fields.append(field_id)
-            field_id = custom_property.get_next_field(field_id)
-        assert len(fields) == 3  # Field ID 2004 is auto added when hidden fields are present
-        assert field_id_1 in fields
-        assert field_id_2 in fields
-        assert 2004 in fields
+        # Field ID 2004 is auto added when hidden fields are present
+        _check_fields(custom_property, 3, [field_id_1, field_id_2, 2004], [])
 
         custom_property.delete_field(field_id_1)
-        fields = []
-        field_id = custom_property.get_first_field()
-        while field_id != 0:
-            fields.append(field_id)
-            field_id = custom_property.get_next_field(field_id)
-        assert len(fields) == 2  # Field ID 2004 is auto added when hidden fields are present
-        assert field_id_1 not in fields
-        assert field_id_2 in fields
-        assert 2004 in fields
+
+        # Field ID 2004 is auto added when hidden fields are present
+        _check_fields(custom_property, 2, [field_id_2, 2004], [field_id_1])

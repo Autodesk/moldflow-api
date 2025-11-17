@@ -10,7 +10,7 @@ from datetime import datetime
 from dataclasses import dataclass
 from functools import wraps
 from pathlib import Path
-from moldflow import Synergy, ItemType
+from moldflow import Synergy, ItemType, IntegerArray, DoubleArray, StringArray
 from tests.api.integration_tests.constants import (
     FileSet,
     STUDY_FILES_DIR,
@@ -298,3 +298,13 @@ def get_available_markers(generate_functions: dict[str, callable]):
     """
     msg_str = "\n - ".join(generate_functions.keys())
     return f'Available test data markers: \n - {msg_str}'
+
+
+def safe_array_to_list(array: IntegerArray | DoubleArray | StringArray):
+    """
+    Convert an array to a list.
+    """
+    try:
+        return array.to_list()
+    except AttributeError:
+        return None
