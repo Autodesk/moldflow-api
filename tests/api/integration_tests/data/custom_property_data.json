@@ -1,0 +1,43 @@
+{
+  "property_name": "Test Name",
+  "property_id": 1,
+  "property_type": 10,
+  "original_field_data": {
+    "field_description": "",
+    "field_values": [],
+    "field_units": [],
+    "field_writable": true,
+    "field_hidden": false
+  },
+  "hidden_field_data": {
+    "field_description": "",
+    "field_values": null,
+    "field_units": [],
+    "field_writable": false,
+    "field_hidden": true
+  },
+  "field_data_1": {
+    "field_id": 20,
+    "field_description": "Test Description",
+    "field_values": [
+      1,
+      2,
+      3
+    ],
+    "field_units": [],
+    "field_writable": true,
+    "field_hidden": false
+  },
+  "field_data_2": {
+    "field_id": 21,
+    "field_description": "Second Test Description",
+    "field_values": [
+      4,
+      5,
+      6
+    ],
+    "field_units": [],
+    "field_writable": true,
+    "field_hidden": false
+  }
+}
