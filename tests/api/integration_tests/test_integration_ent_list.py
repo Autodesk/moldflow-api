@@ -108,7 +108,7 @@ class TestIntegrationEntList:
 
     def test_entity_list_select_from_predicate_none(self, ent_list: EntList):
         """
-        Test the select_from_saved_list method of EntList.
+        Test the select_from_predicate method of EntList with None.
         """
         ent_list.select_from_predicate(None)
         assert ent_list.size == 0
