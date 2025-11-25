@@ -92,3 +92,36 @@ FIELD_PROPERTIES = {
 FIELD_INDEX = 1  # Index for the field to be used for single field tests
 
 # --------------------------------------------------------------------------------------------------
+
+# --------------------------------------------------------------------------------------------------
+# Constants for entity list tests
+
+TEST_ENTITY_LIST_STRING = {
+    "dd_model": {
+        "items": "T56 T57",
+        "predicate": "T56:57",
+        "saved_list": "MyTest",
+        "converted_string": "T56 T57 ",
+        "size": 2,
+        "entity": {0: "T56 ", 1: "T57 "},
+    },
+    "midplane_model": {
+        "items": "T56 T57",
+        "predicate": "T56:57",
+        "saved_list": "MyTest",
+        "converted_string": "T56 T57 ",
+        "size": 2,
+        "entity": {0: "T56 ", 1: "T57 "},
+    },
+    "3d_model": {
+        "items": "TE3798 TE3799",
+        "predicate": "TE3798:3799",
+        "saved_list": "MyTest",
+        "converted_string": "TE3798 TE3799 ",
+        "size": 2,
+        "entity": {0: "TE3798 ", 1: "TE3799 "},
+    },
+}
+
+
+# --------------------------------------------------------------------------------------------------
