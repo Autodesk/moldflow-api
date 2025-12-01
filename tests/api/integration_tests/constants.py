@@ -55,7 +55,7 @@ class FileSet(Enum):
     SINGLE: Single Analyzed File for short tests
         - mid_doe.sdy
     CAD_MANAGER: CADManager class study file with CAD
-         -back_cover_part_study.sdy
+        - back_cover_part_study.sdy
     MESHED: Meshed Unanalyzed Files
         - dd_model.sdy
         - midplane_model.sdy
