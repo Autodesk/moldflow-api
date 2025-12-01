@@ -173,7 +173,6 @@ def expected_data_fixture(request):
         excluded_markers = {'integration', 'file_set', 'parametrize', 'json_file_name'}
         non_excluded_markers = [m.name for m in marker_list if m.name not in excluded_markers]
 
-        # If multiple non-excluded markers exist, it's ambiguous (likely parent-child scenario)
         if len(non_excluded_markers) > 1:
             pytest.fail(
                 f"Multiple markers found on test class '{request.cls.__name__}': {non_excluded_markers}. "
