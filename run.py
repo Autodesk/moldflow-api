@@ -584,7 +584,7 @@ def clean_up():
 def generate_data(markers: list[str]):
     """Generate data for integration tests"""
     logging.info('Generating data for integration tests')
-    generate_data_module = 'tests.api.integration_tests.data.data_generation.generate_data'
+    generate_data_module = 'tests.api.integration_tests.data_generation.generate_data'
     run_command([sys.executable, '-m', generate_data_module] + markers, ROOT_DIR)
 
 

@@ -13,7 +13,7 @@ import zipfile
 from moldflow import Synergy, Project, ItemType
 from tests.api.integration_tests.constants import (
     STUDY_FILES_DIR,
-    DATA_DIR,
+    INTEGRATION_TESTS_DIR,
     DEFAULT_WINDOW_SIZE_X,
     DEFAULT_WINDOW_SIZE_Y,
     DEFAULT_WINDOW_POSITION_X,
@@ -22,8 +22,7 @@ from tests.api.integration_tests.constants import (
     PROJECT_PREFIX,
     STUDY_FILE_EXTENSION,
     PROJECT_EXTENSION,
-    DATA_FILE_EXTENSION,
-    DATA_FILE_SUFFIX,
+    DATA_FILE_NAME,
 )
 
 
@@ -192,7 +191,7 @@ def expected_data_fixture(request):
                 f"@pytest.mark.json_file_name('<filename>')."
             )
 
-    json_path = Path(DATA_DIR) / f"{json_file_name}{DATA_FILE_SUFFIX}{DATA_FILE_EXTENSION}"
+    json_path = Path(INTEGRATION_TESTS_DIR) / f"test_suite_{json_file_name}" / DATA_FILE_NAME
     if not json_path.exists():
         pytest.skip(f"Expected data file not found: {json_path}")
 

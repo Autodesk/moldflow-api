@@ -180,7 +180,3 @@ Thumbs.db
 
 # Internal Autodesk directories
 .adsk/
-
-# Study Files folder - ignore everything except zip files
-tests/api/integration_tests/study_files/*
-!tests/api/integration_tests/study_files/*.zip

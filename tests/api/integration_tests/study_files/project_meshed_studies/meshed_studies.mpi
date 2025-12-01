@@ -1,0 +1,11 @@
+VERSION 1.0
+BEGIN PROJECT "meshed_studies"
+STUDY "dd_model" dd_model.sdy
+STUDY "midplane_model" midplane_model.sdy
+STUDY "3d_model" 3d_model.sdy
+END PROJECT
+ORGANIZE 0
+BEGIN PROPERTIES
+END PROPERTIES
+Last Write Time: Thu Nov  6 18:28:23 2025
+
