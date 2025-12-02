@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-Default values for testing Moldflow Synergy API classes.
+Defaults for the ImportOptions class.
 """
 
-import_options_defaults = {
+DEFAULT_IMPORT_OPTIONS = {
     "mesh_type": "",
     "units": "",
     "mdl_mesh": True,

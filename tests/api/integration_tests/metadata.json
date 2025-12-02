@@ -1,31 +1,25 @@
 {
   "mesh_summary": {
-    "date": "2025-11-10",
-    "time": "00:09:18",
+    "date": "2025-12-02",
+    "time": "06:58:32 UTC",
     "build_number": "49.1.198",
     "version": "2026"
   },
   "synergy": {
-    "date": "2025-11-10",
-    "time": "00:09:18",
+    "date": "2025-12-02",
+    "time": "06:58:32 UTC",
     "build_number": "49.1.198",
     "version": "2026"
   },
   "material_property": {
-    "date": "2025-11-17",
-    "time": "23:55:56",
+    "date": "2025-12-02",
+    "time": "06:58:32 UTC",
     "build_number": "49.1.198",
     "version": "2026"
   },
   "custom_property": {
-    "date": "2025-11-17",
-    "time": "23:56:45",
-    "build_number": "49.1.198",
-    "version": "2026"
-  },
-  "prop": {
-    "date": "2025-11-17",
-    "time": "23:54:06",
+    "date": "2025-12-02",
+    "time": "06:58:32 UTC",
     "build_number": "49.1.198",
     "version": "2026"
   }

@@ -1,0 +1,21 @@
+ ATTENTION - THIS DOCUMENT UNIT SYSTEM IS: SI
+---------------------------
+ Study: mid_doe.sdy
+---------------------------
+Analysis of Influences 
+
+Experimental data
+Variables:,Dimension scale factor,Melt temperature,Qualities:,Standard Deviation:Bulk temperature at end of fill,Clamp force,Injection pressure,Wall shear stress,Standard Deviation:Temperature at flow front,Standard Deviation:Time to reach ejection temperature
+Runs:\Units:,%,K,,K(d),N,Pa,Pa,K(d),s
+0,-5,560.15,,1.7628,16206.9,5.17047e+07,845119,1.21083,0.517601
+1,-5,600.15,,1.20543,7182.07,2.9668e+07,581270,0.304797,0.576798
+2,5,560.15,,1.68139,15964.2,5.12216e+07,861348,1.06475,0.562444
+3,5,600.15,,1.20707,7785.98,2.98535e+07,582161,0.287863,0.567158
+
+Percentage influences
+Qualities:,Standard Deviation:Bulk temperature at end of fill,Clamp force,Injection pressure,Wall shear stress,Standard Deviation:Temperature at flow front,Standard Deviation:Time to reach ejection temperature
+Dimension scale factor,7.17621,2.05664,0.681033,3.05629,8.83124,35.518
+Melt temperature,92.8238,97.9434,99.319,96.9437,91.1688,64.482
+
+
+---------------------------
