@@ -11,7 +11,7 @@ from tests.api.integration_tests.constants import FileSet
 
 
 @generate_json(file_set=FileSet.MESHED)
-def generate_mesh_summary_data(synergy: Synergy = None):
+def generate_mesh_summary_data(synergy: Synergy = None, study_file: str = None):
     """
     Extract mesh summary data from a study.
     Returns a dict with relevant properties.

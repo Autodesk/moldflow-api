@@ -9,7 +9,7 @@ Usage:
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build]
     run.py format [--check]
-    run.py generate-test-data [<markers>...]
+    run.py generate-baseline-data [<markers>...]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
@@ -24,7 +24,7 @@ Commands:
     build                           Build and optionally publish the moldflow-api package.
     build-docs                      Build the documentation.
     format                          Format all Python files in the repository using black.
-    generate-test-data              Generate data for integration tests.
+    generate-baseline-data          Generate baseline data for integration tests.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
     lint                            Lint all Python files in the repository.
@@ -630,7 +630,7 @@ def main():
 
             lint(skip_build=skip_build)
 
-        elif args.get('generate-test-data'):
+        elif args.get('generate-baseline-data'):
             markers = args.get('<markers>') or []
             generate_data(markers=markers)
 

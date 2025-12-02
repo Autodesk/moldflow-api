@@ -181,6 +181,7 @@ def generate_json(file_set: FileSet | None = None, synergy_required: bool = True
                             continue
 
                         # Call the decorated function to collect data for this study
+                        kwargs["study_file"] = study_file
                         data = func(synergy=synergy, *args, **kwargs)
                         result_data[study_file] = data
                 else:

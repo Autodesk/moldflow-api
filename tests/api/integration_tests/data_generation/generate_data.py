@@ -10,7 +10,7 @@ Usage:
 
 import docopt
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from tests.api.integration_tests.data_generation.generate_data_helper import (
     clean_up_temp_files,
     get_generate_data_functions,
@@ -24,7 +24,7 @@ from tests.api.integration_tests.conftest import get_study_files
 def main():
     """Main entry point for this script"""
     args = docopt.docopt(__doc__)
-    DATE_TIME = datetime.now()
+    DATE_TIME = datetime.now(timezone.utc)
 
     try:
         markers = args.get('<markers>') or []
