@@ -20,6 +20,7 @@ def generate_ent_list_data(synergy: Synergy, study_file: str):
     """
     entity_type = TEST_ENTITY_LIST_ITEMS[study_file]["entity_type"]
     items = TEST_ENTITY_LIST_ITEMS[study_file]["items"]
+    saved_list_name = TEST_ENTITY_LIST_ITEMS[study_file]["saved_list_name"]
 
     item_string = " ".join([f"{entity_type}{item}" for item in items])
     item_predicate = f"{entity_type}{items[0]}:{items[1]}"
@@ -30,6 +31,7 @@ def generate_ent_list_data(synergy: Synergy, study_file: str):
     return {
         "item_string": item_string,
         "item_predicate": item_predicate,
+        "saved_list_name": saved_list_name,
         "converted_string": converted_string,
         "size": size,
         "entity": entity,

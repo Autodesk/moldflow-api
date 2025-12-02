@@ -2,6 +2,7 @@
   "3d_model": {
     "item_string": "TE3798 TE3799",
     "item_predicate": "TE3798:3799",
+    "saved_list_name": "MyTest",
     "converted_string": "TE3798 TE3799 ",
     "size": 2,
     "entity": {
@@ -12,6 +13,7 @@
   "dd_model": {
     "item_string": "T56 T57",
     "item_predicate": "T56:57",
+    "saved_list_name": "MyTest",
     "converted_string": "T56 T57 ",
     "size": 2,
     "entity": {
@@ -22,6 +24,7 @@
   "midplane_model": {
     "item_string": "T56 T57",
     "item_predicate": "T56:57",
+    "saved_list_name": "MyTest",
     "converted_string": "T56 T57 ",
     "size": 2,
     "entity": {

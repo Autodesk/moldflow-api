@@ -16,6 +16,7 @@ from tests.api.integration_tests.constants import FileSet
 TEST_ENTITY_LIST_PARAMETERS = [
     ("select_from_string", "item_string"),
     ("select_from_predicate", "item_predicate"),
+    ("select_from_saved_list", "saved_list_name"),
 ]
 
 
@@ -53,6 +54,8 @@ class TestIntegrationEntList:
             pm = synergy.predicate_manager
             predicate = pm.create_label_predicate(values_to_select[parameter])
             getattr(ent_list, select_function)(predicate)
+        elif select_function == "select_from_saved_list":
+            getattr(ent_list, select_function)(values_to_select[parameter])
         else:
             raise ValueError(f"Invalid select function: {select_function}")
 
@@ -66,7 +69,7 @@ class TestIntegrationEntList:
     @pytest.mark.parametrize(
         "select_function, parameter",
         TEST_ENTITY_LIST_PARAMETERS,
-        ids=["select_from_string", "select_from_predicate"],
+        ids=["select_from_string", "select_from_predicate", "select_from_saved_list"],
     )
     def test_entity_list_size(
         self,
@@ -89,7 +92,7 @@ class TestIntegrationEntList:
     @pytest.mark.parametrize(
         "select_function, parameter",
         TEST_ENTITY_LIST_PARAMETERS,
-        ids=["select_from_string", "select_from_predicate"],
+        ids=["select_from_string", "select_from_predicate", "select_from_saved_list"],
     )
     def test_entity_list_convert_to_string(
         self,
@@ -111,7 +114,7 @@ class TestIntegrationEntList:
     @pytest.mark.parametrize(
         "select_function, parameter",
         TEST_ENTITY_LIST_PARAMETERS,
-        ids=["select_from_string", "select_from_predicate"],
+        ids=["select_from_string", "select_from_predicate", "select_from_saved_list"],
     )
     def test_entity_list_entity(
         self,
