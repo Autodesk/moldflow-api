@@ -15,8 +15,9 @@ from tests.api.integration_tests.test_suite_ent_list.constants import TEST_ENTIT
 @generate_json(file_set=FileSet.MESHED)
 def generate_ent_list_data(synergy: Synergy, study_file: str):
     """
-    Generate data for a new property.
-    Returns a dict with relevant properties.
+    Generates expected test data for EntList integration tests based on the entity type and items
+    specified in the study file. Returns a dictionary with properties such as item strings,
+    predicates, saved list name, converted string, size, and entity mapping for use in tests.
     """
     entity_type = TEST_ENTITY_LIST_ITEMS[study_file]["entity_type"]
     items = TEST_ENTITY_LIST_ITEMS[study_file]["items"]
