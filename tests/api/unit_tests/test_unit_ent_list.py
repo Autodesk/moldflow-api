@@ -11,6 +11,7 @@ from moldflow import EntList, Predicate
 
 
 @pytest.mark.unit
+@pytest.mark.ent_list
 class TestUnitEntList:
     """
     Test suite for the EntList class.
