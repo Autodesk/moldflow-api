@@ -28,5 +28,11 @@
     "time": "15:34:24 UTC",
     "build_number": "49.1.198",
     "version": "2026"
+  },
+  "predicate_manager": {
+    "date": "2025-12-08",
+    "time": "02:50:25 UTC",
+    "build_number": "49.1.198",
+    "version": "2026"
   }
 }
