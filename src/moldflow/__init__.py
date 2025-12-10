@@ -69,6 +69,7 @@ from .common import DuplicateOption
 from .common import EdgeDisplayOptions
 from .common import EntityType
 from .common import GradingFactor
+from .common import GeomType
 from .common import ImportUnitIndex
 from .common import ImportUnits
 from .common import ItemType

@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
-- N/A
+- Fixed `GeomType` enum not being exposed in package `__init__.py` - users can now import it directly with `from moldflow import GeomType`
 
 ### Security
 - N/A
