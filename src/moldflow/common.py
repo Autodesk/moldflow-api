@@ -408,7 +408,7 @@ class GeomType(Enum):
     """
 
     AUTO_DETECT = "Auto-Detect"
-    DUAL_DOMAIN = "Dual Domain"
+    FUSION = "Fusion"
     MIDPLANE = "Midplane"
 
 
