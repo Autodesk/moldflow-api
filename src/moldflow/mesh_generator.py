@@ -738,8 +738,8 @@ class MeshGenerator:
         process_log(
             __name__, LogMessage.PROPERTY_SET, locals(), name="cad_mesh_grading_factor", value=value
         )
-        check_type(value, (int, float), "cad_mesh_grading_factor")
-        check_range(value, 0, 1, "cad_mesh_grading_factor")
+        check_type(value, (int, float))
+        check_range(value, 0, 1, True, True)
         self.mesh_generator.CadMeshGradingFactor = float(value)
 
     @property
