@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed `GeomType` enum not being exposed in package `__init__.py` - users can now import it directly with `from moldflow import GeomType` ([#39](https://github.com/Autodesk/moldflow-api/issues/39), [#42](https://github.com/Autodesk/moldflow-api/issues/42))
+- Fixed invalid `DUAL_DOMAIN` enum value in `GeomType` - replaced with `FUSION = "Fusion"` to match valid Moldflow API values
+- Fixed missing `-> bool` return type annotations for `MeshGenerator.generate()` and `MeshGenerator.save_options()` methods
 
 ### Security
 - N/A
