@@ -20,6 +20,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
+- N/A
+
+### Security
+- N/A
+
+## [26.0.4]
+
+### Added
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
 - Fixed `GeomType` enum not being exposed in package `__init__.py` - users can now import it directly with `from moldflow import GeomType`
 - Fixed invalid `DUAL_DOMAIN` enum value in `GeomType` - replaced with `FUSION = "Fusion"` to match valid Moldflow API values
 - Fixed missing `-> bool` return type annotations for `MeshGenerator.generate()` and `MeshGenerator.save_options()` methods
@@ -95,7 +115,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial version aligned with Moldflow Synergy 2026.0.1
 - Python 3.10-3.13 compatibility
 
-[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.2...HEAD
+[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.4...HEAD
+[26.0.4]: https://github.com/Autodesk/moldflow-api/compare/v26.0.3...v26.0.4
+[26.0.3]: https://github.com/Autodesk/moldflow-api/compare/v26.0.2...v26.0.3
 [26.0.2]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.2
 [26.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.1
 [26.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.0
