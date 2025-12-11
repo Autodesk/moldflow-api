@@ -116,8 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Python 3.10-3.13 compatibility
 
 [Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.4...HEAD
-[26.0.4]: https://github.com/Autodesk/moldflow-api/compare/v26.0.3...v26.0.4
-[26.0.3]: https://github.com/Autodesk/moldflow-api/compare/v26.0.2...v26.0.3
+[26.0.4]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.4
+[26.0.3]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.3
 [26.0.2]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.2
 [26.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.1
 [26.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.0
