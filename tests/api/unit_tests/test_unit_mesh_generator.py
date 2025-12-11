@@ -6,8 +6,8 @@ Test for MeshGenerator Wrapper Class of moldflow-api module.
 """
 
 import pytest
-from moldflow import MeshGenerator
-from moldflow.common import (
+from moldflow import (
+    MeshGenerator,
     GeomType,
     NurbsAlgorithm,
     CoolType,
