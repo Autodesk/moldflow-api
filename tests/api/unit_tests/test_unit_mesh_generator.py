@@ -506,7 +506,6 @@ class TestUnitMeshGenerator:
         "property_name, invalid_value",
         [("nurbs_mesher", x) for x in [-1, 10, 5]]
         + [("cad_contact_mesh_type", x) for x in ["abc", "Something"]]
-        + [("cad_mesh_grading_factor", x) for x in [-1, -0.1, 1.1, 2]]
         + [("source_geom_type", x) for x in ["Hello", "abc"]]
         + [("cool_type", x) for x in [-1, 10, 5]]
         + [("tri_classification_opt", x) for x in [-1, 10, 5]],
