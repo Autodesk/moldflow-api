@@ -9,7 +9,7 @@ Usage:
 
 from .logger import process_log
 from .common import LogMessage
-from .helper import check_type, check_min_max, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_min_max, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .ent_list import EntList
 from .mesh_summary import MeshSummary
@@ -129,8 +129,7 @@ class DiagnosisManager:
             visible (bool): Show/hide the selected mesh diagnosis.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_connect")
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         check_type(ex_beam, bool)
         check_type(assign_layer, bool)
         check_type(show_txt, bool)
@@ -339,10 +338,8 @@ class DiagnosisManager:
         check_type(max_value, (float, int))
         check_min_max(min_value, max_value)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetThicknessDiagnosis2(
             min_value,
             max_value,
@@ -380,10 +377,8 @@ class DiagnosisManager:
         check_min_max(min_value, max_value)
         check_type(std_ar, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetAspectRatioDiagnosis2(
             min_value,
             max_value,
@@ -415,14 +410,11 @@ class DiagnosisManager:
             int: The number of connectivity diagnostics.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_connectivity_diagnosis")
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         check_type(ex_beam, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetConnectivityDiagnosis2(
             coerce_optional_dispatch(nodes, "ent_list"),
             ex_beam,
@@ -453,10 +445,8 @@ class DiagnosisManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_edges_diagnosis")
         check_type(non_manifold, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetEdgesDiagnosis2(
             non_manifold,
             visible,
@@ -489,10 +479,8 @@ class DiagnosisManager:
         check_type(overlap, bool)
         check_type(intersect, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetOverlapDiagnosis2(
             overlap,
             intersect,
@@ -517,10 +505,8 @@ class DiagnosisManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_occurrence_diagnosis")
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetOccurrenceDiagnosis2(
             visible,
             coerce_optional_dispatch(element_id, "integer_array"),
@@ -541,10 +527,8 @@ class DiagnosisManager:
             int: The number of mesh match diagnostics.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_match_info_diagnosis")
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetMatchInfoDiagnosis(
             coerce_optional_dispatch(element_id, "integer_array"),
             coerce_optional_dispatch(value, "double_array"),
@@ -566,10 +550,8 @@ class DiagnosisManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_orientation_diagnosis")
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetOrientationDiagnosis2(
             visible,
             coerce_optional_dispatch(element_id, "integer_array"),
@@ -619,10 +601,8 @@ class DiagnosisManager:
         )
         check_type(min_value, (float, int))
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetZeroAreaElementsDiagnosis2(
             min_value,
             visible,
@@ -760,10 +740,8 @@ class DiagnosisManager:
         check_type(inner_loop, bool)
         check_type(surf_def, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetSurfWithBadTrimCurv(
             outer_loop,
             inner_loop,
@@ -800,10 +778,8 @@ class DiagnosisManager:
         check_type(free, bool)
         check_type(non_manifold, bool)
         check_type(visible, bool)
-        if element_id is not None:
-            check_type(element_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(element_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         return self.diagnosis_manager.GetSurfWithFreeTrimCurv(
             free,
             non_manifold,
@@ -1001,8 +977,7 @@ class DiagnosisManager:
             int: The number of inverted tetras.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_inverted_tetras")
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
+        check_optional_type(tetra_id, IntegerArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetInvertedTetras(
             visible, coerce_optional_dispatch(tetra_id, "integer_array")
@@ -1020,8 +995,7 @@ class DiagnosisManager:
             int: The number of collapsed faces.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_collapsed_faces")
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
+        check_optional_type(tetra_id, IntegerArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetCollapsedFaces(
             visible, coerce_optional_dispatch(tetra_id, "integer_array")
@@ -1048,8 +1022,7 @@ class DiagnosisManager:
             name="get_insufficient_refinement_through_thickness",
         )
         check_type(min_layer, int)
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
+        check_optional_type(tetra_id, IntegerArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetInsufficientRefinementThroughThickness(
             min_layer, visible, coerce_optional_dispatch(tetra_id, "integer_array")
@@ -1076,10 +1049,8 @@ class DiagnosisManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_internal_long_edges")
         check_type(max_edge_length_ratio, (float, int))
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(tetra_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetInternalLongEdges(
             max_edge_length_ratio,
@@ -1114,10 +1085,8 @@ class DiagnosisManager:
             name="get_tetras_with_extremely_large_volume",
         )
         check_type(max_volume_ratio, (float, int))
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(tetra_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetTetrasWithExtremelyLargeVolume(
             max_volume_ratio,
@@ -1149,10 +1118,8 @@ class DiagnosisManager:
             __name__, LogMessage.FUNCTION_CALL, locals(), name="get_tetras_with_high_aspect_ratio"
         )
         check_type(max_aspect_ratio, (float, int))
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(tetra_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetTetrasWithHighAspectRatio(
             max_aspect_ratio,
@@ -1187,10 +1154,8 @@ class DiagnosisManager:
             name="get_tetras_with_extreme_min_angle_between_faces",
         )
         check_type(min_angle, (float, int))
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(tetra_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetTetrasWithExtremeMinAngleBetweenFaces(
             min_angle,
@@ -1225,10 +1190,8 @@ class DiagnosisManager:
             name="get_tetras_with_extreme_max_angle_between_faces",
         )
         check_type(max_angle, (float, int))
-        if tetra_id is not None:
-            check_type(tetra_id, IntegerArray)
-        if value is not None:
-            check_type(value, DoubleArray)
+        check_optional_type(tetra_id, IntegerArray)
+        check_optional_type(value, DoubleArray)
         check_type(visible, bool)
         return self.diagnosis_manager.GetTetrasWithExtremeMaxAngleBetweenFaces(
             max_angle,

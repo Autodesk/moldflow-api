@@ -26,6 +26,7 @@ from .helper import (
     check_min_max,
     check_range,
     check_type,
+    check_optional_type,
     get_enum_value,
     check_is_positive,
     check_is_non_negative,
@@ -76,10 +77,8 @@ class Viewer:
             up_view (Vector | None): The up view vector.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="reset_view")
-        if normal_view is not None:
-            check_type(normal_view, Vector)
-        if up_view is not None:
-            check_type(up_view, Vector)
+        check_optional_type(normal_view, Vector)
+        check_optional_type(up_view, Vector)
         self.viewer.ResetView(
             coerce_optional_dispatch(normal_view, "vector"),
             coerce_optional_dispatch(up_view, "vector"),
@@ -404,10 +403,8 @@ class Viewer:
         filename = check_file_extension(
             filename, (PNG_FILE_EXT, JPG_FILE_EXT, JPEG_FILE_EXT, BMP_FILE_EXT, TIF_FILE_EXT)
         )
-        if x is not None:
-            check_type(x, int)
-        if y is not None:
-            check_type(y, int)
+        check_optional_type(x, int)
+        check_optional_type(y, int)
 
         # Route strictly to legacy COM methods
         if x is None and y is None:
@@ -480,14 +477,10 @@ class Viewer:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_bookmark")
         check_type(name, str)
-        if normal_view is not None:
-            check_type(normal_view, Vector)
-        if up_view is not None:
-            check_type(up_view, Vector)
-        if focal_point is not None:
-            check_type(focal_point, Vector)
-        if eye_position is not None:
-            check_type(eye_position, Vector)
+        check_optional_type(normal_view, Vector)
+        check_optional_type(up_view, Vector)
+        check_optional_type(focal_point, Vector)
+        check_optional_type(eye_position, Vector)
         check_type(clipping_range_min, (int, float))
         check_is_non_negative(clipping_range_min)
         check_type(clipping_range_max, (int, float))
@@ -514,8 +507,7 @@ class Viewer:
             plot (Plot | None): The plot to show.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_plot")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         self.viewer.ShowPlot(coerce_optional_dispatch(plot, "plot"))
 
     def hide_plot(self, plot: Plot | None) -> None:
@@ -526,8 +518,7 @@ class Viewer:
             plot (Plot | None): The plot to hide.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="hide_plot")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         self.viewer.HidePlot(coerce_optional_dispatch(plot, "plot"))
 
     def overlay_plot(self, plot: Plot | None) -> None:
@@ -538,8 +529,7 @@ class Viewer:
             plot (Plot | None): The plot to overlay.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="overlay_plot")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         self.viewer.OverlayPlot(coerce_optional_dispatch(plot, "plot"))
 
     def get_plot(self, plot_id: int) -> Plot:
@@ -585,8 +575,7 @@ class Viewer:
             Vector: The converted display coordinates.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="world_to_display")
-        if world_coord is not None:
-            check_type(world_coord, Vector)
+        check_optional_type(world_coord, Vector)
         result = self.viewer.WorldToDisplay(coerce_optional_dispatch(world_coord, "vector"))
         if result is None:
             return None
@@ -604,8 +593,7 @@ class Viewer:
             EntList: Object containing created clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_clipping_plane")
-        if normal is not None:
-            check_type(normal, Vector)
+        check_optional_type(normal, Vector)
         check_type(distance, (int, float))
         result = self.viewer.CreateClippingPlane(
             coerce_optional_dispatch(normal, "vector"), distance
@@ -641,10 +629,8 @@ class Viewer:
             distance (float): The new distance from the origin to the clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="modify_clipping_plane")
-        if plane is not None:
-            check_type(plane, EntList)
-        if normal is not None:
-            check_type(normal, Vector)
+        check_optional_type(plane, EntList)
+        check_optional_type(normal, Vector)
         check_type(distance, (int, float))
         self.viewer.ModifyClippingPlane(
             coerce_optional_dispatch(plane, "ent_list"),
@@ -667,8 +653,7 @@ class Viewer:
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modify_clipping_plane_by_id"
         )
         check_type(plane_id, int)
-        if normal is not None:
-            check_type(normal, Vector)
+        check_optional_type(normal, Vector)
         check_type(distance, (int, float))
         self.viewer.ModifyClippingPlaneByID(
             plane_id, coerce_optional_dispatch(normal, "vector"), distance
@@ -682,8 +667,7 @@ class Viewer:
             plane (EntList | None): The clipping plane to delete.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_clipping_plane")
-        if plane is not None:
-            check_type(plane, EntList)
+        check_optional_type(plane, EntList)
         self.viewer.DeleteClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
 
     def get_first_clipping_plane(self) -> EntList:
@@ -710,8 +694,7 @@ class Viewer:
             EntList: The next clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_clipping_plane")
-        if plane is not None:
-            check_type(plane, EntList)
+        check_optional_type(plane, EntList)
         result = self.viewer.GetNextClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
         if result is None:
             return None
@@ -726,8 +709,7 @@ class Viewer:
             enable (bool): Whether to enable or disable the clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="enable_clipping_plane")
-        if plane is not None:
-            check_type(plane, EntList)
+        check_optional_type(plane, EntList)
         check_type(enable, bool)
         self.viewer.EnableClippingPlane(coerce_optional_dispatch(plane, "ent_list"), enable)
 
@@ -754,8 +736,7 @@ class Viewer:
             plane: The clipping plane to set as active.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_active_clipping_plane")
-        if plane is not None:
-            check_type(plane, EntList)
+        check_optional_type(plane, EntList)
         self.viewer.SetActiveClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
 
     def show_plot_frame(self, plot: Plot | None, frame: int) -> None:
@@ -767,8 +748,7 @@ class Viewer:
             frame (int): The frame number to show.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_plot_frame")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         check_type(frame, int)
         check_is_non_negative(frame)
         self.viewer.ShowPlotFrame(coerce_optional_dispatch(plot, "plot"), frame)

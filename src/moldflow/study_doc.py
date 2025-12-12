@@ -11,6 +11,7 @@ from .import_options import ImportOptions
 from .logger import process_log
 from .helper import (
     check_type,
+    check_optional_type,
     check_file_extension,
     check_range,
     get_enum_value,
@@ -154,8 +155,7 @@ class StudyDoc:
         Set selection
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="selection", value=value)
-        if value is not None:
-            check_type(value, EntList)
+        check_optional_type(value, EntList)
         self.study_doc.Selection = coerce_optional_dispatch(value, "ent_list")
 
     @property
@@ -264,8 +264,7 @@ class StudyDoc:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_file")
         check_type(name, str)
-        if opts is not None:
-            check_type(opts, ImportOptions)
+        check_optional_type(opts, ImportOptions)
         check_type(show_logs, bool)
         return self.study_doc.AddFile(
             name, coerce_optional_dispatch(opts, "import_options"), show_logs
@@ -313,8 +312,7 @@ class StudyDoc:
             EntList: The next node in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_node")
-        if node is not None:
-            check_type(node, EntList)
+        check_optional_type(node, EntList)
         result = self.study_doc.GetNextNode(coerce_optional_dispatch(node, "ent_list"))
         if result is None:
             return None
@@ -331,8 +329,7 @@ class StudyDoc:
             Vector: The coordinates of the node
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_node_coord")
-        if node is not None:
-            check_type(node, EntList)
+        check_optional_type(node, EntList)
         result = self.study_doc.GetNodeCoord(coerce_optional_dispatch(node, "ent_list"))
         if result is None:
             return None
@@ -362,8 +359,7 @@ class StudyDoc:
             EntList: The next triangle in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_tri")
-        if tri is not None:
-            check_type(tri, EntList)
+        check_optional_type(tri, EntList)
         result = self.study_doc.GetNextTri(coerce_optional_dispatch(tri, "ent_list"))
         if result is None:
             return None
@@ -393,8 +389,7 @@ class StudyDoc:
             EntList: The next beam in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_beam")
-        if beam is not None:
-            check_type(beam, EntList)
+        check_optional_type(beam, EntList)
         result = self.study_doc.GetNextBeam(coerce_optional_dispatch(beam, "ent_list"))
         if result is None:
             return None
@@ -424,8 +419,7 @@ class StudyDoc:
             EntList: The next tetrahedral element in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_tet")
-        if tet is not None:
-            check_type(tet, EntList)
+        check_optional_type(tet, EntList)
         result = self.study_doc.GetNextTet(coerce_optional_dispatch(tet, "ent_list"))
         if result is None:
             return None
@@ -442,8 +436,7 @@ class StudyDoc:
             EntList: The nodes of the element
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_elem_nodes")
-        if elem is not None:
-            check_type(elem, EntList)
+        check_optional_type(elem, EntList)
         result = self.study_doc.GetElemNodes(coerce_optional_dispatch(elem, "ent_list"))
         if result is None:
             return None
@@ -460,8 +453,7 @@ class StudyDoc:
             EntList: The layer of the entity
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_layer")
-        if ent is not None:
-            check_type(ent, EntList)
+        check_optional_type(ent, EntList)
         result = self.study_doc.GetEntityLayer(coerce_optional_dispatch(ent, "ent_list"))
         if result is None:
             return None
@@ -478,8 +470,7 @@ class StudyDoc:
             int: The ID of the entity
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_id")
-        if ent is not None:
-            check_type(ent, EntList)
+        check_optional_type(ent, EntList)
         return self.study_doc.GetEntityID(coerce_optional_dispatch(ent, "ent_list"))
 
     def get_first_curve(self) -> EntList:
@@ -506,8 +497,7 @@ class StudyDoc:
             EntList: The next curve in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_curve")
-        if curve is not None:
-            check_type(curve, EntList)
+        check_optional_type(curve, EntList)
         result = self.study_doc.GetNextCurve(coerce_optional_dispatch(curve, "ent_list"))
         if result is None:
             return None
@@ -525,8 +515,7 @@ class StudyDoc:
             Vector: The point on the curve
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_curve_point")
-        if curve is not None:
-            check_type(curve, EntList)
+        check_optional_type(curve, EntList)
         check_type(pos_curve, (int, float))
         check_range(pos_curve, 0, 1, True, True)
         result = self.study_doc.GetCurvePoint(

@@ -9,7 +9,7 @@ Usage:
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
 from .logger import process_log, LogMessage
-from .helper import check_type, check_range, get_enum_value, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_range, get_enum_value, coerce_optional_dispatch
 from .com_proxy import safe_com
 
 
@@ -39,8 +39,7 @@ class LayerManager:
             bool: True if the layer is active, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="active")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.Active(coerce_optional_dispatch(layer, "ent_list"))
 
     def create_layer(self) -> bool:
@@ -64,8 +63,7 @@ class LayerManager:
             bool: True if the layer was activated successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="activate_layer")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.ActivateLayer(coerce_optional_dispatch(layer, "ent_list"))
 
     def create_entity_list(self) -> EntList:
@@ -93,10 +91,8 @@ class LayerManager:
             int: The number of elements assigned to the layer.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="assign_to_layer")
-        if elems is not None:
-            check_type(elems, EntList)
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(elems, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.AssignToLayer(
             coerce_optional_dispatch(elems, "ent_list"), coerce_optional_dispatch(layer, "ent_list")
         )
@@ -114,8 +110,7 @@ class LayerManager:
             bool: True if the layer was deleted successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_layer")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(move_ent, bool)
         return self.layer_manager.DeleteLayer(coerce_optional_dispatch(layer, "ent_list"), move_ent)
 
@@ -130,8 +125,7 @@ class LayerManager:
             bool: True if the layer was toggled successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="toggle_layer")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.ToggleLayer(coerce_optional_dispatch(layer, "ent_list"))
 
     # pylint: disable-next=R0913, R0917
@@ -161,8 +155,7 @@ class LayerManager:
             int: The number of elements expanded.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="expand_layer")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(levels, int)
         check_type(expand_new_layer, bool)
         check_type(inc_nodes, bool)
@@ -191,8 +184,7 @@ class LayerManager:
             bool: True if the name was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_layer_name")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(name, str)
         return self.layer_manager.SetLayerName(coerce_optional_dispatch(layer, "ent_list"), name)
 
@@ -218,8 +210,7 @@ class LayerManager:
             bool: True if the layers were shown or hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_layers")
-        if layers is not None:
-            check_type(layers, EntList)
+        check_optional_type(layers, EntList)
         check_type(show, bool)
         return self.layer_manager.ShowLayers(coerce_optional_dispatch(layers, "ent_list"), show)
 
@@ -248,8 +239,7 @@ class LayerManager:
             int: The integer identifier for the color
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_color")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(default, bool)
         check_range(red, 0, 255, True, True)
@@ -274,8 +264,7 @@ class LayerManager:
             bool: True if the visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_visible")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(visible, bool)
         return self.layer_manager.SetTypeVisible(
@@ -323,8 +312,7 @@ class LayerManager:
             bool: True if the display option was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_display_option")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         option = get_enum_value(option, DisplayOption)
         return self.layer_manager.SetTypeDisplayOption(
@@ -355,8 +343,7 @@ class LayerManager:
             EntList: The next layer.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         result = self.layer_manager.GetNext(coerce_optional_dispatch(layer, "ent_list"))
         if result is None:
             return None
@@ -373,8 +360,7 @@ class LayerManager:
             str: The name of the layer.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_name")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.GetName(coerce_optional_dispatch(layer, "ent_list"))
 
     def show_labels(self, layer: EntList | None, show: bool) -> bool:
@@ -389,8 +375,7 @@ class LayerManager:
             bool: True if the labels were shown or hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_labels")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(show, bool)
         return self.layer_manager.ShowLabels(coerce_optional_dispatch(layer, "ent_list"), show)
 
@@ -406,8 +391,7 @@ class LayerManager:
             bool: True if the glyphs were shown or hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_glyphs")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(show, bool)
         return self.layer_manager.ShowGlyphs(coerce_optional_dispatch(layer, "ent_list"), show)
 
@@ -426,8 +410,7 @@ class LayerManager:
             bool: True if the label visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_show_labels")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(show, bool)
         return self.layer_manager.SetTypeShowLabels(
@@ -449,8 +432,7 @@ class LayerManager:
             bool: True if the glyphs visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_show_glyphs")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(show, bool)
         return self.layer_manager.SetTypeShowGlyphs(
@@ -502,8 +484,7 @@ class LayerManager:
             bool: True if all other layers were hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="hide_all_other_layers")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.HideAllOtherLayers(coerce_optional_dispatch(layer, "ent_list"))
 
     def remove_empty_layers(self) -> bool:
@@ -527,8 +508,7 @@ class LayerManager:
             bool: True if the layer is visible, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_activated")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         return self.layer_manager.GetActivated(coerce_optional_dispatch(layer, "ent_list"))
 
     def get_type_visible(self, layer: EntList | None, entity_type: EntityType | str) -> bool:
@@ -543,8 +523,7 @@ class LayerManager:
             bool: True if the entity type is visible, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_type_visible")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         entity_type = get_enum_value(entity_type, EntityType)
         return self.layer_manager.GetTypeVisible(
             coerce_optional_dispatch(layer, "ent_list"), entity_type
@@ -572,8 +551,7 @@ class LayerManager:
             bool: True if the clipping was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="allow_clipping")
-        if layer is not None:
-            check_type(layer, EntList)
+        check_optional_type(layer, EntList)
         check_type(checked, bool)
         return self.layer_manager.AllowClipping(
             coerce_optional_dispatch(layer, "ent_list"), checked

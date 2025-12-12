@@ -9,7 +9,7 @@ Usage:
 from .predicate import Predicate
 from .double_array import DoubleArray
 from .common import CrossSectionType, LogMessage
-from .helper import check_type, get_enum_value, check_range, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, get_enum_value, check_range, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .logger import process_log
 
@@ -117,10 +117,8 @@ class PredicateManager:
             Predicate: The created AND predicate.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_and_predicate")
-        if predicate1 is not None:
-            check_type(predicate1, Predicate)
-        if predicate2 is not None:
-            check_type(predicate2, Predicate)
+        check_optional_type(predicate1, Predicate)
+        check_optional_type(predicate2, Predicate)
         result = self.predicate_manager.CreateBoolAndPredicate(
             coerce_optional_dispatch(predicate1, "predicate"),
             coerce_optional_dispatch(predicate2, "predicate"),
@@ -145,10 +143,8 @@ class PredicateManager:
             Predicate: The created OR predicate
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_or_predicate")
-        if predicate1 is not None:
-            check_type(predicate1, Predicate)
-        if predicate2 is not None:
-            check_type(predicate2, Predicate)
+        check_optional_type(predicate1, Predicate)
+        check_optional_type(predicate2, Predicate)
         result = self.predicate_manager.CreateBoolOrPredicate(
             coerce_optional_dispatch(predicate1, "predicate"),
             coerce_optional_dispatch(predicate2, "predicate"),
@@ -169,8 +165,7 @@ class PredicateManager:
             Predicate: The created NOT predicate.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_not_predicate")
-        if predicate is not None:
-            check_type(predicate, Predicate)
+        check_optional_type(predicate, Predicate)
         result = self.predicate_manager.CreateBoolNotPredicate(
             coerce_optional_dispatch(predicate, "predicate")
         )
@@ -193,10 +188,8 @@ class PredicateManager:
             Predicate: The created XOR predicate.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_xor_predicate")
-        if predicate1 is not None:
-            check_type(predicate1, Predicate)
-        if predicate2 is not None:
-            check_type(predicate2, Predicate)
+        check_optional_type(predicate1, Predicate)
+        check_optional_type(predicate2, Predicate)
         result = self.predicate_manager.CreateBoolXorPredicate(
             coerce_optional_dispatch(predicate1, "predicate"),
             coerce_optional_dispatch(predicate2, "predicate"),
@@ -241,10 +234,8 @@ class PredicateManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_x_section_predicate")
         cross_section = get_enum_value(cross_section, CrossSectionType)
-        if min_value is not None:
-            check_type(min_value, DoubleArray)
-        if max_value is not None:
-            check_type(max_value, DoubleArray)
+        check_optional_type(min_value, DoubleArray)
+        check_optional_type(max_value, DoubleArray)
         result = self.predicate_manager.CreateXSectionPredicate(
             cross_section,
             coerce_optional_dispatch(min_value, "double_array"),

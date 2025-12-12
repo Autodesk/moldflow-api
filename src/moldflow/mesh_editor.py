@@ -13,7 +13,7 @@ from .common import LogMessage
 from .ent_list import EntList
 from .vector import Vector
 from .prop import Property
-from .helper import check_type, check_range, check_is_non_negative, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_range, check_is_non_negative, coerce_optional_dispatch
 from .com_proxy import safe_com
 
 
@@ -80,10 +80,8 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="swap_edges")
-        if tri1 is not None:
-            check_type(tri1, EntList)
-        if tri2 is not None:
-            check_type(tri2, EntList)
+        check_optional_type(tri1, EntList)
+        check_optional_type(tri2, EntList)
         check_type(feat_allow, bool)
         return self.mesh_editor.SwapEdge(
             coerce_optional_dispatch(tri1, "ent_list"),
@@ -104,8 +102,7 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="stitch_free_edges")
         check_type(tolerance, float)
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         return self.mesh_editor.StitchFreeEdges2(
             coerce_optional_dispatch(nodes, "ent_list"), tolerance
         )
@@ -121,10 +118,8 @@ class MeshEditor:
             The new node.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
         result = self.mesh_editor.InsertNode(
             coerce_optional_dispatch(node1, "ent_list"), coerce_optional_dispatch(node2, "ent_list")
         )
@@ -149,8 +144,7 @@ class MeshEditor:
             The new node at the centroid of triangle.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node_in_tri")
-        if node1 is not None:
-            check_type(node1, EntList)
+        check_optional_type(node1, EntList)
 
         if node2 is None and node3 is None:
             check_range(node1.size, 3, 3, True, True)
@@ -159,10 +153,8 @@ class MeshEditor:
                 return None
             return EntList(result)
 
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
 
         result = self.mesh_editor.InsertNodeInTri(
             coerce_optional_dispatch(node1, "ent_list"),
@@ -196,20 +188,16 @@ class MeshEditor:
             The new node at the centroid of tetrahedron.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node_in_tet")
-        if node1 is not None:
-            check_type(node1, EntList)
+        check_optional_type(node1, EntList)
         if node2 is None or node3 is None or node4 is None:
             check_range(node1.size, 4, 4, True, True)
             result = self.mesh_editor.InsertNodeInTet(coerce_optional_dispatch(node1, "ent_list"))
             if result is None:
                 return None
             return EntList(result)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
-        if node4 is not None:
-            check_type(node4, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
+        check_optional_type(node4, EntList)
         result = self.mesh_editor.InsertNodeInTetByNodes(
             coerce_optional_dispatch(node1, "ent_list"),
             coerce_optional_dispatch(node2, "ent_list"),
@@ -243,14 +231,10 @@ class MeshEditor:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node_in_tet_by_nodes"
         )
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
-        if node4 is not None:
-            check_type(node4, EntList)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
+        check_optional_type(node4, EntList)
         result = self.mesh_editor.InsertNodeInTetByNodes(
             coerce_optional_dispatch(node1, "ent_list"),
             coerce_optional_dispatch(node2, "ent_list"),
@@ -272,8 +256,7 @@ class MeshEditor:
             Entlist of the new node.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node_on_beam")
-        if beam is not None:
-            check_type(beam, EntList)
+        check_optional_type(beam, EntList)
         check_type(num_div, int)
         check_is_non_negative(num_div)
         result = self.mesh_editor.InsertNodeOnBeam(
@@ -295,10 +278,8 @@ class MeshEditor:
             True if successful; False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_nodes")
-        if nodes is not None:
-            check_type(nodes, EntList)
-        if vector is not None:
-            check_type(vector, Vector)
+        check_optional_type(nodes, EntList)
+        check_optional_type(vector, Vector)
         check_type(loc, bool)
         return self.mesh_editor.MoveNodes(
             coerce_optional_dispatch(nodes, "ent_list"),
@@ -322,12 +303,9 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="align_nodes")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if to_align is not None:
-            check_type(to_align, EntList)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(to_align, EntList)
         return self.mesh_editor.AlignNodes(
             coerce_optional_dispatch(node1, "ent_list"),
             coerce_optional_dispatch(node2, "ent_list"),
@@ -346,8 +324,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="smooth_nodes")
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         check_type(feat, bool)
         return self.mesh_editor.SmoothNodes(coerce_optional_dispatch(nodes, "ent_list"), feat)
 
@@ -377,8 +354,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="flip_normals")
-        if tris is not None:
-            check_type(tris, EntList)
+        check_optional_type(tris, EntList)
         return self.mesh_editor.FlipNormals(coerce_optional_dispatch(tris, "ent_list"))
 
     def align_normals(self, seed_tri: EntList | None, tris: EntList | None) -> int:
@@ -394,10 +370,8 @@ class MeshEditor:
             Number of triangles whose normals were aligned
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="align_normals")
-        if seed_tri is not None:
-            check_type(seed_tri, EntList)
-        if tris is not None:
-            check_type(tris, EntList)
+        check_optional_type(seed_tri, EntList)
+        check_optional_type(tris, EntList)
         return self.mesh_editor.AlignNormals(
             coerce_optional_dispatch(seed_tri, "ent_list"),
             coerce_optional_dispatch(tris, "ent_list"),
@@ -417,8 +391,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="fill_hole")
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         if fill_type is None:
             return self.mesh_editor.FillHole(coerce_optional_dispatch(nodes, "ent_list"))
         check_type(fill_type, int)
@@ -447,16 +420,11 @@ class MeshEditor:
             The new tetrahedron.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_tet")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
-        if node4 is not None:
-            check_type(node4, EntList)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
+        check_optional_type(node4, EntList)
+        check_optional_type(prop, Property)
         prop_disp = coerce_optional_dispatch(prop, "prop")
         result = self.mesh_editor.CreateTet(
             coerce_optional_dispatch(node1, "ent_list"),
@@ -489,14 +457,10 @@ class MeshEditor:
             The new triangle
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_tri")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
+        check_optional_type(prop, Property)
         prop_disp = coerce_optional_dispatch(prop, "prop")
         result = self.mesh_editor.CreateTri(
             coerce_optional_dispatch(node1, "ent_list"),
@@ -557,8 +521,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="refine_tetras_by_labels")
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(nodes, EntList)
         check_type(num_layer, int)
         check_is_non_negative(num_layer)
         check_type(isolate_refined_tet, bool)
@@ -599,20 +562,13 @@ class MeshEditor:
             The new wedge.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_wedge")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
-        if node3 is not None:
-            check_type(node3, EntList)
-        if node4 is not None:
-            check_type(node4, EntList)
-        if node5 is not None:
-            check_type(node5, EntList)
-        if node6 is not None:
-            check_type(node6, EntList)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
+        check_optional_type(node3, EntList)
+        check_optional_type(node4, EntList)
+        check_optional_type(node5, EntList)
+        check_optional_type(node6, EntList)
+        check_optional_type(prop, Property)
         result = self.mesh_editor.CreateWedge(
             coerce_optional_dispatch(node1, "ent_list"),
             coerce_optional_dispatch(node2, "ent_list"),
@@ -639,8 +595,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="convert_wedges_to_tetras")
-        if wedges is not None:
-            check_type(wedges, EntList)
+        check_optional_type(wedges, EntList)
         check_type(num_layer, int)
         check_is_non_negative(num_layer)
         return self.mesh_editor.ConvertWedgesToTetras(
@@ -663,14 +618,11 @@ class MeshEditor:
             The new beam.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_beams")
-        if node1 is not None:
-            check_type(node1, EntList)
-        if node2 is not None:
-            check_type(node2, EntList)
+        check_optional_type(node1, EntList)
+        check_optional_type(node2, EntList)
         check_type(num_beams, int)
         check_is_non_negative(num_beams)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(prop, Property)
         result = self.mesh_editor.CreateBeams(
             coerce_optional_dispatch(node1, "ent_list"),
             coerce_optional_dispatch(node2, "ent_list"),
@@ -715,8 +667,7 @@ class MeshEditor:
             You would need to delete the dependent entities first
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete")
-        if entities is not None:
-            check_type(entities, EntList)
+        check_optional_type(entities, EntList)
         result = self.mesh_editor.Delete(coerce_optional_dispatch(entities, "ent_list"))
         if result is None:
             return None
@@ -738,8 +689,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="remesh_area")
-        if tris is not None:
-            check_type(tris, EntList)
+        check_optional_type(tris, EntList)
         check_type(size, (int, float))
         check_type(imprint, bool)
         check_type(smooth, (int, float))
@@ -762,10 +712,8 @@ class MeshEditor:
             Number of nodes affected
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="match_notes")
-        if nodes is not None:
-            check_type(nodes, EntList)
-        if tris is not None:
-            check_type(tris, EntList)
+        check_optional_type(nodes, EntList)
+        check_optional_type(tris, EntList)
         check_type(layer, str)
         return self.mesh_editor.MatchNodes(
             coerce_optional_dispatch(nodes, "ent_list"),
@@ -793,8 +741,7 @@ class MeshEditor:
         check_type(tol, float)
         check_type(is_angular, bool)
         check_type(mesh, bool)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(prop, Property)
             return self.mesh_editor.MakeRegion2(
                 tol, is_angular, mesh, coerce_optional_dispatch(prop, "prop")
             )
@@ -812,10 +759,8 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_beam_node")
-        if moving_node is not None:
-            check_type(moving_node, EntList)
-        if target is not None:
-            check_type(target, Vector)
+        check_optional_type(moving_node, EntList)
+        check_optional_type(target, Vector)
         return self.mesh_editor.MoveBeamNode(
             coerce_optional_dispatch(moving_node, "ent_list"),
             coerce_optional_dispatch(target, "vector"),
@@ -842,12 +787,9 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_node_to_edge")
-        if node is not None:
-            check_type(node, EntList)
-        if edge_node1 is not None:
-            check_type(edge_node1, EntList)
-        if edge_node2 is not None:
-            check_type(edge_node2, EntList)
+        check_optional_type(node, EntList)
+        check_optional_type(edge_node1, EntList)
+        check_optional_type(edge_node2, EntList)
         check_type(param_loc, (int, float))
         check_range(param_loc, 0.0, 1.0, True, True)
         return self.mesh_editor.MoveNodeToEdge(
@@ -873,14 +815,11 @@ class MeshEditor:
             The new beam.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_beams_by_points")
-        if pt1 is not None:
-            check_type(pt1, Vector)
-        if pt2 is not None:
-            check_type(pt2, Vector)
+        check_optional_type(pt1, Vector)
+        check_optional_type(pt2, Vector)
         check_type(num, int)
         check_is_non_negative(num)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(prop, Property)
         result = self.mesh_editor.CreateBeamsByPoints(
             coerce_optional_dispatch(pt1, "vector"),
             coerce_optional_dispatch(pt2, "vector"),
@@ -902,8 +841,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="project_mesh")
-        if tris is not None:
-            check_type(tris, EntList)
+        check_optional_type(tris, EntList)
         return self.mesh_editor.ProjectMesh(coerce_optional_dispatch(tris, "ent_list"))
 
     def convert_to_beams(
@@ -922,10 +860,8 @@ class MeshEditor:
             Number of beams created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="convert_to_beams")
-        if start_node is not None:
-            check_type(start_node, EntList)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(start_node, EntList)
+        check_optional_type(prop, Property)
         check_type(junction, bool)
         check_type(num_branch, int)
         check_is_non_negative(num_branch)
@@ -986,10 +922,8 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="cut_triangles_by_plane")
-        if plane_normal is not None:
-            check_type(plane_normal, Vector)
-        if ref_point is not None:
-            check_type(ref_point, Vector)
+        check_optional_type(plane_normal, Vector)
+        check_optional_type(ref_point, Vector)
         check_type(fill, bool)
         check_type(smooth, bool)
         return self.mesh_editor.CutTrianglesByPlane(
@@ -1015,8 +949,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="offset_triangles")
-        if offset_tri is not None:
-            check_type(offset_tri, EntList)
+        check_optional_type(offset_tri, EntList)
         check_type(offset_dist, (int, float))
         check_type(falloff_dist, (int, float))
         check_type(smooth_nb, bool)
@@ -1049,14 +982,12 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="extrude_triangles")
-        if offset_tri is not None:
-            check_type(offset_tri, EntList)
+        check_optional_type(offset_tri, EntList)
         check_type(dist, (int, float))
         check_type(scale, (int, float))
         check_type(smooth_nb, bool)
         check_type(create_new_body, bool)
-        if prop is not None:
-            check_type(prop, Property)
+        check_optional_type(prop, Property)
         return self.mesh_editor.ExtrudeTriangles(
             coerce_optional_dispatch(offset_tri, "ent_list"),
             dist,
@@ -1087,8 +1018,7 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="imprint_selected_triangles")
-        if tri is not None:
-            check_type(tri, EntList)
+        check_optional_type(tri, EntList)
         return self.mesh_editor.ImprintSelectedTriangles(coerce_optional_dispatch(tri, "ent_list"))
 
     # pylint: disable=R0913, R0917
@@ -1148,10 +1078,8 @@ class MeshEditor:
             number of nodes merged
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="merge_nodes")
-        if target is not None:
-            check_type(target, EntList)
-        if nodes is not None:
-            check_type(nodes, EntList)
+        check_optional_type(target, EntList)
+        check_optional_type(nodes, EntList)
         check_type(fusion, bool)
         check_type(use_mid, bool)
         return self.mesh_editor.MergeNodes2(

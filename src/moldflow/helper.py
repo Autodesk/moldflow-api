@@ -76,6 +76,34 @@ def check_type(value, types: tuple):
     process_log(__name__, LogMessage.VALID_INPUT)
 
 
+def check_optional_type(value, types: tuple):
+    """
+    Check if the value is of the specified type(s) or None.
+
+    This function is used to validate optional parameters that may be None or a specific type.
+    It provides standardized handling of None arguments across API calls.
+
+    Args:
+        value: The value to check. Can be None or of the specified type(s).
+        types (tuple): A tuple of types to check against (excluding None).
+
+    Returns:
+        bool: True if the value is None or of the specified type(s), otherwise raises a TypeError.
+
+    Raises:
+        TypeError: If the value is not None and not of the specified type(s).
+
+    Notes:
+        - None is always considered valid.
+        - The function handles the special case where in python `bool` is a subclass of `int`.
+        - If `types` is not a tuple, it is treated as a single type.
+    """
+    if value is None:
+        process_log(__name__, LogMessage.VALID_INPUT)
+        return
+    check_type(value, types)
+
+
 def _compare(value1, value2, inclusive):
     """
     Compare two values

@@ -18,6 +18,7 @@ from moldflow.helper import (
     check_is_negative,
     check_min_max,
     check_type,
+    check_optional_type,
     check_range,
     check_expected_values,
     get_enum_value,
@@ -339,3 +340,32 @@ class TestHelper:
 
         assert result == []
         mock_array.val.assert_not_called()
+
+    @pytest.mark.parametrize(
+        "value, types",
+        [(None, (int, float))]
+        + [(None, str)]
+        + [(None, bool)]
+        + [(x, (int, float)) for x in VALID_INT + VALID_FLOAT]
+        + [(x, str) for x in VALID_STR]
+        + [(x, bool) for x in VALID_BOOL],
+    )
+    def test_check_optional_type(self, value, types, _, caplog):
+        """
+        Test check_optional_type function with valid values including None.
+        """
+        check_optional_type(value, types)
+        assert _("Valid") in caplog.text
+
+    @pytest.mark.parametrize(
+        "value, types",
+        [(x, (int, float)) for x in list_intersection(INVALID_FLOAT, INVALID_INT)]
+        + [(x, int) for x in INVALID_INT],
+    )
+    def test_check_optional_type_invalid(self, value, types, _):
+        """
+        Test check_optional_type function with invalid type (but not None).
+        """
+        with pytest.raises(TypeError) as e:
+            check_optional_type(value, types)
+        assert _("Invalid") in str(e.value)

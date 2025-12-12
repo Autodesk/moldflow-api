@@ -9,7 +9,7 @@ Usage:
 from .prop import Property
 from .common import MaterialDatabase, MaterialDatabaseType
 from .logger import process_log
-from .helper import check_type, get_enum_value, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, get_enum_value, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .common import LogMessage
 
@@ -72,8 +72,7 @@ class MaterialFinder:
             Property: The next material.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_material")
-        if material is not None:
-            check_type(material, Property)
+        check_optional_type(material, Property)
         material_disp = coerce_optional_dispatch(material, "prop")
         result = self.material_finder.GetNextMaterial(material_disp)
         if result is None:
