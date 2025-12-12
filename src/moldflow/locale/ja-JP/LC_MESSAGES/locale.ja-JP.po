@@ -3,6 +3,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ja-JP\n"
 
+msgid "Cancel"
+msgstr "キャンセル"
+
 msgid "Checking file extension {file_name}"
 msgstr "ファイル拡張子 {file_name} を確認しています"
 
@@ -72,6 +75,9 @@ msgstr "無効な値: {reason}"
 msgid "Logger was not setup"
 msgstr "ロガーが設定されていませんでした"
 
+msgid "OK"
+msgstr "OK"
+
 msgid "Save Error"
 msgstr "保存エラー"
 
@@ -83,6 +89,9 @@ msgstr "保存エラー: {saving} を {file_name} に保存できませんでし
 
 msgid "Setting {name} to {value}"
 msgstr "{name} を {value} に設定しています"
+
+msgid "Submit"
+msgstr "OK"
 
 msgid "Test String"
 msgstr "テスト文字列"

@@ -67,12 +67,15 @@ class DoubleArray:
         vb_array = self.double_array.ToVBSArray()
         return list(vb_array)
 
-    def from_list(self, values: list[float]) -> None:
+    def from_list(self, values: list[float]) -> int:
         """
         Convert a list of floats to a double array.
 
         Args:
             values (list[float]): The list of floats to convert.
+
+        Returns:
+            int: The number of elements added to the array.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="from_list")
 
@@ -80,7 +83,7 @@ class DoubleArray:
         for value in values:
             check_type(value, (int, float))
 
-        self.double_array.FromVBSArray(list(values))
+        return self.double_array.FromVBSArray(list(values))
 
     @property
     def size(self) -> int:

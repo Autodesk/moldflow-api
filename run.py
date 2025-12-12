@@ -12,8 +12,8 @@ Usage:
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
-    run.py publish [-s | --skip-build] [--testpypi]
-    run.py release
+    run.py publish [-s | --skip-build] [(--testpypi | --repo-url=<url>)]
+    run.py release [--github-api-url=<url>]
     run.py report [-c | --cli] [-h | --html] [-x | --xml]
     run.py test [<tests>...] [-m <marker> | --marker=<marker>] [-s | --skip-build]
         [-k | --keep-files] [-q | --quiet] [--unit] [--integration] [--core] [--all]
@@ -49,6 +49,8 @@ Options:
     --unit                          Run only unit tests.
     --integration                   Run only integration tests.
     --all                           Run all tests.
+    --repo-url=<url>                Custom PyPI repository URL.
+    --github-api-url=<url>          Custom GitHub API URL.
 """
 
 import os
@@ -58,6 +60,8 @@ import logging
 import platform
 import subprocess
 import shutil
+import glob
+from urllib.parse import urlparse
 
 import docopt
 from github import Github
@@ -69,7 +73,6 @@ ENCODING = 'utf-8'
 SITE_PACKAGES = 'moldflow-site-packages'
 VERSION_JSON = 'version.json'
 VERSION = ''
-BUILD_NUMBER = os.environ.get('BUILD_NUMBER', '0')
 
 # FILE TYPES
 PY_FILES_EXT = '.py'
@@ -86,7 +89,6 @@ DOCS_SOURCE_DIR = os.path.join(DOCS_DIR, 'source')
 DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
-SCRIPTS_DIR = os.path.join(ROOT_DIR, 'scripts')
 
 # Files
 PYLINT_CONFIG_FILE = os.path.join(ROOT_DIR, '.pylint.toml')
@@ -97,7 +99,7 @@ COVERAGE_CONFIG_FILE = os.path.join(ROOT_DIR, '.coverage-config')
 COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
-PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py", SCRIPTS_DIR]
+PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py"]
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):
@@ -149,7 +151,7 @@ def build_package(install=True):
         install_package()
 
 
-def publish(skip_build=False, testpypi=False):
+def publish(skip_build=False, testpypi=False, repo_url=None):
     """Publish package"""
 
     # Restrict publishing to GitHub Actions workflow
@@ -158,6 +160,9 @@ def publish(skip_build=False, testpypi=False):
             'Publishing to PyPI is restricted to the GitHub Actions manual workflow.'
             'Please use the "Publish to PyPI (manual)" workflow.'
         )
+    # Defensive check: don't allow both testpypi and explicit repo_url
+    if testpypi and repo_url:
+        raise RuntimeError('Options testpypi and repo_url are mutually exclusive.')
 
     if not skip_build:
         build_package()
@@ -167,14 +172,35 @@ def publish(skip_build=False, testpypi=False):
     # First check the package
     logging.info('Checking package validity')
 
-    run_command([sys.executable] + f'-m twine check --strict {DIST_FILES}'.split(' '), ROOT_DIR)
+    # Expand distribution files using glob to avoid shell globbing
+    dist_files_list = glob.glob(DIST_FILES)
+    if not dist_files_list:
+        raise RuntimeError(f'No distribution files found in {DIST_DIR}')
+
+    # Use explicit args to avoid shell interpolation for the check step
+    run_command([sys.executable, '-m', 'twine', 'check', '--strict'] + dist_files_list, ROOT_DIR)
 
     logging.info('Package is valid')
 
-    twine_args = '--repository testpypi --verbose' if testpypi else '--verbose'
+    # Validate repo URL if provided
+    if repo_url:
+        parsed = urlparse(repo_url)
+        # Only allow secure HTTPS URLs for repository uploads
+        if parsed.scheme != 'https' or not parsed.netloc:
+            raise RuntimeError(f'Invalid repository URL: {repo_url}. Only HTTPS URLs are allowed.')
+
+    # Build twine upload args safely as a list
+    twine_cmd = [sys.executable, '-m', 'twine', 'upload', '--verbose']
+
+    if repo_url:
+        twine_cmd += ['--repository-url', repo_url]
+    elif testpypi:
+        twine_cmd += ['--repository', 'testpypi']
+
+    twine_cmd += dist_files_list
 
     run_command(
-        [sys.executable] + f'-m twine upload {twine_args} {DIST_FILES}'.split(' '),
+        twine_cmd,
         ROOT_DIR,
         {
             'TWINE_USERNAME': os.environ.get('TWINE_USERNAME', ''),
@@ -183,7 +209,7 @@ def publish(skip_build=False, testpypi=False):
     )
 
 
-def create_release():
+def create_release(github_api_url=None):
     """
     Create Git tag and GitHub release via PyGithub.
 
@@ -212,7 +238,13 @@ def create_release():
     release_name = tag
 
     logging.info('Creating GitHub release %s on %s', tag, owner_repo)
-    gh = Github(token)
+
+    if github_api_url:
+        logging.info('Using custom GitHub API URL: %s', github_api_url)
+        gh = Github(token, base_url=github_api_url)
+    else:
+        gh = Github(token)
+
     repo = gh.get_repo(owner_repo)
 
     release = repo.create_git_tag_and_release(
@@ -555,14 +587,13 @@ def set_version():
 
     # Set global version for use in other functions
     global VERSION
-    patch_value = vers_json_dict.get('patch', BUILD_NUMBER)
-    VERSION = f"{vers_json_dict['major']}.{vers_json_dict['minor']}.{patch_value}"
+    VERSION = f"{vers_json_dict['major']}.{vers_json_dict['minor']}.{vers_json_dict['patch']}"
 
     # Create package version.json with complete version info
     package_version = {
         "major": vers_json_dict['major'],
         "minor": vers_json_dict['minor'],
-        "patch": patch_value,
+        "patch": vers_json_dict['patch'],
     }
 
     # Ensure package directory exists
@@ -649,12 +680,22 @@ def main():
 
         elif args.get('publish'):
             skip_build = args.get('--skip-build') or args.get('-s')
-            testpypi = args.get('--testpypi') or args.get('-t')
+            testpypi = args.get('--testpypi')
+            repo_url = args.get('--repo-url')
 
-            publish(skip_build=skip_build, testpypi=testpypi)
+            # Docopt groups are XOR, but validate explicitly and present a
+            # user-friendly message rather than a stack trace.
+            if testpypi and repo_url:
+                logging.error(
+                    'Options --testpypi and --repo-url are mutually exclusive. Provide only one.'
+                )
+                return 2
+
+            publish(skip_build=skip_build, testpypi=testpypi, repo_url=repo_url)
 
         elif args.get('release'):
-            create_release()
+            github_api_url = args.get('--github-api-url')
+            create_release(github_api_url=github_api_url)
 
         elif args.get('clean-up'):
             clean_up()

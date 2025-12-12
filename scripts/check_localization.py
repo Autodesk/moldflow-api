@@ -38,6 +38,12 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 
+# Strings that are acceptable to remain identical across locales
+ALLOW_EQUAL_MSGSTR: set[str] = {
+    "OK",
+}
+
+
 @dataclass
 class PoEntry:
     """

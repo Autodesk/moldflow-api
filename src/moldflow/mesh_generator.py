@@ -37,16 +37,22 @@ class MeshGenerator:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="MeshGenerator")
         self.mesh_generator = safe_com(_mesh_generator)
 
-    def generate(self):
+    def generate(self) -> bool:
         """
         Generate the mesh using the MeshGenerator instance.
+
+        Returns:
+            bool: True if mesh generation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="generate")
         return self.mesh_generator.Generate
 
-    def save_options(self):
+    def save_options(self) -> bool:
         """
         Save the mesh generation options.
+
+        Returns:
+            bool: True if options were saved successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="save_options")
         return self.mesh_generator.SaveOptions

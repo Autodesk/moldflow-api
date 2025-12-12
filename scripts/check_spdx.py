@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-Script to add SPDX headers to Python source files.
+Script to check SPDX headers in Python source files.
 """
 
 import os
@@ -47,6 +47,7 @@ def get_gitignore_spec(repo_root: str) -> pathspec.PathSpec:
     return pathspec.PathSpec([])
 
 
+
 def should_skip(path: str, gitignore_spec: pathspec.PathSpec) -> bool:
     """Check if a file should be skipped."""
     # Convert to relative path for gitignore matching
@@ -59,6 +60,7 @@ def should_skip(path: str, gitignore_spec: pathspec.PathSpec) -> bool:
     # Check our custom skip patterns
     parts = Path(path).parts
     return any(any(part.startswith(skip.rstrip('/')) for part in parts) for skip in SKIP_PATTERNS)
+
 
 
 def has_spdx_header(content: str) -> bool:
