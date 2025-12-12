@@ -1073,8 +1073,8 @@ class Plot:
             curve (EntList): The curve to add.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_xy_plot_curve")
-        check_optional_type(curve, EntList)
-        self.plot.AddXYPlotCurve(coerce_optional_dispatch(curve, "ent_list"))
+
+        self.plot.AddXYPlotCurve(check_and_coerce_optional(curve, EntList))
 
     def delete_xy_plot_curve(self, curve: EntList | None) -> None:
         """
@@ -1084,8 +1084,8 @@ class Plot:
             curve (EntList): The curve to delete.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_xy_plot_curve")
-        check_optional_type(curve, EntList)
-        self.plot.DeleteXYPlotCurve(coerce_optional_dispatch(curve, "ent_list"))
+
+        self.plot.DeleteXYPlotCurve(check_and_coerce_optional(curve, EntList))
 
     @property
     def edge_display(self) -> int:
@@ -1165,8 +1165,8 @@ class Plot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="apply_best_fit")
-        check_optional_type(nodes, EntList)
-        return self.plot.ApplyBestFit(coerce_optional_dispatch(nodes, "ent_list"))
+
+        return self.plot.ApplyBestFit(check_and_coerce_optional(nodes, EntList))
 
     @property
     def deflection_scale_factor(self) -> float:
@@ -1346,9 +1346,9 @@ class Plot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="warp_query_node")
         check_type(node_id, int)
         check_is_non_negative(node_id)
-        check_optional_type(return_values, DoubleArray)
+
         return self.plot.WarpQueryNode(
-            node_id, coerce_optional_dispatch(return_values, "double_array")
+            node_id, check_and_coerce_optional(return_values, DoubleArray)
         )
 
     @property
@@ -1381,12 +1381,12 @@ class Plot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_probe_plot_probe_line")
         check_type(index, int)
         check_is_non_negative(index)
-        check_optional_type(start_pt, Vector)
-        check_optional_type(end_pt, Vector)
+
+
         return self.plot.GetProbePlotProbeLine(
             index,
-            coerce_optional_dispatch(start_pt, "vector"),
-            coerce_optional_dispatch(end_pt, "vector"),
+            check_and_coerce_optional(start_pt, Vector),
+            check_and_coerce_optional(end_pt, Vector),
         )
 
     def add_probe_plot_probe_line(self, start_pt: Vector | None, end_pt: Vector | None) -> bool:
@@ -1401,10 +1401,10 @@ class Plot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_probe_plot_probe_line")
-        check_optional_type(start_pt, Vector)
-        check_optional_type(end_pt, Vector)
+
+
         return self.plot.AddProbePlotProbeLine(
-            coerce_optional_dispatch(start_pt, "vector"), coerce_optional_dispatch(end_pt, "vector")
+            check_and_coerce_optional(start_pt, Vector), check_and_coerce_optional(end_pt, Vector)
         )
 
     def set_probe_plot_probe_line(
@@ -1424,12 +1424,12 @@ class Plot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_probe_plot_probe_line")
         check_type(index, int)
         check_is_non_negative(index)
-        check_optional_type(start_pt, Vector)
-        check_optional_type(end_pt, Vector)
+
+
         return self.plot.SetProbePlotProbeLine(
             index,
-            coerce_optional_dispatch(start_pt, "vector"),
-            coerce_optional_dispatch(end_pt, "vector"),
+            check_and_coerce_optional(start_pt, Vector),
+            check_and_coerce_optional(end_pt, Vector),
         )
 
     @property
@@ -1747,8 +1747,8 @@ class Plot:
             value (Vector): single color to set as RGB vector.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="single_color", value=value)
-        check_optional_type(value, Vector)
-        self.plot.SetSingleColor(coerce_optional_dispatch(value, "vector"))
+
+        self.plot.SetSingleColor(check_and_coerce_optional(value, Vector))
 
     def set_plot_nodes_from_string(self, nodes: str) -> None:
         """
@@ -1771,8 +1771,8 @@ class Plot:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="set_plot_nodes_from_ent_list"
         )
-        check_optional_type(ent_list, EntList)
-        self.plot.SetPlotNodesFromEntList(coerce_optional_dispatch(ent_list, "ent_list"))
+
+        self.plot.SetPlotNodesFromEntList(check_and_coerce_optional(ent_list, EntList))
 
     def add_probe_plane(self, normal: str, point: str) -> bool:
         """
@@ -2477,7 +2477,7 @@ class Plot:
             name="shrinkage_compensation_estimated_shrinkage",
             value=value,
         )
-        check_optional_type(value, Vector)
+
         self.plot.SetShrinkageCompensationEstimatedShrinkage(
-            coerce_optional_dispatch(value, "vector")
+            check_and_coerce_optional(value, Vector)
         )

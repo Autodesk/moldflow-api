@@ -6,7 +6,7 @@ Usage:
     EntList Class API Wrapper
 """
 
-from .helper import check_index, check_type, check_optional_type, coerce_optional_dispatch
+from .helper import check_index, check_type, check_optional_type, check_and_coerce_optional, coerce_optional_dispatch
 from .com_proxy import safe_com, expose_oleobj
 from .predicate import Predicate
 from .common import LogMessage
@@ -65,8 +65,8 @@ class EntList:
                 inclusion of an entity.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="select_from_predicate")
-        check_optional_type(predicate, Predicate)
-        self.ent_list.SelectFromPredicate(coerce_optional_dispatch(predicate, "predicate"))
+
+        self.ent_list.SelectFromPredicate(check_and_coerce_optional(predicate, Predicate))
 
     def convert_to_string(self) -> str:
         """

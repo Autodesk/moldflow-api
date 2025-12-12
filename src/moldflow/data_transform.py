@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, get_enum_value, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .common import TransformFunctions, TransformOperations, TransformScalarOperations
 from .integer_array import IntegerArray
@@ -53,16 +53,13 @@ class DataTransform:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="func")
         func_name = get_enum_value(func_name, TransformFunctions)
-        check_optional_type(label_in, IntegerArray)
-        check_optional_type(data_in, DoubleArray)
-        check_optional_type(label_out, IntegerArray)
-        check_optional_type(data_out, DoubleArray)
+
         return self.data_transform.Func(
             func_name,
-            coerce_optional_dispatch(label_in, "integer_array"),
-            coerce_optional_dispatch(data_in, "double_array"),
-            coerce_optional_dispatch(label_out, "integer_array"),
-            coerce_optional_dispatch(data_out, "double_array"),
+            check_and_coerce_optional(label_in, IntegerArray),
+            check_and_coerce_optional(data_in, DoubleArray),
+            check_and_coerce_optional(label_out, IntegerArray),
+            check_and_coerce_optional(data_out, DoubleArray),
         )
 
     # pylint: disable=R0913, R0917
@@ -92,21 +89,17 @@ class DataTransform:
             bool: True if the operation was applied successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="op")
-        check_optional_type(label_1, IntegerArray)
-        check_optional_type(data_1, DoubleArray)
+
         op = get_enum_value(op, TransformOperations)
-        check_optional_type(label_2, IntegerArray)
-        check_optional_type(data_2, DoubleArray)
-        check_optional_type(label_out, IntegerArray)
-        check_optional_type(data_out, DoubleArray)
+
         return self.data_transform.Op(
-            coerce_optional_dispatch(label_1, "integer_array"),
-            coerce_optional_dispatch(data_1, "double_array"),
+            check_and_coerce_optional(label_1, IntegerArray),
+            check_and_coerce_optional(data_1, DoubleArray),
             op,
-            coerce_optional_dispatch(label_2, "integer_array"),
-            coerce_optional_dispatch(data_2, "double_array"),
-            coerce_optional_dispatch(label_out, "integer_array"),
-            coerce_optional_dispatch(data_out, "double_array"),
+            check_and_coerce_optional(label_2, IntegerArray),
+            check_and_coerce_optional(data_2, DoubleArray),
+            check_and_coerce_optional(label_out, IntegerArray),
+            check_and_coerce_optional(data_out, DoubleArray),
         )
 
     # pylint: disable=R0913, R0917
@@ -134,17 +127,15 @@ class DataTransform:
             bool: True if the scalar operation was applied successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="scalar")
-        check_optional_type(label_in, IntegerArray)
-        check_optional_type(data_in, DoubleArray)
+
         op = get_enum_value(op, TransformScalarOperations)
         check_type(scalar_value, (float, int))
-        check_optional_type(label_out, IntegerArray)
-        check_optional_type(data_out, DoubleArray)
+
         return self.data_transform.Scalar(
-            coerce_optional_dispatch(label_in, "integer_array"),
-            coerce_optional_dispatch(data_in, "double_array"),
+            check_and_coerce_optional(label_in, IntegerArray),
+            check_and_coerce_optional(data_in, DoubleArray),
             op,
             scalar_value,
-            coerce_optional_dispatch(label_out, "integer_array"),
-            coerce_optional_dispatch(data_out, "double_array"),
+            check_and_coerce_optional(label_out, IntegerArray),
+            check_and_coerce_optional(data_out, DoubleArray),
         )

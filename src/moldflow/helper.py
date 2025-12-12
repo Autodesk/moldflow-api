@@ -365,3 +365,70 @@ def coerce_optional_dispatch(value, attr_name: str | None = None):
     if attr_name:
         value = getattr(value, attr_name)
     return value
+
+
+# Type to attribute name mapping for COM objects
+_TYPE_TO_ATTR_MAP = {
+    'EntList': 'ent_list',
+    'Vector': 'vector',
+    'Property': 'prop',
+    'Predicate': 'predicate',
+    'IntegerArray': 'integer_array',
+    'DoubleArray': 'double_array',
+    'BoundaryList': 'boundary_list',
+    'VectorArray': 'vector_array',
+    'StringArray': 'string_array',
+}
+
+
+def check_and_coerce_optional(value, expected_type: type):
+    """
+    Check if the value is of the expected type or None, and coerce it for COM dispatch.
+
+    This function combines type validation and COM coercion into a single operation,
+    providing standardized handling of optional COM object parameters.
+
+    - If value is None, returns a null IDispatch VARIANT
+    - If value is not None, validates the type and unwraps the COM object attribute
+    - For primitive types (int, float, str, bool), returns the value as-is after validation
+
+    Args:
+        value: The value to check and coerce. Can be None or of the expected type.
+        expected_type (type): The expected type to check against.
+
+    Returns:
+        VARIANT or value: The coerced COM object (VARIANT) or the validated primitive value.
+
+    Raises:
+        TypeError: If the value is not None and not of the expected type.
+
+    Examples:
+        >>> nodes = EntList(...)
+        >>> coerced = check_and_coerce_optional(nodes, EntList)
+        >>> # Returns nodes.ent_list
+        
+        >>> check_and_coerce_optional(None, EntList)
+        >>> # Returns variant_null_idispatch()
+        
+        >>> check_and_coerce_optional(42, int)
+        >>> # Returns 42 (primitive types are passed through)
+    """
+    # First validate the type
+    check_optional_type(value, expected_type)
+    
+    # If None, return null dispatch
+    if value is None:
+        return variant_null_idispatch()
+    
+    # Get the type name
+    type_name = expected_type.__name__
+    
+    # Check if this is a COM object type that needs unwrapping
+    attr_name = _TYPE_TO_ATTR_MAP.get(type_name)
+    
+    if attr_name:
+        # COM object - unwrap the attribute
+        return getattr(value, attr_name)
+    else:
+        # Primitive type or unknown type - return as-is
+        return value

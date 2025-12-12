@@ -77,11 +77,11 @@ class Viewer:
             up_view (Vector | None): The up view vector.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="reset_view")
-        check_optional_type(normal_view, Vector)
-        check_optional_type(up_view, Vector)
+
+
         self.viewer.ResetView(
-            coerce_optional_dispatch(normal_view, "vector"),
-            coerce_optional_dispatch(up_view, "vector"),
+            check_and_coerce_optional(normal_view, Vector),
+            check_and_coerce_optional(up_view, Vector),
         )
 
     def rotate(self, angle_x: float, angle_y: float, angle_z: float) -> None:
@@ -477,10 +477,10 @@ class Viewer:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_bookmark")
         check_type(name, str)
-        check_optional_type(normal_view, Vector)
-        check_optional_type(up_view, Vector)
-        check_optional_type(focal_point, Vector)
-        check_optional_type(eye_position, Vector)
+
+
+
+
         check_type(clipping_range_min, (int, float))
         check_is_non_negative(clipping_range_min)
         check_type(clipping_range_max, (int, float))
@@ -489,10 +489,10 @@ class Viewer:
         check_type(parallel_scale, (int, float))
         self.viewer.AddBookmark(
             name,
-            coerce_optional_dispatch(normal_view, "vector"),
-            coerce_optional_dispatch(up_view, "vector"),
-            coerce_optional_dispatch(focal_point, "vector"),
-            coerce_optional_dispatch(eye_position, "vector"),
+            check_and_coerce_optional(normal_view, Vector),
+            check_and_coerce_optional(up_view, Vector),
+            check_and_coerce_optional(focal_point, Vector),
+            check_and_coerce_optional(eye_position, Vector),
             clipping_range_min,
             clipping_range_max,
             view_angle,
@@ -575,8 +575,8 @@ class Viewer:
             Vector: The converted display coordinates.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="world_to_display")
-        check_optional_type(world_coord, Vector)
-        result = self.viewer.WorldToDisplay(coerce_optional_dispatch(world_coord, "vector"))
+
+        result = self.viewer.WorldToDisplay(check_and_coerce_optional(world_coord, Vector))
         if result is None:
             return None
         return Vector(result)
@@ -593,10 +593,10 @@ class Viewer:
             EntList: Object containing created clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_clipping_plane")
-        check_optional_type(normal, Vector)
+
         check_type(distance, (int, float))
         result = self.viewer.CreateClippingPlane(
-            coerce_optional_dispatch(normal, "vector"), distance
+            check_and_coerce_optional(normal, Vector), distance
         )
         if result is None:
             return None
@@ -629,12 +629,11 @@ class Viewer:
             distance (float): The new distance from the origin to the clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="modify_clipping_plane")
-        check_optional_type(plane, EntList)
-        check_optional_type(normal, Vector)
+
         check_type(distance, (int, float))
         self.viewer.ModifyClippingPlane(
-            coerce_optional_dispatch(plane, "ent_list"),
-            coerce_optional_dispatch(normal, "vector"),
+            check_and_coerce_optional(plane, EntList),
+            check_and_coerce_optional(normal, Vector),
             distance,
         )
 
@@ -653,10 +652,10 @@ class Viewer:
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modify_clipping_plane_by_id"
         )
         check_type(plane_id, int)
-        check_optional_type(normal, Vector)
+
         check_type(distance, (int, float))
         self.viewer.ModifyClippingPlaneByID(
-            plane_id, coerce_optional_dispatch(normal, "vector"), distance
+            plane_id, check_and_coerce_optional(normal, Vector), distance
         )
 
     def delete_clipping_plane(self, plane: EntList | None) -> None:
@@ -667,8 +666,8 @@ class Viewer:
             plane (EntList | None): The clipping plane to delete.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_clipping_plane")
-        check_optional_type(plane, EntList)
-        self.viewer.DeleteClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
+
+        self.viewer.DeleteClippingPlane(check_and_coerce_optional(plane, EntList))
 
     def get_first_clipping_plane(self) -> EntList:
         """
@@ -694,8 +693,8 @@ class Viewer:
             EntList: The next clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_clipping_plane")
-        check_optional_type(plane, EntList)
-        result = self.viewer.GetNextClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
+
+        result = self.viewer.GetNextClippingPlane(check_and_coerce_optional(plane, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -709,9 +708,9 @@ class Viewer:
             enable (bool): Whether to enable or disable the clipping plane.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="enable_clipping_plane")
-        check_optional_type(plane, EntList)
+
         check_type(enable, bool)
-        self.viewer.EnableClippingPlane(coerce_optional_dispatch(plane, "ent_list"), enable)
+        self.viewer.EnableClippingPlane(check_and_coerce_optional(plane, EntList), enable)
 
     @property
     def active_clipping_plane(self) -> EntList:
@@ -736,8 +735,8 @@ class Viewer:
             plane: The clipping plane to set as active.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_active_clipping_plane")
-        check_optional_type(plane, EntList)
-        self.viewer.SetActiveClippingPlane(coerce_optional_dispatch(plane, "ent_list"))
+
+        self.viewer.SetActiveClippingPlane(check_and_coerce_optional(plane, EntList))
 
     def show_plot_frame(self, plot: Plot | None, frame: int) -> None:
         """

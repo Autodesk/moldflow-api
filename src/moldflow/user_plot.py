@@ -6,7 +6,7 @@ Usage:
     UserPlot Class API Wrapper
 """
 
-from .helper import check_type, check_optional_type, get_enum_value, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .logger import process_log
 from .common import (
@@ -123,12 +123,11 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_scalar_data")
         check_type(indp_val, (int, float))
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(data, DoubleArray)
+
         return self.user_plot.AddScalarData(
             indp_val,
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(data, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(data, DoubleArray),
         )
 
     # pylint: disable=R0913, R0917
@@ -155,16 +154,15 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_vector_data")
         check_type(indp_val, (int, float))
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(vx, DoubleArray)
-        check_optional_type(vy, DoubleArray)
-        check_optional_type(vz, DoubleArray)
+
+
+
         return self.user_plot.AddVectorData(
             indp_val,
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(vx, "double_array"),
-            coerce_optional_dispatch(vy, "double_array"),
-            coerce_optional_dispatch(vz, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(vx, DoubleArray),
+            check_and_coerce_optional(vy, DoubleArray),
+            check_and_coerce_optional(vz, DoubleArray),
         )
 
     # pylint: disable=R0913, R0917
@@ -197,22 +195,21 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_tensor_data")
         check_type(indp_val, (int, float))
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(t_11, DoubleArray)
-        check_optional_type(t_22, DoubleArray)
-        check_optional_type(t_33, DoubleArray)
-        check_optional_type(t_12, DoubleArray)
-        check_optional_type(t_13, DoubleArray)
-        check_optional_type(t_23, DoubleArray)
+
+
+
+
+
+
         return self.user_plot.AddTensorData(
             indp_val,
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(t_11, "double_array"),
-            coerce_optional_dispatch(t_22, "double_array"),
-            coerce_optional_dispatch(t_33, "double_array"),
-            coerce_optional_dispatch(t_12, "double_array"),
-            coerce_optional_dispatch(t_13, "double_array"),
-            coerce_optional_dispatch(t_23, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(t_11, DoubleArray),
+            check_and_coerce_optional(t_22, DoubleArray),
+            check_and_coerce_optional(t_33, DoubleArray),
+            check_and_coerce_optional(t_12, DoubleArray),
+            check_and_coerce_optional(t_13, DoubleArray),
+            check_and_coerce_optional(t_23, DoubleArray),
         )
 
     def build(self) -> Plot:
@@ -265,11 +262,10 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_scalar_data")
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(data, DoubleArray)
+
         return self.user_plot.SetScalarData(
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(data, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(data, DoubleArray),
         )
 
     def set_vector_data(
@@ -292,15 +288,14 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_vector_data")
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(vx, DoubleArray)
-        check_optional_type(vy, DoubleArray)
-        check_optional_type(vz, DoubleArray)
+
+
+
         return self.user_plot.SetVectorData(
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(vx, "double_array"),
-            coerce_optional_dispatch(vy, "double_array"),
-            coerce_optional_dispatch(vz, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(vx, DoubleArray),
+            check_and_coerce_optional(vy, DoubleArray),
+            check_and_coerce_optional(vz, DoubleArray),
         )
 
     # pylint: disable=R0913, R0917
@@ -330,21 +325,20 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_tensor_data")
-        check_optional_type(element_id, IntegerArray)
-        check_optional_type(t_11, DoubleArray)
-        check_optional_type(t_22, DoubleArray)
-        check_optional_type(t_33, DoubleArray)
-        check_optional_type(t_12, DoubleArray)
-        check_optional_type(t_13, DoubleArray)
-        check_optional_type(t_23, DoubleArray)
+
+
+
+
+
+
         return self.user_plot.SetTensorData(
-            coerce_optional_dispatch(element_id, "integer_array"),
-            coerce_optional_dispatch(t_11, "double_array"),
-            coerce_optional_dispatch(t_22, "double_array"),
-            coerce_optional_dispatch(t_33, "double_array"),
-            coerce_optional_dispatch(t_12, "double_array"),
-            coerce_optional_dispatch(t_13, "double_array"),
-            coerce_optional_dispatch(t_23, "double_array"),
+            check_and_coerce_optional(element_id, IntegerArray),
+            check_and_coerce_optional(t_11, DoubleArray),
+            check_and_coerce_optional(t_22, DoubleArray),
+            check_and_coerce_optional(t_33, DoubleArray),
+            check_and_coerce_optional(t_12, DoubleArray),
+            check_and_coerce_optional(t_13, DoubleArray),
+            check_and_coerce_optional(t_23, DoubleArray),
         )
 
     def add_xy_plot_data(
@@ -363,12 +357,12 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_xy_plot_data")
         check_type(indp_val, (int, float))
-        check_optional_type(x_value, DoubleArray)
-        check_optional_type(y_value, DoubleArray)
+
+
         return self.user_plot.AddXYPlotData(
             indp_val,
-            coerce_optional_dispatch(x_value, "double_array"),
-            coerce_optional_dispatch(y_value, "double_array"),
+            check_and_coerce_optional(x_value, DoubleArray),
+            check_and_coerce_optional(y_value, DoubleArray),
         )
 
     def set_xy_plot_data(self, x_value: DoubleArray | None, y_value: DoubleArray | None) -> bool:
@@ -383,11 +377,11 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_xy_plot_data")
-        check_optional_type(x_value, DoubleArray)
-        check_optional_type(y_value, DoubleArray)
+
+
         return self.user_plot.SetXYPlotData(
-            coerce_optional_dispatch(x_value, "double_array"),
-            coerce_optional_dispatch(y_value, "double_array"),
+            check_and_coerce_optional(x_value, DoubleArray),
+            check_and_coerce_optional(y_value, DoubleArray),
         )
 
     def set_xy_plot_x_unit_name(self, unit_name: str) -> bool:
@@ -443,8 +437,8 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_highlight_data")
-        check_optional_type(values, DoubleArray)
-        return self.user_plot.SetHighlightData(coerce_optional_dispatch(values, "double_array"))
+
+        return self.user_plot.SetHighlightData(check_and_coerce_optional(values, DoubleArray))
 
     def build_weldline_plot(self, plot_name: str, max_angle: float, for_overmolding: bool) -> Plot:
         """

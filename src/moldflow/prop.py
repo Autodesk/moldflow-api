@@ -9,7 +9,7 @@ Usage:
 from .double_array import DoubleArray
 from .string_array import StringArray
 from .logger import process_log
-from .helper import check_type, check_optional_type, check_is_non_negative, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_and_coerce_optional, check_is_non_negative, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .common import LogMessage
 
@@ -209,8 +209,8 @@ class Property:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_field_values")
         check_type(field_id, int)
         check_is_non_negative(field_id)
-        check_optional_type(values, DoubleArray)
-        self.prop.SetFieldValues(field_id, coerce_optional_dispatch(values, "double_array"))
+
+        self.prop.SetFieldValues(field_id, check_and_coerce_optional(values, DoubleArray))
 
     def field_units(self, field_id: int) -> StringArray:
         """

@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, coerce_optional_dispatch
+from .helper import check_type, check_optional_type, check_and_coerce_optional, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .vector import Vector
 
@@ -85,8 +85,8 @@ class MoldSurfaceGenerator:
             value (Vector): The new origin of the mold surface.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="origin", value=value)
-        check_optional_type(value, Vector)
-        self.mold_surface_generator.Origin = coerce_optional_dispatch(value, "vector")
+
+        self.mold_surface_generator.Origin = check_and_coerce_optional(value, Vector)
 
     @property
     def dimensions(self) -> Vector:
@@ -112,8 +112,8 @@ class MoldSurfaceGenerator:
             value (Vector): The new dimensions of the mold surface.
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="dimensions", value=value)
-        check_optional_type(value, Vector)
-        self.mold_surface_generator.Dimensions = coerce_optional_dispatch(value, "vector")
+
+        self.mold_surface_generator.Dimensions = check_and_coerce_optional(value, Vector)
 
     @property
     def save_as_cad(self) -> bool:

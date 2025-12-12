@@ -52,8 +52,8 @@ class Modeler:
             int: The ID of the created node.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_node_by_xyz")
-        check_optional_type(coord, Vector)
-        result = self.modeler.CreateNodeByXYZ(coerce_optional_dispatch(coord, "vector"))
+
+        result = self.modeler.CreateNodeByXYZ(check_and_coerce_optional(coord, Vector))
         if result is None:
             return None
         return EntList(result)
@@ -73,13 +73,13 @@ class Modeler:
             EntList: The list of created nodes.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodes_between")
-        check_optional_type(start, Vector)
-        check_optional_type(end, Vector)
+
+
         check_type(num_nodes, int)
         check_is_positive(num_nodes)
         result = self.modeler.CreateNodesBetween(
-            coerce_optional_dispatch(start, "vector"),
-            coerce_optional_dispatch(end, "vector"),
+            check_and_coerce_optional(start, Vector),
+            check_and_coerce_optional(end, Vector),
             num_nodes,
         )
         if result is None:
@@ -101,13 +101,13 @@ class Modeler:
             EntList: The list of created nodes.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodes_by_offset")
-        check_optional_type(coord, Vector)
-        check_optional_type(offset, Vector)
+
+
         check_type(num_nodes, int)
         check_is_positive(num_nodes)
         result = self.modeler.CreateNodesByOffset(
-            coerce_optional_dispatch(coord, "vector"),
-            coerce_optional_dispatch(offset, "vector"),
+            check_and_coerce_optional(coord, Vector),
+            check_and_coerce_optional(offset, Vector),
             num_nodes,
         )
         if result is None:
@@ -127,12 +127,12 @@ class Modeler:
             EntList: The list of created nodes.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodes_by_divide")
-        check_optional_type(curve, EntList)
+
         check_type(num_nodes, int)
         check_is_positive(num_nodes)
         check_type(ends, bool)
         result = self.modeler.CreateNodesByDivide(
-            coerce_optional_dispatch(curve, "ent_list"), num_nodes, ends
+            check_and_coerce_optional(curve, EntList), num_nodes, ends
         )
         if result is None:
             return None
@@ -166,13 +166,11 @@ class Modeler:
             EntList: The list of created nodes.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_node_by_intersect")
-        check_optional_type(curve, EntList)
-        check_optional_type(curve2, EntList)
-        check_optional_type(pt, Vector)
+
         result = self.modeler.CreateNodeByIntersect(
-            coerce_optional_dispatch(curve, "ent_list"),
-            coerce_optional_dispatch(curve2, "ent_list"),
-            coerce_optional_dispatch(pt, "vector"),
+            check_and_coerce_optional(curve, EntList),
+            check_and_coerce_optional(curve2, EntList),
+            check_and_coerce_optional(pt, Vector),
         )
         if result is None:
             return None
@@ -202,15 +200,15 @@ class Modeler:
              EntList: The list of created lines.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_line")
-        check_optional_type(coord, Vector)
-        check_optional_type(vec, Vector)
+
+
         check_type(relative, bool)
-        check_optional_type(prop_set, Property)
+
         check_type(ends, bool)
-        prop_disp = coerce_optional_dispatch(prop_set, "prop")
+        prop_disp = check_and_coerce_optional(prop_set, Property)
         result = self.modeler.CreateLine(
-            coerce_optional_dispatch(coord, "vector"),
-            coerce_optional_dispatch(vec, "vector"),
+            check_and_coerce_optional(coord, Vector),
+            check_and_coerce_optional(vec, Vector),
             relative,
             prop_disp,
             ends,
@@ -244,19 +242,19 @@ class Modeler:
             EntList: The list of created arcs.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_arc_by_angle")
-        check_optional_type(center, Vector)
+
         check_type(radius, (int, float))
         check_is_positive(radius)
         check_type(start, (int, float))
         check_type(end, (int, float))
-        check_optional_type(prop_set, Property)
+
         check_type(ends, bool)
         result = self.modeler.CreateArcByAngle(
-            coerce_optional_dispatch(center, "vector"),
+            check_and_coerce_optional(center, Vector),
             radius,
             start,
             end,
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(prop_set, Property),
             ends,
         )
         if result is None:
@@ -289,18 +287,18 @@ class Modeler:
             EntList: The list of created arcs.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_arc_by_points")
-        check_optional_type(pt1, Vector)
-        check_optional_type(pt2, Vector)
-        check_optional_type(pt3, Vector)
+
+
+
         check_type(circle, bool)
-        check_optional_type(prop_set, Property)
+
         check_type(ends, bool)
         result = self.modeler.CreateArcByPoints(
-            coerce_optional_dispatch(pt1, "vector"),
-            coerce_optional_dispatch(pt2, "vector"),
-            coerce_optional_dispatch(pt3, "vector"),
+            check_and_coerce_optional(pt1, Vector),
+            check_and_coerce_optional(pt2, Vector),
+            check_and_coerce_optional(pt3, Vector),
             circle,
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(prop_set, Property),
             ends,
         )
         # pylint: disable=R0801
@@ -356,19 +354,19 @@ class Modeler:
             EntList: The list of created curves.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_curve_by_connect")
-        check_optional_type(curve1, EntList)
+
         end1 = get_enum_value(end1, CurveInitPosition)
-        check_optional_type(curve2, EntList)
+
         end2 = get_enum_value(end2, CurveInitPosition)
         check_type(factor, (int, float))
-        check_optional_type(prop_set, Property)
+
         result = self.modeler.CreateCurveByConnect(
-            coerce_optional_dispatch(curve1, "ent_list"),
+            check_and_coerce_optional(curve1, EntList),
             end1,
-            coerce_optional_dispatch(curve2, "ent_list"),
+            check_and_coerce_optional(curve2, EntList),
             end2,
             factor,
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(prop_set, Property),
         )
         if result is None:
             return None
@@ -389,12 +387,11 @@ class Modeler:
             EntList: The list of created splines.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_spline")
-        check_optional_type(coord, VectorArray)
-        check_optional_type(prop_set, Property)
+
         check_type(ends, bool)
         result = self.modeler.CreateSpline(
-            coerce_optional_dispatch(coord, "vector_array"),
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(coord, VectorArray),
+            check_and_coerce_optional(prop_set, Property),
             ends,
         )
         if result is None:
@@ -413,11 +410,11 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="break_curves")
-        check_optional_type(curve1, EntList)
-        check_optional_type(curve2, EntList)
+
+
         return self.modeler.BreakCurves(
-            coerce_optional_dispatch(curve1, "ent_list"),
-            coerce_optional_dispatch(curve2, "ent_list"),
+            check_and_coerce_optional(curve1, EntList),
+            check_and_coerce_optional(curve2, EntList),
         )
 
     def set_property(self, ents: EntList | None, prop_set: Property | None) -> bool:
@@ -432,10 +429,9 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_property")
-        check_optional_type(ents, EntList)
-        check_optional_type(prop_set, Property)
+
         return self.modeler.SetProperty(
-            coerce_optional_dispatch(ents, "ent_list"), coerce_optional_dispatch(prop_set, "prop")
+            check_and_coerce_optional(ents, EntList), check_and_coerce_optional(prop_set, Property)
         )
 
     def create_region_by_boundary(
@@ -452,10 +448,9 @@ class Modeler:
             EntList: The list of created regions.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_region_by_boundary")
-        check_optional_type(curve, EntList)
-        check_optional_type(prop_set, Property)
+
         result = self.modeler.CreateRegionByBoundary(
-            coerce_optional_dispatch(curve, "ent_list"), coerce_optional_dispatch(prop_set, "prop")
+            check_and_coerce_optional(curve, EntList), check_and_coerce_optional(prop_set, Property)
         )
         if result is None:
             return None
@@ -473,10 +468,9 @@ class Modeler:
             EntList: The list of created regions.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_region_by_nodes")
-        check_optional_type(nodes, EntList)
-        check_optional_type(prop_set, Property)
+
         result = self.modeler.CreateRegionByNodes(
-            coerce_optional_dispatch(nodes, "ent_list"), coerce_optional_dispatch(prop_set, "prop")
+            check_and_coerce_optional(nodes, EntList), check_and_coerce_optional(prop_set, Property)
         )
         if result is None:
             return None
@@ -497,13 +491,11 @@ class Modeler:
             EntList: The list of created regions.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_region_by_ruling")
-        check_optional_type(curve1, EntList)
-        check_optional_type(curve2, EntList)
-        check_optional_type(prop_set, Property)
+
         result = self.modeler.CreateRegionByRuling(
-            coerce_optional_dispatch(curve1, "ent_list"),
-            coerce_optional_dispatch(curve2, "ent_list"),
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(curve1, EntList),
+            check_and_coerce_optional(curve2, EntList),
+            check_and_coerce_optional(prop_set, Property),
         )
         if result is None:
             return None
@@ -524,13 +516,11 @@ class Modeler:
             EntList: The list of created regions.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_region_by_extrusion")
-        check_optional_type(curve, EntList)
-        check_optional_type(direction, Vector)
-        check_optional_type(prop_set, Property)
+
         result = self.modeler.CreateRegionByExtrusion(
-            coerce_optional_dispatch(curve, "ent_list"),
-            coerce_optional_dispatch(direction, "vector"),
-            coerce_optional_dispatch(prop_set, "prop"),
+            check_and_coerce_optional(curve, EntList),
+            check_and_coerce_optional(direction, Vector),
+            check_and_coerce_optional(prop_set, Property),
         )
         if result is None:
             return None
@@ -548,11 +538,11 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_boundary")
-        check_optional_type(region, EntList)
-        check_optional_type(curve, EntList)
+
+
         return self.modeler.CreateHoleByBoundary(
-            coerce_optional_dispatch(region, "ent_list"),
-            coerce_optional_dispatch(curve, "ent_list"),
+            check_and_coerce_optional(region, EntList),
+            check_and_coerce_optional(curve, EntList),
         )
 
     def create_hole_by_nodes(self, region: EntList | None, nodes: EntList | None) -> bool:
@@ -567,11 +557,11 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_nodes")
-        check_optional_type(region, EntList)
-        check_optional_type(nodes, EntList)
+
+
         return self.modeler.CreateHoleByNodes(
-            coerce_optional_dispatch(region, "ent_list"),
-            coerce_optional_dispatch(nodes, "ent_list"),
+            check_and_coerce_optional(region, EntList),
+            check_and_coerce_optional(nodes, EntList),
         )
 
     def create_hole_by_ruling(
@@ -589,13 +579,13 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_ruling")
-        check_optional_type(region, EntList)
-        check_optional_type(curve1, EntList)
-        check_optional_type(curve2, EntList)
+
+
+
         return self.modeler.CreateHoleByRuling(
-            coerce_optional_dispatch(region, "ent_list"),
-            coerce_optional_dispatch(curve1, "ent_list"),
-            coerce_optional_dispatch(curve2, "ent_list"),
+            check_and_coerce_optional(region, EntList),
+            check_and_coerce_optional(curve1, EntList),
+            check_and_coerce_optional(curve2, EntList),
         )
 
     def create_hole_by_extrusion(
@@ -613,13 +603,11 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_extrusion")
-        check_optional_type(region, EntList)
-        check_optional_type(curve, EntList)
-        check_optional_type(direction, Vector)
+
         return self.modeler.CreateHoleByExtrusion(
-            coerce_optional_dispatch(region, "ent_list"),
-            coerce_optional_dispatch(curve, "ent_list"),
-            coerce_optional_dispatch(direction, "vector"),
+            check_and_coerce_optional(region, EntList),
+            check_and_coerce_optional(curve, EntList),
+            check_and_coerce_optional(direction, Vector),
         )
 
     # pylint: disable=R0913, R0917
@@ -645,15 +633,14 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="reflect")
-        check_optional_type(ent, EntList)
-        check_optional_type(reference, Vector)
-        check_optional_type(plane, Vector)
+
+
         check_type(copy, bool)
         check_type(merge, bool)
         return self.modeler.Reflect(
-            coerce_optional_dispatch(ent, "ent_list"),
-            coerce_optional_dispatch(reference, "vector"),
-            coerce_optional_dispatch(plane, "vector"),
+            check_and_coerce_optional(ent, EntList),
+            check_and_coerce_optional(reference, Vector),
+            check_and_coerce_optional(plane, Vector),
             copy,
             merge,
         )
@@ -682,15 +669,14 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="scale")
-        check_optional_type(ent, EntList)
-        check_optional_type(reference, Vector)
-        check_optional_type(scale, Vector)
+
+
         check_type(copy, bool)
         check_type(merge, bool)
         return self.modeler.Scale(
-            coerce_optional_dispatch(ent, "ent_list"),
-            coerce_optional_dispatch(reference, "vector"),
-            coerce_optional_dispatch(scale, "vector"),
+            check_and_coerce_optional(ent, EntList),
+            check_and_coerce_optional(reference, Vector),
+            check_and_coerce_optional(scale, Vector),
             copy,
             merge,
         )
@@ -719,15 +705,14 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="translate")
-        check_optional_type(ent, EntList)
-        check_optional_type(translation, Vector)
+
         check_type(copy, bool)
         check_type(num_copies, int)
         check_is_non_negative(num_copies)
         check_type(merge, bool)
         return self.modeler.Translate(
-            coerce_optional_dispatch(ent, "ent_list"),
-            coerce_optional_dispatch(translation, "vector"),
+            check_and_coerce_optional(ent, EntList),
+            check_and_coerce_optional(translation, Vector),
             copy,
             num_copies,
             merge,
@@ -761,9 +746,8 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="rotate")
-        check_optional_type(ent, EntList)
-        check_optional_type(center, Vector)
-        check_optional_type(axis, Vector)
+
+
         check_type(angle, (int, float))
         check_is_non_negative(angle)
         check_type(copy, bool)
@@ -771,9 +755,9 @@ class Modeler:
         check_is_non_negative(num_copies)
         check_type(merge, bool)
         return self.modeler.Rotate(
-            coerce_optional_dispatch(ent, "ent_list"),
-            coerce_optional_dispatch(center, "vector"),
-            coerce_optional_dispatch(axis, "vector"),
+            check_and_coerce_optional(ent, EntList),
+            check_and_coerce_optional(center, Vector),
+            check_and_coerce_optional(axis, Vector),
             angle,
             copy,
             num_copies,
@@ -806,17 +790,16 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="rotate_3_pts")
-        check_optional_type(ents, EntList)
-        check_optional_type(pt1, Vector)
-        check_optional_type(pt2, Vector)
-        check_optional_type(pt3, Vector)
+
+
+
         check_type(copy, bool)
         check_type(merge, bool)
         return self.modeler.Rotate3Pts(
-            coerce_optional_dispatch(ents, "ent_list"),
-            coerce_optional_dispatch(pt1, "vector"),
-            coerce_optional_dispatch(pt2, "vector"),
-            coerce_optional_dispatch(pt3, "vector"),
+            check_and_coerce_optional(ents, EntList),
+            check_and_coerce_optional(pt1, Vector),
+            check_and_coerce_optional(pt2, Vector),
+            check_and_coerce_optional(pt3, Vector),
             copy,
             merge,
         )
@@ -836,13 +819,13 @@ class Modeler:
             EntList: The created local coordinate system.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_lcs_by_points")
-        check_optional_type(coord1, Vector)
-        check_optional_type(coord2, Vector)
-        check_optional_type(coord3, Vector)
+
+
+
         result = self.modeler.CreateLCSByPoints(
-            coerce_optional_dispatch(coord1, "vector"),
-            coerce_optional_dispatch(coord2, "vector"),
-            coerce_optional_dispatch(coord3, "vector"),
+            check_and_coerce_optional(coord1, Vector),
+            check_and_coerce_optional(coord2, Vector),
+            check_and_coerce_optional(coord3, Vector),
         )
         if result is None:
             return None
@@ -862,10 +845,10 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="activate_lcs")
-        check_optional_type(lcs, EntList)
+
         check_type(active, bool)
         lcs_type = get_enum_value(lcs_type, LCSType)
-        return self.modeler.ActivateLCS(coerce_optional_dispatch(lcs, "ent_list"), active, lcs_type)
+        return self.modeler.ActivateLCS(check_and_coerce_optional(lcs, EntList), active, lcs_type)
 
     def create_boundary_list(self) -> BoundaryList:
         """
@@ -907,19 +890,18 @@ class Modeler:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_mesh_size")
         check_type(global_size, (int, float))
         check_is_non_negative(global_size)
-        check_optional_type(ents, EntList)
-        check_optional_type(boundaries, BoundaryList)
+
         check_type(size, (int, float))
         check_is_positive(size)
-        check_optional_type(cad_bodies, EntList)
+
         check_type(num_layer, int)
         check_is_non_negative(num_layer)
         return self.modeler.SetMeshSize2(
             global_size,
-            coerce_optional_dispatch(ents, "ent_list"),
-            coerce_optional_dispatch(boundaries, "boundary_list"),
+            check_and_coerce_optional(ents, EntList),
+            check_and_coerce_optional(boundaries, BoundaryList),
             size,
-            coerce_optional_dispatch(cad_bodies, "ent_list"),
+            check_and_coerce_optional(cad_bodies, EntList),
             num_layer,
         )
 
@@ -938,13 +920,12 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="scale_mesh_density")
-        check_optional_type(ents, EntList)
-        check_optional_type(boundaries, BoundaryList)
+
         check_type(scale, (int, float))
         check_is_positive(scale)
         return self.modeler.ScaleMeshDensity(
-            coerce_optional_dispatch(ents, "ent_list"),
-            coerce_optional_dispatch(boundaries, "boundary_list"),
+            check_and_coerce_optional(ents, EntList),
+            check_and_coerce_optional(boundaries, BoundaryList),
             scale,
         )
 
@@ -961,8 +942,8 @@ class Modeler:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modified_with_inventor_fusion"
         )
-        check_optional_type(ents, EntList)
-        return self.modeler.ModifiedWithInventorFusion(coerce_optional_dispatch(ents, "ent_list"))
+
+        return self.modeler.ModifiedWithInventorFusion(check_and_coerce_optional(ents, EntList))
 
     def is_inventor_fusion_cad_edit_done(self, job_id: int) -> bool:
         """

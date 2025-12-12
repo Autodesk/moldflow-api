@@ -19,6 +19,7 @@ from moldflow.helper import (
     check_min_max,
     check_type,
     check_optional_type,
+    check_and_coerce_optional,
     check_range,
     check_expected_values,
     get_enum_value,
@@ -368,4 +369,60 @@ class TestHelper:
         """
         with pytest.raises(TypeError) as e:
             check_optional_type(value, types)
+        assert _("Invalid") in str(e.value)
+
+    @pytest.mark.parametrize("value", [None, 42, 3.14, "test"])
+    def test_check_and_coerce_optional_primitives(self, value, _, caplog):
+        """
+        Test check_and_coerce_optional with primitive types.
+        For primitives (int, float, str), the function should return the value as-is.
+        """
+        if value is None:
+            result = check_and_coerce_optional(value, int)
+            # For None, should return a VARIANT null dispatch
+            assert result is not None  # Returns a VARIANT object
+        elif isinstance(value, int):
+            result = check_and_coerce_optional(value, int)
+            assert result == value
+            assert _("Valid") in caplog.text
+        elif isinstance(value, float):
+            result = check_and_coerce_optional(value, float)
+            assert result == value
+            assert _("Valid") in caplog.text
+        elif isinstance(value, str):
+            result = check_and_coerce_optional(value, str)
+            assert result == value
+            assert _("Valid") in caplog.text
+
+    def test_check_and_coerce_optional_com_object(self, _):
+        """
+        Test check_and_coerce_optional with a mock COM object.
+        For COM objects, the function should unwrap the internal attribute.
+        """
+        # Create a mock COM object that mimics EntList
+        mock_ent_list = Mock()
+        mock_ent_list.__class__.__name__ = 'EntList'
+        mock_internal = Mock()
+        mock_ent_list.ent_list = mock_internal
+        
+        # The function should validate the type and return the internal attribute
+        result = check_and_coerce_optional(mock_ent_list, type(mock_ent_list))
+        assert result == mock_internal
+
+    def test_check_and_coerce_optional_none_com_object(self, _):
+        """
+        Test check_and_coerce_optional with None for a COM object type.
+        Should return a VARIANT null dispatch.
+        """
+        mock_type = type('EntList', (), {})
+        result = check_and_coerce_optional(None, mock_type)
+        # Should return a VARIANT object, not None
+        assert result is not None
+
+    def test_check_and_coerce_optional_invalid_type(self, _):
+        """
+        Test check_and_coerce_optional with invalid type.
+        """
+        with pytest.raises(TypeError) as e:
+            check_and_coerce_optional("string", int)
         assert _("Invalid") in str(e.value)

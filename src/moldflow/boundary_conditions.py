@@ -8,7 +8,7 @@ Usage:
 
 from .helper import coerce_optional_dispatch
 from .common import LogMessage, AnalysisType, ConstraintType
-from .helper import check_type, check_optional_type, get_enum_value
+from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value
 from .com_proxy import safe_com
 from .logger import process_log
 from .ent_list import EntList
@@ -76,10 +76,10 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_fixed_constraints")
-        check_optional_type(nodes, EntList)
+
         analysis = get_enum_value(analysis, AnalysisType)
         return self.boundary_conditions.CreateFixedConstraints(
-            coerce_optional_dispatch(nodes, "ent_list"), analysis
+            check_and_coerce_optional(nodes, EntList), analysis
         )
 
     def create_core_shift_fixed_constraints(
@@ -96,10 +96,10 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_fixed_constraints")
-        check_optional_type(nodes, EntList)
+
         check_type(retract_time, (float, int))
         return self.boundary_conditions.CreateFixedConstraints2(
-            coerce_optional_dispatch(nodes, "ent_list"), retract_time
+            check_and_coerce_optional(nodes, EntList), retract_time
         )
 
     def create_pin_constraints(self, nodes: EntList | None, analysis: AnalysisType | int) -> int:
@@ -114,10 +114,10 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_pin_constraints")
-        check_optional_type(nodes, EntList)
+
         analysis = get_enum_value(analysis, AnalysisType)
         return self.boundary_conditions.CreatePinConstraints(
-            coerce_optional_dispatch(nodes, "ent_list"), analysis
+            check_and_coerce_optional(nodes, EntList), analysis
         )
 
     def create_core_shift_pin_constraints(
@@ -134,10 +134,10 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_pin_constraints")
-        check_optional_type(nodes, EntList)
+
         check_type(retract_time, (float, int))
         return self.boundary_conditions.CreatePinConstraints2(
-            coerce_optional_dispatch(nodes, "ent_list"), retract_time
+            check_and_coerce_optional(nodes, EntList), retract_time
         )
 
     # pylint: disable-next=R0913,R0917
@@ -161,15 +161,15 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_spring_constraints")
-        check_optional_type(nodes, EntList)
+
         analysis = get_enum_value(analysis, AnalysisType)
-        check_optional_type(trans, Vector)
-        check_optional_type(rotation, Vector)
+
+
         return self.boundary_conditions.CreateSpringConstraints(
-            coerce_optional_dispatch(nodes, "ent_list"),
+            check_and_coerce_optional(nodes, EntList),
             analysis,
-            coerce_optional_dispatch(trans, "vector"),
-            coerce_optional_dispatch(rotation, "vector"),
+            check_and_coerce_optional(trans, Vector),
+            check_and_coerce_optional(rotation, Vector),
         )
 
     # pylint: disable-next=R0913,R0917
@@ -193,14 +193,13 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_spring_constraints")
-        check_optional_type(nodes, EntList)
-        check_optional_type(trans, Vector)
-        check_optional_type(rotation, Vector)
+
+
         check_type(retract_time, (float, int))
         return self.boundary_conditions.CreateSpringConstraints2(
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(trans, "vector"),
-            coerce_optional_dispatch(rotation, "vector"),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(trans, Vector),
+            check_and_coerce_optional(rotation, Vector),
             retract_time,
         )
 
@@ -229,22 +228,21 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_general_constraints")
-        check_optional_type(nodes, EntList)
-        check_optional_type(trans, Vector)
-        check_optional_type(rotation, Vector)
-        check_optional_type(trans_types, Vector)
-        check_optional_type(rotation_types, Vector)
+
+
+
+
         analysis = get_enum_value(analysis, AnalysisType)
         trans_types = self._check_vector(trans_types)
         rotation_types = self._check_vector(rotation_types)
 
         return self.boundary_conditions.CreateGeneralConstraints2(
-            coerce_optional_dispatch(nodes, "ent_list"),
+            check_and_coerce_optional(nodes, EntList),
             analysis,
-            coerce_optional_dispatch(trans, "vector"),
-            coerce_optional_dispatch(rotation, "vector"),
-            coerce_optional_dispatch(trans_types, "vector"),
-            coerce_optional_dispatch(rotation_types, "vector"),
+            check_and_coerce_optional(trans, Vector),
+            check_and_coerce_optional(rotation, Vector),
+            check_and_coerce_optional(trans_types, Vector),
+            check_and_coerce_optional(rotation_types, Vector),
         )
 
     # pylint: disable-next=R0913,R0917
@@ -277,20 +275,19 @@ class BoundaryConditions:
             locals(),
             name="create_core_shift_general_constraints",
         )
-        check_optional_type(nodes, EntList)
-        check_optional_type(trans, Vector)
-        check_optional_type(rotation, Vector)
-        check_optional_type(trans_types, Vector)
-        check_optional_type(rotation_types, Vector)
+
+
+
+
         check_type(retract_time, (int, float))
         trans_types = self._check_vector(trans_types)
         rotation_types = self._check_vector(rotation_types)
         return self.boundary_conditions.CreateGeneralConstraints3(
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(trans, "vector"),
-            coerce_optional_dispatch(rotation, "vector"),
-            coerce_optional_dispatch(trans_types, "vector"),
-            coerce_optional_dispatch(rotation_types, "vector"),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(trans, Vector),
+            check_and_coerce_optional(rotation, Vector),
+            check_and_coerce_optional(trans_types, Vector),
+            check_and_coerce_optional(rotation_types, Vector),
             retract_time,
         )
 
@@ -309,13 +306,12 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodal_loads")
-        check_optional_type(nodes, EntList)
-        check_optional_type(force, Vector)
-        check_optional_type(moment, Vector)
+
+
         return self.boundary_conditions.CreateNodalLoads(
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(force, "vector"),
-            coerce_optional_dispatch(moment, "vector"),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(force, Vector),
+            check_and_coerce_optional(moment, Vector),
         )
 
     def create_edge_loads(self, nodes: EntList | None, force: Vector | None) -> int:
@@ -330,10 +326,9 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_edge_loads")
-        check_optional_type(nodes, EntList)
-        check_optional_type(force, Vector)
+
         return self.boundary_conditions.CreateEdgeLoads(
-            coerce_optional_dispatch(nodes, "ent_list"), coerce_optional_dispatch(force, "vector")
+            check_and_coerce_optional(nodes, EntList), check_and_coerce_optional(force, Vector)
         )
 
     def create_elemental_loads(self, tri: EntList | None, force: Vector | None) -> int:
@@ -348,10 +343,9 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_elemental_loads")
-        check_optional_type(tri, EntList)
-        check_optional_type(force, Vector)
+
         return self.boundary_conditions.CreateElementalLoads(
-            coerce_optional_dispatch(tri, "ent_list"), coerce_optional_dispatch(force, "vector")
+            check_and_coerce_optional(tri, EntList), check_and_coerce_optional(force, Vector)
         )
 
     def create_pressure_loads(self, tri: EntList | None, pressure: float) -> int:
@@ -366,10 +360,10 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_pressure_loads")
-        check_optional_type(tri, EntList)
+
         check_type(pressure, (float, int))
         return self.boundary_conditions.CreatePressureLoads(
-            coerce_optional_dispatch(tri, "ent_list"), pressure
+            check_and_coerce_optional(tri, EntList), pressure
         )
 
     def create_temperature_loads(self, tri: EntList | None, top: float, bottom: float) -> int:
@@ -385,11 +379,11 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_temperature_loads")
-        check_optional_type(tri, EntList)
+
         check_type(top, (float, int))
         check_type(bottom, (float, int))
         return self.boundary_conditions.CreateTemperatureLoads(
-            coerce_optional_dispatch(tri, "ent_list"), top, bottom
+            check_and_coerce_optional(tri, EntList), top, bottom
         )
 
     def create_volume_loads(self, tri: EntList | None, force: Vector | None) -> int:
@@ -404,10 +398,9 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_volume_loads")
-        check_optional_type(tri, EntList)
-        check_optional_type(force, Vector)
+
         return self.boundary_conditions.CreateVolumeLoads(
-            coerce_optional_dispatch(tri, "ent_list"), coerce_optional_dispatch(force, "vector")
+            check_and_coerce_optional(tri, EntList), check_and_coerce_optional(force, Vector)
         )
 
     def create_critical_dimension(
@@ -426,13 +419,13 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_critical_dimension")
-        check_optional_type(node1, EntList)
-        check_optional_type(node2, EntList)
+
+
         check_type(upper, (float, int))
         check_type(lower, (float, int))
         return self.boundary_conditions.CreateCriticalDimension(
-            coerce_optional_dispatch(node1, "ent_list"),
-            coerce_optional_dispatch(node2, "ent_list"),
+            check_and_coerce_optional(node1, EntList),
+            check_and_coerce_optional(node2, EntList),
             upper,
             lower,
         )
@@ -454,12 +447,12 @@ class BoundaryConditions:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="create_doe_critical_dimension"
         )
-        check_optional_type(node1, EntList)
-        check_optional_type(node2, EntList)
+
+
         check_type(name, str)
         return self.boundary_conditions.CreateDoeCriticalDimension(
-            coerce_optional_dispatch(node1, "ent_list"),
-            coerce_optional_dispatch(node2, "ent_list"),
+            check_and_coerce_optional(node1, EntList),
+            check_and_coerce_optional(node2, EntList),
             name,
         )
 
@@ -481,14 +474,13 @@ class BoundaryConditions:
             EntList: The list of NDBC that were created.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_ndbc")
-        check_optional_type(nodes, EntList)
-        check_optional_type(normal, Vector)
+
         check_type(prop_type, int)
-        check_optional_type(prop, Property)
-        prop_disp = coerce_optional_dispatch(prop, "prop")
+
+        prop_disp = check_and_coerce_optional(prop, Property)
         result = self.boundary_conditions.CreateNDBC(
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(normal, "vector"),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(normal, Vector),
             prop_type,
             prop_disp,
         )
@@ -514,14 +506,14 @@ class BoundaryConditions:
             EntList: The list of NDBC that were created.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_ndbc_at_xyz")
-        check_optional_type(coord, Vector)
-        check_optional_type(normal, Vector)
+
+
         check_type(prop_type, int)
-        check_optional_type(prop, Property)
-        prop_disp = coerce_optional_dispatch(prop, "prop")
+
+        prop_disp = check_and_coerce_optional(prop, Property)
         result = self.boundary_conditions.CreateNDBCAtXYZ(
-            coerce_optional_dispatch(coord, "vector"),
-            coerce_optional_dispatch(normal, "vector"),
+            check_and_coerce_optional(coord, Vector),
+            check_and_coerce_optional(normal, Vector),
             prop_type,
             prop_disp,
         )
@@ -542,13 +534,11 @@ class BoundaryConditions:
             bool: True if the NDBC was moved successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_ndbc")
-        check_optional_type(ndbc, EntList)
-        check_optional_type(nodes, EntList)
-        check_optional_type(normal, Vector)
+
         return self.boundary_conditions.MoveNDBC(
-            coerce_optional_dispatch(ndbc, "ent_list"),
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(normal, "vector"),
+            check_and_coerce_optional(ndbc, EntList),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(normal, Vector),
         )
 
     def move_ndbc_to_xyz(
@@ -566,13 +556,12 @@ class BoundaryConditions:
             bool: True if successful; False if not
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_ndbc_to_xyz")
-        check_optional_type(ndbc, EntList)
-        check_optional_type(coord, Vector)
-        check_optional_type(normal, Vector)
+
+
         return self.boundary_conditions.MoveNDBCToXYZ(
-            coerce_optional_dispatch(ndbc, "ent_list"),
-            coerce_optional_dispatch(coord, "vector"),
-            coerce_optional_dispatch(normal, "vector"),
+            check_and_coerce_optional(ndbc, EntList),
+            check_and_coerce_optional(coord, Vector),
+            check_and_coerce_optional(normal, Vector),
         )
 
     def find_property(self, prop_type: int, prop_id: int) -> Property:
@@ -606,10 +595,10 @@ class BoundaryConditions:
             int : Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_prohibited_gate_nodes")
-        check_optional_type(nodes, EntList)
+
         analysis = get_enum_value(analysis, AnalysisType)
         return self.boundary_conditions.SetProhibitedGateNodes(
-            coerce_optional_dispatch(nodes, "ent_list"), analysis
+            check_and_coerce_optional(nodes, EntList), analysis
         )
 
     # pylint: disable-next=R0913,R0917
@@ -638,29 +627,28 @@ class BoundaryConditions:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="create_one_sided_constraints"
         )
-        check_optional_type(nodes, EntList)
-        check_optional_type(positive_trans, Vector)
-        check_optional_type(negative_trans, Vector)
-        check_optional_type(positive_trans_types, Vector)
-        check_optional_type(negative_trans_types, Vector)
+
+
+
+
         if retract_time != 0:
             check_type(retract_time, (float, int))
             positive_trans_types = self._check_vector(positive_trans_types)
             negative_trans_types = self._check_vector(negative_trans_types)
             return self.boundary_conditions.CreateOneSidedConstraints2(
-                coerce_optional_dispatch(nodes, "ent_list"),
-                coerce_optional_dispatch(positive_trans, "vector"),
-                coerce_optional_dispatch(negative_trans, "vector"),
-                coerce_optional_dispatch(positive_trans_types, "vector"),
-                coerce_optional_dispatch(negative_trans_types, "vector"),
+                check_and_coerce_optional(nodes, EntList),
+                check_and_coerce_optional(positive_trans, Vector),
+                check_and_coerce_optional(negative_trans, Vector),
+                check_and_coerce_optional(positive_trans_types, Vector),
+                check_and_coerce_optional(negative_trans_types, Vector),
                 retract_time,
             )
         positive_trans_types = self._check_vector(positive_trans_types)
         negative_trans_types = self._check_vector(negative_trans_types)
         return self.boundary_conditions.CreateOneSidedConstraints(
-            coerce_optional_dispatch(nodes, "ent_list"),
-            coerce_optional_dispatch(positive_trans, "vector"),
-            coerce_optional_dispatch(negative_trans, "vector"),
-            coerce_optional_dispatch(positive_trans_types, "vector"),
-            coerce_optional_dispatch(negative_trans_types, "vector"),
+            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(positive_trans, Vector),
+            check_and_coerce_optional(negative_trans, Vector),
+            check_and_coerce_optional(positive_trans_types, Vector),
+            check_and_coerce_optional(negative_trans_types, Vector),
         )
