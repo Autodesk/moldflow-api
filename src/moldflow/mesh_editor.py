@@ -742,6 +742,7 @@ class MeshEditor:
         check_type(is_angular, bool)
         check_type(mesh, bool)
         check_optional_type(prop, Property)
+        if prop is not None:
             return self.mesh_editor.MakeRegion2(
                 tol, is_angular, mesh, coerce_optional_dispatch(prop, "prop")
             )
