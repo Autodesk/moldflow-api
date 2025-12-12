@@ -11,7 +11,7 @@ Moldflow API is a Python wrapper library for the Synergy API, designed to simpli
 
 Before you begin, ensure you have:
 - Windows 10/11
-- Python 3.10.x - 3.13.x
+- Python 3.10.x - 3.14.x
 - Autodesk Moldflow Synergy 2026.0.1 or later
 
 ## Install
