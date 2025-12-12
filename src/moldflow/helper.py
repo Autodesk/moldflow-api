@@ -45,13 +45,13 @@ def get_enum_value(value, enum: Enum):
     return value
 
 
-def check_type(value, types: tuple):
+def check_type(value, types: tuple | type):
     """
     Check if the value is of the specified type(s).
 
     Args:
         value: The value to check.
-        types (tuple): A tuple of types to check against.
+        types (tuple | type): A tuple of types to check against, or a single type.
 
     Returns:
         bool: True if the value is of the specified type(s), otherwise raises a TypeError.
@@ -76,7 +76,7 @@ def check_type(value, types: tuple):
     process_log(__name__, LogMessage.VALID_INPUT)
 
 
-def check_optional_type(value, types: tuple):
+def check_optional_type(value, types: tuple | type):
     """
     Check if the value is of the specified type(s) or None.
 
@@ -85,7 +85,7 @@ def check_optional_type(value, types: tuple):
 
     Args:
         value: The value to check. Can be None or of the specified type(s).
-        types (tuple): A tuple of types to check against (excluding None).
+        types (tuple | type): A tuple of types to check against, or a single type (excluding None).
 
     Returns:
         bool: True if the value is None or of the specified type(s), otherwise raises a TypeError.
