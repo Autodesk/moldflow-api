@@ -393,15 +393,6 @@ class TriClassification(Enum):
     PRESERVE_ALL = 2
 
 
-class GradingFactor(Enum):
-    """
-    Enum for GradingFactor
-    """
-
-    SLOW = 0
-    FAST = 1
-
-
 class GeomType(Enum):
     """
     Enum for GeomType
