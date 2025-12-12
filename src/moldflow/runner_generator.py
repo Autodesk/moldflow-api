@@ -11,7 +11,6 @@ from .helper import check_type
 from .com_proxy import safe_com
 from .common import LogMessage
 
-
 class RunnerGenerator:
     """
     Wrapper for RunnerGenerator class of Moldflow Synergy.

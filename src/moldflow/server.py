@@ -10,7 +10,6 @@ from .logger import process_log
 from .common import LogMessage
 from .com_proxy import safe_com
 
-
 class Server:
     """
     Wrapper for Server class of Moldflow Synergy.

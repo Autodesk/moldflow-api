@@ -8,7 +8,6 @@ from .i18n import get_text
 from .common import ValueErrorReason, ErrorMessage
 from .exceptions import SaveError, SynergyError
 
-
 def raise_type_error(variable, types: tuple | str) -> NoReturn:
     """
     Raise a TypeError if the variable is not an instance of the specified type(s).
@@ -33,7 +32,6 @@ def raise_type_error(variable, types: tuple | str) -> NoReturn:
     )
     raise TypeError(localised_err_msg)
 
-
 def raise_value_error(reason: ValueErrorReason | str, **kwargs) -> NoReturn:
     """
     Raise a ValueError with a custom error message.
@@ -53,7 +51,6 @@ def raise_value_error(reason: ValueErrorReason | str, **kwargs) -> NoReturn:
     localised_err_msg = _(err_msg).format(reason=localised_reason)
     raise ValueError(localised_err_msg)
 
-
 def raise_index_error() -> NoReturn:
     """
     Raise an IndexError if the index is out of range.
@@ -65,11 +62,9 @@ def raise_index_error() -> NoReturn:
     err_msg = ErrorMessage.INDEX_ERROR.value
     raise IndexError(_(err_msg))
 
-
 def raise_save_error(saving: str, file_name: str) -> NoReturn:
     """
     Raise a SaveError if the save operation fails.
-
 
     Args:
         saving (str): The operation that failed.
@@ -83,7 +78,6 @@ def raise_save_error(saving: str, file_name: str) -> NoReturn:
     localised_err_msg = _(err_msg).format(saving=saving, file_name=file_name)
     raise SaveError(localised_err_msg)
 
-
 def raise_attribute_error(attribute: str) -> NoReturn:
     """Raise an AttributeError with a localised custom error message.
 
@@ -94,7 +88,6 @@ def raise_attribute_error(attribute: str) -> NoReturn:
     err_msg = ErrorMessage.ATTRIBUTE_ERROR.value
     localised_err_msg = _(err_msg).format(attribute=attribute)
     raise AttributeError(localised_err_msg)
-
 
 def raise_synergy_error() -> NoReturn:
     """

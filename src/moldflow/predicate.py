@@ -10,7 +10,6 @@ from .logger import process_log
 from .common import LogMessage
 from .com_proxy import safe_com, expose_oleobj
 
-
 class Predicate:
     """
     Wrapper for Predicate class of Moldflow Synergy.

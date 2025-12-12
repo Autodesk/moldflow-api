@@ -51,7 +51,6 @@ from .vector import Vector
 from .ent_list import EntList
 from .errors import raise_save_error
 
-
 class Plot:
     """
     Wrapper for Plot class of Moldflow Synergy.
@@ -1382,7 +1381,6 @@ class Plot:
         check_type(index, int)
         check_is_non_negative(index)
 
-
         return self.plot.GetProbePlotProbeLine(
             index,
             check_and_coerce_optional(start_pt, Vector),
@@ -1401,7 +1399,6 @@ class Plot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_probe_plot_probe_line")
-
 
         return self.plot.AddProbePlotProbeLine(
             check_and_coerce_optional(start_pt, Vector), check_and_coerce_optional(end_pt, Vector)
@@ -1424,7 +1421,6 @@ class Plot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_probe_plot_probe_line")
         check_type(index, int)
         check_is_non_negative(index)
-
 
         return self.plot.SetProbePlotProbeLine(
             index,

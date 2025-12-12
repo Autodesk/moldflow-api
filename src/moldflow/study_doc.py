@@ -24,7 +24,6 @@ from .constants import UDM_FILE_EXT
 from .vector import Vector
 from .string_array import StringArray
 
-
 class StudyDoc:
     """
     Wrapper for StudyDoc class of Moldflow Synergy.

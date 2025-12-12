@@ -11,7 +11,6 @@ from .helper import check_type
 from .com_proxy import flag_com_method, safe_com
 from .common import LogMessage
 
-
 class DoubleArray:
     """
     Wrapper for DoubleArray class of Moldflow Synergy.

@@ -13,7 +13,6 @@ from .helper import check_type, check_optional_type, check_and_coerce_optional, 
 from .com_proxy import safe_com
 from .common import LogMessage
 
-
 class MaterialFinder:
     """
     Wrapper for MaterialFinder class of Moldflow Synergy.

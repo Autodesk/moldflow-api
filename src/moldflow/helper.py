@@ -13,7 +13,6 @@ from .errors import raise_type_error, raise_value_error, raise_index_error
 from .common import ValueErrorReason, LogMessage
 from .logger import process_log
 
-
 def get_enum_value(value, enum: Enum):
     """
     Check if the value is part of the given enum class.
@@ -43,7 +42,6 @@ def get_enum_value(value, enum: Enum):
 
     process_log(__name__, LogMessage.VALUE_NOT_IN_ENUM, locals(), value=value, enum_name=enum_name)
     return value
-
 
 def check_type(value, types: tuple | type):
     """
@@ -75,7 +73,6 @@ def check_type(value, types: tuple | type):
         raise_type_error(value, types)
     process_log(__name__, LogMessage.VALID_INPUT)
 
-
 def check_optional_type(value, types: tuple | type):
     """
     Check if the value is of the specified type(s) or None.
@@ -103,7 +100,6 @@ def check_optional_type(value, types: tuple | type):
         return
     check_type(value, types)
 
-
 def _compare(value1, value2, inclusive):
     """
     Compare two values
@@ -121,7 +117,6 @@ def _compare(value1, value2, inclusive):
     if value2 > value1:
         return True
     return inclusive and value1 == value2
-
 
 def check_range(
     value: float,
@@ -182,7 +177,6 @@ def check_range(
         raise_value_error(reason, **reason_format)
     process_log(__name__, LogMessage.VALID_INPUT)
 
-
 def check_is_non_negative(value: float):
     """
     Check if the value is non-negative.
@@ -196,7 +190,6 @@ def check_is_non_negative(value: float):
     if value < 0:
         raise_value_error(ValueErrorReason.NON_NEGATIVE, value=value)
     process_log(__name__, LogMessage.VALID_INPUT)
-
 
 def check_is_positive(value: float):
     """
@@ -212,7 +205,6 @@ def check_is_positive(value: float):
         raise_value_error(ValueErrorReason.POSITIVE, value=value)
     process_log(__name__, LogMessage.VALID_INPUT)
 
-
 def check_is_negative(value: float):
     """
     Check if the value is negative.
@@ -227,7 +219,6 @@ def check_is_negative(value: float):
         raise_value_error(ValueErrorReason.NEGATIVE, value=value)
     process_log(__name__, LogMessage.VALID_INPUT)
 
-
 def check_is_non_zero(value: float):
     """
     Check if the value is non-zero.
@@ -241,7 +232,6 @@ def check_is_non_zero(value: float):
     if value == 0:
         raise_value_error(ValueErrorReason.NON_ZERO, value=value)
     process_log(__name__, LogMessage.VALID_INPUT)
-
 
 def check_index(index: int, min_value: int, max_value: int):
     """
@@ -261,7 +251,6 @@ def check_index(index: int, min_value: int, max_value: int):
     if index < min_value or index >= max_value:
         raise_index_error()
     process_log(__name__, LogMessage.VALID_INPUT)
-
 
 def check_file_extension(file_name: str, extensions: tuple | str):
     """
@@ -290,7 +279,6 @@ def check_file_extension(file_name: str, extensions: tuple | str):
         file_name = file_name + default
     return file_name
 
-
 def check_expected_values(value, expected_values: tuple):
     """
     Check if the value is in the expected values.
@@ -307,7 +295,6 @@ def check_expected_values(value, expected_values: tuple):
         raise_value_error(
             ValueErrorReason.INVALID_VALUE, value=value, expected_values=expected_values
         )
-
 
 def check_min_max(min_value: float, max_value: float):
     """
@@ -326,7 +313,6 @@ def check_min_max(min_value: float, max_value: float):
             ValueErrorReason.MIN_MORE_THAN_MAX, min_value=min_value, max_value=max_value
         )
 
-
 def _mf_array_to_list(array_instance):
     """
     Generic helper function to convert any array instance to a list.
@@ -339,11 +325,9 @@ def _mf_array_to_list(array_instance):
     """
     return [array_instance.val(i) for i in range(array_instance.size)]
 
-
 def variant_null_idispatch():
     """Return a VARIANT representing a null IDispatch pointer (VT_DISPATCH, None)."""
     return VARIANT(pythoncom.VT_DISPATCH, None)
-
 
 def coerce_optional_dispatch(value, attr_name: str | None = None):
     """
@@ -366,7 +350,6 @@ def coerce_optional_dispatch(value, attr_name: str | None = None):
         value = getattr(value, attr_name)
     return value
 
-
 # Type to attribute name mapping for COM objects
 _TYPE_TO_ATTR_MAP = {
     'EntList': 'ent_list',
@@ -379,7 +362,6 @@ _TYPE_TO_ATTR_MAP = {
     'VectorArray': 'vector_array',
     'StringArray': 'string_array',
 }
-
 
 def check_and_coerce_optional(value, expected_type: type):
     """

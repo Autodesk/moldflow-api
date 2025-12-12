@@ -13,7 +13,6 @@ from .common import TransformFunctions, TransformOperations, TransformScalarOper
 from .integer_array import IntegerArray
 from .double_array import DoubleArray
 
-
 class DataTransform:
     """
     Wrapper for DataTransform class of Moldflow Synergy.

@@ -38,7 +38,6 @@ from .common import ValueErrorReason
 from .plot import Plot
 from .vector import Vector
 
-
 class Viewer:
     """
     Wrapper for Viewer class of Moldflow Synergy.
@@ -77,7 +76,6 @@ class Viewer:
             up_view (Vector | None): The up view vector.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="reset_view")
-
 
         self.viewer.ResetView(
             check_and_coerce_optional(normal_view, Vector),
@@ -477,9 +475,6 @@ class Viewer:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_bookmark")
         check_type(name, str)
-
-
-
 
         check_type(clipping_range_min, (int, float))
         check_is_non_negative(clipping_range_min)

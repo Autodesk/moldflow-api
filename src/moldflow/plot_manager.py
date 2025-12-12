@@ -21,7 +21,6 @@ from .com_proxy import safe_com
 from .errors import raise_save_error
 from .constants import XML_FILE_EXT, SDZ_FILE_EXT, FBX_FILE_EXT, ELE_FILE_EXT
 
-
 class PlotManager:
     """
     Wrapper for PlotManager class of Moldflow Synergy.
@@ -242,8 +241,6 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_vector_data")
         check_type(ds_id, int)
 
-
-
         return self.plot_manager.GetVectorData(
             ds_id,
             check_and_coerce_optional(indp_values, DoubleArray),
@@ -286,11 +283,6 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_tensor_data")
         check_type(ds_id, int)
 
-
-
-
-
-
         return self.plot_manager.GetTensorData(
             ds_id,
             check_and_coerce_optional(indp_values, DoubleArray),
@@ -320,7 +312,6 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_non_mesh_data")
         check_type(ds_id, int)
 
-
         return self.plot_manager.GetNonmeshData(
             ds_id,
             check_and_coerce_optional(indp_values, DoubleArray),
@@ -343,7 +334,6 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_highlight_data")
         check_type(ds_id, int)
-
 
         return self.plot_manager.GetHighlightData(
             ds_id,
@@ -929,7 +919,6 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="fbx_export")
         check_type(file_name, str)
         file_name = check_file_extension(file_name, FBX_FILE_EXT)
-
 
         check_type(export_type, int)
         check_type(wp_scale_factor, (float, int))

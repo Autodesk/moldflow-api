@@ -16,7 +16,6 @@ from .prop import Property
 from .helper import check_type, check_optional_type, check_and_coerce_optional, check_range, check_is_non_negative, coerce_optional_dispatch
 from .com_proxy import safe_com
 
-
 class MeshEditor:
     """
     Wrapper for MeshEditor class of Moldflow Synergy.
@@ -81,7 +80,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="swap_edges")
 
-
         check_type(feat_allow, bool)
         return self.mesh_editor.SwapEdge(
             check_and_coerce_optional(tri1, EntList),
@@ -119,7 +117,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node")
 
-
         result = self.mesh_editor.InsertNode(
             check_and_coerce_optional(node1, EntList), check_and_coerce_optional(node2, EntList)
         )
@@ -151,7 +148,6 @@ class MeshEditor:
             if result is None:
                 return None
             return EntList(result)
-
 
         result = self.mesh_editor.InsertNodeInTri(
             check_and_coerce_optional(node1, EntList),
@@ -193,8 +189,6 @@ class MeshEditor:
                 return None
             return EntList(result)
 
-
-
         result = self.mesh_editor.InsertNodeInTetByNodes(
             check_and_coerce_optional(node1, EntList),
             check_and_coerce_optional(node2, EntList),
@@ -228,9 +222,6 @@ class MeshEditor:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="insert_node_in_tet_by_nodes"
         )
-
-
-
 
         result = self.mesh_editor.InsertNodeInTetByNodes(
             check_and_coerce_optional(node1, EntList),
@@ -300,8 +291,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="align_nodes")
 
-
-
         return self.mesh_editor.AlignNodes(
             check_and_coerce_optional(node1, EntList),
             check_and_coerce_optional(node2, EntList),
@@ -366,7 +355,6 @@ class MeshEditor:
             Number of triangles whose normals were aligned
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="align_normals")
-
 
         return self.mesh_editor.AlignNormals(
             check_and_coerce_optional(seed_tri, EntList),
@@ -602,7 +590,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_beams")
 
-
         check_type(num_beams, int)
         check_is_non_negative(num_beams)
 
@@ -696,7 +683,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="match_notes")
 
-
         check_type(layer, str)
         return self.mesh_editor.MatchNodes(
             check_and_coerce_optional(nodes, EntList),
@@ -771,8 +757,6 @@ class MeshEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_node_to_edge")
 
-
-
         check_type(param_loc, (int, float))
         check_range(param_loc, 0.0, 1.0, True, True)
         return self.mesh_editor.MoveNodeToEdge(
@@ -798,7 +782,6 @@ class MeshEditor:
             The new beam.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_beams_by_points")
-
 
         check_type(num, int)
         check_is_non_negative(num)
@@ -904,7 +887,6 @@ class MeshEditor:
             True if operation is successful; False otherwise
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="cut_triangles_by_plane")
-
 
         check_type(fill, bool)
         check_type(smooth, bool)
@@ -1060,7 +1042,6 @@ class MeshEditor:
             number of nodes merged
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="merge_nodes")
-
 
         check_type(fusion, bool)
         check_type(use_mid, bool)

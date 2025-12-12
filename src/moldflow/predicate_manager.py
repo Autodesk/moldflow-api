@@ -13,7 +13,6 @@ from .helper import check_type, check_optional_type, check_and_coerce_optional, 
 from .com_proxy import safe_com
 from .logger import process_log
 
-
 class PredicateManager:
     """
     Wrapper for PredicateManager class of Moldflow Synergy.
@@ -118,7 +117,6 @@ class PredicateManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_and_predicate")
 
-
         result = self.predicate_manager.CreateBoolAndPredicate(
             check_and_coerce_optional(predicate1, Predicate),
             check_and_coerce_optional(predicate2, Predicate),
@@ -143,7 +141,6 @@ class PredicateManager:
             Predicate: The created OR predicate
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_or_predicate")
-
 
         result = self.predicate_manager.CreateBoolOrPredicate(
             check_and_coerce_optional(predicate1, Predicate),
@@ -189,7 +186,6 @@ class PredicateManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_bool_xor_predicate")
 
-
         result = self.predicate_manager.CreateBoolXorPredicate(
             check_and_coerce_optional(predicate1, Predicate),
             check_and_coerce_optional(predicate2, Predicate),
@@ -234,7 +230,6 @@ class PredicateManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_x_section_predicate")
         cross_section = get_enum_value(cross_section, CrossSectionType)
-
 
         result = self.predicate_manager.CreateXSectionPredicate(
             cross_section,

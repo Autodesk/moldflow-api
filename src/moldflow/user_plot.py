@@ -21,7 +21,6 @@ from .integer_array import IntegerArray
 from .double_array import DoubleArray
 from .plot import Plot
 
-
 class UserPlot:
     """
     Wrapper for UserPlot class of Moldflow Synergy.
@@ -155,8 +154,6 @@ class UserPlot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_vector_data")
         check_type(indp_val, (int, float))
 
-
-
         return self.user_plot.AddVectorData(
             indp_val,
             check_and_coerce_optional(element_id, IntegerArray),
@@ -195,11 +192,6 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_tensor_data")
         check_type(indp_val, (int, float))
-
-
-
-
-
 
         return self.user_plot.AddTensorData(
             indp_val,
@@ -289,8 +281,6 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_vector_data")
 
-
-
         return self.user_plot.SetVectorData(
             check_and_coerce_optional(element_id, IntegerArray),
             check_and_coerce_optional(vx, DoubleArray),
@@ -326,11 +316,6 @@ class UserPlot:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_tensor_data")
 
-
-
-
-
-
         return self.user_plot.SetTensorData(
             check_and_coerce_optional(element_id, IntegerArray),
             check_and_coerce_optional(t_11, DoubleArray),
@@ -358,7 +343,6 @@ class UserPlot:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_xy_plot_data")
         check_type(indp_val, (int, float))
 
-
         return self.user_plot.AddXYPlotData(
             indp_val,
             check_and_coerce_optional(x_value, DoubleArray),
@@ -377,7 +361,6 @@ class UserPlot:
             bool: True if successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_xy_plot_data")
-
 
         return self.user_plot.SetXYPlotData(
             check_and_coerce_optional(x_value, DoubleArray),

@@ -12,7 +12,6 @@ from .predicate import Predicate
 from .common import LogMessage
 from .logger import process_log
 
-
 class EntList:
     """
     Wrapper for EntList class of Moldflow Synergy.

@@ -18,7 +18,6 @@ import urllib.request
 from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple, Optional
 
-
 # Module-level constants to avoid repeated literals and improve maintainability
 PACKAGE_NAME = "moldflow"
 NO_UPDATE_ENV_VAR = "MOLDFLOW_API_NO_UPDATE_CHECK"
@@ -26,7 +25,6 @@ VIRTUAL_ENV_ENV_VAR = "VIRTUAL_ENV"
 PYPI_JSON_URL = f"https://pypi.org/pypi/{PACKAGE_NAME}/json"
 PYPI_TIMEOUT_SECONDS = 0.5
 WARNING_FOOTER = f"To disable this warning, set {NO_UPDATE_ENV_VAR}=1"
-
 
 def _get_package_version() -> str:
     """
@@ -53,7 +51,6 @@ def _get_package_version() -> str:
                 "This likely indicates a build or packaging issue."
             ) from e
 
-
 def _parse_version(ver: str) -> tuple:
     """
     Parse version string into a tuple of (major, minor, patch).
@@ -70,7 +67,6 @@ def _parse_version(ver: str) -> tuple:
     while len(nums) < 3:
         nums.append(0)
     return tuple(nums)
-
 
 def _process_pypi_releases(
     releases: dict, current_parsed: tuple
@@ -130,7 +126,6 @@ def _process_pypi_releases(
 
     return latest_in_major_version, latest_overall_version
 
-
 def _check_for_updates() -> Tuple[Optional[str], Optional[str]]:
     """
     Check PyPI for newer versions of the package.
@@ -159,7 +154,6 @@ def _check_for_updates() -> Tuple[Optional[str], Optional[str]]:
         # Any error (timeout, network issue, etc) should fail silently
         return None, None
 
-
 def _pip_cmd(version_string: Optional[str] = None) -> str:
     """
     Construct a pip command using the current Python executable.
@@ -179,7 +173,6 @@ def _pip_cmd(version_string: Optional[str] = None) -> str:
     if version_string:
         base += f"=={version_string}"
     return base
-
 
 def _show_update_message(minor_update: Optional[str], major_update: Optional[str]) -> None:
     """
@@ -232,7 +225,6 @@ def _show_update_message(minor_update: Optional[str], major_update: Optional[str
         warning_msg = f"{body}\n\n{footer}"
         warnings.warn(warning_msg, UserWarning)
 
-
 def check_for_updates_on_import():
     """
     Perform version check and show update message if updates are available.
@@ -246,7 +238,6 @@ def check_for_updates_on_import():
     minor, major = _check_for_updates()
     if minor or major:
         _show_update_message(minor, major)
-
 
 def get_version() -> str:
     """

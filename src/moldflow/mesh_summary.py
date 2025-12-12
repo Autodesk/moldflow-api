@@ -10,7 +10,6 @@ from .logger import process_log
 from .common import LogMessage
 from .com_proxy import safe_com
 
-
 class MeshSummary:
     """
     Wrapper for MeshSummary class of Moldflow Synergy.

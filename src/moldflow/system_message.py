@@ -13,7 +13,6 @@ from .logger import process_log, LogMessage
 from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, check_is_non_negative, coerce_optional_dispatch
 from .com_proxy import safe_com
 
-
 class SystemMessage:
     """
     Wrapper for SystemMessage class of Moldflow Synergy.

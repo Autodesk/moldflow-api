@@ -23,7 +23,6 @@ CONFIG = {
     },
 }
 
-
 class SafeStreamHandler(logging.StreamHandler):
     """Stream handler that falls back to backslash-escaping on encoding errors.
 
@@ -52,7 +51,6 @@ class SafeStreamHandler(logging.StreamHandler):
         except Exception:  # pragma: no cover - delegate to logging error handler
             self.handleError(record)
 
-
 def set_is_logging(is_logging: bool):
     """
     Enables or Disables moldflow API logging system
@@ -61,7 +59,6 @@ def set_is_logging(is_logging: bool):
     """
     global _IS_LOGGING
     _IS_LOGGING = is_logging
-
 
 def configure_file_logging(
     command_line_logs: bool, log_file: bool, log_file_name: str = DEFAULT_LOG_FILE
@@ -115,7 +112,6 @@ def configure_file_logging(
 
     moldflow_logger.setLevel(root_logger.getEffectiveLevel())
 
-
 def get_logger(name) -> logging.Logger | None:
     """
     Retrieve or create a logger with the specified name.
@@ -132,7 +128,6 @@ def get_logger(name) -> logging.Logger | None:
         logger = moldflow_logger.getChild(name)
         return logger
     return None
-
 
 def process_log(logger_name: str, message_log: LogMessage | str, dump=None, **kwargs):
     """

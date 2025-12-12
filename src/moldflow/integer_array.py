@@ -11,7 +11,6 @@ from .helper import check_type
 from .com_proxy import safe_com, flag_com_method
 from .common import LogMessage
 
-
 class IntegerArray:
     """
     Wrapper for IntegerArray class of Moldflow Synergy.

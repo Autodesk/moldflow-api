@@ -16,7 +16,6 @@ from .mesh_summary import MeshSummary
 from .integer_array import IntegerArray
 from .double_array import DoubleArray
 
-
 class DiagnosisManager:
     """
     Wrapper for DiagnosisManager class of Moldflow Synergy.

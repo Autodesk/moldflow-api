@@ -13,7 +13,6 @@ from .helper import get_enum_value, check_type, check_optional_type, check_and_c
 from .com_proxy import safe_com
 from .common import CommitActions, MaterialDatabaseType, PropertyType
 
-
 class PropertyEditor:
     """
     Wrapper for PropertyEditor class of Moldflow Synergy.

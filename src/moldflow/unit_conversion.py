@@ -11,7 +11,6 @@ from .helper import check_type, get_enum_value
 from .com_proxy import safe_com
 from .common import LogMessage, SystemUnits
 
-
 class UnitConversion:
     """
     Wrapper for UnitConversion class of Moldflow Synergy.

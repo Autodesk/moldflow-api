@@ -11,7 +11,6 @@ from .helper import check_type, check_optional_type, check_and_coerce_optional, 
 from .com_proxy import safe_com
 from .vector import Vector
 
-
 class MoldSurfaceGenerator:
     """
     Wrapper for MoldSurfaceGenerator class of Moldflow Synergy.

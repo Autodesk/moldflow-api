@@ -5,7 +5,6 @@
 
 from .common import ErrorMessage
 
-
 class SaveError(Exception):
     """Exception raised when saving a file fails."""
 
@@ -18,7 +17,6 @@ class SaveError(Exception):
         """
         super().__init__(message)
         self.message = message
-
 
 class SynergyError(Exception):
     """Exception raised when Synergy fails to initialize."""

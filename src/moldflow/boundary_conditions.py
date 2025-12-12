@@ -15,7 +15,6 @@ from .ent_list import EntList
 from .vector import Vector
 from .prop import Property
 
-
 class BoundaryConditions:
     """
     Wrapper for BoundaryConditions class of Moldflow Synergy.
@@ -164,7 +163,6 @@ class BoundaryConditions:
 
         analysis = get_enum_value(analysis, AnalysisType)
 
-
         return self.boundary_conditions.CreateSpringConstraints(
             check_and_coerce_optional(nodes, EntList),
             analysis,
@@ -193,7 +191,6 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_spring_constraints")
-
 
         check_type(retract_time, (float, int))
         return self.boundary_conditions.CreateSpringConstraints2(
@@ -228,9 +225,6 @@ class BoundaryConditions:
             int: Number of constraints created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_general_constraints")
-
-
-
 
         analysis = get_enum_value(analysis, AnalysisType)
         trans_types = self._check_vector(trans_types)
@@ -276,9 +270,6 @@ class BoundaryConditions:
             name="create_core_shift_general_constraints",
         )
 
-
-
-
         check_type(retract_time, (int, float))
         trans_types = self._check_vector(trans_types)
         rotation_types = self._check_vector(rotation_types)
@@ -306,7 +297,6 @@ class BoundaryConditions:
             int: Number of loads created
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodal_loads")
-
 
         return self.boundary_conditions.CreateNodalLoads(
             check_and_coerce_optional(nodes, EntList),
@@ -420,7 +410,6 @@ class BoundaryConditions:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_critical_dimension")
 
-
         check_type(upper, (float, int))
         check_type(lower, (float, int))
         return self.boundary_conditions.CreateCriticalDimension(
@@ -447,7 +436,6 @@ class BoundaryConditions:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="create_doe_critical_dimension"
         )
-
 
         check_type(name, str)
         return self.boundary_conditions.CreateDoeCriticalDimension(
@@ -507,7 +495,6 @@ class BoundaryConditions:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_ndbc_at_xyz")
 
-
         check_type(prop_type, int)
 
         prop_disp = check_and_coerce_optional(prop, Property)
@@ -556,7 +543,6 @@ class BoundaryConditions:
             bool: True if successful; False if not
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="move_ndbc_to_xyz")
-
 
         return self.boundary_conditions.MoveNDBCToXYZ(
             check_and_coerce_optional(ndbc, EntList),
@@ -627,9 +613,6 @@ class BoundaryConditions:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="create_one_sided_constraints"
         )
-
-
-
 
         if retract_time != 0:
             check_type(retract_time, (float, int))

@@ -12,7 +12,6 @@ from .common import EntityType, DisplayOption
 from .helper import get_enum_value, check_type, check_optional_type, check_and_coerce_optional, check_range, coerce_optional_dispatch
 from .com_proxy import safe_com
 
-
 class FolderManager:
     """
     Wrapper for FolderManager class of Moldflow Synergy.
@@ -84,7 +83,6 @@ class FolderManager:
             bool: True if the objects were added successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_objects_to_folder")
-
 
         return self.folder_manager.AddObjectsToFolder(
             check_and_coerce_optional(objects, EntList),

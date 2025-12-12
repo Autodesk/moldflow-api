@@ -12,7 +12,6 @@ from .common import MDLContactMeshType, CADBodyProperty
 from .helper import get_enum_value, check_type, check_is_non_negative
 from .com_proxy import safe_com
 
-
 class ImportOptions:
     """
     Wrapper for ImportOptions class of Moldflow Synergy.

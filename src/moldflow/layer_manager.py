@@ -12,7 +12,6 @@ from .logger import process_log, LogMessage
 from .helper import check_type, check_optional_type, check_and_coerce_optional, check_range, get_enum_value, coerce_optional_dispatch
 from .com_proxy import safe_com
 
-
 class LayerManager:
     """
     Wrapper for LayerManager class of Moldflow Synergy.
@@ -91,7 +90,6 @@ class LayerManager:
             int: The number of elements assigned to the layer.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="assign_to_layer")
-
 
         return self.layer_manager.AssignToLayer(
             check_and_coerce_optional(elems, EntList), check_and_coerce_optional(layer, EntList)

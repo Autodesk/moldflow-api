@@ -10,7 +10,6 @@ from .helper import check_type, check_index
 from .com_proxy import safe_com
 from .logger import process_log, LogMessage
 
-
 class VectorArray:
     """
     Wrapper for VectorArray class of Moldflow Synergy.

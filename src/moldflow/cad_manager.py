@@ -12,7 +12,6 @@ from .logger import process_log, LogMessage
 from .helper import check_type, check_optional_type, check_and_coerce_optional, coerce_optional_dispatch
 from .com_proxy import safe_com
 
-
 class CADManager:
     """
     Wrapper for CADManager class of Moldflow Synergy.
@@ -60,7 +59,6 @@ class CADManager:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modify_cad_surfaces_by_normal"
         )
-
 
         check_type(distance, (float, int))
         return self.cad_manager.ModifyCADSurfacesByNormal(

@@ -25,7 +25,6 @@ from .vector_array import VectorArray
 from .ent_list import EntList
 from .vector import Vector
 
-
 class Modeler:
     """
     Wrapper for Modeler class of Moldflow Synergy.
@@ -74,7 +73,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodes_between")
 
-
         check_type(num_nodes, int)
         check_is_positive(num_nodes)
         result = self.modeler.CreateNodesBetween(
@@ -101,7 +99,6 @@ class Modeler:
             EntList: The list of created nodes.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_nodes_by_offset")
-
 
         check_type(num_nodes, int)
         check_is_positive(num_nodes)
@@ -201,7 +198,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_line")
 
-
         check_type(relative, bool)
 
         check_type(ends, bool)
@@ -287,8 +283,6 @@ class Modeler:
             EntList: The list of created arcs.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_arc_by_points")
-
-
 
         check_type(circle, bool)
 
@@ -410,7 +404,6 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="break_curves")
-
 
         return self.modeler.BreakCurves(
             check_and_coerce_optional(curve1, EntList),
@@ -539,7 +532,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_boundary")
 
-
         return self.modeler.CreateHoleByBoundary(
             check_and_coerce_optional(region, EntList),
             check_and_coerce_optional(curve, EntList),
@@ -557,7 +549,6 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_nodes")
-
 
         return self.modeler.CreateHoleByNodes(
             check_and_coerce_optional(region, EntList),
@@ -579,8 +570,6 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_ruling")
-
-
 
         return self.modeler.CreateHoleByRuling(
             check_and_coerce_optional(region, EntList),
@@ -634,7 +623,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="reflect")
 
-
         check_type(copy, bool)
         check_type(merge, bool)
         return self.modeler.Reflect(
@@ -669,7 +657,6 @@ class Modeler:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="scale")
-
 
         check_type(copy, bool)
         check_type(merge, bool)
@@ -747,7 +734,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="rotate")
 
-
         check_type(angle, (int, float))
         check_is_non_negative(angle)
         check_type(copy, bool)
@@ -791,8 +777,6 @@ class Modeler:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="rotate_3_pts")
 
-
-
         check_type(copy, bool)
         check_type(merge, bool)
         return self.modeler.Rotate3Pts(
@@ -819,8 +803,6 @@ class Modeler:
             EntList: The created local coordinate system.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_lcs_by_points")
-
-
 
         result = self.modeler.CreateLCSByPoints(
             check_and_coerce_optional(coord1, Vector),
