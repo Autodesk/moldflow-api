@@ -293,7 +293,7 @@ python run.py generate-test-data <marker1> <marker2> ...
 - If you pass one or more markers, only those markers' baseline files are generated/updated.
 - If you pass **no markers**, **all** available test data baselines are generated/updated.
 - Baseline files are **auto-created** the first time you run the generator; it's advised not to hand-create/self-edit them to avoid inconsistencies.
-- The generator will write the baseline JSON for the updated markers.
+- The generator will write the expected data JSON for the updated markers.
 
 **Note:** The generator functions are expected to produce a `dict`.
 
@@ -625,7 +625,7 @@ python run.py generate-test-data mesh_summary
 ```
 
 After running you should see:
-- Data file created: `tests/api/integration_tests/test_suite_mesh_summary/data.json`
+- Expected data file created: `tests/api/integration_tests/test_suite_mesh_summary/data.json`
 
 ### 6. Resulting folder structure
 
