@@ -180,3 +180,12 @@ Thumbs.db
 
 # Internal Autodesk directories
 .adsk/
+
+# Tracking only sdy files in some integration test project folders
+# Ignore everything in project_meshed_studies and project_cad_study folders except mpi and sdy files
+**/project_meshed_studies/*
+**/project_cad_manager_studies/*
+!**/project_meshed_studies/*.mpi
+!**/project_meshed_studies/*.sdy
+!**/project_cad_manager_studies/*.mpi
+!**/project_cad_manager_studies/*.sdy

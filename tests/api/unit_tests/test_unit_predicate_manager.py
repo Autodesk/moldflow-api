@@ -12,6 +12,7 @@ from tests.api.unit_tests.conftest import VALID_MOCK
 
 
 @pytest.mark.unit
+@pytest.mark.predicate_manager
 class TestUnitPredicateManager:
     """
     Test suite for the PredicateManager class.
