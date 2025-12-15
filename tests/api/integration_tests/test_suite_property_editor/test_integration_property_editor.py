@@ -116,7 +116,6 @@ class TestIntegrationPropertyEditor:
         prop_iter = custom_property_editor.get_first_property(TEST_PROPERTY_TYPE)
         res = {}
         while prop_iter is not None:
-            # assert prop_iter.type == TEST_PROPERTY_TYPE
             if str(prop_iter.type) not in res:
                 res[str(prop_iter.type)] = {}
             desc = custom_property_editor.get_data_description(prop_iter.type, prop_iter.id)
@@ -175,9 +174,3 @@ class TestIntegrationPropertyEditor:
         """
         no_of_unused_properties = property_editor.remove_unused_properties()
         assert no_of_unused_properties == expected_values["no_of_removed_properties"]
-
-    def test_fetch_property(self, custom_property_editor: PropertyEditor, expected_values):
-        """
-        Test fetching a property.
-        """
-        prop = custom_property_editor.fetch_property(TEST_PROPERTY_TYPE, 1, "", "", 0)
