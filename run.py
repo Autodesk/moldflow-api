@@ -9,7 +9,7 @@ Usage:
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build]
     run.py format [--check]
-    run.py generate-baseline-data [<markers>...]
+    run.py generate-expected-data [<markers>...]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
@@ -24,7 +24,7 @@ Commands:
     build                           Build and optionally publish the moldflow-api package.
     build-docs                      Build the documentation.
     format                          Format all Python files in the repository using black.
-    generate-baseline-data          Generate baseline data for integration tests.
+    generate-expected-data          Generate expected data for integration tests.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
     lint                            Lint all Python files in the repository.
@@ -581,7 +581,7 @@ def clean_up():
         os.remove(COVERAGE_XML_FILE_NAME)
 
 
-def generate_data(markers: list[str]):
+def generate_expected_data(markers: list[str]):
     """Generate data for integration tests"""
     logging.info('Generating data for integration tests')
     generate_data_module = 'tests.api.integration_tests.data_generation.generate_data'
@@ -630,9 +630,9 @@ def main():
 
             lint(skip_build=skip_build)
 
-        elif args.get('generate-baseline-data'):
+        elif args.get('generate-expected-data'):
             markers = args.get('<markers>') or []
-            generate_data(markers=markers)
+            generate_expected_data(markers=markers)
 
         elif args.get('test'):
             tests = args.get('<tests>') or []

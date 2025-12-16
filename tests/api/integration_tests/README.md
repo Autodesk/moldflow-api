@@ -15,11 +15,10 @@ It combines the marker-driven test suite conventions with the project fixtures a
 6. [Steps to Add a New Integration Test Suite](#steps-to-add-a-new-integration-test-suite)  
 7. [Baseline Data Handling](#baseline-data-handling)  
 8. [Generator Functions](#generator-functions)  
-9. [Metadata Tracking](#metadata-tracking)  
-10. [Running Integration Tests](#running-integration-tests)  
-11. [Example Test Suite](#example-test-suite)  
-12. [Best Practices](#best-practices)  
-13. [Appendix: Quick Checklist](#appendix-quick-checklist)
+9. [Running Integration Tests](#running-integration-tests)  
+10. [Example Test Suite](#example-test-suite)  
+11. [Best Practices](#best-practices)  
+12. [Appendix: Quick Checklist](#appendix-quick-checklist)
 
 ---
 
@@ -31,7 +30,7 @@ Integration tests in this repo exercise **real interactions** with Moldflow Syne
 - test class names
 - test suite names
 - generator function names
-- pytest markers and metadata entries
+- pytest markers entries
 
 **Important:** Markers are always **snake_case**. The marker's human-readable form inside class names uses **PascalCase** (see naming conventions).
 
@@ -115,7 +114,6 @@ Each integration test suite is organized in its own dedicated folder following a
 tests/api/integration_tests/
 ├── conftest.py                           # Shared fixtures for all integration tests
 ├── constants.py                          # Shared constants (FileSet enum, paths, etc.)
-├── metadata.json                         # Tracks baseline generation metadata
 ├── data_generation/                      # Data generation utilities
 │   ├── generate_data.py                  # Main data generation script
 │   ├── generate_data_helper.py           # Helper functions and decorators
@@ -295,7 +293,7 @@ python run.py generate-test-data <marker1> <marker2> ...
 - If you pass one or more markers, only those markers' baseline files are generated/updated.
 - If you pass **no markers**, **all** available test data baselines are generated/updated.
 - Baseline files are **auto-created** the first time you run the generator; it's advised not to hand-create/self-edit them to avoid inconsistencies.
-- The generator will write the baseline JSON and also update `metadata.json` for the updated markers (see Metadata section).
+- The generator will write the expected data JSON for the updated markers.
 
 **Note:** The generator functions are expected to produce a `dict`.
 
@@ -482,42 +480,6 @@ This loads: `test_suite_material_property/data.json`
 
 ---
 
-## Metadata Tracking
-
-`metadata.json` (located at `tests/api/integration_tests/metadata.json`) keeps a simple audit of baseline updates.
-
-For each marker entry includes:
-
-| Key | Description |
-|------------|------|
-| `date` | Date of baseline generation/update [In **YYYY-MM-DD** format] |
-| `time` | Time of baseline generation/update [In **HH:MM:SS** format] |
-| `build_number` | Build Number of Synergy used to generate/update the baseline (e.g., 49.0.x, 49.1.198, etc) |
-| `version` | Synergy Version used for baseline update (e.g., 2026, 2027, etc) |
-
-### Example
-
-```json
-{
-  "mesh_summary": {
-    "date": "2025-12-02",
-    "time": "01:46:35",
-    "build_number": "49.1.198",
-    "version": "2026"
-  },
-  "synergy": {
-    "date": "2025-12-02",
-    "time": "01:46:35",
-    "build_number": "49.1.198",
-    "version": "2026"
-  }
-}
-```
-
-When the baseline generator runs for a marker, only that marker's metadata entry is updated (others remain unchanged).
-
----
-
 ## Running Integration Tests
 
 | Task | Command | Example |
@@ -663,8 +625,7 @@ python run.py generate-test-data mesh_summary
 ```
 
 After running you should see:
-- Data file created: `tests/api/integration_tests/test_suite_mesh_summary/data.json`
-- `metadata.json` updated to include `mesh_summary`
+- Expected data file created: `tests/api/integration_tests/test_suite_mesh_summary/data.json`
 
 ### 6. Resulting folder structure
 
@@ -712,7 +673,6 @@ test_suite_mesh_summary/
 - **Class names**: use PascalCase for the Marker portion (e.g., `TestIntegrationMeshSummary`).
 - **Folder structure**: each test suite gets its own `test_suite_<marker>/` folder containing all related files.
 - **Generator functions**: return serializable dictionaries only (no complex objects).
-- **Metadata**: let the generator update `metadata.json` — do not edit manually.
 - **Scope fixtures appropriately**: use class scope for expensive resources like COM instances.
 - **Parameterize where possible**: reduce duplication by using `study_file` and `study_with_project`.
 - **Document new markers**: add a short explanation in `pytest.ini`.
@@ -761,7 +721,6 @@ test_suite_mesh_summary/
 
 - [ ] Run `python run.py generate-test-data <marker>`
 - [ ] Verify `test_suite_<marker>/data.json` was created
-- [ ] Verify `metadata.json` was updated
 
 ### Step 6: Verify and Test
 
@@ -777,7 +736,6 @@ test_suite_mesh_summary/
 - [ ] `test_suite_<marker>/generate_test_data_<marker>.py`
 - [ ] `test_suite_<marker>/data.json`
 - [ ] `test_suite_<marker>/constants.py` (if created)
-- [ ] `metadata.json`
 - [ ] Push changes to repository
 
 ---
