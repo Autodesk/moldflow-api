@@ -8,7 +8,6 @@ Custom logging utility for test data generation with clean, professional output.
 import sys
 from pathlib import Path
 from typing import Dict, Set
-from tests.api.integration_tests.constants import METADATA_FILE
 
 
 class GenerateDataLogger:
@@ -16,7 +15,6 @@ class GenerateDataLogger:
 
     def __init__(self):
         self.generated_files: Dict[str, Set[str]] = {}
-        self.metadata_file = METADATA_FILE
 
     def track_generation(self, marker: str, data_file_name: str):
         """Track a generated file for a specific marker."""

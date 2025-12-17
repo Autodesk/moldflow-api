@@ -10,7 +10,6 @@ Usage:
 
 import docopt
 import sys
-from datetime import datetime, timezone
 from tests.api.integration_tests.data_generation.generate_data_helper import (
     clean_up_temp_files,
     get_generate_data_functions,
@@ -24,7 +23,6 @@ from tests.api.integration_tests.conftest import get_study_files
 def main():
     """Main entry point for this script"""
     args = docopt.docopt(__doc__)
-    DATE_TIME = datetime.now(timezone.utc)
 
     try:
         markers = args.get('<markers>') or []
@@ -38,9 +36,9 @@ def main():
                 return 0
 
         if len(markers) > 0:
-            fetch_data_on_markers(markers, generate_functions, DATE_TIME)
+            fetch_data_on_markers(markers, generate_functions)
         else:
-            fetch_data_on_markers(generate_functions.keys(), generate_functions, DATE_TIME)
+            fetch_data_on_markers(generate_functions.keys(), generate_functions)
 
     except Exception as err:
         generate_data_logger.error(f'FAILURE: {err}')
