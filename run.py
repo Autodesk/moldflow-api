@@ -392,9 +392,9 @@ def build_docs(target, skip_build):
                 # fmt: off
                 run_command(
                     [
-                    sys.executable, '-m', 'sphinx_multiversion',
-                    DOCS_SOURCE_DIR, build_output
-                ],
+                        sys.executable, '-m', 'sphinx_multiversion',
+                        DOCS_SOURCE_DIR, build_output
+                    ],
                     ROOT_DIR,
                 )
             except Exception as err:
