@@ -401,7 +401,7 @@ def build_docs(target, skip_build):
                 logging.error(
                     "Failed to build documentation with sphinx_multiversion.\n"
                     "This can happen if no Git tags or branches match your version pattern.\n"
-                    "Try running 'git fetch --tags' and ensure that version tags exist in the repository.\n"
+                    "Try running 'git fetch --tags' and ensure version tags exist in the repo.\n"
                     "Underlying error: %s",
                     str(err),
                 )
