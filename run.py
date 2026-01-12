@@ -62,10 +62,10 @@ import subprocess
 import shutil
 import glob
 from urllib.parse import urlparse
-
 import docopt
 from github import Github
 import polib
+from packaging.version import InvalidVersion, Version
 
 
 WINDOWS = platform.system() == 'Windows'
@@ -86,7 +86,9 @@ TEST_DIR = os.path.join(ROOT_DIR, 'tests')
 LOCALE_DIR = os.path.join(MOLDFLOW_DIR, 'locale')
 DOCS_DIR = os.path.join(ROOT_DIR, 'docs')
 DOCS_SOURCE_DIR = os.path.join(DOCS_DIR, 'source')
+DOCS_STATIC_DIR = os.path.join(DOCS_SOURCE_DIR, '_static')
 DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
+DOCS_HTML_DIR = os.path.join(DOCS_BUILD_DIR, 'html')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
 
@@ -100,6 +102,7 @@ COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
 PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py"]
+SWITCHER_JSON = os.path.join(DOCS_STATIC_DIR, 'switcher.json')
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):
@@ -325,6 +328,26 @@ def build_mo():
         )
 
 
+def create_latest_alias(build_output):
+    """Create a 'latest' alias pointing to the newest version"""
+    version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
+    if version_dirs:
+
+        def version_key(v):
+            try:
+                return Version(v.lstrip('v'))
+            except InvalidVersion:
+                return Version("0.0.0")
+
+        sorted_versions = sorted(version_dirs, key=version_key, reverse=True)
+        latest_version = sorted_versions[0]
+        latest_src = os.path.join(build_output, latest_version)
+        latest_dest = os.path.join(build_output, 'latest')
+
+        logging.info("Creating 'latest' alias for %s", latest_version)
+        shutil.copytree(latest_src, latest_dest, dirs_exist_ok=True)
+
+
 def build_docs(target, skip_build):
     """Build Documentation"""
 
@@ -338,19 +361,28 @@ def build_docs(target, skip_build):
         shutil.rmtree(DOCS_BUILD_DIR)
 
     try:
-        run_command(
-            [
-                sys.executable,
-                '-m',
-                'sphinx',
-                'build',
-                '-M',
-                target,
-                DOCS_SOURCE_DIR,
-                DOCS_BUILD_DIR,
-            ],
-            ROOT_DIR,
-        )
+        if target == 'html':
+            build_output = os.path.join(DOCS_BUILD_DIR, 'html')
+            run_command(
+                [sys.executable, '-m', 'sphinx_multiversion', DOCS_SOURCE_DIR, build_output],
+                ROOT_DIR,
+            )
+            create_latest_alias(build_output)
+        else:
+            # For other targets such as latex, pdf, etc.
+            run_command(
+                [
+                    sys.executable,
+                    '-m',
+                    'sphinx',
+                    'build',
+                    '-M',
+                    target,
+                    DOCS_SOURCE_DIR,
+                    DOCS_BUILD_DIR,
+                ],
+                ROOT_DIR,
+            )
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
         logging.error(
