@@ -84,7 +84,7 @@ def skip_member(app, what, name, obj, skip, options):
     return skip
 
 
-def set_context_switcher(app, _, __, context, ___):
+def set_context_switcher(app, pagename, templatename, context, doctree):
     """Set version_match in the switcher to show the correct version label."""
 
     # Try output directory name (e.g., v26.0.2) - most reliable for sphinx-multiversion
