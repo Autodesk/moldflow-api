@@ -345,6 +345,11 @@ def create_latest_alias(build_output: str) -> None:
     latest_src = os.path.join(build_output, latest_version)
     latest_dest = os.path.join(build_output, 'latest')
 
+    # Verify source exists before proceeding
+    if not os.path.exists(latest_src):
+        logging.error("Source directory for 'latest' alias does not exist: %s", latest_src)
+        return
+
     # Clean up any existing 'latest' entry first
     if os.path.islink(latest_dest):
         os.unlink(latest_dest)
