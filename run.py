@@ -328,24 +328,44 @@ def build_mo():
         )
 
 
-def create_latest_alias(build_output):
-    """Create a 'latest' alias pointing to the newest version"""
+def create_latest_alias(build_output: str) -> None:
+    """Create a 'latest' alias pointing to the newest version using symlinks when possible."""
     version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
-    if version_dirs:
+    if not version_dirs:
+        return
 
-        def version_key(v):
-            try:
-                return Version(v.lstrip('v'))
-            except InvalidVersion:
-                return Version("0.0.0")
+    def version_key(v):
+        try:
+            return Version(v.lstrip('v'))
+        except InvalidVersion:
+            return Version("0.0.0")
 
-        sorted_versions = sorted(version_dirs, key=version_key, reverse=True)
-        latest_version = sorted_versions[0]
-        latest_src = os.path.join(build_output, latest_version)
-        latest_dest = os.path.join(build_output, 'latest')
+    sorted_versions = sorted(version_dirs, key=version_key, reverse=True)
+    latest_version = sorted_versions[0]
+    latest_src = os.path.join(build_output, latest_version)
+    latest_dest = os.path.join(build_output, 'latest')
 
-        logging.info("Creating 'latest' alias for %s", latest_version)
-        shutil.copytree(latest_src, latest_dest, dirs_exist_ok=True)
+    # Clean up any existing 'latest' entry first
+    if os.path.islink(latest_dest):
+        os.unlink(latest_dest)
+    elif os.path.isdir(latest_dest):
+        shutil.rmtree(latest_dest)
+    elif os.path.exists(latest_dest):
+        os.remove(latest_dest)
+
+    # Try creating a symbolic link first (most efficient)
+    logging.info("Creating 'latest' alias for %s", latest_version)
+    try:
+        os.symlink(latest_src, latest_dest, target_is_directory=True)
+        logging.info("Created symbolic link: latest -> %s", latest_version)
+    except (OSError, NotImplementedError) as err:
+        # Fall back to copying if symlinks aren't supported
+        logging.warning(
+            "Could not create symbolic link for 'latest' alias (%s); "
+            "falling back to copying documentation.",
+            err,
+        )
+        shutil.copytree(latest_src, latest_dest)
 
 
 def build_docs(target, skip_build):
