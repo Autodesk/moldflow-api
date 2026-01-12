@@ -388,10 +388,15 @@ def build_docs(target, skip_build):
     try:
         if target == 'html':
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
+            # fmt: off
             run_command(
-                [sys.executable, '-m', 'sphinx_multiversion', DOCS_SOURCE_DIR, build_output],
+                [
+                    sys.executable, '-m', 'sphinx_multiversion',
+                    DOCS_SOURCE_DIR, build_output
+                ],
                 ROOT_DIR,
             )
+            # fmt: on
             create_latest_alias(build_output)
         else:
             # For other targets such as latex, pdf, etc.
