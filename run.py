@@ -388,14 +388,25 @@ def build_docs(target, skip_build):
     try:
         if target == 'html':
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
-            # fmt: off
-            run_command(
-                [
+            try:
+                # fmt: off
+                run_command(
+                    [
                     sys.executable, '-m', 'sphinx_multiversion',
                     DOCS_SOURCE_DIR, build_output
                 ],
-                ROOT_DIR,
-            )
+                    ROOT_DIR,
+                )
+            except Exception as err:
+                logging.error(
+                    "Failed to build documentation with sphinx_multiversion.\n"
+                    "This can happen if no Git tags or branches match your version pattern.\n"
+                    "Try running 'git fetch --tags' and ensure that version tags exist in the repository.\n"
+                    "Underlying error: %s",
+                    str(err),
+                )
+                # Re-raise so the outer handler can log the general failure as well.
+                raise
             # fmt: on
             create_latest_alias(build_output)
         else:
