@@ -68,6 +68,9 @@ python run.py build
 python run.py build-docs
 ```
 
+> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
+   to include the new tag in the version dropdown for documentation.***
+
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
 
@@ -158,6 +161,7 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 ## Versioning
 
 We use [Semantic Versioning](https://semver.org/). For available versions, see the [tags on this repository](https://github.com/Autodesk/moldflow-api/tags).
+
 
 ## License
 
