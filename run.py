@@ -58,8 +58,6 @@ import logging
 import platform
 import subprocess
 import shutil
-import glob
-from urllib.parse import urlparse
 import docopt
 from github import Github
 import polib
