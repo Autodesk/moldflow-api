@@ -11,6 +11,7 @@ from .helper import check_type, _mf_array_to_list
 from .com_proxy import safe_com, flag_com_method
 from .common import LogMessage
 
+
 class StringArray:
     """
     Wrapper for StringArray class of Moldflow Synergy.

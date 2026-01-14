@@ -25,6 +25,7 @@ from .vector_array import VectorArray
 from .ent_list import EntList
 from .vector import Vector
 
+
 class Modeler:
     """
     Wrapper for Modeler class of Moldflow Synergy.
@@ -406,8 +407,7 @@ class Modeler:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="break_curves")
 
         return self.modeler.BreakCurves(
-            check_and_coerce_optional(curve1, EntList),
-            check_and_coerce_optional(curve2, EntList),
+            check_and_coerce_optional(curve1, EntList), check_and_coerce_optional(curve2, EntList)
         )
 
     def set_property(self, ents: EntList | None, prop_set: Property | None) -> bool:
@@ -533,8 +533,7 @@ class Modeler:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_boundary")
 
         return self.modeler.CreateHoleByBoundary(
-            check_and_coerce_optional(region, EntList),
-            check_and_coerce_optional(curve, EntList),
+            check_and_coerce_optional(region, EntList), check_and_coerce_optional(curve, EntList)
         )
 
     def create_hole_by_nodes(self, region: EntList | None, nodes: EntList | None) -> bool:
@@ -551,8 +550,7 @@ class Modeler:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_hole_by_nodes")
 
         return self.modeler.CreateHoleByNodes(
-            check_and_coerce_optional(region, EntList),
-            check_and_coerce_optional(nodes, EntList),
+            check_and_coerce_optional(region, EntList), check_and_coerce_optional(nodes, EntList)
         )
 
     def create_hole_by_ruling(

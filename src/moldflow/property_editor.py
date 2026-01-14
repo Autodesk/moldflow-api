@@ -9,9 +9,16 @@ Usage:
 from .logger import process_log, LogMessage
 from .ent_list import EntList
 from .prop import Property
-from .helper import get_enum_value, check_type, check_optional_type, check_and_coerce_optional, coerce_optional_dispatch
+from .helper import (
+    get_enum_value,
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
 from .common import CommitActions, MaterialDatabaseType, PropertyType
+
 
 class PropertyEditor:
     """
@@ -226,7 +233,9 @@ class PropertyEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_property_of_type")
 
-        result = self.property_editor.GetNextPropertyOfType(check_and_coerce_optional(prop, Property))
+        result = self.property_editor.GetNextPropertyOfType(
+            check_and_coerce_optional(prop, Property)
+        )
         if result is None:
             return None
         return Property(result)
@@ -243,9 +252,7 @@ class PropertyEditor:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_property")
 
-        prop = self.property_editor.GetEntityProperty(
-            check_and_coerce_optional(entities, EntList)
-        )
+        prop = self.property_editor.GetEntityProperty(check_and_coerce_optional(entities, EntList))
         if prop is None:
             return None
         return Property(prop)

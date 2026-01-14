@@ -13,6 +13,7 @@ from typing import Callable
 
 _translator: Callable[[str], str] | None = None
 
+
 def install_translation(
     domain: str, localedir: str, languages: list[str] | None
 ) -> Callable[[str], str]:
@@ -25,6 +26,7 @@ def install_translation(
     _translator = translation.gettext
 
     return _translator
+
 
 def get_text() -> Callable[[str], str]:
     """

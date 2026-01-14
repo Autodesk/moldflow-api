@@ -51,6 +51,7 @@ from .helper import (
 from .com_proxy import safe_com
 from .errors import raise_synergy_error
 
+
 class Synergy:
     """
     Wrapper for Synergy class of Moldflow Synergy.

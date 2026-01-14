@@ -38,6 +38,7 @@ from .common import ValueErrorReason
 from .plot import Plot
 from .vector import Vector
 
+
 class Viewer:
     """
     Wrapper for Viewer class of Moldflow Synergy.

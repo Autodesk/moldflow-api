@@ -16,10 +16,18 @@ from .integer_array import IntegerArray
 from .material_plot import MaterialPlot
 from .user_plot import UserPlot
 from .common import MaterialDatabase, MaterialIndex, PlotType, SystemUnits
-from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, check_file_extension, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    get_enum_value,
+    check_file_extension,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
 from .errors import raise_save_error
 from .constants import XML_FILE_EXT, SDZ_FILE_EXT, FBX_FILE_EXT, ELE_FILE_EXT
+
 
 class PlotManager:
     """

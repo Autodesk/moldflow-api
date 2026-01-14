@@ -7,11 +7,18 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    get_enum_value,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
 from .common import TransformFunctions, TransformOperations, TransformScalarOperations
 from .integer_array import IntegerArray
 from .double_array import DoubleArray
+
 
 class DataTransform:
     """

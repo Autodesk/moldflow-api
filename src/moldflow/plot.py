@@ -51,6 +51,7 @@ from .vector import Vector
 from .ent_list import EntList
 from .errors import raise_save_error
 
+
 class Plot:
     """
     Wrapper for Plot class of Moldflow Synergy.

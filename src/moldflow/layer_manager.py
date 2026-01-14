@@ -9,8 +9,16 @@ Usage:
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, check_and_coerce_optional, check_range, get_enum_value, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    check_range,
+    get_enum_value,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
+
 
 class LayerManager:
     """
@@ -551,6 +559,4 @@ class LayerManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="allow_clipping")
 
         check_type(checked, bool)
-        return self.layer_manager.AllowClipping(
-            check_and_coerce_optional(layer, EntList), checked
-        )
+        return self.layer_manager.AllowClipping(check_and_coerce_optional(layer, EntList), checked)

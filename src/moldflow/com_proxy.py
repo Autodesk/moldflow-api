@@ -17,6 +17,7 @@ from .errors import raise_attribute_error
 # Helper: Verify COM attribute existence
 # ------------------------------------------------------------------
 
+
 def _verify_com_attribute(obj, attribute: str):
     """
     Raise *AttributeError* if *attribute* is not present on *obj*.
@@ -32,6 +33,7 @@ def _verify_com_attribute(obj, attribute: str):
     if not hasattr(obj, attribute):
         raise_attribute_error(attribute)
     process_log(__name__, LogMessage.VALID_INPUT)
+
 
 class SafeCOMProxy:
     """Lightweight proxy around a COM object that validates attribute access.
@@ -112,6 +114,7 @@ class SafeCOMProxy:
         """
         return hash(self._com)
 
+
 def safe_com(obj):
     """
     Return a *SafeCOMProxy* wrapping *obj* if it isn’t already wrapped.
@@ -121,9 +124,11 @@ def safe_com(obj):
     """
     return obj if isinstance(obj, SafeCOMProxy) else SafeCOMProxy(obj)
 
+
 # ------------------------------------------------------------------
 # Helper to expose _oleobj_ on wrapper objects
 # ------------------------------------------------------------------
+
 
 def expose_oleobj(container, attr_name="_com"):
     """Attach `_oleobj_` to *container* by copying it from the wrapped COM object.
@@ -152,6 +157,7 @@ def expose_oleobj(container, attr_name="_com"):
         # _oleobj_.  In both cases we silently skip — the wrapper simply will
         # not be passable to COM until the attribute appears.
         pass
+
 
 def flag_com_method(com_object, method_name: str):
     """

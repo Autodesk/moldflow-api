@@ -11,6 +11,7 @@ from .logger import process_log
 from .helper import check_type, check_is_non_negative, check_range, get_enum_value
 from .com_proxy import safe_com
 
+
 class MaterialSelector:
     """
     Wrapper for MaterialSelector class of Moldflow Synergy.

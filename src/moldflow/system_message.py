@@ -10,8 +10,16 @@ from .string_array import StringArray
 from .double_array import DoubleArray
 from .common import SystemUnits
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value, check_is_non_negative, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    get_enum_value,
+    check_is_non_negative,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
+
 
 class SystemMessage:
     """

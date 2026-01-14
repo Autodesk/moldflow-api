@@ -11,6 +11,7 @@ from .com_proxy import safe_com
 from .logger import process_log
 from .common import LogMessage
 
+
 class MaterialPlot:
     """
     Wrapper for MaterialPlot class of Moldflow Synergy.

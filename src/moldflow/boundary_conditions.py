@@ -15,6 +15,7 @@ from .ent_list import EntList
 from .vector import Vector
 from .prop import Property
 
+
 class BoundaryConditions:
     """
     Wrapper for BoundaryConditions class of Moldflow Synergy.

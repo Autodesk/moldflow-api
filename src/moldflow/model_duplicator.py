@@ -10,6 +10,7 @@ from .logger import process_log, LogMessage
 from .helper import check_type
 from .com_proxy import safe_com
 
+
 class ModelDuplicator:
     """
     Wrapper for ModelDuplicator class of Moldflow Synergy.

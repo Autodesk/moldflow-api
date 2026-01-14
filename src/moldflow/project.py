@@ -11,6 +11,7 @@ from .com_proxy import safe_com
 from .common import ItemType, DuplicateOption, ImportUnitIndex
 from .logger import process_log, LogMessage
 
+
 class Project:
     """
     Wrapper for Project class of Moldflow Synergy.

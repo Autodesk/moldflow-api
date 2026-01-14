@@ -9,12 +9,19 @@ Usage:
 
 from .logger import process_log
 from .common import LogMessage
-from .helper import check_type, check_optional_type, check_and_coerce_optional, check_min_max, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    check_min_max,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
 from .ent_list import EntList
 from .mesh_summary import MeshSummary
 from .integer_array import IntegerArray
 from .double_array import DoubleArray
+
 
 class DiagnosisManager:
     """

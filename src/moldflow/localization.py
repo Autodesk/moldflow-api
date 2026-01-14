@@ -22,6 +22,7 @@ from .common import LogMessage
 from .i18n import install_translation, get_text
 from .logger import process_log
 
+
 def get_locale(product_name: str = "Moldflow Synergy", version: str = ""):
     """
     Get the locale of the specified Autodesk product from the Windows registry.
@@ -93,6 +94,7 @@ def get_locale(product_name: str = "Moldflow Synergy", version: str = ""):
     # Default
     _process_locale("Default", "", DEFAULT_BCP_47_STD)
     return DEFAULT_THREE_LETTER_CODE
+
 
 def set_language(product_name: str = "Moldflow Synergy", version: str = "", locale: str = ""):
     """

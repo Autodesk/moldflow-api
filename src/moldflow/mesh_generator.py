@@ -20,6 +20,7 @@ from .common import (
 from .helper import check_type, check_range, get_enum_value
 from .com_proxy import safe_com
 
+
 class MeshGenerator:
     """
     Wrapper for MeshGenerator class of Moldflow Synergy.

@@ -157,6 +157,7 @@ WIN_ID_CANCEL = 2
 # Defaults
 DEFAULT_TITLE = "Moldflow"
 
+
 class MessageBoxType(Enum):
     """
     Message box types supported by the convenience API.
@@ -184,6 +185,7 @@ class MessageBoxType(Enum):
     CANCEL_TRY_CONTINUE = auto()
     INPUT = auto()
 
+
 class MessageBoxResult(Enum):
     """
     Result of a message box interaction.
@@ -202,8 +204,10 @@ class MessageBoxResult(Enum):
     TRY_AGAIN = auto()
     CONTINUE = auto()
 
+
 # Public type alias for show() return value
 MessageBoxReturn: TypeAlias = Union[MessageBoxResult, Optional[str]]
+
 
 class MessageBoxIcon(Enum):
     """
@@ -217,12 +221,14 @@ class MessageBoxIcon(Enum):
     ERROR = auto()
     QUESTION = auto()
 
+
 class MessageBoxModality(Enum):
     """Modality for the message box window."""
 
     APPLICATION = auto()  # Default Win32 behavior (no explicit flag)
     SYSTEM = auto()
     TASK = auto()
+
 
 class MessageBoxDefaultButton(Enum):
     """Which button is the default (activated by Enter)."""
@@ -231,6 +237,7 @@ class MessageBoxDefaultButton(Enum):
     BUTTON2 = auto()
     BUTTON3 = auto()
     BUTTON4 = auto()
+
 
 # Mapping dictionaries (module-level) for flags and results
 MAPPING_MESSAGEBOX_TYPE = {
@@ -274,6 +281,7 @@ ID_TO_RESULT = {
     WIN_IDTRYAGAIN: MessageBoxResult.TRY_AGAIN,
     WIN_IDCONTINUE: MessageBoxResult.CONTINUE,
 }
+
 
 @dataclass(frozen=True)
 class MessageBoxOptions:  # pylint: disable=too-many-instance-attributes
@@ -342,6 +350,7 @@ class MessageBoxOptions:  # pylint: disable=too-many-instance-attributes
         # Validate char_limit
         if self.char_limit is not None and self.char_limit < 0:
             object.__setattr__(self, "char_limit", 0)
+
 
 class MessageBox:
     """
@@ -535,6 +544,7 @@ class MessageBox:
         """
         dialog = _Win32InputDialog(self.title, self.text, self.options)
         return dialog.run()
+
 
 class _Win32InputDialog:
     """

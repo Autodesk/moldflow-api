@@ -8,6 +8,7 @@ Enums for Moldflow API
 import logging
 from enum import Enum
 
+
 class MaterialDatabase(Enum):
     """
     Enum for different material database with IDs.
@@ -25,6 +26,7 @@ class MaterialDatabase(Enum):
     MUCELL_MATERIAL_PROPERTIES = 21300
     INJECTION_MOLDING_MACHINE = 30007
 
+
 class MaterialDatabaseType(Enum):
     """
     Enum for different material database types.
@@ -32,6 +34,7 @@ class MaterialDatabaseType(Enum):
 
     SYSTEM = "System"
     USER = "User"
+
 
 class CrossSectionType(Enum):
     """
@@ -45,6 +48,7 @@ class CrossSectionType(Enum):
     U_SHAPE = "U-shape"
     TRAPEZOIDAL = "Trapezoidal"
 
+
 class MeshType(Enum):
     """
     Enum for different mesh types.
@@ -53,6 +57,7 @@ class MeshType(Enum):
     MESH_MIDPLANE = "Midplane"
     MESH_FUSION = "Fusion"
     MESH_3D = "3D"
+
 
 class ImportUnits(Enum):
     """
@@ -64,6 +69,7 @@ class ImportUnits(Enum):
     M = "m"
     IN = "in"
 
+
 class ImportUnitIndex(Enum):
     """
     Enum for ImportUnits
@@ -74,6 +80,7 @@ class ImportUnitIndex(Enum):
     M = 2
     IN = 3
 
+
 class MDLKernel(Enum):
     """
     Enum for MDLKernel
@@ -81,6 +88,7 @@ class MDLKernel(Enum):
 
     PARAMETRIC = "Parametric"
     PARASOLID = "Parasolid"
+
 
 class MDLContactMeshType(Enum):
     """
@@ -91,6 +99,7 @@ class MDLContactMeshType(Enum):
     FAULT_TOLERANCE = "Fault tolerant"
     IGNORE_CONTACT = "Ignore contact"
 
+
 class CADBodyProperty(Enum):
     """
     Enum for CADBodyProperty
@@ -99,6 +108,7 @@ class CADBodyProperty(Enum):
     PROPERTY_CAD_COMPONENT = 0
     PROPERTY_3D_CHANNEL = 40915
     PROPERTY_MOLD_COMPONENT = 40912
+
 
 class ItemType(Enum):
     """
@@ -109,6 +119,7 @@ class ItemType(Enum):
     REPORT = "Report"
     FOLDER = "Folder"
 
+
 class DuplicateOption(Enum):
     """
     Enum for DuplicateOption
@@ -118,6 +129,7 @@ class DuplicateOption(Enum):
     NO_RESULTS_FILES_INCLUDED = 1
     INCLUDE_RESULT_FILES_LINKED_TO_ORIGINAL = 2
 
+
 class SystemUnits(Enum):
     """
     System of units
@@ -126,6 +138,7 @@ class SystemUnits(Enum):
     METRIC = "Metric"
     ENGLISH = "English"
     STANDARD = "SI"
+
 
 class ErrorMessage(Enum):
     """
@@ -138,6 +151,7 @@ class ErrorMessage(Enum):
     SAVE_ERROR = "Save Error: Failed to save {saving} to {file_name}"
     ATTRIBUTE_ERROR = "Invalid Attribute: {attribute} is not supported"
     SYNERGY_ERROR = "Failed to initialize Synergy: Synergy not found"
+
 
 class LogMessage(Enum):
     """
@@ -188,6 +202,7 @@ class LogMessage(Enum):
     NONE_LOGGER = ("Logger was not setup", logging.WARNING)
     # Critical logs
 
+
 class ValueErrorReason(Enum):
     """Reasons for raising a ValueError."""
 
@@ -206,6 +221,7 @@ class ValueErrorReason(Enum):
     INVALID_FILE_EXTENSION = "{value} does not have a valid file extension, must be {extensions}"
     INVALID_VALUE = "found {value}, must be one of {expected_values}"
     BOTH_PARAMETERS_REQUIRED = "both {first} and {second} must be provided together"
+
 
 class MoldingProcess(Enum):
     """Type of molding process"""
@@ -230,6 +246,7 @@ class MoldingProcess(Enum):
     MULTIPLE_BARREL_REACTIVE_MOLDING = "Multiple-Barrel Reactive Molding"
     COOLANT_FLOW = "Coolant Flow"
 
+
 class MaterialIndex(Enum):
     """
     Enum for different material index.
@@ -237,6 +254,7 @@ class MaterialIndex(Enum):
 
     FIRST = 0
     SECOND = 1
+
 
 class EntityType(Enum):
     """
@@ -256,6 +274,7 @@ class EntityType(Enum):
     TET4 = "TE"
     STL = "STL"
 
+
 class DisplayOption(Enum):
     """
     Enum for DisplayOption
@@ -273,6 +292,7 @@ class DisplayOption(Enum):
     SOLID_PLUS_NET = "Solid + Net"
     TRANSPARENT_PLUS_NET = "Transparent + Net"
 
+
 class AnalysisType(Enum):
     """
     Enum for AnalysisType
@@ -283,6 +303,7 @@ class AnalysisType(Enum):
     STRESS_WARP = 3
     CORE_SHIFT = 4
 
+
 class ConstraintType(Enum):
     """
     Enum for ConstraintType
@@ -291,6 +312,7 @@ class ConstraintType(Enum):
     FIXED = 1
     FREE = 2
     SPECIFIC = 3
+
 
 class TransformFunctions(Enum):
     """
@@ -307,6 +329,7 @@ class TransformFunctions(Enum):
     LOGARITHM = "log"
     SQUARE_ROOT = "sqrt"
 
+
 class TransformOperations(Enum):
     """
     Enum for TransformOperations
@@ -316,6 +339,7 @@ class TransformOperations(Enum):
     SUBTRACT = "-"
     MULTIPLY = "*"
     DIVIDE = "/"
+
 
 class TransformScalarOperations(Enum):
     """
@@ -329,6 +353,7 @@ class TransformScalarOperations(Enum):
     POST_DIVIDE = "/="
     POST_MINUS = "-="
 
+
 class CommitActions(Enum):
     """
     Enum for CommitActions
@@ -339,6 +364,7 @@ class CommitActions(Enum):
     PROCESS_CONDITIONS = "Process Conditions"
     REMOVE_UNUSED = "Remove Unused"
 
+
 class NurbsAlgorithm(Enum):
     """
     Enum for NurbsMesher
@@ -347,6 +373,7 @@ class NurbsAlgorithm(Enum):
     DEFAULT = 0
     ADVANCING_FRONT = 1
 
+
 class CoolType(Enum):
     """
     Enum for CoolType
@@ -354,6 +381,7 @@ class CoolType(Enum):
 
     BEM = 1
     FEM = 2
+
 
 class TriClassification(Enum):
     """
@@ -374,6 +402,7 @@ class GeomType(Enum):
     FUSION = "Fusion"
     MIDPLANE = "Midplane"
 
+
 class Mesher3DType(Enum):
     """
     Enum for Mesher3DType
@@ -382,6 +411,7 @@ class Mesher3DType(Enum):
     ADVANCING_FRONT = "AdvancingFront"
     LEGACY = "Legacy"
     ADVANCING_LAYERS = "AdvancingLayers"
+
 
 class CADContactMesh(Enum):
     """
@@ -392,6 +422,7 @@ class CADContactMesh(Enum):
     FAULT_TOLERANCE = "Fault tolerant"
     IGNORE_CONTACT = "Ignore contact"
 
+
 class UserPlotType(Enum):
     """
     Enum for UserPlotType
@@ -400,6 +431,7 @@ class UserPlotType(Enum):
     ELEMENT_DATA = "ELDT"
     NODE_DATA = "NDDT"
     NON_MESH_DATA = "NMDT"
+
 
 class BirefringenceResultType(Enum):
     """
@@ -411,6 +443,7 @@ class BirefringenceResultType(Enum):
     RETARDANCE_TENSOR = 2
     FRINGE_PATTERN = 3
 
+
 class DeflectionType(Enum):
     """
     Enum for DeflectionType
@@ -420,6 +453,7 @@ class DeflectionType(Enum):
     DEFL_C = "DEFL_C"
     DEFL_W = "DEFL_W"
     DEFL_W2 = "DEFL_W2"
+
 
 class DisplayComponent(Enum):
     """
@@ -440,6 +474,7 @@ class DisplayComponent(Enum):
     SECOND_TENSOR_PRINCIPAL_VALUE = 7
     THIRD_TENSOR_PRINCIPAL_VALUE = 8
 
+
 class ScaleOptions(Enum):
     """
     Enum for ScaleOption
@@ -448,6 +483,7 @@ class ScaleOptions(Enum):
     AUTOMATIC_SCALING_ALL_FRAMES = 0
     AUTOMATIC_SCALING_WITH_COLORS_SCALED_PER_FRAME = 1
     SPECIFIED_MANUAL_SCALING = 2
+
 
 class PlotMethod(Enum):
     """
@@ -464,6 +500,7 @@ class PlotMethod(Enum):
     DISPLAY_TENSOR_PRINCIPAL_VECTOR_AS_DARTS = 128
     DISPLAY_TENSOR_PRINCIPAL_VECTOR_AS_SEGMENTS = 256
 
+
 class AnimationType(Enum):
     """
     Enum for AnimationType
@@ -471,6 +508,7 @@ class AnimationType(Enum):
 
     FRAME_ANIMATION = 0
     MIN_MAX_ANIMATION = 1
+
 
 class ColorTableIDs(Enum):
     """
@@ -484,6 +522,7 @@ class ColorTableIDs(Enum):
     SINGLE_COLOR = 1000
     TRAFFIC_LIGHT = 1100
 
+
 class EdgeDisplayOptions(Enum):
     """
     Enum for EdgeDisplayOptions
@@ -492,6 +531,7 @@ class EdgeDisplayOptions(Enum):
     OFF = 0
     FEATURE_EDGE = 1
     MESH_EDGE = 2
+
 
 class DeflectionScaleDirections(Enum):
     """
@@ -503,6 +543,7 @@ class DeflectionScaleDirections(Enum):
     Z = 2
     ALL = 3
 
+
 class SliceAtProbeOptions(Enum):
     """
     Enum for SliceAtProbeOptions
@@ -512,6 +553,7 @@ class SliceAtProbeOptions(Enum):
     MINIMUM = "Minimum"
     MAXIMUM = "Maximum"
 
+
 class TensorAxisRatioOptions(Enum):
     """
     Enum for TensorAxisRatioOptions
@@ -520,6 +562,7 @@ class TensorAxisRatioOptions(Enum):
     CONSTANT_MAXIMUM_LENGTH = 0
     THREE_TWO_ONE = 1
     PROPORTIONAL_TO_PRINCIPAL_VALUES = 2
+
 
 class ShrinkageCompensationOptions(Enum):
     """
@@ -531,6 +574,7 @@ class ShrinkageCompensationOptions(Enum):
     ANISOTROPIC = "Anisotropic"
     NONE = "None"
 
+
 class TraceModes(Enum):
     """
     Enum for TraceModes
@@ -538,6 +582,7 @@ class TraceModes(Enum):
 
     ALL_PATHLINES = 0
     TERMINATING_IN_SELECTED_AREA = 1
+
 
 class TraceStyles(Enum):
     """
@@ -548,6 +593,7 @@ class TraceStyles(Enum):
     MARKERS = 1
     TUBES = 2
 
+
 class ScaleTypes(Enum):
     """
     Enum for ScaleTypes
@@ -555,6 +601,7 @@ class ScaleTypes(Enum):
 
     DEFAULT = 0
     SPECIFIED = 1
+
 
 class ColorScaleOptions(Enum):
     """
@@ -564,6 +611,7 @@ class ColorScaleOptions(Enum):
     BLUE_TO_RED = True
     RED_TO_BLUE = False
 
+
 class ViewModes(Enum):
     """
     Enum for ViewModes projections
@@ -571,6 +619,7 @@ class ViewModes(Enum):
 
     PARALLEL_PROJECTION = 0
     PERSPECTIVE_PROJECTION = 1
+
 
 class StandardViews(Enum):
     """
@@ -601,6 +650,7 @@ class StandardViews(Enum):
     BACK_BOTTOM_RIGHT = "BackBottomRight"
     ISOMETRIC = "Isometric"
 
+
 class AnimationSpeed(Enum):
     """
     Enum for AnimationSpeed
@@ -609,6 +659,7 @@ class AnimationSpeed(Enum):
     SLOW = "Slow"
     MEDIUM = "Medium"
     FAST = "Fast"
+
 
 class ClampForcePlotDirection(Enum):
     """
@@ -619,6 +670,7 @@ class ClampForcePlotDirection(Enum):
     Y = 1
     Z = 2
 
+
 class ModulusPlotDirection(Enum):
     """
     Enum for ModulusPlotDirection
@@ -627,6 +679,7 @@ class ModulusPlotDirection(Enum):
     EXX = 0
     EYY = 1
     EZZ = 2
+
 
 class PlotType(Enum):
     """
@@ -656,6 +709,7 @@ class PlotType(Enum):
     PLOT_FUSION_SINK_MARK_PLOT = 24
     PLOT_DOE_RESPONSE_SURFACE_PLOT = 25
 
+
 class LCSType(Enum):
     """
     Enum for LCS_Type
@@ -664,6 +718,7 @@ class LCSType(Enum):
     COORDINATE_SYSTEM = "LCS"
     MODELLING_PLANE = "Plane"
 
+
 class CurveInitPosition(Enum):
     """
     Enum for Curve_Init_Position
@@ -671,6 +726,7 @@ class CurveInitPosition(Enum):
 
     START = 0
     END = 1
+
 
 class PropertyType(Enum):
     """

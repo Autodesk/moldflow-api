@@ -9,8 +9,16 @@ Usage:
 from .logger import process_log, LogMessage
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
-from .helper import get_enum_value, check_type, check_optional_type, check_and_coerce_optional, check_range, coerce_optional_dispatch
+from .helper import (
+    get_enum_value,
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    check_range,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
+
 
 class FolderManager:
     """
@@ -85,8 +93,7 @@ class FolderManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_objects_to_folder")
 
         return self.folder_manager.AddObjectsToFolder(
-            check_and_coerce_optional(objects, EntList),
-            check_and_coerce_optional(folder, EntList),
+            check_and_coerce_optional(objects, EntList), check_and_coerce_optional(folder, EntList)
         )
 
     def remove_objects_from_folder(self, objects: EntList | None) -> bool:

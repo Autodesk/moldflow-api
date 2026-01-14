@@ -404,7 +404,7 @@ class TestHelper:
         mock_ent_list.__class__.__name__ = 'EntList'
         mock_internal = Mock()
         mock_ent_list.ent_list = mock_internal
-        
+
         # The function should validate the type and return the internal attribute
         result = check_and_coerce_optional(mock_ent_list, type(mock_ent_list))
         assert result == mock_internal

@@ -9,8 +9,14 @@ Usage:
 from .ent_list import EntList
 from .vector import Vector
 from .logger import process_log, LogMessage
-from .helper import check_type, check_optional_type, check_and_coerce_optional, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
+
 
 class CADManager:
     """

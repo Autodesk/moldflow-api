@@ -13,8 +13,16 @@ from .common import LogMessage
 from .ent_list import EntList
 from .vector import Vector
 from .prop import Property
-from .helper import check_type, check_optional_type, check_and_coerce_optional, check_range, check_is_non_negative, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    check_and_coerce_optional,
+    check_range,
+    check_is_non_negative,
+    coerce_optional_dispatch,
+)
 from .com_proxy import safe_com
+
 
 class MeshEditor:
     """
@@ -357,8 +365,7 @@ class MeshEditor:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="align_normals")
 
         return self.mesh_editor.AlignNormals(
-            check_and_coerce_optional(seed_tri, EntList),
-            check_and_coerce_optional(tris, EntList),
+            check_and_coerce_optional(seed_tri, EntList), check_and_coerce_optional(tris, EntList)
         )
 
     def fill_hole(self, nodes: EntList | None, fill_type: int | None = None) -> bool:
