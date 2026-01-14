@@ -76,6 +76,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Fetch all history for sphinx-multiversion
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -142,6 +144,9 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
+      - name: Fetch Git tags
+        run: git fetch --tags
 
       - name: Build documentation
         run: python run.py build-docs

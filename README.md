@@ -68,8 +68,7 @@ python run.py build
 python run.py build-docs
 ```
 
-> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
-   to include the new tag in the version dropdown for documentation.***
+> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` to include the new tag in the version dropdown for documentation.***
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
