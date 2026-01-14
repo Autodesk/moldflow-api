@@ -16,7 +16,14 @@ from .integer_array import IntegerArray
 from .material_plot import MaterialPlot
 from .user_plot import UserPlot
 from .common import MaterialDatabase, MaterialIndex, PlotType, SystemUnits
-from .helper import check_type, get_enum_value, check_file_extension, coerce_optional_dispatch
+from .helper import (
+    check_type,
+    check_optional_type,
+    coerce_optional_dispatch,
+    check_and_coerce_optional,
+    get_enum_value,
+    check_file_extension,
+)
 from .com_proxy import safe_com
 from .errors import raise_save_error
 from .constants import XML_FILE_EXT, SDZ_FILE_EXT, FBX_FILE_EXT, ELE_FILE_EXT
@@ -61,8 +68,7 @@ class PlotManager:
             Plot: The next plot.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_plot")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         result = self.plot_manager.GetNextPlot(coerce_optional_dispatch(plot, "plot"))
         if result is None:
             return None
@@ -156,8 +162,7 @@ class PlotManager:
             plot (Plot): The plot to delete.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_plot")
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         self.plot_manager.DeletePlot(coerce_optional_dispatch(plot, "plot"))
 
     def data_has_xy_plot_by_ds_id(self, ds_id: int) -> bool:
@@ -209,17 +214,12 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_scalar_data")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
-        if ent_ids is not None:
-            check_type(ent_ids, IntegerArray)
-        if scalar_data is not None:
-            check_type(scalar_data, DoubleArray)
+
         return self.plot_manager.GetScalarData(
             ds_id,
-            coerce_optional_dispatch(indp_values, "double_array"),
-            coerce_optional_dispatch(ent_ids, "integer_array"),
-            coerce_optional_dispatch(scalar_data, "double_array"),
+            check_and_coerce_optional(indp_values, DoubleArray),
+            check_and_coerce_optional(ent_ids, IntegerArray),
+            check_and_coerce_optional(scalar_data, DoubleArray),
         )
 
     # pylint: disable-next=R0913, R0917
@@ -248,23 +248,14 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_vector_data")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
-        if ent_ids is not None:
-            check_type(ent_ids, IntegerArray)
-        if va is not None:
-            check_type(va, DoubleArray)
-        if vb is not None:
-            check_type(vb, DoubleArray)
-        if vc is not None:
-            check_type(vc, DoubleArray)
+
         return self.plot_manager.GetVectorData(
             ds_id,
-            coerce_optional_dispatch(indp_values, "double_array"),
-            coerce_optional_dispatch(ent_ids, "integer_array"),
-            coerce_optional_dispatch(va, "double_array"),
-            coerce_optional_dispatch(vb, "double_array"),
-            coerce_optional_dispatch(vc, "double_array"),
+            check_and_coerce_optional(indp_values, DoubleArray),
+            check_and_coerce_optional(ent_ids, IntegerArray),
+            check_and_coerce_optional(va, DoubleArray),
+            check_and_coerce_optional(vb, DoubleArray),
+            check_and_coerce_optional(vc, DoubleArray),
         )
 
     # pylint: disable-next=R0913, R0917
@@ -299,32 +290,17 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_tensor_data")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
-        if ent_ids is not None:
-            check_type(ent_ids, IntegerArray)
-        if t11 is not None:
-            check_type(t11, DoubleArray)
-        if t22 is not None:
-            check_type(t22, DoubleArray)
-        if t33 is not None:
-            check_type(t33, DoubleArray)
-        if t12 is not None:
-            check_type(t12, DoubleArray)
-        if t13 is not None:
-            check_type(t13, DoubleArray)
-        if t23 is not None:
-            check_type(t23, DoubleArray)
+
         return self.plot_manager.GetTensorData(
             ds_id,
-            coerce_optional_dispatch(indp_values, "double_array"),
-            coerce_optional_dispatch(ent_ids, "integer_array"),
-            coerce_optional_dispatch(t11, "double_array"),
-            coerce_optional_dispatch(t22, "double_array"),
-            coerce_optional_dispatch(t33, "double_array"),
-            coerce_optional_dispatch(t12, "double_array"),
-            coerce_optional_dispatch(t13, "double_array"),
-            coerce_optional_dispatch(t23, "double_array"),
+            check_and_coerce_optional(indp_values, DoubleArray),
+            check_and_coerce_optional(ent_ids, IntegerArray),
+            check_and_coerce_optional(t11, DoubleArray),
+            check_and_coerce_optional(t22, DoubleArray),
+            check_and_coerce_optional(t33, DoubleArray),
+            check_and_coerce_optional(t12, DoubleArray),
+            check_and_coerce_optional(t13, DoubleArray),
+            check_and_coerce_optional(t23, DoubleArray),
         )
 
     def get_non_mesh_data(
@@ -343,14 +319,11 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_non_mesh_data")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
-        if non_mesh_data is not None:
-            check_type(non_mesh_data, DoubleArray)
+
         return self.plot_manager.GetNonmeshData(
             ds_id,
-            coerce_optional_dispatch(indp_values, "double_array"),
-            coerce_optional_dispatch(non_mesh_data, "double_array"),
+            check_and_coerce_optional(indp_values, DoubleArray),
+            check_and_coerce_optional(non_mesh_data, DoubleArray),
         )
 
     def get_highlight_data(
@@ -369,14 +342,11 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_highlight_data")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
-        if highlight_data is not None:
-            check_type(highlight_data, DoubleArray)
+
         return self.plot_manager.GetHighlightData(
             ds_id,
-            coerce_optional_dispatch(indp_values, "double_array"),
-            coerce_optional_dispatch(highlight_data, "double_array"),
+            check_and_coerce_optional(indp_values, DoubleArray),
+            check_and_coerce_optional(highlight_data, DoubleArray),
         )
 
     def create_user_plot(self) -> UserPlot:
@@ -456,10 +426,9 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_indp_values")
         check_type(ds_id, int)
-        if values is not None:
-            check_type(values, DoubleArray)
+
         return self.plot_manager.GetIndpValues(
-            ds_id, coerce_optional_dispatch(values, "double_array")
+            ds_id, check_and_coerce_optional(values, DoubleArray)
         )
 
     def get_data_nb_components(self, ds_id: int) -> int:
@@ -511,10 +480,9 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="find_dataset_ids_by_name")
         check_type(name, str)
-        if ds_ids is not None:
-            check_type(ds_ids, IntegerArray)
+
         return self.plot_manager.FindDatasetIdsByName(
-            name, coerce_optional_dispatch(ds_ids, "integer_array")
+            name, check_and_coerce_optional(ds_ids, IntegerArray)
         )
 
     def create_anchor_plane(
@@ -552,8 +520,7 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="apply_anchor_plane")
         check_type(anchor_index, int)
-        if plot is not None:
-            check_type(plot, Plot)
+        check_optional_type(plot, Plot)
         return self.plot_manager.ApplyAnchorPlane(
             anchor_index, coerce_optional_dispatch(plot, "plot")
         )
@@ -748,10 +715,9 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="warp_query_node")
         check_type(node_id, int)
         check_type(anchor_index, int)
-        if ret_values is not None:
-            check_type(ret_values, DoubleArray)
+
         return self.plot_manager.WarpQueryNode(
-            node_id, anchor_index, coerce_optional_dispatch(ret_values, "double_array")
+            node_id, anchor_index, check_and_coerce_optional(ret_values, DoubleArray)
         )
 
     def warp_query_begin(self, ds_id: int, indp_values: DoubleArray | None) -> bool:
@@ -767,10 +733,9 @@ class PlotManager:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="warp_query_begin")
         check_type(ds_id, int)
-        if indp_values is not None:
-            check_type(indp_values, DoubleArray)
+
         return self.plot_manager.WarpQueryBegin(
-            ds_id, coerce_optional_dispatch(indp_values, "double_array")
+            ds_id, check_and_coerce_optional(indp_values, DoubleArray)
         )
 
     def export_to_sdz(self, file_name: str) -> bool:
@@ -962,18 +927,15 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="fbx_export")
         check_type(file_name, str)
         file_name = check_file_extension(file_name, FBX_FILE_EXT)
-        if geo_list is not None:
-            check_type(geo_list, EntList)
-        if mesh_list is not None:
-            check_type(mesh_list, EntList)
+
         check_type(export_type, int)
         check_type(wp_scale_factor, (float, int))
         check_type(sm_scale_factor, (float, int))
         unit_sys = get_enum_value(unit_sys, SystemUnits)
         result = self.plot_manager.FBXExport(
             file_name,
-            coerce_optional_dispatch(geo_list, "ent_list"),
-            coerce_optional_dispatch(mesh_list, "ent_list"),
+            check_and_coerce_optional(geo_list, EntList),
+            check_and_coerce_optional(mesh_list, EntList),
             export_type,
             wp_scale_factor,
             sm_scale_factor,

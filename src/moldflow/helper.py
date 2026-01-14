@@ -45,13 +45,13 @@ def get_enum_value(value, enum: Enum):
     return value
 
 
-def check_type(value, types: tuple):
+def check_type(value, types: tuple | type):
     """
     Check if the value is of the specified type(s).
 
     Args:
         value: The value to check.
-        types (tuple): A tuple of types to check against.
+        types (tuple | type): A tuple of types to check against, or a single type.
 
     Returns:
         bool: True if the value is of the specified type(s), otherwise raises a TypeError.
@@ -74,6 +74,34 @@ def check_type(value, types: tuple):
     if (is_bool and bool_not_in_types) or not isinstance(value, types):
         raise_type_error(value, types)
     process_log(__name__, LogMessage.VALID_INPUT)
+
+
+def check_optional_type(value, types: tuple | type):
+    """
+    Check if the value is of the specified type(s) or None.
+
+    This function is used to validate optional parameters that may be None or a specific type.
+    It provides standardized handling of None arguments across API calls.
+
+    Args:
+        value: The value to check. Can be None or of the specified type(s).
+        types (tuple | type): A tuple of types to check against, or a single type (excluding None).
+
+    Returns:
+        bool: True if the value is None or of the specified type(s), otherwise raises a TypeError.
+
+    Raises:
+        TypeError: If the value is not None and not of the specified type(s).
+
+    Notes:
+        - None is always considered valid.
+        - The function handles the special case where in python `bool` is a subclass of `int`.
+        - If `types` is not a tuple, it is treated as a single type.
+    """
+    if value is None:
+        process_log(__name__, LogMessage.VALID_INPUT)
+        return
+    check_type(value, types)
 
 
 def _compare(value1, value2, inclusive):
@@ -336,4 +364,70 @@ def coerce_optional_dispatch(value, attr_name: str | None = None):
         return variant_null_idispatch()
     if attr_name:
         value = getattr(value, attr_name)
+    return value
+
+
+# Type to attribute name mapping for COM objects
+_TYPE_TO_ATTR_MAP = {
+    'EntList': 'ent_list',
+    'Vector': 'vector',
+    'Property': 'prop',
+    'Predicate': 'predicate',
+    'IntegerArray': 'integer_array',
+    'DoubleArray': 'double_array',
+    'BoundaryList': 'boundary_list',
+    'VectorArray': 'vector_array',
+    'StringArray': 'string_array',
+}
+
+
+def check_and_coerce_optional(value, expected_type: type):
+    """
+    Check if the value is of the expected type or None, and coerce it for COM dispatch.
+
+    This function combines type validation and COM coercion into a single operation,
+    providing standardized handling of optional COM object parameters.
+
+    - If value is None, returns a null IDispatch VARIANT
+    - If value is not None, validates the type and unwraps the COM object attribute
+    - For primitive types (int, float, str, bool), returns the value as-is after validation
+
+    Args:
+        value: The value to check and coerce. Can be None or of the expected type.
+        expected_type (type): The expected type to check against.
+
+    Returns:
+        VARIANT or value: The coerced COM object (VARIANT) or the validated primitive value.
+
+    Raises:
+        TypeError: If the value is not None and not of the expected type.
+
+    Examples:
+        >>> nodes = EntList(...)
+        >>> coerced = check_and_coerce_optional(nodes, EntList)
+        >>> # Returns nodes.ent_list
+
+        >>> check_and_coerce_optional(None, EntList)
+        >>> # Returns variant_null_idispatch()
+
+        >>> check_and_coerce_optional(42, int)
+        >>> # Returns 42 (primitive types are passed through)
+    """
+    # First validate the type
+    check_optional_type(value, expected_type)
+
+    # If None, return null dispatch
+    if value is None:
+        return variant_null_idispatch()
+
+    # Get the type name
+    type_name = expected_type.__name__
+
+    # Check if this is a COM object type that needs unwrapping
+    attr_name = _TYPE_TO_ATTR_MAP.get(type_name)
+
+    if attr_name:
+        # COM object - unwrap the attribute
+        return getattr(value, attr_name)
+    # Primitive type or unknown type - return as-is
     return value

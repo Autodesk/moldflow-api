@@ -62,7 +62,6 @@ WIN_VK_ESCAPE = 0x1B
 # pylint: disable=invalid-name
 INT_PTR = ctypes.c_ssize_t
 
-
 # Win32 MessageBox flags (from winuser.h)
 WIN_MB_OK = 0x00000000
 WIN_MB_OKCANCEL = 0x00000001

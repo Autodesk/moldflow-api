@@ -70,7 +70,6 @@ def raise_save_error(saving: str, file_name: str) -> NoReturn:
     """
     Raise a SaveError if the save operation fails.
 
-
     Args:
         saving (str): The operation that failed.
         file_name (str): The name of the file that could not be saved.

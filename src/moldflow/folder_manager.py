@@ -9,7 +9,7 @@ Usage:
 from .logger import process_log, LogMessage
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
-from .helper import get_enum_value, check_type, check_range, coerce_optional_dispatch
+from .helper import get_enum_value, check_type, check_and_coerce_optional, check_range
 from .com_proxy import safe_com
 
 
@@ -49,9 +49,8 @@ class FolderManager:
             EntList: The created child layer.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_child_layer")
-        if folder is not None:
-            check_type(folder, EntList)
-        result = self.folder_manager.CreateChildLayer(coerce_optional_dispatch(folder, "ent_list"))
+
+        result = self.folder_manager.CreateChildLayer(check_and_coerce_optional(folder, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -67,9 +66,8 @@ class FolderManager:
             EntList: The created child folder.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="create_child_folder")
-        if folder is not None:
-            check_type(folder, EntList)
-        result = self.folder_manager.CreateChildFolder(coerce_optional_dispatch(folder, "ent_list"))
+
+        result = self.folder_manager.CreateChildFolder(check_and_coerce_optional(folder, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -86,13 +84,9 @@ class FolderManager:
             bool: True if the objects were added successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_objects_to_folder")
-        if objects is not None:
-            check_type(objects, EntList)
-        if folder is not None:
-            check_type(folder, EntList)
+
         return self.folder_manager.AddObjectsToFolder(
-            coerce_optional_dispatch(objects, "ent_list"),
-            coerce_optional_dispatch(folder, "ent_list"),
+            check_and_coerce_optional(objects, EntList), check_and_coerce_optional(folder, EntList)
         )
 
     def remove_objects_from_folder(self, objects: EntList | None) -> bool:
@@ -106,10 +100,9 @@ class FolderManager:
             bool: True if the objects were removed successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="remove_objects_from_folder")
-        if objects is not None:
-            check_type(objects, EntList)
+
         return self.folder_manager.RemoveObjectsFromFolder(
-            coerce_optional_dispatch(objects, "ent_list")
+            check_and_coerce_optional(objects, EntList)
         )
 
     def create_entity_list(self) -> EntList:
@@ -138,11 +131,10 @@ class FolderManager:
             bool: True if the folder was deleted successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="delete_folder")
-        if folder is not None:
-            check_type(folder, EntList)
+
         check_type(move_layers, bool)
         return self.folder_manager.DeleteFolder(
-            coerce_optional_dispatch(folder, "ent_list"), move_layers
+            check_and_coerce_optional(folder, EntList), move_layers
         )
 
     def toggle_folder(self, folder: EntList | None) -> bool:
@@ -156,9 +148,8 @@ class FolderManager:
             bool: True if the folder was toggled successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="toggle_folder")
-        if folder is not None:
-            check_type(folder, EntList)
-        return self.folder_manager.ToggleFolder(coerce_optional_dispatch(folder, "ent_list"))
+
+        return self.folder_manager.ToggleFolder(check_and_coerce_optional(folder, EntList))
 
     # pylint: disable-next=R0913, R0917
     def expand_folder(
@@ -187,8 +178,7 @@ class FolderManager:
             int: The number of entities affected.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="expand_folder")
-        if folder is not None:
-            check_type(folder, EntList)
+
         # pylint: disable=R0801
         check_type(levels, int)
         check_type(expand_new_layer, bool)
@@ -197,7 +187,7 @@ class FolderManager:
         check_type(inc_tetras, bool)
         check_type(inc_beams, bool)
         return self.folder_manager.ExpandFolder(
-            coerce_optional_dispatch(folder, "ent_list"),
+            check_and_coerce_optional(folder, EntList),
             levels,
             expand_new_layer,
             inc_nodes,
@@ -218,10 +208,9 @@ class FolderManager:
             bool: True if the folder name was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_folder_name")
-        if folder is not None:
-            check_type(folder, EntList)
+
         check_type(name, str)
-        return self.folder_manager.SetFolderName(coerce_optional_dispatch(folder, "ent_list"), name)
+        return self.folder_manager.SetFolderName(check_and_coerce_optional(folder, EntList), name)
 
     def show_all_folders(self) -> bool:
         """
@@ -245,10 +234,9 @@ class FolderManager:
             bool: True if the folders were shown/hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_folders")
-        if folders is not None:
-            check_type(folders, EntList)
+
         check_type(show, bool)
-        return self.folder_manager.ShowFolders(coerce_optional_dispatch(folders, "ent_list"), show)
+        return self.folder_manager.ShowFolders(check_and_coerce_optional(folders, EntList), show)
 
     # pylint: disable-next=R0913, R0917
     def set_type_color(
@@ -275,8 +263,7 @@ class FolderManager:
             int: The integer identifier for the color
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_color")
-        if folder is not None:
-            check_type(folder, EntList)
+
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(default, bool)
         check_type(red, int)
@@ -286,7 +273,7 @@ class FolderManager:
         check_range(green, 0, 255, True, True)
         check_range(blue, 0, 255, True, True)
         return self.folder_manager.SetTypeColor(
-            coerce_optional_dispatch(folder, "ent_list"), entity_type, default, red, green, blue
+            check_and_coerce_optional(folder, EntList), entity_type, default, red, green, blue
         )
 
     def set_type_visible(
@@ -304,12 +291,11 @@ class FolderManager:
             bool: True if the visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_visible")
-        if folder is not None:
-            check_type(folder, EntList)
+
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(visible, bool)
         return self.folder_manager.SetTypeVisible(
-            coerce_optional_dispatch(folder, "ent_list"), entity_type, visible
+            check_and_coerce_optional(folder, EntList), entity_type, visible
         )
 
     def set_type_display_option(
@@ -353,12 +339,11 @@ class FolderManager:
             bool: True if the display option was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_display_option")
-        if folder is not None:
-            check_type(folder, EntList)
+
         entity_type = get_enum_value(entity_type, EntityType)
         option = get_enum_value(option, DisplayOption)
         return self.folder_manager.SetTypeDisplayOption(
-            coerce_optional_dispatch(folder, "ent_list"), entity_type, option
+            check_and_coerce_optional(folder, EntList), entity_type, option
         )
 
     def get_first(self) -> EntList:
@@ -385,9 +370,8 @@ class FolderManager:
             EntList: The next folder.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next")
-        if folder is not None:
-            check_type(folder, EntList)
-        result = self.folder_manager.GetNext(coerce_optional_dispatch(folder, "ent_list"))
+
+        result = self.folder_manager.GetNext(check_and_coerce_optional(folder, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -403,9 +387,8 @@ class FolderManager:
             str: The name of the folder.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_name")
-        if folder is not None:
-            check_type(folder, EntList)
-        return self.folder_manager.GetName(coerce_optional_dispatch(folder, "ent_list"))
+
+        return self.folder_manager.GetName(check_and_coerce_optional(folder, EntList))
 
     def show_labels(self, folder: EntList | None, show: bool) -> bool:
         """
@@ -419,10 +402,9 @@ class FolderManager:
             bool: True if the labels were shown/hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_labels")
-        if folder is not None:
-            check_type(folder, EntList)
+
         check_type(show, bool)
-        return self.folder_manager.ShowLabels(coerce_optional_dispatch(folder, "ent_list"), show)
+        return self.folder_manager.ShowLabels(check_and_coerce_optional(folder, EntList), show)
 
     def show_glyphs(self, folder: EntList | None, show: bool) -> bool:
         """
@@ -436,10 +418,9 @@ class FolderManager:
             bool: True if the glyphs were shown/hidden successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="show_glyphs")
-        if folder is not None:
-            check_type(folder, EntList)
+
         check_type(show, bool)
-        return self.folder_manager.ShowGlyphs(coerce_optional_dispatch(folder, "ent_list"), show)
+        return self.folder_manager.ShowGlyphs(check_and_coerce_optional(folder, EntList), show)
 
     def set_type_show_labels(
         self, folder: EntList | None, entity_type: EntityType | str, show: bool
@@ -456,12 +437,11 @@ class FolderManager:
             bool: True if the label visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_show_labels")
-        if folder is not None:
-            check_type(folder, EntList)
+
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(show, bool)
         return self.folder_manager.SetTypeShowLabels(
-            coerce_optional_dispatch(folder, "ent_list"), entity_type, show
+            check_and_coerce_optional(folder, EntList), entity_type, show
         )
 
     def set_type_show_glyphs(
@@ -479,12 +459,11 @@ class FolderManager:
             bool: True if the glyph visibility was set successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_type_show_glyphs")
-        if folder is not None:
-            check_type(folder, EntList)
+
         entity_type = get_enum_value(entity_type, EntityType)
         check_type(show, bool)
         return self.folder_manager.SetTypeShowGlyphs(
-            coerce_optional_dispatch(folder, "ent_list"), entity_type, show
+            check_and_coerce_optional(folder, EntList), entity_type, show
         )
 
     def create_folder_by_name(self, name: str) -> EntList:
@@ -532,9 +511,8 @@ class FolderManager:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="hide_all_other_folders")
-        if folder is not None:
-            check_type(folder, EntList)
-        return self.folder_manager.HideAllOtherFolders(coerce_optional_dispatch(folder, "ent_list"))
+
+        return self.folder_manager.HideAllOtherFolders(check_and_coerce_optional(folder, EntList))
 
     def remove_empty_folders(self) -> bool:
         """
@@ -558,9 +536,8 @@ class FolderManager:
             bool: True if the operation was successful, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="allow_clipping")
-        if folder is not None:
-            check_type(folder, EntList)
+
         check_type(checked, bool)
         return self.folder_manager.AllowClipping(
-            coerce_optional_dispatch(folder, "ent_list"), checked
+            check_and_coerce_optional(folder, EntList), checked
         )

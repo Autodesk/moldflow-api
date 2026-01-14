@@ -9,7 +9,7 @@ Usage:
 from .logger import process_log, LogMessage
 from .ent_list import EntList
 from .prop import Property
-from .helper import get_enum_value, check_type, coerce_optional_dispatch
+from .helper import get_enum_value, check_type, check_and_coerce_optional
 from .com_proxy import safe_com
 from .common import CommitActions, MaterialDatabaseType, PropertyType
 
@@ -116,12 +116,9 @@ class PropertyEditor:
             bool: True if the property was assigned successfully, False otherwise.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="set_property")
-        if entities is not None:
-            check_type(entities, EntList)
-        if prop is not None:
-            check_type(prop, Property)
+
         return self.property_editor.SetProperty(
-            coerce_optional_dispatch(entities, "ent_list"), coerce_optional_dispatch(prop, "prop")
+            check_and_coerce_optional(entities, EntList), check_and_coerce_optional(prop, Property)
         )
 
     def create_entity_list(self) -> EntList:
@@ -212,9 +209,8 @@ class PropertyEditor:
             Property: The next property in the list.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_property")
-        if prop is not None:
-            check_type(prop, Property)
-        result = self.property_editor.GetNextProperty(coerce_optional_dispatch(prop, "prop"))
+
+        result = self.property_editor.GetNextProperty(check_and_coerce_optional(prop, Property))
         if result is None:
             return None
         return Property(result)
@@ -230,9 +226,10 @@ class PropertyEditor:
             Property: The next property of the same type.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_property_of_type")
-        if prop is not None:
-            check_type(prop, Property)
-        result = self.property_editor.GetNextPropertyOfType(coerce_optional_dispatch(prop, "prop"))
+
+        result = self.property_editor.GetNextPropertyOfType(
+            check_and_coerce_optional(prop, Property)
+        )
         if result is None:
             return None
         return Property(result)
@@ -248,11 +245,8 @@ class PropertyEditor:
             Property: The property of the entities.
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_property")
-        if entities is not None:
-            check_type(entities, EntList)
-        prop = self.property_editor.GetEntityProperty(
-            coerce_optional_dispatch(entities, "ent_list")
-        )
+
+        prop = self.property_editor.GetEntityProperty(check_and_coerce_optional(entities, EntList))
         if prop is None:
             return None
         return Property(prop)

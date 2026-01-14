@@ -9,7 +9,7 @@ Usage:
 from .ent_list import EntList
 from .vector import Vector
 from .logger import process_log, LogMessage
-from .helper import check_type, coerce_optional_dispatch
+from .helper import check_type, check_and_coerce_optional
 from .com_proxy import safe_com
 
 
@@ -60,14 +60,11 @@ class CADManager:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modify_cad_surfaces_by_normal"
         )
-        if faces is not None:
-            check_type(faces, EntList)
-        if transit_faces is not None:
-            check_type(transit_faces, EntList)
+
         check_type(distance, (float, int))
         return self.cad_manager.ModifyCADSurfacesByNormal(
-            coerce_optional_dispatch(faces, "ent_list"),
-            coerce_optional_dispatch(transit_faces, "ent_list"),
+            check_and_coerce_optional(faces, EntList),
+            check_and_coerce_optional(transit_faces, EntList),
             distance,
         )
 
@@ -89,14 +86,9 @@ class CADManager:
         process_log(
             __name__, LogMessage.FUNCTION_CALL, locals(), name="modify_cad_surfaces_by_vector"
         )
-        if faces is not None:
-            check_type(faces, EntList)
-        if transit_faces is not None:
-            check_type(transit_faces, EntList)
-        if vector is not None:
-            check_type(vector, Vector)
+
         return self.cad_manager.ModifyCADSurfacesByVector(
-            coerce_optional_dispatch(faces, "ent_list"),
-            coerce_optional_dispatch(transit_faces, "ent_list"),
-            coerce_optional_dispatch(vector, "vector"),
+            check_and_coerce_optional(faces, EntList),
+            check_and_coerce_optional(transit_faces, EntList),
+            check_and_coerce_optional(vector, Vector),
         )

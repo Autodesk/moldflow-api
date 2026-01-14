@@ -18,7 +18,6 @@ import urllib.request
 from importlib.metadata import version, PackageNotFoundError
 from typing import Tuple, Optional
 
-
 # Module-level constants to avoid repeated literals and improve maintainability
 PACKAGE_NAME = "moldflow"
 NO_UPDATE_ENV_VAR = "MOLDFLOW_API_NO_UPDATE_CHECK"

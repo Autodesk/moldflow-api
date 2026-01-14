@@ -11,11 +11,13 @@ from .import_options import ImportOptions
 from .logger import process_log
 from .helper import (
     check_type,
+    check_optional_type,
+    coerce_optional_dispatch,
+    check_and_coerce_optional,
     check_file_extension,
     check_range,
     get_enum_value,
     check_is_non_negative,
-    coerce_optional_dispatch,
 )
 from .com_proxy import safe_com
 from .common import LogMessage, MoldingProcess, MeshType
@@ -154,9 +156,8 @@ class StudyDoc:
         Set selection
         """
         process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="selection", value=value)
-        if value is not None:
-            check_type(value, EntList)
-        self.study_doc.Selection = coerce_optional_dispatch(value, "ent_list")
+
+        self.study_doc.Selection = check_and_coerce_optional(value, EntList)
 
     @property
     def number_of_analyses(self) -> int:
@@ -264,8 +265,7 @@ class StudyDoc:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="add_file")
         check_type(name, str)
-        if opts is not None:
-            check_type(opts, ImportOptions)
+        check_optional_type(opts, ImportOptions)
         check_type(show_logs, bool)
         return self.study_doc.AddFile(
             name, coerce_optional_dispatch(opts, "import_options"), show_logs
@@ -313,9 +313,8 @@ class StudyDoc:
             EntList: The next node in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_node")
-        if node is not None:
-            check_type(node, EntList)
-        result = self.study_doc.GetNextNode(coerce_optional_dispatch(node, "ent_list"))
+
+        result = self.study_doc.GetNextNode(check_and_coerce_optional(node, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -331,9 +330,8 @@ class StudyDoc:
             Vector: The coordinates of the node
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_node_coord")
-        if node is not None:
-            check_type(node, EntList)
-        result = self.study_doc.GetNodeCoord(coerce_optional_dispatch(node, "ent_list"))
+
+        result = self.study_doc.GetNodeCoord(check_and_coerce_optional(node, EntList))
         if result is None:
             return None
         return Vector(result)
@@ -362,9 +360,8 @@ class StudyDoc:
             EntList: The next triangle in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_tri")
-        if tri is not None:
-            check_type(tri, EntList)
-        result = self.study_doc.GetNextTri(coerce_optional_dispatch(tri, "ent_list"))
+
+        result = self.study_doc.GetNextTri(check_and_coerce_optional(tri, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -393,9 +390,8 @@ class StudyDoc:
             EntList: The next beam in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_beam")
-        if beam is not None:
-            check_type(beam, EntList)
-        result = self.study_doc.GetNextBeam(coerce_optional_dispatch(beam, "ent_list"))
+
+        result = self.study_doc.GetNextBeam(check_and_coerce_optional(beam, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -424,9 +420,8 @@ class StudyDoc:
             EntList: The next tetrahedral element in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_tet")
-        if tet is not None:
-            check_type(tet, EntList)
-        result = self.study_doc.GetNextTet(coerce_optional_dispatch(tet, "ent_list"))
+
+        result = self.study_doc.GetNextTet(check_and_coerce_optional(tet, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -442,9 +437,8 @@ class StudyDoc:
             EntList: The nodes of the element
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_elem_nodes")
-        if elem is not None:
-            check_type(elem, EntList)
-        result = self.study_doc.GetElemNodes(coerce_optional_dispatch(elem, "ent_list"))
+
+        result = self.study_doc.GetElemNodes(check_and_coerce_optional(elem, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -460,9 +454,8 @@ class StudyDoc:
             EntList: The layer of the entity
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_layer")
-        if ent is not None:
-            check_type(ent, EntList)
-        result = self.study_doc.GetEntityLayer(coerce_optional_dispatch(ent, "ent_list"))
+
+        result = self.study_doc.GetEntityLayer(check_and_coerce_optional(ent, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -478,9 +471,8 @@ class StudyDoc:
             int: The ID of the entity
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_entity_id")
-        if ent is not None:
-            check_type(ent, EntList)
-        return self.study_doc.GetEntityID(coerce_optional_dispatch(ent, "ent_list"))
+
+        return self.study_doc.GetEntityID(check_and_coerce_optional(ent, EntList))
 
     def get_first_curve(self) -> EntList:
         """
@@ -506,9 +498,8 @@ class StudyDoc:
             EntList: The next curve in the study
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_next_curve")
-        if curve is not None:
-            check_type(curve, EntList)
-        result = self.study_doc.GetNextCurve(coerce_optional_dispatch(curve, "ent_list"))
+
+        result = self.study_doc.GetNextCurve(check_and_coerce_optional(curve, EntList))
         if result is None:
             return None
         return EntList(result)
@@ -525,13 +516,10 @@ class StudyDoc:
             Vector: The point on the curve
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_curve_point")
-        if curve is not None:
-            check_type(curve, EntList)
+
         check_type(pos_curve, (int, float))
         check_range(pos_curve, 0, 1, True, True)
-        result = self.study_doc.GetCurvePoint(
-            coerce_optional_dispatch(curve, "ent_list"), pos_curve
-        )
+        result = self.study_doc.GetCurvePoint(check_and_coerce_optional(curve, EntList), pos_curve)
         if result is None:
             return None
         return Vector(result)

@@ -10,7 +10,7 @@ from .string_array import StringArray
 from .double_array import DoubleArray
 from .common import SystemUnits
 from .logger import process_log, LogMessage
-from .helper import check_type, get_enum_value, check_is_non_negative, coerce_optional_dispatch
+from .helper import check_type, check_and_coerce_optional, get_enum_value, check_is_non_negative
 from .com_proxy import safe_com
 
 
@@ -50,15 +50,12 @@ class SystemMessage:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_data_message")
         check_type(msgid, int)
-        if preset_text is not None:
-            check_type(preset_text, StringArray)
-        if preset_vals is not None:
-            check_type(preset_vals, DoubleArray)
+
         check_is_non_negative(msgid)
         unit_sys = get_enum_value(unit_sys, SystemUnits)
         return self.system_message.GetDataMessage(
             msgid,
-            coerce_optional_dispatch(preset_text, "string_array"),
-            coerce_optional_dispatch(preset_vals, "double_array"),
+            check_and_coerce_optional(preset_text, StringArray),
+            check_and_coerce_optional(preset_vals, DoubleArray),
             unit_sys,
         )
