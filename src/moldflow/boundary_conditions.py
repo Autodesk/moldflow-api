@@ -6,9 +6,8 @@ Usage:
     BoundaryConditions Class API Wrapper
 """
 
-from .helper import coerce_optional_dispatch
 from .common import LogMessage, AnalysisType, ConstraintType
-from .helper import check_type, check_optional_type, check_and_coerce_optional, get_enum_value
+from .helper import check_type, check_and_coerce_optional, get_enum_value
 from .com_proxy import safe_com
 from .logger import process_log
 from .ent_list import EntList

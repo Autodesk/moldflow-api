@@ -11,6 +11,8 @@ from .import_options import ImportOptions
 from .logger import process_log
 from .helper import (
     check_type,
+    check_optional_type,
+    coerce_optional_dispatch,
     check_and_coerce_optional,
     check_file_extension,
     check_range,

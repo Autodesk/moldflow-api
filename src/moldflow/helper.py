@@ -429,6 +429,5 @@ def check_and_coerce_optional(value, expected_type: type):
     if attr_name:
         # COM object - unwrap the attribute
         return getattr(value, attr_name)
-    else:
-        # Primitive type or unknown type - return as-is
-        return value
+    # Primitive type or unknown type - return as-is
+    return value

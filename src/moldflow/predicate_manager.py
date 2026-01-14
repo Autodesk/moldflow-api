@@ -12,7 +12,6 @@ from .common import CrossSectionType, LogMessage
 from .helper import (
     check_type,
     check_and_coerce_optional,
-    check_and_coerce_optional,
     get_enum_value,
     check_range,
 )

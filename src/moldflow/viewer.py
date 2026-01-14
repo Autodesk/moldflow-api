@@ -26,6 +26,8 @@ from .helper import (
     check_min_max,
     check_range,
     check_type,
+    check_optional_type,
+    coerce_optional_dispatch,
     check_and_coerce_optional,
     get_enum_value,
     check_is_positive,

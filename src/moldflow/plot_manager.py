@@ -18,7 +18,8 @@ from .user_plot import UserPlot
 from .common import MaterialDatabase, MaterialIndex, PlotType, SystemUnits
 from .helper import (
     check_type,
-    check_and_coerce_optional,
+    check_optional_type,
+    coerce_optional_dispatch,
     check_and_coerce_optional,
     get_enum_value,
     check_file_extension,

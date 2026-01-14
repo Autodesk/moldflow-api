@@ -7,7 +7,7 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
-from .helper import check_type, check_and_coerce_optional, check_and_coerce_optional, get_enum_value
+from .helper import check_type, check_and_coerce_optional, get_enum_value
 from .com_proxy import safe_com
 from .common import TransformFunctions, TransformOperations, TransformScalarOperations
 from .integer_array import IntegerArray
