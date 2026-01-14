@@ -9,10 +9,8 @@ Usage:
 from .logger import process_log, LogMessage
 from .helper import (
     check_type,
-    check_optional_type,
     check_and_coerce_optional,
-    coerce_optional_dispatch,
-)
+    check_and_coerce_optional,)
 from .com_proxy import safe_com
 from .vector import Vector
 

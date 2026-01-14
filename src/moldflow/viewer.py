@@ -26,13 +26,11 @@ from .helper import (
     check_min_max,
     check_range,
     check_type,
-    check_optional_type,
+    check_and_coerce_optional,
     get_enum_value,
     check_is_positive,
     check_is_non_negative,
-    check_file_extension,
-    coerce_optional_dispatch,
-)
+    check_file_extension,)
 from .errors import raise_value_error
 from .common import ValueErrorReason
 from .plot import Plot

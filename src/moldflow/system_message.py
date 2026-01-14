@@ -12,12 +12,10 @@ from .common import SystemUnits
 from .logger import process_log, LogMessage
 from .helper import (
     check_type,
-    check_optional_type,
+    check_and_coerce_optional,
     check_and_coerce_optional,
     get_enum_value,
-    check_is_non_negative,
-    coerce_optional_dispatch,
-)
+    check_is_non_negative,)
 from .com_proxy import safe_com
 
 

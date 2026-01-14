@@ -11,14 +11,12 @@ from .com_proxy import safe_com
 from .logger import process_log, LogMessage
 from .helper import (
     check_type,
-    check_optional_type,
+    check_and_coerce_optional,
     get_enum_value,
     check_range,
     check_is_non_negative,
     check_expected_values,
-    check_file_extension,
-    coerce_optional_dispatch,
-)
+    check_file_extension,)
 from .common import (
     DisplayComponent,
     ScaleOptions,

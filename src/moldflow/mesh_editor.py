@@ -15,12 +15,10 @@ from .vector import Vector
 from .prop import Property
 from .helper import (
     check_type,
-    check_optional_type,
+    check_and_coerce_optional,
     check_and_coerce_optional,
     check_range,
-    check_is_non_negative,
-    coerce_optional_dispatch,
-)
+    check_is_non_negative,)
 from .com_proxy import safe_com
 
 

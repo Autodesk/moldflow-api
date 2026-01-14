@@ -12,10 +12,8 @@ from .prop import Property
 from .helper import (
     get_enum_value,
     check_type,
-    check_optional_type,
     check_and_coerce_optional,
-    coerce_optional_dispatch,
-)
+    check_and_coerce_optional,)
 from .com_proxy import safe_com
 from .common import CommitActions, MaterialDatabaseType, PropertyType
 

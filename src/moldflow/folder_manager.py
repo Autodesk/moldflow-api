@@ -12,11 +12,9 @@ from .common import EntityType, DisplayOption
 from .helper import (
     get_enum_value,
     check_type,
-    check_optional_type,
     check_and_coerce_optional,
-    check_range,
-    coerce_optional_dispatch,
-)
+    check_and_coerce_optional,
+    check_range,)
 from .com_proxy import safe_com
 
 

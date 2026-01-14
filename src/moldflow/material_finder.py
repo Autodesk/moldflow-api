@@ -11,11 +11,9 @@ from .common import MaterialDatabase, MaterialDatabaseType
 from .logger import process_log
 from .helper import (
     check_type,
-    check_optional_type,
     check_and_coerce_optional,
-    get_enum_value,
-    coerce_optional_dispatch,
-)
+    check_and_coerce_optional,
+    get_enum_value,)
 from .com_proxy import safe_com
 from .common import LogMessage
 
