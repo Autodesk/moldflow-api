@@ -9,12 +9,7 @@ Usage:
 from .logger import process_log, LogMessage
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
-from .helper import (
-    get_enum_value,
-    check_type,
-    check_and_coerce_optional,
-    check_range,
-)
+from .helper import get_enum_value, check_type, check_and_coerce_optional, check_range
 from .com_proxy import safe_com
 
 

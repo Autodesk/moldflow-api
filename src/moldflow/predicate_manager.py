@@ -9,12 +9,7 @@ Usage:
 from .predicate import Predicate
 from .double_array import DoubleArray
 from .common import CrossSectionType, LogMessage
-from .helper import (
-    check_type,
-    check_and_coerce_optional,
-    get_enum_value,
-    check_range,
-)
+from .helper import check_type, check_and_coerce_optional, get_enum_value, check_range
 from .com_proxy import safe_com
 from .logger import process_log
 
