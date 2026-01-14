@@ -147,7 +147,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Fetch Git tags
-        run: git fetch --tags --force
+        run: git fetch --tags
 
       - name: Build documentation
         run: python run.py build-docs
