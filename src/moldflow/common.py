@@ -364,6 +364,7 @@ class TriClassification(Enum):
     PRESERVE_NOT_SLIVER = 1
     PRESERVE_ALL = 2
 
+
 class GeomType(Enum):
     """
     Enum for GeomType
