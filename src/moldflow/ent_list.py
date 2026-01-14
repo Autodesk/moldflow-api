@@ -6,11 +6,7 @@ Usage:
     EntList Class API Wrapper
 """
 
-from .helper import (
-    check_index,
-    check_type,
-    check_and_coerce_optional,
-    check_and_coerce_optional,)
+from .helper import check_index, check_type, check_and_coerce_optional, check_and_coerce_optional
 from .com_proxy import safe_com, expose_oleobj
 from .predicate import Predicate
 from .common import LogMessage

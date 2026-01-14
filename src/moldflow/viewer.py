@@ -30,7 +30,8 @@ from .helper import (
     get_enum_value,
     check_is_positive,
     check_is_non_negative,
-    check_file_extension,)
+    check_file_extension,
+)
 from .errors import raise_value_error
 from .common import ValueErrorReason
 from .plot import Plot

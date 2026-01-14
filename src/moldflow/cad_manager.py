@@ -9,10 +9,7 @@ Usage:
 from .ent_list import EntList
 from .vector import Vector
 from .logger import process_log, LogMessage
-from .helper import (
-    check_type,
-    check_and_coerce_optional,
-    check_and_coerce_optional,)
+from .helper import check_type, check_and_coerce_optional, check_and_coerce_optional
 from .com_proxy import safe_com
 
 

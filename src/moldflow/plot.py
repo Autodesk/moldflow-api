@@ -16,7 +16,8 @@ from .helper import (
     check_range,
     check_is_non_negative,
     check_expected_values,
-    check_file_extension,)
+    check_file_extension,
+)
 from .common import (
     DisplayComponent,
     ScaleOptions,

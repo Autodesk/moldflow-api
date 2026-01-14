@@ -15,7 +15,8 @@ from .helper import (
     check_is_positive,
     check_type,
     check_and_coerce_optional,
-    get_enum_value,)
+    get_enum_value,
+)
 from .com_proxy import safe_com
 from .boundary_list import BoundaryList
 from .prop import Property

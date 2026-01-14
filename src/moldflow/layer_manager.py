@@ -14,7 +14,8 @@ from .helper import (
     check_and_coerce_optional,
     check_and_coerce_optional,
     check_range,
-    get_enum_value,)
+    get_enum_value,
+)
 from .com_proxy import safe_com
 
 

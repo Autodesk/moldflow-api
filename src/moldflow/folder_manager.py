@@ -14,7 +14,8 @@ from .helper import (
     check_type,
     check_and_coerce_optional,
     check_and_coerce_optional,
-    check_range,)
+    check_range,
+)
 from .com_proxy import safe_com
 
 

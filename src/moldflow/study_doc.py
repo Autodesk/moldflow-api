@@ -15,7 +15,8 @@ from .helper import (
     check_file_extension,
     check_range,
     get_enum_value,
-    check_is_non_negative,)
+    check_is_non_negative,
+)
 from .com_proxy import safe_com
 from .common import LogMessage, MoldingProcess, MeshType
 from .constants import UDM_FILE_EXT
