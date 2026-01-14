@@ -360,8 +360,8 @@ class TestHelper:
 
     @pytest.mark.parametrize(
         "value, types",
-        [(x, (int, float)) for x in list_intersection(INVALID_FLOAT, INVALID_INT)]
-        + [(x, int) for x in INVALID_INT],
+        [(x, (int, float)) for x in list_intersection(INVALID_FLOAT, INVALID_INT) if x is not None]
+        + [(x, int) for x in INVALID_INT if x is not None],
     )
     def test_check_optional_type_invalid(self, value, types, _):
         """
