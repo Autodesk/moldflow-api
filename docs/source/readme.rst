@@ -1255,7 +1255,12 @@ The project includes a ``run.py`` script with several useful commands:
 - ``python run.py test`` - Run tests
 - ``python run.py lint`` - Run code linting
 - ``python run.py format`` - Format code with black
-- ``python run.py build-docs`` - Build documentation
+- ``python run.py build-docs`` - Build versioned documentation (HTML uses git tags for the
+  navigation dropdown; run ``git fetch --tags`` locally before building)
+
+.. note::
+   When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
+   to include the new tag in the version dropdown.
 
 Contributing
 ============
