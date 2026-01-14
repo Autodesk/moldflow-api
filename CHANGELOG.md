@@ -8,19 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- N/A
+- Python 3.14 support
 
 ### Changed
-- N/A
+- `MeshGenerator.cad_mesh_grading_factor` now accepts `float` values in range 0.0 to 1.0 instead of enum/integer-coded options
 
 ### Deprecated
 - N/A
 
 ### Removed
-- N/A
+- `GradingFactor` enum - incorrectly restricted the API to discrete values when the COM API accepts continuous float values from 0.0 to 1.0
 
 ### Fixed
 - Fixed `GeomType` enum not being exposed in package `__init__.py` - users can now import it directly with `from moldflow import GeomType`
+- Fixed `MeshGenerator.cad_mesh_grading_factor` to properly accept float/double values matching the COM API signature instead of restricting to enum values
 
 ### Security
 - N/A

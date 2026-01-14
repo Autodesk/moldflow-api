@@ -13,7 +13,6 @@ from .common import (
     NurbsAlgorithm,
     CoolType,
     TriClassification,
-    GradingFactor,
     GeomType,
     Mesher3DType,
     CADContactMesh,
@@ -731,15 +730,16 @@ class MeshGenerator:
         return self.mesh_generator.CadMeshGradingFactor
 
     @cad_mesh_grading_factor.setter
-    def cad_mesh_grading_factor(self, value: GradingFactor | int) -> None:
+    def cad_mesh_grading_factor(self, value: float) -> None:
         """
         Set the CAD mesh grading factor option.
         """
         process_log(
             __name__, LogMessage.PROPERTY_SET, locals(), name="cad_mesh_grading_factor", value=value
         )
-        value = get_enum_value(value, GradingFactor)
-        self.mesh_generator.CadMeshGradingFactor = value
+        check_type(value, (int, float))
+        check_range(value, 0, 1, True, True)
+        self.mesh_generator.CadMeshGradingFactor = float(value)
 
     @property
     def cad_mesh_minimum_curvature_percentage(self) -> float:
