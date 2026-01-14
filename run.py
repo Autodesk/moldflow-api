@@ -7,7 +7,7 @@
 Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
-    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build]
+    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
     run.py format [--check]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
@@ -49,6 +49,7 @@ Options:
     --unit                          Run only unit tests.
     --integration                   Run only integration tests.
     --all                           Run all tests.
+    -l, --local                     Build documentation locally (single version).
 """
 
 import os
@@ -340,7 +341,7 @@ def create_latest_alias(build_output: str) -> None:
         shutil.copytree(latest_src, latest_dest)
 
 
-def build_docs(target, skip_build):
+def build_docs(target, skip_build, local=False):
     """Build Documentation"""
 
     if not skip_build:
@@ -353,7 +354,7 @@ def build_docs(target, skip_build):
         shutil.rmtree(DOCS_BUILD_DIR)
 
     try:
-        if target == 'html':
+        if target == 'html' and not local:
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
             try:
                 # fmt: off
@@ -705,8 +706,9 @@ def main():
         elif args.get('build-docs'):
             target = args.get('--target') or args.get('-t') or 'html'
             skip_build = args.get('--skip-build') or args.get('-s')
+            local = args.get('--local') or args.get('-l')
 
-            build_docs(target=target, skip_build=skip_build)
+            build_docs(target=target, skip_build=skip_build, local=local)
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))
