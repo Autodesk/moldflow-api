@@ -296,6 +296,31 @@ def build_mo():
         )
 
 
+def create_root_redirect(build_output: str) -> None:
+    """Create an index.html at the root that redirects to /latest/."""
+    index_path = os.path.join(build_output, 'index.html')
+    redirect_html = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting to latest documentation...</title>
+    <meta http-equiv="refresh" content="0; url=./latest/">
+    <link rel="canonical" href="./latest/">
+    <script>window.location.replace("./latest/");</script>
+</head>
+<body>
+    <p>Redirecting to <a href="./latest/">latest documentation</a>...</p>
+</body>
+</html>
+"""
+    try:
+        with open(index_path, 'w', encoding='utf-8') as f:
+            f.write(redirect_html)
+        logging.info("Created root redirect: index.html -> latest/")
+    except Exception as err:
+        logging.warning("Could not create root redirect index.html: %s", err)
+
+
 def create_latest_alias(build_output: str) -> None:
     """Create a 'latest' alias pointing to the newest version using symlinks when possible."""
     version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
@@ -377,6 +402,7 @@ def build_docs(target, skip_build, local=False):
                 raise
             # fmt: on
             create_latest_alias(build_output)
+            create_root_redirect(build_output)
         else:
             # For other targets such as latex, pdf, etc.
             run_command(
