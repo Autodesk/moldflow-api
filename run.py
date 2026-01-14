@@ -297,7 +297,7 @@ def build_mo():
 
 
 def create_root_redirect(build_output: str) -> None:
-    """Create an index.html at the root that redirects to /latest/."""
+    """Create an index.html in the versioned HTML build output root that redirects to /latest/."""
     index_path = os.path.join(build_output, 'index.html')
     redirect_html = """<!DOCTYPE html>
 <html>

@@ -1259,7 +1259,7 @@ The project includes a ``run.py`` script with several useful commands:
   navigation dropdown; run ``git fetch --tags`` locally before building)
 
   - ``--skip-build`` (``-s``): Skip building the package before generating docs
-  - ``--local`` (``-l``): Build local, single version
+  - ``--local`` (``-l``): Build documentation locally for a single version (skips multi-version build)
 
 .. note::
    When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 

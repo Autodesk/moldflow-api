@@ -72,7 +72,7 @@ python run.py build-docs
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
-- `--local` (`-l`): Build local, single version
+- `--local` (`-l`): Build documentation locally for a single version (skips multi-version build)
 
 The documentation can be accessed locally by serving the docs/build/html/ folder:
 ```sh
