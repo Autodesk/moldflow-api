@@ -72,8 +72,21 @@ python run.py build-docs
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
+- `--local` (`-l`): Build documentation locally for a single version (skips multi-version build)
 
-The documentation can be accessed locally by opening the index.html in the docs/build/html/ folder.
+The documentation can be accessed locally by serving the docs/build/html/ folder:
+```sh
+cd docs/build/html
+python -m http.server 8000
+```
+
+Then open http://localhost:8000 in your browser. The root automatically redirects to the latest version documentation.
+
+**Versioned Documentation:**
+- Each git tag creates a separate documentation version (e.g., `/v26.0.5/`)
+- A `/latest/` directory points to the newest version
+- Root (`/`) automatically redirects to `/latest/`
+- Run `git fetch --tags` before building to ensure all version tags are available
 
 ### Running the Formatter
 
