@@ -1258,9 +1258,30 @@ The project includes a ``run.py`` script with several useful commands:
 - ``python run.py build-docs`` - Build versioned documentation (HTML uses git tags for the
   navigation dropdown; run ``git fetch --tags`` locally before building)
 
+  - ``--skip-build`` (``-s``): Skip building the package before generating docs
+  - ``--local`` (``-l``): Build documentation locally for a single version (skips multi-version build)
+
 .. note::
    When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
    to include the new tag in the version dropdown.
+
+**Viewing Documentation Locally**
+
+After building, serve the documentation using Python's built-in HTTP server:
+
+.. code-block:: bash
+
+   cd docs/build/html
+   python -m http.server 8000
+
+Then open http://localhost:8000 in your browser.
+
+**Versioned Documentation Features:**
+
+- Each git tag creates a separate documentation version (e.g., ``/v26.0.5/``)
+- A ``/latest/`` directory points to the newest version (symlink on Unix, copy on Windows)
+- Root (``/``) automatically redirects to ``/latest/`` for convenience
+- Version switcher dropdown in the navigation bar allows switching between versions
 
 Contributing
 ============
