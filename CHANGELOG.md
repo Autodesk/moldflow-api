@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added/updated component enum docs and wrapper docs (docs/source/components/enums/*, docs/source/components/wrapper/*) and updated project readme (docs/source/readme.rst).
 
 ### Deprecated
-- Deprecated several legacy Viewer functions and MeshGenerator/ImportOptions properties in preparation for Synergy 2027.0.0 (see PR #110):
+- Deprecated several legacy Viewer functions and MeshGenerator/ImportOptions properties:
 	- `Viewer.save_image_legacy` (deprecated)
 	- `Viewer.save_image` (deprecated)
 	- `Viewer.save_animation` (deprecated)
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 	- `MeshGenerator.use_fallbacks` (deprecated)
 	- `MeshGenerator.use_tetras_on_edge` (deprecated)
 	- `MeshGenerator.tetra_max_ar` (deprecated)
-- Added deprecation warnings and clarified FillHole API redesigns (see PR #97 and IM-9707/IM-10248).
+- Added deprecation warnings and clarified FillHole API redesigns.
 
 ### Removed
 - `GradingFactor` enum - incorrectly restricted the API to discrete values when the COM API accepts continuous float values from 0.0 to 1.0
