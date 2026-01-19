@@ -12,14 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New wrapper and documentation for `AnimationExportOptions` (`src/moldflow/animation_export_options.py` and docs/source/components/wrapper/animation_export_options.rst).
 - New wrapper and documentation for `ImageExportOptions` (`src/moldflow/image_export_options.py` and docs/source/components/wrapper/image_export_options.rst).
 - Added `CADDiagnostic` wrapper and documentation (`src/moldflow/cad_diagnostic.py`, docs/source/components/wrapper/cad_diagnostic.rst).
+- Added and updated unit tests covering animation/image export options, CAD diagnostic, import options, mesh editor, plot manager, study document handling, synergy, and viewer (tests/api/unit_tests/* and tests/core/test_helper.py).
 
 ### Changed
 - `MeshGenerator.cad_mesh_grading_factor` now accepts `float` values in range 0.0 to 1.0 instead of enum/integer-coded options (`src/moldflow/mesh_generator.py`).
 - API improvements and helper additions across mesh editing, plotting, study documents, Synergy integration, and the viewer (`src/moldflow/mesh_editor.py`, `src/moldflow/plot_manager.py`, `src/moldflow/study_doc.py`, `src/moldflow/synergy.py`, `src/moldflow/viewer.py`).
+- Added/updated component enum docs and wrapper docs (docs/source/components/enums/*, docs/source/components/wrapper/*) and updated project readme (docs/source/readme.rst).
 
-### Documentation
-- Added/updated component enum docs and wrapper docs (docs/source/components/enums/*, docs/source/components/wrapper/*).
-- Updated project readme/documentation index to include the new wrappers and examples (docs/source/readme.rst).
+### Deprecated
+- N/A
 
 ### Removed
 - `GradingFactor` enum - incorrectly restricted the API to discrete values when the COM API accepts continuous float values from 0.0 to 1.0
@@ -27,9 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Exposed `GeomType` enum in package `__init__.py` so users can `from moldflow import GeomType` (`src/moldflow/__init__.py`).
 - Fixed `MeshGenerator.cad_mesh_grading_factor` to properly accept float/double values matching the COM API signature instead of restricting to enum values.
-
-### Tests
-- Added and updated unit tests covering animation/image export options, CAD diagnostic, import options, mesh editor, plot manager, study document handling, synergy, and viewer (tests/api/unit_tests/* and tests/core/test_helper.py).
 
 ### Security
 - N/A
