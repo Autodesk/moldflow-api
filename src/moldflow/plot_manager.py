@@ -19,7 +19,7 @@ from .common import MaterialDatabase, MaterialIndex, PlotType, SystemUnits
 from .helper import check_type, get_enum_value, check_file_extension, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .errors import raise_save_error
-from .constants import XML_FILE_EXT, SDZ_FILE_EXT, FBX_FILE_EXT, ELE_FILE_EXT
+from .constants import XML_FILE_EXT, SDZ_FILE_EXT, FBX_FILE_EXT, ELE_FILE_EXT, VTK_FILE_EXT
 
 
 class PlotManager:
@@ -1008,3 +1008,23 @@ class PlotManager:
         if result is None:
             return None
         return MaterialPlot(result)
+
+    def export_to_vtk(self, file_name: str, binary_format: bool = True) -> bool:
+        """
+        Export the results to a VTK file.
+
+        Args:
+            file_name (str): The name of the VTK file.
+            binary_format (bool): Use Binary (True) or ASCII (False). Default: True.
+
+        Returns:
+            bool: True if successful, False otherwise.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="export_to_vtk")
+        check_type(file_name, str)
+        check_type(binary_format, bool)
+        file_name = check_file_extension(file_name, VTK_FILE_EXT)
+        result = self.plot_manager.ExportToVTK(file_name, binary_format)
+        if not result:
+            raise_save_error(saving="Results", file_name=file_name)
+        return result

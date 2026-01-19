@@ -7,19 +7,17 @@ Test for Viewer Wrapper Class of moldflow-api module.
 """
 
 import pytest
-from moldflow import Viewer, Plot
+from moldflow import DoubleArray, EntList, ImageExportOptions, Vector, Viewer, Plot
 from moldflow.common import ViewModes, StandardViews, AnimationSpeed
 from moldflow.constants import (
     MP4_FILE_EXT,
+    GIF_FILE_EXT,
     JPG_FILE_EXT,
     JPEG_FILE_EXT,
     PNG_FILE_EXT,
     BMP_FILE_EXT,
     TIF_FILE_EXT,
 )
-from moldflow.double_array import DoubleArray
-from moldflow.ent_list import EntList
-from moldflow.vector import Vector
 from tests.api.unit_tests.conftest import VALID_MOCK, INVALID_MOCK
 from tests.conftest import (
     INVALID_BOOL,
@@ -391,8 +389,16 @@ class TestUnitViewer:
             for x in pad_and_zip(VALID_MOCK.DOUBLE_ARRAY)
         ]
         + [("get_histogram_location", "GetHistogramLocation", None, None, None)]
+        + [("is_play_animation", "IsPlayAnimation", bool, None, x) for x in pad_and_zip(VALID_BOOL)]
         + [
-            ("is_play_animation", "IsPlayAnimation", bool, None, x) for x in pad_and_zip(VALID_BOOL)
+            (
+                "image_export_options",
+                "ImageExportOptions",
+                ImageExportOptions,
+                "image_export_options",
+                a,
+            )
+            for a in pad_and_zip(VALID_MOCK.IMAGE_EXPORT_OPTIONS)
         ],
     )
     # pylint: disable=R0913,R0917
@@ -431,6 +437,18 @@ class TestUnitViewer:
             ("save_animation", "SaveAnimation3", (a, b.value, c), (a, b.value, c), bool, None, d)
             for a, b, c, d in pad_and_zip(
                 [x + MP4_FILE_EXT for x in VALID_STR], AnimationSpeed, VALID_BOOL, VALID_BOOL
+            )
+        ]
+        + [
+            ("save_animation", "SaveAnimation3", (a, b, c), (a, b.value, c), bool, None, d)
+            for a, b, c, d in pad_and_zip(
+                [x + GIF_FILE_EXT for x in VALID_STR], AnimationSpeed, VALID_BOOL, VALID_BOOL
+            )
+        ]
+        + [
+            ("save_animation", "SaveAnimation3", (a, b.value, c), (a, b.value, c), bool, None, d)
+            for a, b, c, d in pad_and_zip(
+                [x + GIF_FILE_EXT for x in VALID_STR], AnimationSpeed, VALID_BOOL, VALID_BOOL
             )
         ]
         + [
@@ -474,6 +492,30 @@ class TestUnitViewer:
                 VALID_BOOL,
                 VALID_BOOL,
             )
+        ]
+        + [
+            (
+                "save_image_with_options",
+                "SaveImage5",
+                (a,),
+                (a.image_export_options,),
+                bool,
+                None,
+                b,
+            )
+            for a, b in pad_and_zip(VALID_MOCK.IMAGE_EXPORT_OPTIONS, VALID_BOOL)
+        ]
+        + [
+            (
+                "save_animation_with_options",
+                "SaveAnimation4",
+                (a,),
+                (a.animation_export_options,),
+                bool,
+                None,
+                b,
+            )
+            for a, b in pad_and_zip(VALID_MOCK.ANIMATION_EXPORT_OPTIONS, VALID_BOOL)
         ]
         + [
             ("save_image_legacy", "SaveImage", (a,), (a,), bool, None, True)
@@ -766,10 +808,35 @@ class TestUnitViewer:
             )
         ]
         + [
+            ("save_image_with_options", "SaveImage5", [VALID_MOCK.IMAGE_EXPORT_OPTIONS], x)
+            for x in ((index, value) for index, value in enumerate([INVALID_MOCK]))
+        ]
+        + [
+            (
+                "save_animation_with_options",
+                "SaveAnimation4",
+                [VALID_MOCK.ANIMATION_EXPORT_OPTIONS],
+                x,
+            )
+            for x in ((index, value) for index, value in enumerate([INVALID_MOCK]))
+        ]
+        + [
             (
                 "save_animation",
                 "SaveAnimation3",
                 [VALID_STR[0] + MP4_FILE_EXT, AnimationSpeed.FAST.value, VALID_BOOL[0]],
+                x,
+            )
+            for x in (
+                (index, value)
+                for index, value in enumerate([INVALID_STR, INVALID_STR, INVALID_BOOL])
+            )
+        ]
+        + [
+            (
+                "save_animation",
+                "SaveAnimation3",
+                [VALID_STR[0] + GIF_FILE_EXT, AnimationSpeed.FAST.value, VALID_BOOL[0]],
                 x,
             )
             for x in (

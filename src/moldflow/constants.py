@@ -24,6 +24,9 @@ LOCALE_LOCATION = "SOFTWARE\\Autodesk\\{product_name}\\{version}\\Environment"
 LOCALE_ENVIRONMENT_VARIABLE_NAME = "MFSYN_LOCALE"
 LOCALE_REGISTRY_VARIABLE_NAME = "MFSYN_LOCALE"
 
+# Animation speed constants
+ANIMATION_SPEED_CONVERTER = {"Slow": 0, "Medium": 1, "Fast": 2}
+
 # BCP-47 standard constants
 THREE_LETTER_TO_BCP_47 = {
     "chs": "zh-CN",
@@ -57,3 +60,5 @@ JPEG_FILE_EXT = ".jpeg"
 BMP_FILE_EXT = ".bmp"
 TIF_FILE_EXT = ".tif"
 MP4_FILE_EXT = ".mp4"
+GIF_FILE_EXT = ".gif"
+VTK_FILE_EXT = ".vtk"

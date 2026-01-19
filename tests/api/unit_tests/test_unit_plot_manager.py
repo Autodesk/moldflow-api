@@ -1018,7 +1018,8 @@ class TestUnitPlotManager:
                 VALID_FLOAT,
                 INVALID_STR,
             )
-        ],
+        ]
+        + [("ExportToVTK", "export_to_vtk", ("export.vtk", x)) for x in INVALID_BOOL],
     )
     # pylint: disable-next=R0913, R0917
     def test_functions_invalid_type(
@@ -1268,6 +1269,10 @@ class TestUnitPlotManager:
                 VALID_FLOAT,
                 SystemUnits,
             )
+        ]
+        + [
+            ("ExportToVTK", "export_to_vtk", ("sample.vtk", x), ("sample.vtk", x))
+            for x in VALID_BOOL
         ],
     )
     # pylint: disable-next=R0913, R0917
@@ -1315,7 +1320,8 @@ class TestUnitPlotManager:
                 VALID_FLOAT,
                 SystemUnits,
             )
-        ],
+        ]
+        + [("ExportToVTK", "export_to_vtk", ("sample.vtk", x)) for x in VALID_BOOL],
     )
     # pylint: disable-next=R0913, R0917
     def test_save_functions_save_error(

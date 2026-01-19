@@ -7,10 +7,12 @@ Helper functions for the Moldflow Wrapper Library.
 
 from enum import Enum
 import os
+import functools
+import warnings
 from win32com.client import VARIANT
 import pythoncom
 from .errors import raise_type_error, raise_value_error, raise_index_error
-from .common import ValueErrorReason, LogMessage
+from .common import ValueErrorReason, LogMessage, WarningMessage
 from .logger import process_log
 
 
@@ -241,8 +243,6 @@ def check_file_extension(file_name: str, extensions: tuple | str):
     Args:
         file_name (str): The file name to check.
         extensions (list[str]): A list of valid file extensions.
-    Raises:
-        ValueError: If the file name does not have a valid extension.
     """
     process_log(__name__, LogMessage.CHECK_FILE_EXTENSION, locals(), file_name=file_name)
     check_type(file_name, str)
@@ -337,3 +337,34 @@ def coerce_optional_dispatch(value, attr_name: str | None = None):
     if attr_name:
         value = getattr(value, attr_name)
     return value
+
+
+# NOTE: Once Python 3.13 is the minimum supported version, prefer using the
+# stdlib decorator warnings.deprecated instead of this helper.
+# See: https://docs.python.org/3.13/library/warnings.html#warnings.deprecated
+def deprecated(replacement: str | None = None, message: str | None = None):
+    """Decorator to mark functions as deprecated and emit a DeprecationWarning.
+
+    Parameters:
+        replacement: Optional alternative function name to include in the message
+        message: Optional custom message; if provided, overrides default text
+    """
+
+    def _decorator(func):
+        if replacement:
+            default_msg = (
+                f"{func.__qualname__}: "
+                f"{WarningMessage.DEPRECATED_BY.value.format(replacement=replacement)}"
+            )
+        else:
+            default_msg = f"{func.__qualname__}: {WarningMessage.DEPRECATED.value}"
+        warn_msg = message or default_msg
+
+        @functools.wraps(func)
+        def _wrapped(*args, **kwargs):
+            warnings.warn(warn_msg, DeprecationWarning, stacklevel=2)
+            return func(*args, **kwargs)
+
+        return _wrapped
+
+    return _decorator

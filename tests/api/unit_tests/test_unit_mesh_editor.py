@@ -724,6 +724,121 @@ class TestUnitMeshEditor:
         mock_object.FillHole.assert_not_called()
         mock_object.FillHole2.assert_not_called()
 
+    @pytest.mark.parametrize("expected", [1, 2, 3])
+    def test_fill_hole_from_nodes(self, mock_mesh_editor, mock_object, expected):
+        """
+        Test preferred nodes-based fill hole with MeshEditor
+        """
+        mock_object.FillHoleFromNodes.return_value = expected
+        nodes = Mock(spec=EntList)
+        nodes.ent_list = Mock()
+        result = mock_mesh_editor.fill_hole_from_nodes(nodes)
+        assert isinstance(result, int)
+        assert result == expected
+        mock_object.FillHoleFromNodes.assert_called_once_with(nodes.ent_list)
+
+    def test_fill_hole_from_nodes_none(self, mock_mesh_editor, mock_object):
+        """
+        Test preferred nodes-based fill hole with None input (optional dispatch)
+        """
+        with patch(
+            "moldflow.helper.variant_null_idispatch",
+            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
+        ) as mock_func:
+            expected = 5
+            mock_object.FillHoleFromNodes.return_value = expected
+            result = mock_mesh_editor.fill_hole_from_nodes(None)
+            assert isinstance(result, int)
+            assert result == expected
+            mock_object.FillHoleFromNodes.assert_called_once_with(mock_func())
+
+    @pytest.mark.parametrize("nodes", [1, 1.0, "String", True])
+    def test_fill_hole_from_nodes_invalid(self, mock_mesh_editor, mock_object, nodes, _):
+        """
+        Test preferred nodes-based fill hole invalid arguments
+        """
+        with pytest.raises(TypeError) as e:
+            mock_mesh_editor.fill_hole_from_nodes(nodes)
+        assert _("Invalid") in str(e.value)
+        mock_object.FillHoleFromNodes.assert_not_called()
+
+    @pytest.mark.parametrize("smooth, expected", [(True, 1), (True, 2), (False, 3)])
+    def test_fill_hole_from_triangles(self, mock_mesh_editor, mock_object, smooth, expected):
+        """
+        Test preferred triangles-based fill hole with MeshEditor
+        """
+        mock_object.FillHoleFromTriangles.return_value = expected
+        triangles = Mock(spec=EntList)
+        triangles.ent_list = Mock()
+        result = mock_mesh_editor.fill_hole_from_triangles(triangles, smooth)
+        assert isinstance(result, int)
+        assert result == expected
+        # COM now expects a boolean smoothing flag; ints map with (value != 2)
+        mock_object.FillHoleFromTriangles.assert_called_once_with(triangles.ent_list, smooth)
+
+    @pytest.mark.parametrize("value, expected_bool", [(True, True), (False, False)])
+    def test_fill_hole_from_triangles_bool(
+        self, mock_mesh_editor, mock_object, value, expected_bool, _
+    ):
+        """Test boolean smoothing flag is forwarded to COM as-is."""
+        mock_object.FillHoleFromTriangles.return_value = 11
+        triangles = Mock(spec=EntList)
+        triangles.ent_list = Mock()
+        result = mock_mesh_editor.fill_hole_from_triangles(triangles, value)
+        assert isinstance(result, int)
+        assert result == 11
+        mock_object.FillHoleFromTriangles.assert_called_once_with(triangles.ent_list, expected_bool)
+
+    @pytest.mark.parametrize("value", [("BENT",)])  # string not accepted
+    def test_fill_hole_from_triangles_invalid_enum_string(
+        self, mock_mesh_editor, mock_object, value, _
+    ):
+        """Invalid string input should raise a TypeError and not call COM."""
+        with pytest.raises(TypeError):
+            mock_mesh_editor.fill_hole_from_triangles(Mock(spec=EntList), value)
+        mock_object.FillHoleFromTriangles.assert_not_called()
+
+    # Enum is no longer supported; keep a simple int mapping test via legacy path removed
+
+    def test_fill_hole_from_triangles_none(self, mock_mesh_editor, mock_object):
+        """
+        Test preferred triangles-based fill hole with None tri list (optional dispatch)
+        """
+        with patch(
+            "moldflow.helper.variant_null_idispatch",
+            return_value=VARIANT(pythoncom.VT_DISPATCH, None),
+        ) as mock_func:
+            expected = 7
+            fill_type = True
+            mock_object.FillHoleFromTriangles.return_value = expected
+            result = mock_mesh_editor.fill_hole_from_triangles(None, fill_type)
+            assert isinstance(result, int)
+            assert result == expected
+            mock_object.FillHoleFromTriangles.assert_called_once_with(mock_func(), True)
+
+    @pytest.mark.parametrize(
+        "triangles, fill_type",
+        [
+            (1, 0),
+            (1.0, 0),
+            ("String", 0),
+            (Mock(spec=EntList), None),
+            (Mock(spec=EntList), 1.0),
+            (Mock(spec=EntList), "String"),
+            # bool is accepted now for smoothing control
+        ],
+    )
+    def test_fill_hole_from_triangles_invalid(
+        self, mock_mesh_editor, mock_object, triangles, fill_type, _
+    ):
+        """
+        Test preferred triangles-based fill hole invalid arguments
+        """
+        with pytest.raises(TypeError) as e:
+            mock_mesh_editor.fill_hole_from_triangles(triangles, fill_type)
+        assert _("Invalid") in str(e.value)
+        mock_object.FillHoleFromTriangles.assert_not_called()
+
     @pytest.mark.parametrize("property_value", [Mock(spec=Property), None])
     def test_create_tet(self, mock_mesh_editor, mock_object, property_value):
         """

@@ -81,15 +81,6 @@ class ImportUnitIndex(Enum):
     IN = 3
 
 
-class MDLKernel(Enum):
-    """
-    Enum for MDLKernel
-    """
-
-    PARAMETRIC = "Parametric"
-    PARASOLID = "Parasolid"
-
-
 class MDLContactMeshType(Enum):
     """
     Enum for MDLContactMeshType
@@ -138,6 +129,15 @@ class SystemUnits(Enum):
     METRIC = "Metric"
     ENGLISH = "English"
     STANDARD = "SI"
+
+
+class WarningMessage(Enum):
+    """
+    Enum for warning messages.
+    """
+
+    DEPRECATED = "Deprecated"
+    DEPRECATED_BY = "Deprecated by {replacement}"
 
 
 class ErrorMessage(Enum):
@@ -409,7 +409,6 @@ class Mesher3DType(Enum):
     """
 
     ADVANCING_FRONT = "AdvancingFront"
-    LEGACY = "Legacy"
     ADVANCING_LAYERS = "AdvancingLayers"
 
 
@@ -651,6 +650,7 @@ class StandardViews(Enum):
     ISOMETRIC = "Isometric"
 
 
+# To be updated to use int values when legacy support is removed.
 class AnimationSpeed(Enum):
     """
     Enum for AnimationSpeed
@@ -740,3 +740,13 @@ class PropertyType(Enum):
     PART_INSERT = 40907
     MOLD_INSERT_SURFACE = 40908
     PARTING_SURFACE = 40910
+
+
+class CaptureModes(Enum):
+    """
+    Enum for CaptureModes
+    """
+
+    ACTIVE_VIEW = 0
+    ALL_VIEWS = 1
+    GRAPHIC_DISPLAY_AREA = 2

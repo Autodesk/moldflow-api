@@ -146,6 +146,8 @@ class MeshGenerator:
     @property
     def element_reduction(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Enables/disables automatic element size determination
         for fusion meshes from faceted geometry.
 
@@ -193,6 +195,8 @@ class MeshGenerator:
     @property
     def automatic_tetra_optimization(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether optimizing tetras automatically.
 
         :getter: Get the automatic tetra optimization option
@@ -289,6 +293,8 @@ class MeshGenerator:
     @property
     def tetra_max_ar(self) -> float:
         """
+        .. deprecated:: 27.0.0
+
         Limit on aspect ratio for tetrahedral meshes.
 
         :getter: Get the tetra max aspect ratio option
@@ -362,6 +368,8 @@ class MeshGenerator:
     @property
     def use_tetras_on_edge(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether tetras are to be created on model edges.
 
         :getter: Get the use tetras on edge option
@@ -778,6 +786,8 @@ class MeshGenerator:
     @property
     def use_fallbacks(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether fallback is to be used when CAD meshing fails.
 
         :getter: Get the use fallbacks option
