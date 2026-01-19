@@ -7,7 +7,7 @@
 Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
-    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build]
+    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
     run.py format [--check]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
@@ -51,6 +51,7 @@ Options:
     --all                           Run all tests.
     --repo-url=<url>                Custom PyPI repository URL.
     --github-api-url=<url>          Custom GitHub API URL.
+    -l, --local                     Build documentation locally (single version).
 """
 
 import os
@@ -328,6 +329,31 @@ def build_mo():
         )
 
 
+def create_root_redirect(build_output: str) -> None:
+    """Create an index.html in the versioned HTML build output root that redirects to /latest/."""
+    index_path = os.path.join(build_output, 'index.html')
+    redirect_html = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting to latest documentation...</title>
+    <meta http-equiv="refresh" content="0; url=./latest/">
+    <link rel="canonical" href="./latest/">
+    <script>window.location.replace("./latest/");</script>
+</head>
+<body>
+    <p>Redirecting to <a href="./latest/">latest documentation</a>...</p>
+</body>
+</html>
+"""
+    try:
+        with open(index_path, 'w', encoding='utf-8') as f:
+            f.write(redirect_html)
+        logging.info("Created root redirect: index.html -> latest/")
+    except Exception as err:
+        logging.warning("Could not create root redirect index.html: %s", err)
+
+
 def create_latest_alias(build_output: str) -> None:
     """Create a 'latest' alias pointing to the newest version using symlinks when possible."""
     version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
@@ -373,7 +399,7 @@ def create_latest_alias(build_output: str) -> None:
         shutil.copytree(latest_src, latest_dest)
 
 
-def build_docs(target, skip_build):
+def build_docs(target, skip_build, local=False):
     """Build Documentation"""
 
     if not skip_build:
@@ -386,7 +412,7 @@ def build_docs(target, skip_build):
         shutil.rmtree(DOCS_BUILD_DIR)
 
     try:
-        if target == 'html':
+        if target == 'html' and not local:
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
             try:
                 # fmt: off
@@ -409,6 +435,7 @@ def build_docs(target, skip_build):
                 raise
             # fmt: on
             create_latest_alias(build_output)
+            create_root_redirect(build_output)
         else:
             # For other targets such as latex, pdf, etc.
             run_command(
@@ -737,8 +764,9 @@ def main():
         elif args.get('build-docs'):
             target = args.get('--target') or args.get('-t') or 'html'
             skip_build = args.get('--skip-build') or args.get('-s')
+            local = args.get('--local') or args.get('-l')
 
-            build_docs(target=target, skip_build=skip_build)
+            build_docs(target=target, skip_build=skip_build, local=local)
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))
