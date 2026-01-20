@@ -9,6 +9,7 @@ Usage:
 # pylint: disable=C0302
 
 from .logger import process_log
+from .helper import deprecated
 from .common import LogMessage
 from .ent_list import EntList
 from .vector import Vector
@@ -403,10 +404,13 @@ class MeshEditor:
             coerce_optional_dispatch(tris, "ent_list"),
         )
 
+    @deprecated("fill_hole_from_nodes or fill_hole_from_triangles")
     def fill_hole(self, nodes: EntList | None, fill_type: int | None = None) -> bool:
         """
-        Fill a "hole" in the mesh by creating triangles between given nodes
-        If fill_type provided, fill a "hole" in the mesh by creating new triangles
+        .. deprecated:: 27.0.0
+            Use :py:func:`fill_hole_from_nodes` or :py:func:`fill_hole_from_triangles` instead.
+        Fill a "hole" in the mesh by creating triangles between given nodes.
+        If fill_type provided, fill a "hole" in the mesh by creating new triangles.
 
         Args:
             nodes (EntList | None): EntList ordered sequence of nodes defining the outer
@@ -423,6 +427,41 @@ class MeshEditor:
             return self.mesh_editor.FillHole(coerce_optional_dispatch(nodes, "ent_list"))
         check_type(fill_type, int)
         return self.mesh_editor.FillHole2(coerce_optional_dispatch(nodes, "ent_list"), fill_type)
+
+    def fill_hole_from_nodes(self, nodes: EntList | None) -> bool:
+        """
+        Fill a "hole" in the mesh by nodes.
+
+        Parameters:
+            nodes: EntList ordered sequence of nodes defining the outer boundary of the hole
+
+        Returns:
+            True if operation is successful; False otherwise
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="fill_hole_from_nodes")
+        if nodes is not None:
+            check_type(nodes, EntList)
+        return self.mesh_editor.FillHoleFromNodes(coerce_optional_dispatch(nodes, "ent_list"))
+
+    def fill_hole_from_triangles(self, tris: EntList | None, apply_smoothing: bool) -> bool:
+        """
+        Fill a "hole" in the mesh by triangles.
+
+        Parameters:
+            tris: EntList of triangles around the hole
+            apply_smoothing: Specify True to smooth; False to disable smoothing.
+
+        Returns:
+            True if operation is successful; False otherwise
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="fill_hole_from_triangles")
+        if tris is not None:
+            check_type(tris, EntList)
+        check_type(apply_smoothing, bool)
+        smooth = apply_smoothing
+        return self.mesh_editor.FillHoleFromTriangles(
+            coerce_optional_dispatch(tris, "ent_list"), bool(smooth)
+        )
 
     # pylint: disable-next=R0913, R0917
     def create_tet(

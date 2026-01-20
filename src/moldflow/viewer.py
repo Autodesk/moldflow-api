@@ -7,15 +7,19 @@ Usage:
 """
 
 # pylint: disable=C0302
+from typing import Optional
 from win32com.client import VARIANT
 import pythoncom
 from .double_array import DoubleArray
+from .image_export_options import ImageExportOptions
+from .animation_export_options import AnimationExportOptions
 from .ent_list import EntList
 from .logger import process_log
 from .com_proxy import safe_com
 from .common import LogMessage, ViewModes, StandardViews, AnimationSpeed
 from .constants import (
     MP4_FILE_EXT,
+    GIF_FILE_EXT,
     JPG_FILE_EXT,
     JPEG_FILE_EXT,
     PNG_FILE_EXT,
@@ -31,6 +35,7 @@ from .helper import (
     check_is_non_negative,
     check_file_extension,
     coerce_optional_dispatch,
+    deprecated,
 )
 from .errors import raise_value_error
 from .common import ValueErrorReason
@@ -288,6 +293,7 @@ class Viewer:
         self.viewer.Print()
 
     # pylint: disable=R0913, R0917
+    @deprecated("save_image_with_options")
     def save_image(
         self,
         filename: str,
@@ -306,6 +312,9 @@ class Viewer:
         min_max: bool = False,
     ) -> bool:
         """
+        .. deprecated:: 27.0.0
+            Use :py:func:`save_image_with_options` instead.
+
         Saves the current view as an image.
 
         Args:
@@ -363,10 +372,14 @@ class Viewer:
             min_max,
         )
 
+    @deprecated("save_animation_with_options")
     def save_animation(
         self, filename: str, speed: AnimationSpeed | str, prompts: bool = False
     ) -> bool:
         """
+        .. deprecated:: 27.0.0
+            Use :py:func:`save_animation_with_options` instead.
+
         Saves the current view as an animation.
 
         Args:
@@ -379,13 +392,49 @@ class Viewer:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="save_animation")
         check_type(filename, str)
-        filename = check_file_extension(filename, (MP4_FILE_EXT))
+        filename = check_file_extension(filename, (MP4_FILE_EXT, GIF_FILE_EXT))
         speed = get_enum_value(speed, AnimationSpeed)
         check_type(prompts, bool)
         return self.viewer.SaveAnimation3(filename, speed, prompts)
 
+    def animation_export_options(self) -> AnimationExportOptions:
+        """
+        Creates a new AnimationExportOptions object for configuring animation export settings.
+
+        Returns:
+            A new AnimationExportOptions object.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="animation_export_options")
+        result = self.viewer.AnimationExportOptions
+        if result is None:
+            return None
+        return AnimationExportOptions(result)
+
+    def save_animation_with_options(self, options: Optional[AnimationExportOptions] = None) -> bool:
+        """
+        Saves the current view as an animation with the given options.
+
+        Args:
+            options: The options to use for the animation.
+            If None, a new AnimationExportOptions object will be created with default settings.
+
+        Returns:
+            True if successful, False otherwise.
+        """
+        process_log(
+            __name__, LogMessage.FUNCTION_CALL, locals(), name="save_animation_with_options"
+        )
+        if options is None:
+            options = self.animation_export_options()
+        check_type(options, AnimationExportOptions)
+        return self.viewer.SaveAnimation4(options.animation_export_options)
+
+    @deprecated("save_image_with_options")
     def save_image_legacy(self, filename: str, x: int | None = None, y: int | None = None) -> bool:
         """
+        .. deprecated:: 27.0.0
+            Use :py:func:`save_image_with_options` instead.
+
         Save image using legacy behavior only (V1/V2):
         - filename only -> SaveImage(filename)
         - filename and positive x,y -> SaveImage2(filename, x, y)
@@ -422,6 +471,36 @@ class Viewer:
         check_is_positive(x)
         check_is_positive(y)
         return self.viewer.SaveImage2(filename, x, y)
+
+    def image_export_options(self) -> ImageExportOptions:
+        """
+        Creates a new ImageExportOptions object for configuring image export settings.
+
+        Returns:
+            A new ImageExportOptions object.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="image_export_options")
+        result = self.viewer.ImageExportOptions
+        if result is None:
+            return None
+        return ImageExportOptions(result)
+
+    def save_image_with_options(self, options: Optional[ImageExportOptions] = None) -> bool:
+        """
+        Saves the current view as an image with the given options.
+
+        Args:
+            options (ImageExportOptions | None): The options to use for the image.
+            If None, a new ImageExportOptions object will be created with default settings.
+
+        Returns:
+            True if successful, False otherwise.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="save_image_with_options")
+        if options is None:
+            options = self.image_export_options()
+        check_type(options, ImageExportOptions)
+        return self.viewer.SaveImage5(options.image_export_options)
 
     def enable_clipping_plane_by_id(self, plane_id: int, enable: bool) -> None:
         """

@@ -1,9 +1,15 @@
 [
   {
-    "version": "v26.0.5",
-    "name": "v26.0.5 (latest)",
-    "url": "../v26.0.5/",
+    "version": "v27.0.0",
+    "name": "v27.0.0 (latest)",
+    "url": "../v27.0.0/",
     "is_latest": true
+  },
+  {
+    "version": "v26.0.5",
+    "name": "v26.0.5",
+    "url": "../v26.0.5/",
+    "is_latest": false
   },
   {
     "version": "v26.0.4",

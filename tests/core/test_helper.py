@@ -257,6 +257,8 @@ class TestHelper:
             ("test.txt", (".txt", ".csv")),
             ("test.txt", ".txt"),
             ("test\\test.png", (".txt", ".csv", ".png")),
+            ("animation.mp4", (".mp4", ".gif")),
+            ("animation.gif", (".mp4", ".gif")),
         ],
     )
     def test_check_file_extension(self, file_name, extensions, _, caplog):

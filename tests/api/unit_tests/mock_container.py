@@ -41,8 +41,10 @@ class MockContainer:
             setattr(self, key.upper(), mock_obj)
 
     # Explicit attribute definitions for IntelliSense support
+    ANIMATION_EXPORT_OPTIONS: Mock
     BOUNDARY_CONDITIONS: Mock
     BOUNDARY_LIST: Mock
+    CAD_DIAGNOSTIC: Mock
     CAD_MANAGER: Mock
     CIRCUIT_GENERATOR: Mock
     DATA_TRANSFORM: Mock
@@ -50,6 +52,7 @@ class MockContainer:
     DOUBLE_ARRAY: Mock
     ENT_LIST: Mock
     FOLDER_MANAGER: Mock
+    IMAGE_EXPORT_OPTIONS: Mock
     IMPORT_OPTIONS: Mock
     INTEGER_ARRAY: Mock
     LAYER_MANAGER: Mock

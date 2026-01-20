@@ -692,7 +692,7 @@ Configure Import Options Before CAD Import
 .. code-block:: python
 
     from moldflow import Synergy
-    from moldflow.common import MeshType, ImportUnits, MDLKernel
+    from moldflow.common import MeshType, ImportUnits
 
     synergy = Synergy()
     io = synergy.import_options  # ImportOptions
@@ -701,7 +701,6 @@ Configure Import Options Before CAD Import
     io.mesh_type = MeshType.MESH_FUSION
     io.units = ImportUnits.MM
     io.use_mdl = True
-    io.mdl_kernel = MDLKernel.PARASOLID
     io.mdl_mesh = True
     io.mdl_surfaces = True
     io.mdl_auto_edge_select = True

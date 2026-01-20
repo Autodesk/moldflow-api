@@ -9,6 +9,7 @@ Usage:
 import os
 import win32com.client
 from .boundary_conditions import BoundaryConditions
+from .cad_diagnostic import CADDiagnostic
 from .cad_manager import CADManager
 from .circuit_generator import CircuitGenerator
 from .data_transform import DataTransform
@@ -371,6 +372,17 @@ class Synergy:
         return BoundaryConditions(result)
 
     @property
+    def cad_diagnostic(self) -> CADDiagnostic:
+        """
+        Get the CADDiagnostic object.
+        """
+        process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="cad_diagnostic")
+        result = self.synergy.CADDiagnostic
+        if result is None:
+            return None
+        return CADDiagnostic(result)
+
+    @property
     def cad_manager(self) -> CADManager:
         """
         Get the CADManager object.
@@ -666,3 +678,14 @@ class Synergy:
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="version")
         return self.synergy.Version
+
+    def log(self, message: str) -> None:
+        """
+        Log a message to the Synergy application.
+
+        Args:
+            message (str): The message to log.
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="log")
+        check_type(message, str)
+        self.synergy.Log(message)

@@ -7,7 +7,7 @@ Test for ImportOptions Wrapper Class of moldflow-api module.
 
 import pytest
 from moldflow import ImportOptions
-from moldflow import MeshType, ImportUnits, MDLKernel, MDLContactMeshType, CADBodyProperty
+from moldflow import MeshType, ImportUnits, MDLContactMeshType, CADBodyProperty
 
 
 @pytest.mark.unit
@@ -50,10 +50,6 @@ class TestUnitImportOptions:
             ("MDLSurfaces", "mdl_surfaces", False),
             ("UseMDL", "use_mdl", True),
             ("UseMDL", "use_mdl", False),
-            ("MDLKernel", "mdl_kernel", MDLKernel.PARAMETRIC),
-            ("MDLKernel", "mdl_kernel", MDLKernel.PARASOLID),
-            ("MDLKernel", "mdl_kernel", "Parametric"),
-            ("MDLKernel", "mdl_kernel", "Parasolid"),
             ("MDLAutoEdgeSelect", "mdl_auto_edge_select", True),
             ("MDLAutoEdgeSelect", "mdl_auto_edge_select", False),
             ("MDLEdgeLength", "mdl_edge_length", 0.1),
@@ -125,10 +121,6 @@ class TestUnitImportOptions:
             ("MDLSurfaces", "mdl_surfaces", False, False),
             ("UseMDL", "use_mdl", True, True),
             ("UseMDL", "use_mdl", False, False),
-            ("MDLKernel", "mdl_kernel", MDLKernel.PARAMETRIC, "Parametric"),
-            ("MDLKernel", "mdl_kernel", MDLKernel.PARASOLID, "Parasolid"),
-            ("MDLKernel", "mdl_kernel", "Parametric", "Parametric"),
-            ("MDLKernel", "mdl_kernel", "Parasolid", "Parasolid"),
             ("MDLAutoEdgeSelect", "mdl_auto_edge_select", True, True),
             ("MDLAutoEdgeSelect", "mdl_auto_edge_select", False, False),
             ("MDLEdgeLength", "mdl_edge_length", 0.1, 0.1),
@@ -210,7 +202,6 @@ class TestUnitImportOptions:
             ("mdl_mesh", 1),
             ("mdl_surfaces", 1),
             ("use_mdl", 1),
-            ("mdl_kernel", 1),
             ("mdl_auto_edge_select", 1),
             ("mdl_auto_edge_select", "Test"),
             ("mdl_edge_length", "Test"),
@@ -227,7 +218,6 @@ class TestUnitImportOptions:
             ("mdl_mesh", None),
             ("mdl_surfaces", None),
             ("use_mdl", None),
-            ("mdl_kernel", None),
             ("mdl_auto_edge_select", None),
             ("mdl_edge_length", None),
             ("mdl_tetra_layers", None),
@@ -257,7 +247,6 @@ class TestUnitImportOptions:
         [
             ("mesh_type", "Test"),
             ("units", "Test"),
-            ("mdl_kernel", "Test"),
             ("mdl_contact_mesh_type", "Test"),
             ("cad_body_property", 1),
         ],
