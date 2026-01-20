@@ -407,6 +407,8 @@ class MeshEditor:
     @deprecated("fill_hole_from_nodes or fill_hole_from_triangles")
     def fill_hole(self, nodes: EntList | None, fill_type: int | None = None) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Fill a "hole" in the mesh by creating triangles between given nodes.
         If fill_type provided, fill a "hole" in the mesh by creating new triangles.
 

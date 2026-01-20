@@ -9,7 +9,7 @@ Usage:
 from .logger import process_log
 from .common import LogMessage, MeshType, ImportUnits
 from .common import MDLContactMeshType, CADBodyProperty
-from .helper import get_enum_value, check_type, check_is_non_negative
+from .helper import get_enum_value, check_type, check_is_non_negative, deprecated
 from .com_proxy import safe_com
 
 
@@ -152,6 +152,7 @@ class ImportOptions:
         self.import_options.UseMDL = value
 
     @property
+    @deprecated()
     def mdl_kernel(self):
         """
         .. deprecated:: 27.0.0

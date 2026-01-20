@@ -35,6 +35,7 @@ from .helper import (
     check_is_non_negative,
     check_file_extension,
     coerce_optional_dispatch,
+    deprecated,
 )
 from .errors import raise_value_error
 from .common import ValueErrorReason
@@ -292,6 +293,7 @@ class Viewer:
         self.viewer.Print()
 
     # pylint: disable=R0913, R0917
+    @deprecated("save_image_with_options")
     def save_image(
         self,
         filename: str,
@@ -370,6 +372,7 @@ class Viewer:
             min_max,
         )
 
+    @deprecated("save_animation_with_options")
     def save_animation(
         self, filename: str, speed: AnimationSpeed | str, prompts: bool = False
     ) -> bool:
@@ -426,6 +429,7 @@ class Viewer:
         check_type(options, AnimationExportOptions)
         return self.viewer.SaveAnimation4(options.animation_export_options)
 
+    @deprecated("save_image_with_options")
     def save_image_legacy(self, filename: str, x: int | None = None, y: int | None = None) -> bool:
         """
         .. deprecated:: 27.0.0

@@ -17,7 +17,7 @@ from .common import (
     Mesher3DType,
     CADContactMesh,
 )
-from .helper import check_type, check_range, get_enum_value
+from .helper import check_type, check_range, get_enum_value, deprecated
 from .com_proxy import safe_com
 
 
@@ -144,6 +144,7 @@ class MeshGenerator:
         self.mesh_generator.Smoothing = value
 
     @property
+    @deprecated()
     def element_reduction(self) -> bool:
         """
         .. deprecated:: 27.0.0
@@ -193,6 +194,7 @@ class MeshGenerator:
         self.mesh_generator.SurfaceOptimization = value
 
     @property
+    @deprecated()
     def automatic_tetra_optimization(self) -> bool:
         """
         .. deprecated:: 27.0.0
@@ -291,6 +293,7 @@ class MeshGenerator:
         self.mesh_generator.TetraLayersForCores = value
 
     @property
+    @deprecated()
     def tetra_max_ar(self) -> float:
         """
         .. deprecated:: 27.0.0
@@ -366,6 +369,7 @@ class MeshGenerator:
         self.mesh_generator.MaximumMatchDistance = value
 
     @property
+    @deprecated()
     def use_tetras_on_edge(self) -> bool:
         """
         .. deprecated:: 27.0.0
@@ -784,6 +788,7 @@ class MeshGenerator:
         self.mesh_generator.CadMeshMinimumCurvaturePercentage = value
 
     @property
+    @deprecated()
     def use_fallbacks(self) -> bool:
         """
         .. deprecated:: 27.0.0
