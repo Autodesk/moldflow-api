@@ -8,6 +8,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- N/A
+
+### Security
+- N/A
+
+## [27.0.0] - 2026-01-21
+
+### Added
 - Python 3.14 support
 - New wrapper and documentation for `AnimationExportOptions` (`src/moldflow/animation_export_options.py` and docs/source/components/wrapper/animation_export_options.rst).
 - New wrapper and documentation for `ImageExportOptions` (`src/moldflow/image_export_options.py` and docs/source/components/wrapper/image_export_options.rst).
@@ -40,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
-## [26.0.5]
+## [26.0.5] - 2025-12-12
 
 ### Added
 - N/A
@@ -60,7 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
-## [26.0.4]
+## [26.0.4] - 2025-12-11
 
 ### Added
 - N/A
@@ -82,7 +102,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
-## [26.0.3]
+## [26.0.3] - 2025-10-29
 
 ### Added
 - N/A
