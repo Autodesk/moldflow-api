@@ -20,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added/updated component enum docs and wrapper docs (docs/source/components/enums/*, docs/source/components/wrapper/*) and updated project readme (docs/source/readme.rst).
 
 ### Deprecated
-
 - Deprecated several legacy Viewer functions and MeshGenerator/ImportOptions properties in preparation for Synergy 2027.0.0:
   - `Viewer.save_image_legacy`
   - `Viewer.save_image`
