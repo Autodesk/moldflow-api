@@ -242,7 +242,7 @@ def check_file_extension(file_name: str, extensions: tuple | str):
     Check if the file name has a valid extension.
     Args:
         file_name (str): The file name to check.
-        extensions (list[str]): A list of valid file extensions.
+        extensions (tuple[str, ...] | str): Valid file extension(s).
     """
     process_log(__name__, LogMessage.CHECK_FILE_EXTENSION, locals(), file_name=file_name)
     check_type(file_name, str)
