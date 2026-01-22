@@ -20,14 +20,10 @@ from tests.api.integration_tests.constants import (
     FileSet,
     STUDY_FILES_DIR,
     INTEGRATION_TESTS_DIR,
-    METADATA_FILE,
-    METADATA_FILE_NAME,
     TEMP_FILE_PREFIX,
     GENERATE_DATA_FUNCTION_PREFIX,
     GENERATE_DATA_FUNCTION_SUFFIX,
     DATA_FILE_NAME,
-    METADATA_DATE_FORMAT,
-    METADATA_TIME_FORMAT,
     PROJECT_PREFIX,
     PROJECT_EXTENSION,
     TEST_SUITE_PREFIX,
@@ -40,26 +36,6 @@ from tests.api.integration_tests.data_generation.generate_data_logger import gen
 
 
 WINDOWS = platform.system() == 'Windows'
-
-
-@dataclass
-class Metadata:
-    """
-    Metadata class for storing metadata about the test data.
-    """
-
-    date: datetime
-    time: datetime
-    build_number: str
-    version: str
-
-    def to_dict(self):
-        return {
-            "date": self.date.strftime(METADATA_DATE_FORMAT),
-            "time": self.time.strftime(METADATA_TIME_FORMAT),
-            "build_number": self.build_number,
-            "version": self.version,
-        }
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):
@@ -203,18 +179,6 @@ def generate_json(file_set: FileSet | None = None, synergy_required: bool = True
     return decorator
 
 
-def fetch_metadata(date_time: datetime):
-    """
-    Fetch the metadata from the Synergy instance.
-    """
-    synergy = Synergy()
-    metadata = Metadata(
-        date=date_time, time=date_time, build_number=synergy.build_number, version=synergy.version
-    )
-    synergy.quit(False)
-    return metadata.to_dict()
-
-
 def clean_up_temp_files():
     """
     Clean up the temporary files.
@@ -242,22 +206,12 @@ def read_json_file(file_path: Path):
         return
 
 
-def commit_data(metadata: dict):
+def commit_data():
     """
     Commit the data to the data directory.
     The data is committed to the data directory in the following way:
-    - The metadata is committed to the metadata file.
     - The temporary files are committed to the data directory.
-    Args:
-        metadata (dict): The metadata to commit.
     """
-    # Update metadata file
-    metadata_file_data = read_json_file(METADATA_FILE)
-    for marker, data in metadata.items():
-        metadata_file_data[marker] = data
-        generate_data_logger.track_generation(marker, METADATA_FILE_NAME)
-    _json_dump(METADATA_FILE_NAME, metadata_file_data)
-
     # Commit temporary files to final files
     for item in INTEGRATION_TESTS_DIR.iterdir():
         if item.is_dir() and item.name.startswith(TEST_SUITE_PREFIX):
@@ -296,15 +250,10 @@ def get_generate_data_functions():
     return functions
 
 
-def fetch_data_on_markers(
-    markers: list[str], generate_functions: dict[str, callable], date_time: datetime
-):
+def fetch_data_on_markers(markers: list[str], generate_functions: dict[str, callable]):
     """
     Run the markers.
     """
-    metadata = {}
-    metadata_data = fetch_metadata(date_time)
-
     for marker in markers:
         generate_function_file = generate_functions.get(marker)
         if not generate_function_file:
@@ -312,7 +261,6 @@ def fetch_data_on_markers(
                 f"Generator function for marker '{marker}' not found. Please check if the function exists."
             )
             continue
-        metadata[marker] = metadata_data
 
         # Convert file path to module path
         # e.g., D:\...\tests\api\integration_tests\test_suite_custom_property\generate_test_data_custom_property.py
@@ -321,7 +269,7 @@ def fetch_data_on_markers(
         module_path = str(relative_path.with_suffix('')).replace(os.sep, '.')
 
         run_command([sys.executable, '-m', module_path], ROOT_DIR)
-    commit_data(metadata)
+    commit_data()
     return 0
 
 
