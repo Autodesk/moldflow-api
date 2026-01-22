@@ -65,6 +65,7 @@ from tests.conftest import (
 
 
 @pytest.mark.unit
+@pytest.mark.synergy
 class TestUnitSynergy:
     """
     Test suite for the Synergy class.

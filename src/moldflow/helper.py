@@ -299,19 +299,6 @@ def check_min_max(min_value: float, max_value: float):
         )
 
 
-def _mf_array_to_list(array_instance):
-    """
-    Generic helper function to convert any array instance to a list.
-
-    Args:
-        array_instance: The array instance that has val(index) method and size property.
-
-    Returns:
-        list: A list containing all values from the array.
-    """
-    return [array_instance.val(i) for i in range(array_instance.size)]
-
-
 def variant_null_idispatch():
     """Return a VARIANT representing a null IDispatch pointer (VT_DISPATCH, None)."""
     return VARIANT(pythoncom.VT_DISPATCH, None)

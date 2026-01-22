@@ -1,0 +1,9 @@
+VERSION 1.0
+BEGIN PROJECT "cad_manager_studies"
+STUDY "back_cover_part_study" back_cover_part_study.sdy
+END PROJECT
+ORGANIZE 0
+BEGIN PROPERTIES
+END PROPERTIES
+Last Write Time: Mon Nov 10 11:21:15 2025
+

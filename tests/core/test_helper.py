@@ -5,7 +5,6 @@
 Test helper.py
 """
 
-from unittest.mock import Mock
 from enum import Enum
 import inspect
 import pytest
@@ -21,7 +20,6 @@ from moldflow.helper import (
     check_range,
     check_expected_values,
     get_enum_value,
-    _mf_array_to_list,
 )
 from moldflow import common
 from tests.conftest import (
@@ -311,33 +309,3 @@ class TestHelper:
         with pytest.raises(ValueError) as e:
             check_min_max(min_value, max_value)
         assert _("Invalid") in str(e.value)
-
-    def test_mf_array_to_list(self):
-        """
-        Test _mf_array_to_list helper function.
-        """
-        # Create a mock array instance
-        mock_array = Mock()
-        mock_array.size = 3
-        mock_array.val = Mock(side_effect=lambda i: i * 2)  # Return i * 2 for index i
-
-        result = _mf_array_to_list(mock_array)
-
-        assert result == [0, 2, 4]  # For indices 0, 1, 2 -> values 0, 2, 4
-        assert mock_array.val.call_count == 3
-        mock_array.val.assert_any_call(0)
-        mock_array.val.assert_any_call(1)
-        mock_array.val.assert_any_call(2)
-
-    def test_mf_array_to_list_empty(self):
-        """
-        Test _mf_array_to_list helper function with empty array.
-        """
-        mock_array = Mock()
-        mock_array.size = 0
-        mock_array.val = Mock()
-
-        result = _mf_array_to_list(mock_array)
-
-        assert result == []
-        mock_array.val.assert_not_called()

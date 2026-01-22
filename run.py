@@ -9,6 +9,7 @@ Usage:
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
     run.py format [--check]
+    run.py generate-expected-data [<markers>...]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
@@ -23,6 +24,7 @@ Commands:
     build                           Build and optionally publish the moldflow-api package.
     build-docs                      Build the documentation.
     format                          Format all Python files in the repository using black.
+    generate-expected-data          Generate expected data for integration tests.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
     lint                            Lint all Python files in the repository.
@@ -52,6 +54,7 @@ Options:
     --repo-url=<url>                Custom PyPI repository URL.
     --github-api-url=<url>          Custom GitHub API URL.
     -l, --local                     Build documentation locally (single version).
+    <markers>                       Markers to filter data generation by: mesh_summary, etc.
 """
 
 import os
@@ -678,6 +681,13 @@ def clean_up():
         os.remove(COVERAGE_XML_FILE_NAME)
 
 
+def generate_expected_data(markers: list[str]):
+    """Generate data for integration tests"""
+    logging.info('Generating data for integration tests')
+    generate_data_module = 'tests.api.integration_tests.data_generation.generate_data'
+    run_command([sys.executable, '-m', generate_data_module] + markers, ROOT_DIR)
+
+
 def set_version():
     """Set current version and write version file to package directory"""
 
@@ -719,6 +729,10 @@ def main():
             skip_build = args.get('--skip-build') or args.get('-s')
 
             lint(skip_build=skip_build)
+
+        elif args.get('generate-expected-data'):
+            markers = args.get('<markers>') or []
+            generate_expected_data(markers=markers)
 
         elif args.get('test'):
             tests = args.get('<tests>') or []

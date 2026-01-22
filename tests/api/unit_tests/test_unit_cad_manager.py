@@ -12,6 +12,7 @@ from tests.api.unit_tests.conftest import VALID_MOCK
 
 
 @pytest.mark.unit
+@pytest.mark.cad_manager
 class TestUnitCADManager:
     """
     Test suite for the CADManager class.
