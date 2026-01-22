@@ -7,7 +7,7 @@
 Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
-    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build]
+    run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
     run.py format [--check]
     run.py generate-expected-data [<markers>...]
     run.py install [-s | --skip-build]
@@ -53,6 +53,7 @@ Options:
     --all                           Run all tests.
     --repo-url=<url>                Custom PyPI repository URL.
     --github-api-url=<url>          Custom GitHub API URL.
+    -l, --local                     Build documentation locally (single version).
     <markers>                       Markers to filter data generation by: mesh_summary, etc.
 """
 
@@ -65,10 +66,10 @@ import subprocess
 import shutil
 import glob
 from urllib.parse import urlparse
-
 import docopt
 from github import Github
 import polib
+from packaging.version import InvalidVersion, Version
 
 
 WINDOWS = platform.system() == 'Windows'
@@ -89,7 +90,9 @@ TEST_DIR = os.path.join(ROOT_DIR, 'tests')
 LOCALE_DIR = os.path.join(MOLDFLOW_DIR, 'locale')
 DOCS_DIR = os.path.join(ROOT_DIR, 'docs')
 DOCS_SOURCE_DIR = os.path.join(DOCS_DIR, 'source')
+DOCS_STATIC_DIR = os.path.join(DOCS_SOURCE_DIR, '_static')
 DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
+DOCS_HTML_DIR = os.path.join(DOCS_BUILD_DIR, 'html')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
 
@@ -103,6 +106,7 @@ COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
 PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py"]
+SWITCHER_JSON = os.path.join(DOCS_STATIC_DIR, 'switcher.json')
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):
@@ -328,7 +332,77 @@ def build_mo():
         )
 
 
-def build_docs(target, skip_build):
+def create_root_redirect(build_output: str) -> None:
+    """Create an index.html in the versioned HTML build output root that redirects to /latest/."""
+    index_path = os.path.join(build_output, 'index.html')
+    redirect_html = """<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redirecting to latest documentation...</title>
+    <meta http-equiv="refresh" content="0; url=./latest/">
+    <link rel="canonical" href="./latest/">
+    <script>window.location.replace("./latest/");</script>
+</head>
+<body>
+    <p>Redirecting to <a href="./latest/">latest documentation</a>...</p>
+</body>
+</html>
+"""
+    try:
+        with open(index_path, 'w', encoding='utf-8') as f:
+            f.write(redirect_html)
+        logging.info("Created root redirect: index.html -> latest/")
+    except Exception as err:
+        logging.warning("Could not create root redirect index.html: %s", err)
+
+
+def create_latest_alias(build_output: str) -> None:
+    """Create a 'latest' alias pointing to the newest version using symlinks when possible."""
+    version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
+    if not version_dirs:
+        return
+
+    def version_key(v):
+        try:
+            return Version(v.lstrip('v'))
+        except InvalidVersion:
+            return Version("0.0.0")
+
+    sorted_versions = sorted(version_dirs, key=version_key, reverse=True)
+    latest_version = sorted_versions[0]
+    latest_src = os.path.join(build_output, latest_version)
+    latest_dest = os.path.join(build_output, 'latest')
+
+    # Verify source exists before proceeding
+    if not os.path.exists(latest_src):
+        logging.error("Source directory for 'latest' alias does not exist: %s", latest_src)
+        return
+
+    # Clean up any existing 'latest' entry first
+    if os.path.islink(latest_dest):
+        os.unlink(latest_dest)
+    elif os.path.isdir(latest_dest):
+        shutil.rmtree(latest_dest)
+    elif os.path.exists(latest_dest):
+        os.remove(latest_dest)
+
+    # Try creating a symbolic link first (most efficient)
+    logging.info("Creating 'latest' alias for %s", latest_version)
+    try:
+        os.symlink(latest_src, latest_dest, target_is_directory=True)
+        logging.info("Created symbolic link: latest -> %s", latest_version)
+    except (OSError, NotImplementedError) as err:
+        # Fall back to copying if symlinks aren't supported
+        logging.warning(
+            "Could not create symbolic link for 'latest' alias (%s); "
+            "falling back to copying documentation.",
+            err,
+        )
+        shutil.copytree(latest_src, latest_dest)
+
+
+def build_docs(target, skip_build, local=False):
     """Build Documentation"""
 
     if not skip_build:
@@ -341,19 +415,45 @@ def build_docs(target, skip_build):
         shutil.rmtree(DOCS_BUILD_DIR)
 
     try:
-        run_command(
-            [
-                sys.executable,
-                '-m',
-                'sphinx',
-                'build',
-                '-M',
-                target,
-                DOCS_SOURCE_DIR,
-                DOCS_BUILD_DIR,
-            ],
-            ROOT_DIR,
-        )
+        if target == 'html' and not local:
+            build_output = os.path.join(DOCS_BUILD_DIR, 'html')
+            try:
+                # fmt: off
+                run_command(
+                    [
+                        sys.executable, '-m', 'sphinx_multiversion',
+                        DOCS_SOURCE_DIR, build_output
+                    ],
+                    ROOT_DIR,
+                )
+            except Exception as err:
+                logging.error(
+                    "Failed to build documentation with sphinx_multiversion.\n"
+                    "This can happen if no Git tags or branches match your version pattern.\n"
+                    "Try running 'git fetch --tags' and ensure version tags exist in the repo.\n"
+                    "Underlying error: %s",
+                    str(err),
+                )
+                # Re-raise so the outer handler can log the general failure as well.
+                raise
+            # fmt: on
+            create_latest_alias(build_output)
+            create_root_redirect(build_output)
+        else:
+            # For other targets such as latex, pdf, etc.
+            run_command(
+                [
+                    sys.executable,
+                    '-m',
+                    'sphinx',
+                    'build',
+                    '-M',
+                    target,
+                    DOCS_SOURCE_DIR,
+                    DOCS_BUILD_DIR,
+                ],
+                ROOT_DIR,
+            )
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
         logging.error(
@@ -678,8 +778,9 @@ def main():
         elif args.get('build-docs'):
             target = args.get('--target') or args.get('-t') or 'html'
             skip_build = args.get('--skip-build') or args.get('-s')
+            local = args.get('--local') or args.get('-l')
 
-            build_docs(target=target, skip_build=skip_build)
+            build_docs(target=target, skip_build=skip_build, local=local)
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))

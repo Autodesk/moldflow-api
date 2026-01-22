@@ -11,7 +11,7 @@ Moldflow API is a Python wrapper library for the Synergy API, designed to simpli
 
 Before you begin, ensure you have:
 - Windows 10/11
-- Python 3.10.x - 3.13.x
+- Python 3.10.x - 3.14.x
 - Autodesk Moldflow Synergy 2026.0.1 or later
 
 ## Install
@@ -68,10 +68,25 @@ python run.py build
 python run.py build-docs
 ```
 
+> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` to include the new tag in the version dropdown for documentation.***
+
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
+- `--local` (`-l`): Build documentation locally for a single version (skips multi-version build)
 
-The documentation can be accessed locally by opening the index.html in the docs/build/html/ folder.
+The documentation can be accessed locally by serving the docs/build/html/ folder:
+```sh
+cd docs/build/html
+python -m http.server 8000
+```
+
+Then open http://localhost:8000 in your browser. The root automatically redirects to the latest version documentation.
+
+**Versioned Documentation:**
+- Each git tag creates a separate documentation version (e.g., `/v26.0.5/`)
+- A `/latest/` directory points to the newest version
+- Root (`/`) automatically redirects to `/latest/`
+- Run `git fetch --tags` before building to ensure all version tags are available
 
 ### Running the Formatter
 
@@ -158,6 +173,7 @@ We welcome contributions! Please see our [Contributing Guide](https://github.com
 ## Versioning
 
 We use [Semantic Versioning](https://semver.org/). For available versions, see the [tags on this repository](https://github.com/Autodesk/moldflow-api/tags).
+
 
 ## License
 

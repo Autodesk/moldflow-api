@@ -9,7 +9,7 @@ from unittest.mock import Mock
 import pytest
 from moldflow import StudyDoc, ImportOptions, EntList, StringArray, Vector
 from tests.api.unit_tests.conftest import VALID_MOCK
-from tests.conftest import NON_NEGATIVE_INT, VALID_STR, VALID_BOOL
+from tests.conftest import NON_NEGATIVE_INT, VALID_STR, VALID_BOOL, pad_and_zip, INVALID_BOOL
 
 
 @pytest.mark.unit
@@ -51,6 +51,7 @@ class TestUnitStudyDoc:
             ("mesh_type", "MeshType", "3D"),
             ("number_of_analyses", "NumberOfAnalyses", "TestStudy"),
             ("study_name", "StudyName", "3D"),
+            ("display_name", "DisplayName", "3D"),
             ("notes", "GetNotes", "This is a test note."),
         ],
     )
@@ -686,13 +687,15 @@ class TestUnitStudyDoc:
         "pascal_name, property_name, args, expected_args, return_type, return_value",
         [
             ("AnalysisStatus", "analysis_status", (x,), (x,), str, y)
-            for x in NON_NEGATIVE_INT
-            for y in VALID_STR
+            for x, y in pad_and_zip(NON_NEGATIVE_INT, VALID_STR)
         ]
         + [
             ("AnalysisName", "analysis_name", (x,), (x,), str, y)
-            for x in NON_NEGATIVE_INT
-            for y in VALID_STR
+            for x, y in pad_and_zip(NON_NEGATIVE_INT, VALID_STR)
+        ]
+        + [
+            ("GetAllCadBodies", "get_all_cad_bodies", (x,), (x,), str, y)
+            for x, y in pad_and_zip(VALID_BOOL, VALID_STR)
         ],
     )
     # pylint: disable=R0913, R0917
@@ -715,6 +718,22 @@ class TestUnitStudyDoc:
         assert isinstance(result, return_type)
         assert result == return_value
         getattr(mock_object, pascal_name).assert_called_once_with(*expected_args)
+
+    @pytest.mark.parametrize(
+        "pascal_name, property_name, args",
+        [("GetAllCadBodies", "get_all_cad_bodies", (x,)) for x in pad_and_zip(INVALID_BOOL)],
+    )
+    # pylint: disable=R0913, R0917
+    def test_function_invalid_type(
+        self, mock_study_doc: StudyDoc, mock_object, pascal_name, property_name, args, _
+    ):
+        """
+        Test the function with invalid types.
+        """
+        with pytest.raises(TypeError) as e:
+            getattr(mock_study_doc, property_name)(*args)
+        assert _("Invalid") in str(e.value)
+        getattr(mock_object, pascal_name).assert_not_called()
 
     @pytest.mark.parametrize(
         "pascal_name, property_name, return_type, return_value",

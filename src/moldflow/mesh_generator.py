@@ -13,12 +13,11 @@ from .common import (
     NurbsAlgorithm,
     CoolType,
     TriClassification,
-    GradingFactor,
     GeomType,
     Mesher3DType,
     CADContactMesh,
 )
-from .helper import check_type, check_range, get_enum_value
+from .helper import check_type, check_range, get_enum_value, deprecated
 from .com_proxy import safe_com
 
 
@@ -145,8 +144,11 @@ class MeshGenerator:
         self.mesh_generator.Smoothing = value
 
     @property
+    @deprecated()
     def element_reduction(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Enables/disables automatic element size determination
         for fusion meshes from faceted geometry.
 
@@ -192,8 +194,11 @@ class MeshGenerator:
         self.mesh_generator.SurfaceOptimization = value
 
     @property
+    @deprecated()
     def automatic_tetra_optimization(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether optimizing tetras automatically.
 
         :getter: Get the automatic tetra optimization option
@@ -288,8 +293,11 @@ class MeshGenerator:
         self.mesh_generator.TetraLayersForCores = value
 
     @property
+    @deprecated()
     def tetra_max_ar(self) -> float:
         """
+        .. deprecated:: 27.0.0
+
         Limit on aspect ratio for tetrahedral meshes.
 
         :getter: Get the tetra max aspect ratio option
@@ -361,8 +369,11 @@ class MeshGenerator:
         self.mesh_generator.MaximumMatchDistance = value
 
     @property
+    @deprecated()
     def use_tetras_on_edge(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether tetras are to be created on model edges.
 
         :getter: Get the use tetras on edge option
@@ -732,15 +743,16 @@ class MeshGenerator:
         return self.mesh_generator.CadMeshGradingFactor
 
     @cad_mesh_grading_factor.setter
-    def cad_mesh_grading_factor(self, value: GradingFactor | int) -> None:
+    def cad_mesh_grading_factor(self, value: float) -> None:
         """
         Set the CAD mesh grading factor option.
         """
         process_log(
             __name__, LogMessage.PROPERTY_SET, locals(), name="cad_mesh_grading_factor", value=value
         )
-        value = get_enum_value(value, GradingFactor)
-        self.mesh_generator.CadMeshGradingFactor = value
+        check_type(value, (int, float))
+        check_range(value, 0, 1, True, True)
+        self.mesh_generator.CadMeshGradingFactor = float(value)
 
     @property
     def cad_mesh_minimum_curvature_percentage(self) -> float:
@@ -776,8 +788,11 @@ class MeshGenerator:
         self.mesh_generator.CadMeshMinimumCurvaturePercentage = value
 
     @property
+    @deprecated()
     def use_fallbacks(self) -> bool:
         """
+        .. deprecated:: 27.0.0
+
         Specifies whether fallback is to be used when CAD meshing fails.
 
         :getter: Get the use fallbacks option

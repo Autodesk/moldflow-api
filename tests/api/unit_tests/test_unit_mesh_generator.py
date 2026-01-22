@@ -12,7 +12,6 @@ from moldflow import (
     NurbsAlgorithm,
     CoolType,
     TriClassification,
-    GradingFactor,
     Mesher3DType,
     CADContactMesh,
 )
@@ -134,8 +133,9 @@ class TestUnitMeshGenerator:
             ("cad_auto_size_scale", "CadAutoSizeScale", 50, (int, float)),
             ("cad_sliver_remove", "CadSliverRemove", True, bool),
             ("cad_sliver_remove", "CadSliverRemove", False, bool),
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0, int),
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 1, int),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0.0, (int, float)),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0.5, (int, float)),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 1.0, (int, float)),
             (
                 "cad_mesh_minimum_curvature_percentage",
                 "CadMeshMinimumCurvaturePercentage",
@@ -312,8 +312,9 @@ class TestUnitMeshGenerator:
             ("cad_auto_size_scale", "CadAutoSizeScale", 50, (int, float)),
             ("cad_sliver_remove", "CadSliverRemove", True, bool),
             ("cad_sliver_remove", "CadSliverRemove", False, bool),
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0, int),
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 1, int),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0.0, (int, float)),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 0.5, (int, float)),
+            ("cad_mesh_grading_factor", "CadMeshGradingFactor", 1.0, (int, float)),
             (
                 "cad_mesh_minimum_curvature_percentage",
                 "CadMeshMinimumCurvaturePercentage",
@@ -450,7 +451,7 @@ class TestUnitMeshGenerator:
         + [("use_auto_size", x) for x in ["abc", -1, 1.0, 1, 1.5, None]]
         + [("cad_auto_size_scale", x) for x in ["abc", True, None]]
         + [("cad_sliver_remove", x) for x in ["abc", -1, 1.0, 1, 1.5, None]]
-        + [("cad_mesh_grading_factor", x) for x in ["abc", True, 1.5, None]]
+        + [("cad_mesh_grading_factor", x) for x in ["abc", True, None]]
         + [("cad_mesh_minimum_curvature_percentage", x) for x in ["abc", True, None]]
         + [("use_fallbacks", x) for x in ["abc", -1, 1.0, 1, 1.5, None]]
         + [("max_edge_length_in_thickness_direction", x) for x in ["abc", True, None]]
@@ -505,7 +506,6 @@ class TestUnitMeshGenerator:
         "property_name, invalid_value",
         [("nurbs_mesher", x) for x in [-1, 10, 5]]
         + [("cad_contact_mesh_type", x) for x in ["abc", "Something"]]
-        + [("cad_mesh_grading_factor", x) for x in [-1, 10, 5]]
         + [("source_geom_type", x) for x in ["Hello", "abc"]]
         + [("cool_type", x) for x in [-1, 10, 5]]
         + [("tri_classification_opt", x) for x in [-1, 10, 5]],
@@ -551,14 +551,6 @@ class TestUnitMeshGenerator:
         + [
             ("tri_classification_opt", "TriClassificationOpt", x.value, x.value, int)
             for x in TriClassification
-        ]
-        + [
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", x, x.value, int)
-            for x in GradingFactor
-        ]
-        + [
-            ("cad_mesh_grading_factor", "CadMeshGradingFactor", x.value, x.value, int)
-            for x in GradingFactor
         ]
         + [("mesher_3d", "Mesher3D", x, x.value, str) for x in Mesher3DType]
         + [("mesher_3d", "Mesher3D", x.value, x.value, str) for x in Mesher3DType]

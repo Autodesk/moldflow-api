@@ -17,6 +17,7 @@ from unittest.mock import Mock, PropertyMock, patch
 import pytest
 from moldflow import (
     BoundaryConditions,
+    CADDiagnostic,
     CADManager,
     CircuitGenerator,
     DataTransform,
@@ -239,7 +240,8 @@ class TestUnitSynergy:
 
     @pytest.mark.parametrize(
         "pascal_name, property_name, args",
-        [("Silence", "silence", (x,)) for x in pad_and_zip(INVALID_BOOL)]
+        [("Log", "log", (x,)) for x in pad_and_zip(INVALID_STR)]
+        + [("Silence", "silence", (x,)) for x in pad_and_zip(INVALID_BOOL)]
         + [("NewProject", "new_project", (x, y)) for x, y in pad_and_zip(INVALID_STR, VALID_STR)]
         + [("NewProject", "new_project", (x, y)) for x, y in pad_and_zip(VALID_STR, INVALID_STR)]
         + [("OpenProject", "open_project", (x,)) for x in pad_and_zip(INVALID_STR)]
@@ -302,7 +304,8 @@ class TestUnitSynergy:
 
     @pytest.mark.parametrize(
         "pascal_name, property_name, args, expected_args",
-        [("Quit", "quit", (x,), (x,)) for x in pad_and_zip(VALID_BOOL)],
+        [("Log", "log", (x,), (x,)) for x in pad_and_zip(VALID_STR)]
+        + [("Quit", "quit", (x,), (x,)) for x in pad_and_zip(VALID_BOOL)],
     )
     # pylint: disable-next=R0913, R0917
     def test_functions_no_return(
@@ -531,6 +534,13 @@ class TestUnitSynergy:
                 VALID_MOCK.BOUNDARY_CONDITIONS,
                 "boundary_conditions",
             ),
+            (
+                "CADDiagnostic",
+                "cad_diagnostic",
+                CADDiagnostic,
+                VALID_MOCK.CAD_DIAGNOSTIC,
+                "cad_diagnostic",
+            ),
             ("CADManager", "cad_manager", CADManager, VALID_MOCK.CAD_MANAGER, "cad_manager"),
             (
                 "CircuitGenerator",
@@ -685,6 +695,7 @@ class TestUnitSynergy:
         "pascal_name, property_name",
         [
             ("BoundaryConditions", "boundary_conditions"),
+            ("CADDiagnostic", "cad_diagnostic"),
             ("CADManager", "cad_manager"),
             ("CircuitGenerator", "circuit_generator"),
             ("DataTransform", "data_transform"),

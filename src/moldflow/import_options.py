@@ -7,9 +7,9 @@ Usage:
 """
 
 from .logger import process_log
-from .common import LogMessage, MeshType, ImportUnits, MDLKernel
+from .common import LogMessage, MeshType, ImportUnits
 from .common import MDLContactMeshType, CADBodyProperty
-from .helper import get_enum_value, check_type, check_is_non_negative
+from .helper import get_enum_value, check_type, check_is_non_negative, deprecated
 from .com_proxy import safe_com
 
 
@@ -152,28 +152,23 @@ class ImportOptions:
         self.import_options.UseMDL = value
 
     @property
-    def mdl_kernel(self) -> str:
+    @deprecated()
+    def mdl_kernel(self):
         """
-        The MDL kernel.
+        .. deprecated:: 27.0.0
 
-        :getter: Get the MDL kernel.
-        :setter: Set the MDL kernel.
-        :type: str
+        This property is deprecated and has no effect. Value is ignored.
+
         """
-        process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="mdl_kernel")
-        return self.import_options.MDLKernel
+        return ""
 
     @mdl_kernel.setter
-    def mdl_kernel(self, value: MDLKernel | str) -> None:
+    def mdl_kernel(self, value) -> None:
         """
-        The MDL kernel.
+        This property is deprecated and has no effect. Value is ignored.
 
-        Args:
-            value (str): The MDL kernel to set.
         """
-        process_log(__name__, LogMessage.PROPERTY_SET, locals(), name="mdl_kernel", value=value)
-        value = get_enum_value(value, MDLKernel)
-        self.import_options.MDLKernel = value
+        # No operation needed.
 
     @property
     def mdl_auto_edge_select(self) -> bool:

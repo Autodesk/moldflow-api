@@ -7,8 +7,10 @@ Moldflow API Library
 A Python wrapper for the Autodesk Moldflow Synergy API.
 """
 
+from .animation_export_options import AnimationExportOptions
 from .boundary_conditions import BoundaryConditions
 from .boundary_list import BoundaryList
+from .cad_diagnostic import CADDiagnostic
 from .cad_manager import CADManager
 from .circuit_generator import CircuitGenerator
 from .data_transform import DataTransform
@@ -16,6 +18,7 @@ from .diagnosis_manager import DiagnosisManager
 from .double_array import DoubleArray
 from .ent_list import EntList
 from .folder_manager import FolderManager
+from .image_export_options import ImageExportOptions
 from .import_options import ImportOptions
 from .integer_array import IntegerArray
 from .layer_manager import LayerManager
@@ -53,6 +56,7 @@ from .common import AnimationType
 from .common import AnimationSpeed
 from .common import CADBodyProperty
 from .common import CADContactMesh
+from .common import CaptureModes
 from .common import ClampForcePlotDirection
 from .common import ColorScaleOptions
 from .common import ColorTableIDs
@@ -68,7 +72,6 @@ from .common import DisplayOption
 from .common import DuplicateOption
 from .common import EdgeDisplayOptions
 from .common import EntityType
-from .common import GradingFactor
 from .common import GeomType
 from .common import ImportUnitIndex
 from .common import ImportUnits
@@ -80,7 +83,6 @@ from .common import MaterialIndex
 from .common import Mesher3DType
 from .common import MoldingProcess
 from .common import MDLContactMeshType
-from .common import MDLKernel
 from .common import MeshType
 from .common import ModulusPlotDirection
 from .common import NurbsAlgorithm

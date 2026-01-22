@@ -181,6 +181,18 @@ class StudyDoc:
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="study_name")
         return self.study_doc.StudyName
 
+    @property
+    def display_name(self) -> str:
+        """
+        Value of Display Name.
+
+        :getter: Get value of Display Name
+        :setter: Set value of Display Name
+        :type: str
+        """
+        process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="display_name")
+        return self.study_doc.DisplayName
+
     def save(self) -> bool:
         """
         Saves the study
@@ -750,3 +762,18 @@ class StudyDoc:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="is_analysis_running")
         return self.study_doc.IsAnalysisRunning
+
+    def get_all_cad_bodies(self, is_visible_only: bool) -> str:
+        """
+        Retrieves the body IDs of all cad models as a string
+
+        Args:
+            is_visible_only: True to examine visible CAD bodies only;
+            False to examine all CAD bodies
+
+        Returns:
+            The body IDs of all CAD models as a string
+        """
+        process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="get_all_cad_bodies")
+        check_type(is_visible_only, bool)
+        return self.study_doc.GetAllCadBodies(is_visible_only)
