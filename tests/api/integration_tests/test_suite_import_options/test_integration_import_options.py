@@ -14,7 +14,6 @@ from moldflow import (
     Synergy,
     MeshType,
     ImportUnits,
-    MDLKernel,
     MDLContactMeshType,
     CADBodyProperty,
 )
@@ -28,7 +27,6 @@ SET_IMPORT_OPTIONS = {
     "mdl_mesh": data_dict(VALID_BOOL),
     "mdl_surfaces": data_dict(VALID_BOOL),
     "use_mdl": data_dict(VALID_BOOL),
-    "mdl_kernel": enum_dict(MDLKernel),
     "mdl_auto_edge_select": data_dict(VALID_BOOL),
     "mdl_edge_length": data_dict(NON_NEGATIVE_FLOAT),
     "mdl_tetra_layers": data_dict(NON_NEGATIVE_INT),
