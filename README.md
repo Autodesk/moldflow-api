@@ -68,11 +68,17 @@ python run.py build
 python run.py build-docs
 ```
 
-> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` to include the new tag in the version dropdown for documentation.***
+The documentation version switcher (`switcher.json`) is automatically generated from git tags and `version.json` during the build process.
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
 - `--local` (`-l`): Build documentation locally for a single version (skips multi-version build)
+- `--skip-switcher`: Skip generating switcher.json (useful for offline builds or custom switcher configurations)
+
+**Debug command:** To manually generate `switcher.json` without building docs:
+```sh
+python run.py generate-switcher
+```
 
 The documentation can be accessed locally by serving the docs/build/html/ folder:
 ```sh

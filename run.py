@@ -8,8 +8,10 @@ Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
+        [--skip-switcher]
     run.py format [--check]
     run.py generate-expected-data [<markers>...]
+    run.py generate-switcher
     run.py install [-s | --skip-build]
     run.py install-package-requirements
     run.py lint [-s | --skip-build]
@@ -25,6 +27,7 @@ Commands:
     build-docs                      Build the documentation.
     format                          Format all Python files in the repository using black.
     generate-expected-data          Generate expected data for integration tests.
+    generate-switcher               Generate switcher.json from git tags.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
     lint                            Lint all Python files in the repository.
@@ -54,6 +57,7 @@ Options:
     --repo-url=<url>                Custom PyPI repository URL.
     --github-api-url=<url>          Custom GitHub API URL.
     -l, --local                     Build documentation locally (single version).
+    --skip-switcher                 Skip generating switcher.json for documentation.
     <markers>                       Markers to filter data generation by: mesh_summary, etc.
 """
 
@@ -402,7 +406,7 @@ def create_latest_alias(build_output: str) -> None:
         shutil.copytree(latest_src, latest_dest)
 
 
-def build_docs(target, skip_build, local=False):
+def build_docs(target, skip_build, local=False, skip_switcher=False):
     """Build Documentation"""
 
     if not skip_build:
@@ -416,6 +420,9 @@ def build_docs(target, skip_build, local=False):
 
     try:
         if target == 'html' and not local:
+            # Generate switcher.json for docs versioning dropdown from git tags and version.json
+            if not skip_switcher:
+                generate_switcher()
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
             try:
                 # fmt: off
@@ -688,6 +695,13 @@ def generate_expected_data(markers: list[str]):
     run_command([sys.executable, '-m', generate_data_module] + markers, ROOT_DIR)
 
 
+def generate_switcher():
+    """Generate switcher.json from git tags"""
+    logging.info('Generating switcher.json from git tags')
+    switcher_script = os.path.join(ROOT_DIR, 'scripts', 'generate_switcher.py')
+    run_command([sys.executable, switcher_script], ROOT_DIR)
+
+
 def set_version():
     """Set current version and write version file to package directory"""
 
@@ -734,6 +748,9 @@ def main():
             markers = args.get('<markers>') or []
             generate_expected_data(markers=markers)
 
+        elif args.get('generate-switcher'):
+            generate_switcher()
+
         elif args.get('test'):
             tests = args.get('<tests>') or []
             marker = args.get('--marker') or args.get('-m')
@@ -779,8 +796,11 @@ def main():
             target = args.get('--target') or args.get('-t') or 'html'
             skip_build = args.get('--skip-build') or args.get('-s')
             local = args.get('--local') or args.get('-l')
+            skip_switcher = args.get('--skip-switcher')
 
-            build_docs(target=target, skip_build=skip_build, local=local)
+            build_docs(
+                target=target, skip_build=skip_build, local=local, skip_switcher=skip_switcher
+            )
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))

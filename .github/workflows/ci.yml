@@ -51,6 +51,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # Fetch all history and tags
 
       - name: Set up Python
         uses: actions/setup-python@v5

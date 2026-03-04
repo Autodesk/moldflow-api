@@ -1259,10 +1259,11 @@ The project includes a ``run.py`` script with several useful commands:
 
   - ``--skip-build`` (``-s``): Skip building the package before generating docs
   - ``--local`` (``-l``): Build documentation locally for a single version (skips multi-version build)
+  - ``--skip-switcher``: Skip generating switcher.json (useful for offline builds or custom switcher configurations)
 
 .. note::
-   When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
-   to include the new tag in the version dropdown.
+   The documentation version switcher (``switcher.json``) is automatically generated from
+   git tags and ``version.json`` during the build process.
 
 **Viewing Documentation Locally**
 
