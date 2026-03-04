@@ -202,7 +202,22 @@ def generate_switcher_json(version_tags):
                                 f"Invalid version progression: {latest_tag_version} -> {json_version}. "
                                 f"Cannot skip versions. Expected v{t_major}.{t_minor}.{t_patch + 1}"
                             )
+                    elif j_major == t_major and j_minor == t_minor + 1:
+                        # Valid minor bump, but patch must be 0
+                        if j_patch != 0:
+                            logging.error(
+                                "version.json (%s) has non-zero patch when bumping minor version. "
+                                "When incrementing minor version, patch must reset to 0. Expected v%d.%d.0",
+                                json_version,
+                                j_major,
+                                j_minor,
+                            )
+                            raise ValueError(
+                                f"Invalid version: {json_version}. "
+                                f"When bumping minor version from {latest_tag_version}, patch must be 0. Expected v{j_major}.{j_minor}.0"
+                            )
                     elif j_major == t_major and j_minor > t_minor + 1:
+                        # Skipping minor versions
                         logging.error(
                             "version.json (%s) skips minor versions from latest tag (%s). "
                             "Expected next version would be v%d.%d.0",
@@ -215,7 +230,21 @@ def generate_switcher_json(version_tags):
                             f"Invalid version progression: {latest_tag_version} -> {json_version}. "
                             f"Cannot skip versions. Expected v{t_major}.{t_minor + 1}.0"
                         )
+                    elif j_major == t_major + 1:
+                        # Valid major bump, but minor and patch must be 0
+                        if j_minor != 0 or j_patch != 0:
+                            logging.error(
+                                "version.json (%s) has non-zero minor/patch when bumping major version. "
+                                "When incrementing major version, minor and patch must reset to 0. Expected v%d.0.0",
+                                json_version,
+                                j_major,
+                            )
+                            raise ValueError(
+                                f"Invalid version: {json_version}. "
+                                f"When bumping major version from {latest_tag_version}, minor and patch must be 0. Expected v{j_major}.0.0"
+                            )
                     elif j_major > t_major + 1:
+                        # Skipping major versions
                         logging.error(
                             "version.json (%s) skips major versions from latest tag (%s). "
                             "Expected next version would be v%d.0.0",
