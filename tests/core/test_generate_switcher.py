@@ -10,16 +10,20 @@ from unittest.mock import patch
 
 import pytest
 
-# Ensure the scripts directory is importable
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..', 'scripts'))
-
-from generate_switcher import (
-    parse_version_tags,
-    sort_versions,
-    generate_switcher_json,
-    get_version_from_json,
-    _validate_version_progression,
-)
+# Ensure the scripts directory is importable, but avoid leaking sys.path changes
+_scripts_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts')
+_original_sys_path = list(sys.path)
+try:
+    sys.path.insert(0, _scripts_dir)
+    from generate_switcher import (
+        parse_version_tags,
+        sort_versions,
+        generate_switcher_json,
+        get_version_from_json,
+        _validate_version_progression,
+    )
+finally:
+    sys.path[:] = _original_sys_path
 
 MOCK_VERSION_JSON = 'generate_switcher.get_version_from_json'
 
@@ -348,34 +352,38 @@ class TestGetVersionFromJson:
         with patch('generate_switcher.VERSION_JSON', str(version_file)):
             assert get_version_from_json() == 'v1.2.3'
 
-    def test_missing_field_returns_none(self, tmp_path):
+    def test_missing_field_raises(self, tmp_path):
         version_file = tmp_path / 'version.json'
         version_file.write_text(json.dumps({"major": 1, "minor": 2}))
 
         with patch('generate_switcher.VERSION_JSON', str(version_file)):
-            assert get_version_from_json() is None
+            with pytest.raises(ValueError, match="missing required field"):
+                get_version_from_json()
 
-    def test_non_numeric_values_returns_none(self, tmp_path):
+    def test_non_numeric_values_raises(self, tmp_path):
         version_file = tmp_path / 'version.json'
         version_file.write_text(json.dumps({"major": "abc", "minor": 0, "patch": 0}))
 
         with patch('generate_switcher.VERSION_JSON', str(version_file)):
-            assert get_version_from_json() is None
+            with pytest.raises(ValueError, match="non-numeric"):
+                get_version_from_json()
 
-    def test_negative_values_returns_none(self, tmp_path):
+    def test_negative_values_raises(self, tmp_path):
         version_file = tmp_path / 'version.json'
         version_file.write_text(json.dumps({"major": -1, "minor": 0, "patch": 0}))
 
         with patch('generate_switcher.VERSION_JSON', str(version_file)):
-            assert get_version_from_json() is None
+            with pytest.raises(ValueError, match="negative"):
+                get_version_from_json()
 
     def test_missing_file_returns_none(self):
         with patch('generate_switcher.VERSION_JSON', '/nonexistent/version.json'):
             assert get_version_from_json() is None
 
-    def test_invalid_json_returns_none(self, tmp_path):
+    def test_invalid_json_raises(self, tmp_path):
         version_file = tmp_path / 'version.json'
         version_file.write_text('not valid json{{{')
 
         with patch('generate_switcher.VERSION_JSON', str(version_file)):
-            assert get_version_from_json() is None
+            with pytest.raises(ValueError, match="not valid JSON"):
+                get_version_from_json()

@@ -490,9 +490,11 @@ def _check_clean_working_tree():
 
 
 def _build_tags_incrementally(missing_tags, build_output):
-    """Check out each missing tag, build its docs, then restore the branch."""
+    """Check out each missing tag, build its docs, then restore the original ref."""
     logging.info('Building %d missing version(s) incrementally...', len(missing_tags))
 
+    # Capture the branch name if on a branch, otherwise fall back to the
+    # commit SHA so we can reliably restore even from a detached HEAD.
     branch_result = subprocess.run(
         ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
         cwd=ROOT_DIR,
@@ -500,7 +502,13 @@ def _build_tags_incrementally(missing_tags, build_output):
         text=True,
         check=False,
     )
-    current_branch = branch_result.stdout.strip() if branch_result.returncode == 0 else None
+    original_ref = branch_result.stdout.strip() if branch_result.returncode == 0 else None
+
+    if original_ref == 'HEAD':
+        sha_result = subprocess.run(
+            ['git', 'rev-parse', 'HEAD'], cwd=ROOT_DIR, capture_output=True, text=True, check=False
+        )
+        original_ref = sha_result.stdout.strip() if sha_result.returncode == 0 else None
 
     os.makedirs(build_output, exist_ok=True)
 
@@ -515,10 +523,10 @@ def _build_tags_incrementally(missing_tags, build_output):
             )
             logging.info('Successfully built documentation for %s', tag)
     finally:
-        if current_branch and current_branch != 'HEAD':
-            logging.info('Restoring original branch: %s', current_branch)
+        if original_ref:
+            logging.info('Restoring original ref: %s', original_ref)
             subprocess.run(
-                ['git', 'checkout', current_branch], cwd=ROOT_DIR, check=True, capture_output=True
+                ['git', 'checkout', original_ref], cwd=ROOT_DIR, check=True, capture_output=True
             )
 
 
@@ -545,11 +553,14 @@ def _distribute_switcher_json(build_output):
 
 
 def _build_html_docs_incremental(build_output, skip_switcher, include_current):
-    """Build HTML docs incrementally: only missing tags, then switcher."""
+    """Build HTML docs incrementally: tags, then switcher, then current version."""
     missing_tags = _get_missing_version_tags(build_output)
     if missing_tags:
         _check_clean_working_tree()
         _build_tags_incrementally(missing_tags, build_output)
+
+    if not skip_switcher:
+        generate_switcher(include_current=include_current)
 
     if include_current:
         logging.info('Checking if current version needs to be built...')
@@ -570,7 +581,6 @@ def _build_html_docs_incremental(build_output, skip_switcher, include_current):
                 logging.info('Current version docs built at %s', version_output)
 
     if not skip_switcher:
-        generate_switcher(include_current=include_current)
         _distribute_switcher_json(build_output)
 
 

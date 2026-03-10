@@ -79,63 +79,50 @@ def get_version_from_json():
     """
     Read version from version.json file.
 
-    Returns version string in format 'vX.Y.Z' or None if file doesn't exist.
+    Returns version string in format 'vX.Y.Z', or None if the file does not
+    exist.  Raises ValueError if the file exists but is invalid (malformed
+    JSON, missing fields, non-numeric values, etc.) so that a broken
+    version.json is always a hard failure rather than a silent skip.
     """
     try:
         with open(VERSION_JSON, 'r', encoding='utf-8') as f:
             version_data = json.load(f)
-
-        # Validate that major, minor, patch exist and are valid
-        required_fields = ['major', 'minor', 'patch']
-        for field in required_fields:
-            if field not in version_data:
-                logging.error("version.json is missing required field: %s", field)
-                return None
-
-        # Validate that values can be converted to integers
-        try:
-            major = int(version_data['major'])
-            minor = int(version_data['minor'])
-            patch = int(version_data['patch'])
-
-            # Validate they are non-negative
-            if major < 0 or minor < 0 or patch < 0:
-                logging.error(
-                    "version.json contains negative version numbers: %s.%s.%s", major, minor, patch
-                )
-                return None
-
-        except (ValueError, TypeError) as err:
-            logging.error(
-                "version.json contains non-numeric version values: major=%s, minor=%s, patch=%s. Error: %s",
-                version_data.get('major'),
-                version_data.get('minor'),
-                version_data.get('patch'),
-                err,
-            )
-            return None
-
-        version_str = f"v{major}.{minor}.{patch}"
-
-        # Validate it's a proper semantic version
-        try:
-            Version(version_str.lstrip('v'))
-            return version_str
-        except InvalidVersion as err:
-            logging.error(
-                "Invalid semantic version in version.json: %s. Error: %s", version_str, err
-            )
-            return None
-
     except FileNotFoundError:
         logging.warning("version.json file not found at: %s", VERSION_JSON)
         return None
-    except KeyError as err:
-        logging.error("version.json is missing required field: %s", err)
-        return None
     except json.JSONDecodeError as err:
-        logging.error("version.json is not valid JSON: %s", err)
-        return None
+        raise ValueError(f"version.json is not valid JSON: {err}") from err
+
+    required_fields = ['major', 'minor', 'patch']
+    for field in required_fields:
+        if field not in version_data:
+            raise ValueError(f"version.json is missing required field: {field}")
+
+    try:
+        major = int(version_data['major'])
+        minor = int(version_data['minor'])
+        patch = int(version_data['patch'])
+    except (ValueError, TypeError) as err:
+        raise ValueError(
+            f"version.json contains non-numeric version values: "
+            f"major={version_data.get('major')}, "
+            f"minor={version_data.get('minor')}, "
+            f"patch={version_data.get('patch')}"
+        ) from err
+
+    if major < 0 or minor < 0 or patch < 0:
+        raise ValueError(
+            f"version.json contains negative version numbers: " f"{major}.{minor}.{patch}"
+        )
+
+    version_str = f"v{major}.{minor}.{patch}"
+
+    try:
+        Version(version_str.lstrip('v'))
+    except InvalidVersion as err:
+        raise ValueError(f"Invalid semantic version in version.json: {version_str}") from err
+
+    return version_str
 
 
 def sort_versions(version_tags):
