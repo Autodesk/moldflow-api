@@ -16,10 +16,15 @@ Options:
 import json
 import logging
 import os
+import re
 import subprocess
 import sys
 import docopt
 from packaging.version import InvalidVersion, Version
+
+
+# Must match smv_tag_whitelist in docs/source/conf.py
+SMV_TAG_PATTERN = re.compile(r'^v?\d+\.\d+\.\d+$')
 
 
 # Paths
@@ -44,20 +49,21 @@ def get_git_tags():
 
 def parse_version_tags(tags):
     """
-    Parse version tags and return a list of valid version strings.
+    Parse version tags and return a list of strict X.Y.Z version strings.
 
-    Filters tags that start with 'v' and can be parsed as valid versions.
+    Uses the same pattern as smv_tag_whitelist in docs/source/conf.py
+    so that switcher.json stays in sync with the versions that
+    sphinx-multiversion actually builds.  Accepts both vX.Y.Z and X.Y.Z.
     """
     version_tags = []
 
     for tag in tags:
-        if not tag.startswith('v'):
+        if not SMV_TAG_PATTERN.match(tag):
             continue
 
-        version_str = tag[1:]  # Remove 'v' prefix
+        version_str = tag.lstrip('v')
 
         try:
-            # Validate that it's a proper version
             Version(version_str)
             version_tags.append(tag)
         except InvalidVersion:
