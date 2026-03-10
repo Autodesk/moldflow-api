@@ -49,11 +49,13 @@ def get_git_tags():
 
 def parse_version_tags(tags):
     """
-    Parse version tags and return a list of strict X.Y.Z version strings.
+    Filter tags to those matching strict X.Y.Z releases.
 
     Uses the same pattern as smv_tag_whitelist in docs/source/conf.py
     so that switcher.json stays in sync with the versions that
     sphinx-multiversion actually builds.  Accepts both vX.Y.Z and X.Y.Z.
+
+    Returns the original tag strings (preserving any 'v' prefix).
     """
     version_tags = []
 
@@ -148,6 +150,97 @@ def sort_versions(version_tags):
     return sorted(version_tags, key=version_key, reverse=True)
 
 
+def _validate_version_progression(json_version, latest_tag_version):
+    """
+    Validate that version.json is a legal next version after the latest tag.
+
+    Raises ValueError if the progression skips versions or violates reset
+    rules (e.g. patch must be 0 when bumping minor).
+    """
+    json_ver = Version(json_version.lstrip('v'))
+    tag_ver = Version(latest_tag_version.lstrip('v'))
+
+    if json_ver <= tag_ver:
+        return
+
+    j_major, j_minor, j_patch = json_ver.release[:3]
+    t_major, t_minor, t_patch = tag_ver.release[:3]
+
+    if j_major == t_major and j_minor == t_minor:
+        if j_patch > t_patch + 1:
+            logging.error(
+                "version.json (%s) skips patch versions from latest "
+                "tag (%s). Expected v%d.%d.%d",
+                json_version,
+                latest_tag_version,
+                t_major,
+                t_minor,
+                t_patch + 1,
+            )
+            raise ValueError(
+                f"Invalid version progression: "
+                f"{latest_tag_version} -> {json_version}. "
+                f"Cannot skip versions. "
+                f"Expected v{t_major}.{t_minor}.{t_patch + 1}"
+            )
+    elif j_major == t_major and j_minor == t_minor + 1:
+        if j_patch != 0:
+            logging.error(
+                "version.json (%s) has non-zero patch when bumping "
+                "minor version. Expected v%d.%d.0",
+                json_version,
+                j_major,
+                j_minor,
+            )
+            raise ValueError(
+                f"Invalid version: {json_version}. "
+                f"When bumping minor version from "
+                f"{latest_tag_version}, patch must be 0. "
+                f"Expected v{j_major}.{j_minor}.0"
+            )
+    elif j_major == t_major and j_minor > t_minor + 1:
+        logging.error(
+            "version.json (%s) skips minor versions from latest " "tag (%s). Expected v%d.%d.0",
+            json_version,
+            latest_tag_version,
+            t_major,
+            t_minor + 1,
+        )
+        raise ValueError(
+            f"Invalid version progression: "
+            f"{latest_tag_version} -> {json_version}. "
+            f"Cannot skip versions. "
+            f"Expected v{t_major}.{t_minor + 1}.0"
+        )
+    elif j_major == t_major + 1:
+        if j_minor != 0 or j_patch != 0:
+            logging.error(
+                "version.json (%s) has non-zero minor/patch when "
+                "bumping major version. Expected v%d.0.0",
+                json_version,
+                j_major,
+            )
+            raise ValueError(
+                f"Invalid version: {json_version}. "
+                f"When bumping major version from "
+                f"{latest_tag_version}, minor and patch must be 0. "
+                f"Expected v{j_major}.0.0"
+            )
+    elif j_major > t_major + 1:
+        logging.error(
+            "version.json (%s) skips major versions from latest " "tag (%s). Expected v%d.0.0",
+            json_version,
+            latest_tag_version,
+            t_major + 1,
+        )
+        raise ValueError(
+            f"Invalid version progression: "
+            f"{latest_tag_version} -> {json_version}. "
+            f"Cannot skip versions. "
+            f"Expected v{t_major + 1}.0.0"
+        )
+
+
 def generate_switcher_json(version_tags, include_current=False):
     """
     Generate the switcher.json structure.
@@ -155,9 +248,10 @@ def generate_switcher_json(version_tags, include_current=False):
     Returns a list of version entries with the format expected by
     pydata-sphinx-theme's version switcher.
 
-    When include_current is True, checks version.json to see if there's a
-    newer version that hasn't been tagged yet (e.g., working on a branch/PR).
-    If so, that version is added as the latest at the top of the list.
+    Always reads version.json and validates its progression against the
+    latest git tag (to catch skipped versions early, even in CI).
+    When include_current is True and version.json is newer than the latest
+    tag, that version is also added to the switcher output.
     """
     if not version_tags:
         logging.warning("No version tags found!")
@@ -166,141 +260,50 @@ def generate_switcher_json(version_tags, include_current=False):
     sorted_tags = sort_versions(version_tags)
     switcher_data = []
 
-    version_json_is_newer = False
-    json_version = None
-    latest_tag_version = sorted_tags[0] if sorted_tags else None
+    latest_tag_version = sorted_tags[0]
+    json_version = get_version_from_json()
 
-    if include_current:
-        json_version = get_version_from_json()
-
+    add_json_version = False
     if json_version and latest_tag_version:
         try:
             json_ver = Version(json_version.lstrip('v'))
             tag_ver = Version(latest_tag_version.lstrip('v'))
             version_json_is_newer = json_ver > tag_ver
 
-            # Check if version.json is skipping versions (this is an ERROR)
             if version_json_is_newer:
-                # Parse version components to check for skipped versions
-                json_parts = str(json_ver).split('.')
-                tag_parts = str(tag_ver).split('.')
-
-                if len(json_parts) >= 3 and len(tag_parts) >= 3:
-                    j_major, j_minor, j_patch = (
-                        int(json_parts[0]),
-                        int(json_parts[1]),
-                        int(json_parts[2]),
-                    )
-                    t_major, t_minor, t_patch = (
-                        int(tag_parts[0]),
-                        int(tag_parts[1]),
-                        int(tag_parts[2]),
-                    )
-
-                    # Check if we're skipping versions inappropriately
-                    if j_major == t_major and j_minor == t_minor:
-                        # Same major.minor, check patch difference
-                        if j_patch > t_patch + 1:
-                            logging.error(
-                                "version.json (%s) skips patch versions from latest tag (%s). "
-                                "Expected next version would be v%d.%d.%d",
-                                json_version,
-                                latest_tag_version,
-                                t_major,
-                                t_minor,
-                                t_patch + 1,
-                            )
-                            raise ValueError(
-                                f"Invalid version progression: {latest_tag_version} -> {json_version}. "
-                                f"Cannot skip versions. Expected v{t_major}.{t_minor}.{t_patch + 1}"
-                            )
-                    elif j_major == t_major and j_minor == t_minor + 1:
-                        # Valid minor bump, but patch must be 0
-                        if j_patch != 0:
-                            logging.error(
-                                "version.json (%s) has non-zero patch when bumping minor version. "
-                                "When incrementing minor version, patch must reset to 0. Expected v%d.%d.0",
-                                json_version,
-                                j_major,
-                                j_minor,
-                            )
-                            raise ValueError(
-                                f"Invalid version: {json_version}. "
-                                f"When bumping minor version from {latest_tag_version}, patch must be 0. Expected v{j_major}.{j_minor}.0"
-                            )
-                    elif j_major == t_major and j_minor > t_minor + 1:
-                        # Skipping minor versions
-                        logging.error(
-                            "version.json (%s) skips minor versions from latest tag (%s). "
-                            "Expected next version would be v%d.%d.0",
-                            json_version,
-                            latest_tag_version,
-                            t_major,
-                            t_minor + 1,
-                        )
-                        raise ValueError(
-                            f"Invalid version progression: {latest_tag_version} -> {json_version}. "
-                            f"Cannot skip versions. Expected v{t_major}.{t_minor + 1}.0"
-                        )
-                    elif j_major == t_major + 1:
-                        # Valid major bump, but minor and patch must be 0
-                        if j_minor != 0 or j_patch != 0:
-                            logging.error(
-                                "version.json (%s) has non-zero minor/patch when bumping major version. "
-                                "When incrementing major version, minor and patch must reset to 0. Expected v%d.0.0",
-                                json_version,
-                                j_major,
-                            )
-                            raise ValueError(
-                                f"Invalid version: {json_version}. "
-                                f"When bumping major version from {latest_tag_version}, minor and patch must be 0. Expected v{j_major}.0.0"
-                            )
-                    elif j_major > t_major + 1:
-                        # Skipping major versions
-                        logging.error(
-                            "version.json (%s) skips major versions from latest tag (%s). "
-                            "Expected next version would be v%d.0.0",
-                            json_version,
-                            latest_tag_version,
-                            t_major + 1,
-                        )
-                        raise ValueError(
-                            f"Invalid version progression: {latest_tag_version} -> {json_version}. "
-                            f"Cannot skip versions. Expected v{t_major + 1}.0.0"
-                        )
+                _validate_version_progression(json_version, latest_tag_version)
+                if include_current:
+                    add_json_version = True
 
         except InvalidVersion:
             pass
 
-    # If version.json has a newer version, add it as the latest
-    if version_json_is_newer:
+    if add_json_version:
         logging.info(
-            "version.json (%s) is newer than latest tag (%s), adding as latest",
+            "version.json (%s) is newer than latest tag (%s), " "adding as latest",
             json_version,
             latest_tag_version,
         )
-        entry = {
-            "version": json_version,
-            "name": f"{json_version} (latest)",
-            "url": f"../{json_version}/",
-            "is_latest": True,
-        }
-        switcher_data.append(entry)
+        switcher_data.append(
+            {
+                "version": json_version,
+                "name": f"{json_version} (latest)",
+                "url": f"../{json_version}/",
+                "is_latest": True,
+            }
+        )
 
-    # Add all tagged versions
     for i, tag in enumerate(sorted_tags):
-        # If version.json was added as latest, no tag is latest
-        # Otherwise, the first tag (index 0) is latest
-        is_latest = (i == 0) and not version_json_is_newer
+        is_latest = (i == 0) and not add_json_version
 
-        entry = {
-            "version": tag,
-            "name": f"{tag} (latest)" if is_latest else tag,
-            "url": f"../{tag}/",
-            "is_latest": is_latest,
-        }
-
-        switcher_data.append(entry)
+        switcher_data.append(
+            {
+                "version": tag,
+                "name": f"{tag} (latest)" if is_latest else tag,
+                "url": f"../{tag}/",
+                "is_latest": is_latest,
+            }
+        )
 
     return switcher_data
 
