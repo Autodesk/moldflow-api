@@ -5,8 +5,12 @@
 """
 Generate switcher.json for documentation version switcher.
 
-This script fetches git tags from the repository, identifies version tags,
-and generates the switcher.json file for the documentation version switcher.
+Usage:
+    generate_switcher.py [--include-current]
+
+Options:
+    --include-current   Include the current version from version.json if it is
+                        newer than the latest tag.
 """
 
 import json
@@ -14,6 +18,7 @@ import logging
 import os
 import subprocess
 import sys
+import docopt
 from packaging.version import InvalidVersion, Version
 
 
@@ -137,16 +142,16 @@ def sort_versions(version_tags):
     return sorted(version_tags, key=version_key, reverse=True)
 
 
-def generate_switcher_json(version_tags):
+def generate_switcher_json(version_tags, include_current=False):
     """
     Generate the switcher.json structure.
 
     Returns a list of version entries with the format expected by
     pydata-sphinx-theme's version switcher.
 
-    Checks version.json to see if there's a newer version that hasn't been
-    tagged yet (e.g., working on a branch/PR). If so, that version is added
-    as the latest at the top of the list.
+    When include_current is True, checks version.json to see if there's a
+    newer version that hasn't been tagged yet (e.g., working on a branch/PR).
+    If so, that version is added as the latest at the top of the list.
     """
     if not version_tags:
         logging.warning("No version tags found!")
@@ -155,12 +160,13 @@ def generate_switcher_json(version_tags):
     sorted_tags = sort_versions(version_tags)
     switcher_data = []
 
-    # Check if version.json has a newer version than the latest tag
-    json_version = get_version_from_json()
+    version_json_is_newer = False
+    json_version = None
     latest_tag_version = sorted_tags[0] if sorted_tags else None
 
-    # Determine if version.json version is newer than latest tag
-    version_json_is_newer = False
+    if include_current:
+        json_version = get_version_from_json()
+
     if json_version and latest_tag_version:
         try:
             json_ver = Version(json_version.lstrip('v'))
@@ -309,6 +315,9 @@ def main():
     """Main entry point."""
     logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
 
+    args = docopt.docopt(__doc__)
+    include_current = args.get('--include-current')
+
     try:
         logging.info("Fetching git tags...")
         tags = get_git_tags()
@@ -329,7 +338,7 @@ def main():
         logging.info("Found %d version tags", len(version_tags))
 
         logging.info("Generating switcher.json...")
-        switcher_data = generate_switcher_json(version_tags)
+        switcher_data = generate_switcher_json(version_tags, include_current=include_current)
 
         logging.info("Writing switcher.json to %s", SWITCHER_JSON)
         write_switcher_json(switcher_data)

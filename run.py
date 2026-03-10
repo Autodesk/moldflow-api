@@ -2,13 +2,14 @@
 # SPDX-FileCopyrightText: 2025 Autodesk, Inc.
 # SPDX-License-Identifier: Apache-2.0
 
+# pylint: disable=C0302
 
 """
 Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
-        [--skip-switcher]
+        [--skip-switcher] [--include-current] [--incremental]
     run.py format [--check]
     run.py generate-expected-data [<markers>...]
     run.py generate-switcher
@@ -58,6 +59,10 @@ Options:
     --github-api-url=<url>          Custom GitHub API URL.
     -l, --local                     Build documentation locally (single version).
     --skip-switcher                 Skip generating switcher.json for documentation.
+    --include-current               Build current working tree version from version.json
+                                    (useful during development before tagging).
+    --incremental                   Only build versions that don't have existing output directories
+                                    (speeds up development by skipping already-built versions).
     <markers>                       Markers to filter data generation by: mesh_summary, etc.
 """
 
@@ -406,7 +411,10 @@ def create_latest_alias(build_output: str) -> None:
         shutil.copytree(latest_src, latest_dest)
 
 
-def build_docs(target, skip_build, local=False, skip_switcher=False):
+# pylint: disable=R0912, R0913, R0914, R0915, R0917
+def build_docs(
+    target, skip_build, local=False, skip_switcher=False, include_current=False, incremental=False
+):
     """Build Documentation"""
 
     if not skip_build:
@@ -414,36 +422,182 @@ def build_docs(target, skip_build, local=False, skip_switcher=False):
 
     logging.info('Attempting to build moldflow-api documentation')
 
-    logging.info('Removing existing Sphinx documentation...')
-    if os.path.exists(DOCS_BUILD_DIR):
-        shutil.rmtree(DOCS_BUILD_DIR)
+    if not incremental:
+        logging.info('Removing existing Sphinx documentation...')
+        if os.path.exists(DOCS_BUILD_DIR):
+            shutil.rmtree(DOCS_BUILD_DIR)
+    else:
+        logging.info('Incremental build mode: preserving existing documentation...')
 
+    # pylint: disable=R1702
     try:
         if target == 'html' and not local:
             # Generate switcher.json for docs versioning dropdown from git tags and version.json
             if not skip_switcher:
-                generate_switcher()
+                generate_switcher(include_current=include_current)
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
-            try:
-                # fmt: off
-                run_command(
-                    [
-                        sys.executable, '-m', 'sphinx_multiversion',
-                        DOCS_SOURCE_DIR, build_output
-                    ],
-                    ROOT_DIR,
+
+            # Determine which versions need to be built
+            skip_multiversion = False
+            missing_tags = []
+            if incremental:
+                # Get existing version directories
+                existing_versions = set()
+                if os.path.exists(build_output):
+                    for item in os.listdir(build_output):
+                        item_path = os.path.join(build_output, item)
+                        if os.path.isdir(item_path) and item.startswith('v'):
+                            # Exclude special directories like 'latest'
+                            if item not in ['latest']:
+                                existing_versions.add(item)
+
+                # Get all version tags from git
+                result = subprocess.run(
+                    ['git', 'tag', '-l', 'v*', '--sort=-version:refname'],
+                    cwd=ROOT_DIR,
+                    capture_output=True,
+                    text=True,
+                    check=True,
                 )
-            except Exception as err:
-                logging.error(
-                    "Failed to build documentation with sphinx_multiversion.\n"
-                    "This can happen if no Git tags or branches match your version pattern.\n"
-                    "Try running 'git fetch --tags' and ensure version tags exist in the repo.\n"
-                    "Underlying error: %s",
-                    str(err),
-                )
-                # Re-raise so the outer handler can log the general failure as well.
-                raise
-            # fmt: on
+                all_tags = {tag.strip() for tag in result.stdout.split('\n') if tag.strip()}
+
+                missing_tags = list(all_tags - existing_versions)
+
+                if missing_tags:
+                    logging.info(
+                        'Incremental build: found %d existing versions, %d tags need building: %s',
+                        len(existing_versions),
+                        len(missing_tags),
+                        ', '.join(sorted(missing_tags)),
+                    )
+                else:
+                    logging.info(
+                        'Incremental build: all %d tagged versions already built, '
+                        'skipping tag builds',
+                        len(all_tags),
+                    )
+                    skip_multiversion = True
+
+            # Build tagged versions
+            if not skip_multiversion:
+                if incremental and missing_tags:
+                    # Incremental mode: build only missing tags individually
+                    logging.info(
+                        'Building %d missing version(s) incrementally...', len(missing_tags)
+                    )
+                    # Store current branch to restore later
+                    current_branch_result = subprocess.run(
+                        ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                        cwd=ROOT_DIR,
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    current_branch = (
+                        current_branch_result.stdout.strip()
+                        if current_branch_result.returncode == 0
+                        else None
+                    )
+
+                    # Create build output directory if it doesn't exist
+                    os.makedirs(build_output, exist_ok=True)
+
+                    try:
+                        for tag in sorted(missing_tags):
+                            logging.info('Checking out and building tag: %s', tag)
+                            # Checkout the tag
+                            subprocess.run(
+                                ['git', 'checkout', tag],
+                                cwd=ROOT_DIR,
+                                check=True,
+                                capture_output=True,
+                            )
+                            # Build docs for this tag
+                            tag_output = os.path.join(build_output, tag)
+                            run_command(
+                                [
+                                    sys.executable,
+                                    '-m',
+                                    'sphinx',
+                                    '-b',
+                                    'html',
+                                    DOCS_SOURCE_DIR,
+                                    tag_output,
+                                ],
+                                ROOT_DIR,
+                            )
+                            logging.info('Successfully built documentation for %s', tag)
+                    finally:
+                        # Always restore the original branch
+                        if current_branch and current_branch != 'HEAD':
+                            logging.info('Restoring original branch: %s', current_branch)
+                            subprocess.run(
+                                ['git', 'checkout', current_branch],
+                                cwd=ROOT_DIR,
+                                check=True,
+                                capture_output=True,
+                            )
+                else:
+                    # Non-incremental mode: use sphinx_multiversion to build all tags
+                    try:
+                        # fmt: off
+                        run_command(
+                            [
+                                sys.executable, '-m', 'sphinx_multiversion',
+                                DOCS_SOURCE_DIR, build_output
+                            ],
+                            ROOT_DIR,
+                        )
+                    except Exception as err:
+                        logging.error(
+                            "Failed to build documentation with "
+                            "sphinx_multiversion.\n"
+                            "This can happen if no Git tags or branches match "
+                            "your version pattern.\n"
+                            "Try running 'git fetch --tags' and ensure version "
+                            "tags exist in the repo.\n"
+                            "Underlying error: %s",
+                            str(err),
+                        )
+                        # Re-raise so the outer handler can log the general failure as well.
+                        raise
+                    # fmt: on
+
+            # If include_current is True and version.json is newer than latest tag,
+            # also build docs for the current working tree
+            if include_current:
+                logging.info('Checking if current version needs to be built...')
+                current_version = _get_current_version_if_newer()
+                if current_version:
+                    current_version_output = os.path.join(build_output, current_version)
+
+                    # In incremental mode, check if current version already exists
+                    if incremental and os.path.exists(current_version_output):
+                        logging.info(
+                            'Incremental build: current version %s already exists, skipping',
+                            current_version,
+                        )
+                    else:
+                        logging.info(
+                            'Building documentation for current version: %s', current_version
+                        )
+                        run_command(
+                            [
+                                sys.executable,
+                                '-m',
+                                'sphinx',
+                                '-b',
+                                'html',
+                                DOCS_SOURCE_DIR,
+                                current_version_output,
+                            ],
+                            ROOT_DIR,
+                        )
+                        logging.info(
+                            'Current version documentation built successfully at %s',
+                            current_version_output,
+                        )
+
             create_latest_alias(build_output)
             create_root_redirect(build_output)
         else:
@@ -695,11 +849,57 @@ def generate_expected_data(markers: list[str]):
     run_command([sys.executable, '-m', generate_data_module] + markers, ROOT_DIR)
 
 
-def generate_switcher():
+def _get_current_version_if_newer():
+    """
+    Check if version.json has a version newer than the latest git tag.
+
+    Returns version string (e.g., 'v27.0.1') if newer, None otherwise.
+    """
+    try:
+        # Read version.json
+        with open(VERSION_FILE, 'r', encoding=ENCODING) as f:
+            vers_json_dict = json.load(f)
+        current_version = (
+            f"v{vers_json_dict['major']}.{vers_json_dict['minor']}.{vers_json_dict['patch']}"
+        )
+
+        # Get latest git tag
+        result = subprocess.run(
+            ['git', 'tag', '-l', 'v*', '--sort=-version:refname'],
+            cwd=ROOT_DIR,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        tags = [tag.strip() for tag in result.stdout.split('\n') if tag.strip()]
+
+        if not tags:
+            return None
+
+        latest_tag = tags[0]
+
+        # Compare versions
+
+        current_ver = Version(current_version.lstrip('v'))
+        latest_ver = Version(latest_tag.lstrip('v'))
+
+        if current_ver > latest_ver:
+            return current_version
+        return None
+
+    except Exception as err:
+        logging.warning("Could not determine if current version is newer: %s", err)
+        return None
+
+
+def generate_switcher(include_current=False):
     """Generate switcher.json from git tags"""
     logging.info('Generating switcher.json from git tags')
     switcher_script = os.path.join(ROOT_DIR, 'scripts', 'generate_switcher.py')
-    run_command([sys.executable, switcher_script], ROOT_DIR)
+    cmd = [sys.executable, switcher_script]
+    if include_current:
+        cmd.append('--include-current')
+    run_command(cmd, ROOT_DIR)
 
 
 def set_version():
@@ -797,9 +997,16 @@ def main():
             skip_build = args.get('--skip-build') or args.get('-s')
             local = args.get('--local') or args.get('-l')
             skip_switcher = args.get('--skip-switcher')
+            include_current = args.get('--include-current')
+            incremental = args.get('--incremental')
 
             build_docs(
-                target=target, skip_build=skip_build, local=local, skip_switcher=skip_switcher
+                target=target,
+                skip_build=skip_build,
+                local=local,
+                skip_switcher=skip_switcher,
+                include_current=include_current,
+                incremental=incremental,
             )
 
         elif args.get('install-package-requirements'):
