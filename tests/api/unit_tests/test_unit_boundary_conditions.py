@@ -5,6 +5,7 @@
 """
 Test for BoundaryConditions Wrapper Class of moldflow-api module.
 """
+
 from unittest.mock import Mock, patch
 from win32com.client import VARIANT
 import pythoncom

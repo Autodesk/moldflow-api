@@ -12,7 +12,6 @@ import pytest
 from moldflow import EntList, Synergy
 from tests.api.integration_tests.constants import FileSet
 
-
 TEST_ENTITY_LIST_PARAMETERS = [
     ("select_from_string", "item_string"),
     ("select_from_predicate", "item_predicate"),

@@ -34,7 +34,6 @@ from tests.api.integration_tests.constants import (
 from tests.api.integration_tests.conftest import STUDY_FILES
 from tests.api.integration_tests.data_generation.generate_data_logger import generate_data_logger
 
-
 WINDOWS = platform.system() == 'Windows'
 
 
