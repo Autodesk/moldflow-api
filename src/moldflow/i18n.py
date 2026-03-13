@@ -11,7 +11,6 @@ import builtins
 import gettext
 from typing import Callable
 
-
 _translator: Callable[[str], str] | None = None
 
 

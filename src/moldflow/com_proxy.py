@@ -13,7 +13,6 @@ from .logger import process_log
 from .common import LogMessage
 from .errors import raise_attribute_error
 
-
 # ------------------------------------------------------------------
 # Helper: Verify COM attribute existence
 # ------------------------------------------------------------------

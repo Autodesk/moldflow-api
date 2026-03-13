@@ -6,7 +6,6 @@ Generate data for the PropertyEditor class.
 Returns a dict with relevant properties.
 """
 
-
 from moldflow import Synergy, PropertyEditor
 from tests.api.integration_tests.data_generation.generate_data_helper import generate_json
 from tests.api.integration_tests.constants import FileSet

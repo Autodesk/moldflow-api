@@ -71,7 +71,6 @@ from github import Github
 import polib
 from packaging.version import InvalidVersion, Version
 
-
 WINDOWS = platform.system() == 'Windows'
 ENCODING = 'utf-8'
 SITE_PACKAGES = 'moldflow-site-packages'
