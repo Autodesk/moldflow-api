@@ -1259,10 +1259,29 @@ The project includes a ``run.py`` script with several useful commands:
 
   - ``--skip-build`` (``-s``): Skip building the package before generating docs
   - ``--local`` (``-l``): Build documentation locally for a single version (skips multi-version build)
+  - ``--skip-switcher``: Skip generating switcher.json (useful for offline builds or custom switcher configurations)
+  - ``--include-current``: Build and include current working tree version from version.json (useful during development before tagging)
+  - ``--incremental``: Only build versions that don't have existing output directories (speeds up development by skipping already-built versions)
 
 .. note::
-   When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` 
-   to include the new tag in the version dropdown.
+   The documentation version switcher (``switcher.json``) is automatically generated from
+   git tags during the build process. Only tagged versions are included to ensure all
+   documentation links work correctly. If ``version.json`` is newer than the latest tag,
+   create a git tag to include it in the version switcher.
+
+**Incremental Builds for Development:**
+
+For faster iteration during development, combine ``--include-current`` with ``--incremental``:
+
+.. code-block:: bash
+
+   # First build (builds all versions)
+   python run.py build-docs --include-current
+
+   # Subsequent builds (only rebuilds current version)
+   python run.py build-docs --include-current --incremental
+
+The ``--incremental`` flag preserves existing version builds and only builds what's missing, significantly speeding up documentation updates during development.
 
 **Viewing Documentation Locally**
 
