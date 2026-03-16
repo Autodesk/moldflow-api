@@ -76,6 +76,7 @@ import shutil
 import glob
 from urllib.parse import urlparse
 import docopt
+import git as gitpython
 from github import Github
 import polib
 from packaging.version import InvalidVersion, Version
@@ -94,6 +95,7 @@ MO_FILES_EXT = '.mo'
 
 # Directory Paths
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
+GIT_REPO = gitpython.Repo(ROOT_DIR)
 MOLDFLOW_DIR = os.path.join(ROOT_DIR, 'src', 'moldflow')
 TEST_DIR = os.path.join(ROOT_DIR, 'tests')
 LOCALE_DIR = os.path.join(MOLDFLOW_DIR, 'locale')
@@ -246,9 +248,7 @@ def create_release(github_api_url=None):
     target_sha = os.environ.get('GITHUB_SHA')
     if not target_sha:
         # Fallback to HEAD when running locally
-        target_sha = (
-            subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT_DIR).decode().strip()
-        )
+        target_sha = GIT_REPO.git.rev_parse('HEAD').decode().strip()
 
     tag = f'v{VERSION}'
     release_name = tag
@@ -450,14 +450,7 @@ def _get_missing_version_tags(build_output):
                 if item != 'latest':
                     existing_versions.add(item)
 
-    result = subprocess.run(
-        ['git', 'tag', '-l', 'v*', '--sort=-version:refname'],
-        cwd=ROOT_DIR,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    all_tags = {tag.strip() for tag in result.stdout.split('\n') if tag.strip()}
+    all_tags = {tag.name for tag in GIT_REPO.tags if tag.name.startswith('v')}
 
     missing = list(all_tags - existing_versions)
 
@@ -479,10 +472,7 @@ def _get_missing_version_tags(build_output):
 
 def _check_clean_working_tree():
     """Raise if the git working tree has uncommitted changes."""
-    result = subprocess.run(
-        ['git', 'status', '--porcelain'], cwd=ROOT_DIR, capture_output=True, text=True, check=True
-    )
-    if result.stdout.strip():
+    if GIT_REPO.is_dirty(untracked_files=True):
         raise RuntimeError(
             "Incremental docs build requires a clean working tree. "
             "Please commit or stash your changes first."
@@ -495,27 +485,17 @@ def _build_tags_incrementally(missing_tags, build_output):
 
     # Capture the branch name if on a branch, otherwise fall back to the
     # commit SHA so we can reliably restore even from a detached HEAD.
-    branch_result = subprocess.run(
-        ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
-        cwd=ROOT_DIR,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    original_ref = branch_result.stdout.strip() if branch_result.returncode == 0 else None
-
-    if original_ref == 'HEAD':
-        sha_result = subprocess.run(
-            ['git', 'rev-parse', 'HEAD'], cwd=ROOT_DIR, capture_output=True, text=True, check=False
-        )
-        original_ref = sha_result.stdout.strip() if sha_result.returncode == 0 else None
+    if GIT_REPO.head.is_detached:
+        original_ref = GIT_REPO.head.commit.hexsha
+    else:
+        original_ref = GIT_REPO.active_branch.name
 
     os.makedirs(build_output, exist_ok=True)
 
     try:
         for tag in sorted(missing_tags):
             logging.info('Checking out and building tag: %s', tag)
-            subprocess.run(['git', 'checkout', tag], cwd=ROOT_DIR, check=True, capture_output=True)
+            GIT_REPO.git.checkout(tag)
             tag_output = os.path.join(build_output, tag)
             run_command(
                 [sys.executable, '-m', 'sphinx', '-b', 'html', DOCS_SOURCE_DIR, tag_output],
@@ -525,9 +505,7 @@ def _build_tags_incrementally(missing_tags, build_output):
     finally:
         if original_ref:
             logging.info('Restoring original ref: %s', original_ref)
-            subprocess.run(
-                ['git', 'checkout', original_ref], cwd=ROOT_DIR, check=True, capture_output=True
-            )
+            GIT_REPO.git.checkout(original_ref)
 
 
 def _distribute_switcher_json(build_output):
@@ -879,19 +857,12 @@ def _get_current_version_if_newer():
         )
 
         # Get latest git tag
-        result = subprocess.run(
-            ['git', 'tag', '-l', 'v*', '--sort=-version:refname'],
-            cwd=ROOT_DIR,
-            capture_output=True,
-            text=True,
-            check=True,
-        )
-        tags = [tag.strip() for tag in result.stdout.split('\n') if tag.strip()]
+        tags = [tag.name for tag in GIT_REPO.tags if tag.name.startswith('v')]
 
         if not tags:
             return None
 
-        latest_tag = tags[0]
+        latest_tag = sorted(tags, key=lambda t: Version(t.lstrip('v')), reverse=True)[0]
 
         # Compare versions
 

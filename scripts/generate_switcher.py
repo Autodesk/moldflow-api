@@ -17,9 +17,9 @@ import json
 import logging
 import os
 import re
-import subprocess
 import sys
 import docopt
+import git
 from packaging.version import InvalidVersion, Version
 
 
@@ -37,12 +37,12 @@ VERSION_JSON = os.path.join(ROOT_DIR, 'version.json')
 def get_git_tags():
     """Fetch all git tags from the repository."""
     try:
-        result = subprocess.run(
-            ['git', 'tag', '-l'], cwd=ROOT_DIR, capture_output=True, text=True, check=True
-        )
-        tags = [tag.strip() for tag in result.stdout.split('\n') if tag.strip()]
-        return tags
-    except subprocess.CalledProcessError as err:
+        repo = git.Repo(ROOT_DIR)
+        return [tag.name for tag in repo.tags]
+    except git.InvalidGitRepositoryError as err:
+        logging.error("Not a valid git repository: %s", err)
+        raise
+    except git.GitCommandError as err:
         logging.error("Failed to fetch git tags: %s", err)
         raise
 
