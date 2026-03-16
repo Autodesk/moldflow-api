@@ -68,11 +68,46 @@ python run.py build
 python run.py build-docs
 ```
 
-> ***Note:  When releasing a new version, update ``switcher.json`` in ``docs/source/_static/`` to include the new tag in the version dropdown for documentation.***
+The documentation version switcher (`switcher.json`) is automatically generated from git tags during the build process. Only tagged versions are included by default to ensure all links work correctly.
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
 - `--local` (`-l`): Build documentation locally for a single version (skips multi-version build)
+- `--skip-switcher`: Skip generating switcher.json (useful for offline builds or custom switcher configurations)
+- `--include-current`: Include current working tree version from version.json in switcher (useful during development before tagging)
+- `--incremental`: Only build versions that don't have existing output directories (speeds up development by skipping already-built versions)
+
+**Debug command:** To manually generate `switcher.json` without building docs:
+```sh
+python run.py generate-switcher
+```
+
+**Development workflow:** When working on a version bump before tagging:
+```sh
+# Build docs including your current unreleased version
+# This will:
+#  1. Build all tagged versions via sphinx_multiversion
+#  2. Build current working tree version via sphinx
+#  3. Add current version to switcher.json as latest
+python run.py build-docs --include-current
+```
+
+**Note:** By default, if `version.json` contains a version newer than the latest git tag, it will be validated but NOT added to the switcher (to prevent broken links). Use `--include-current` to build and include it during development, or create a git tag to include it permanently.
+
+**Fast development iteration:**
+```sh
+# First build (builds all versions)
+python run.py build-docs --include-current
+
+# Subsequent builds (only rebuilds current version, skips existing tagged versions)
+python run.py build-docs --include-current --incremental
+```
+
+**How `--incremental` works:**
+- Checks which version directories already exist in `docs/build/html/`
+- For missing tagged versions: checks out each tag, builds docs, then restores your branch
+- For current version (with `--include-current`): only builds if directory doesn't exist
+- Useful during development to avoid rebuilding all historical versions every time
 
 The documentation can be accessed locally by serving the docs/build/html/ folder:
 ```sh
