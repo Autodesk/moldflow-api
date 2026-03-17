@@ -562,6 +562,14 @@ def _build_html_docs_incremental(build_output, skip_switcher, include_current):
 
 
 # pylint: disable=R0913, R0917
+def _run_sphinx_build(target):
+    """Run a standard single-version Sphinx build."""
+    run_command(
+        [sys.executable, '-m', 'sphinx', 'build', '-M', target, DOCS_SOURCE_DIR, DOCS_BUILD_DIR],
+        ROOT_DIR,
+    )
+
+
 def build_docs(
     target, skip_build, local=False, skip_switcher=False, include_current=False, incremental=False
 ):
@@ -580,7 +588,9 @@ def build_docs(
         logging.info('Incremental build mode: preserving existing documentation...')
 
     try:
-        if target == 'html' and not local:
+        has_version_tags = any(tag.name.startswith('v') for tag in GIT_REPO.tags)
+
+        if target == 'html' and not local and has_version_tags:
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
 
             if incremental:
@@ -590,22 +600,16 @@ def build_docs(
 
             create_latest_alias(build_output)
             create_root_redirect(build_output)
+        elif target == 'html' and not local and not has_version_tags:
+            logging.warning(
+                'No version tags found in the repository. '
+                'Falling back to a single-version documentation build.'
+            )
+            _run_sphinx_build(target)
         else:
             if target == 'html' and not skip_switcher:
                 generate_switcher(include_current=include_current)
-            run_command(
-                [
-                    sys.executable,
-                    '-m',
-                    'sphinx',
-                    'build',
-                    '-M',
-                    target,
-                    DOCS_SOURCE_DIR,
-                    DOCS_BUILD_DIR,
-                ],
-                ROOT_DIR,
-            )
+            _run_sphinx_build(target)
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
         logging.error(
