@@ -579,14 +579,52 @@ def _run_sphinx_build(target):
     )
 
 
-def _clean_stale_docs():
-    """Remove stale switcher.json from the source tree and wipe the build directory."""
+def _remove_stale_switcher():
+    """Remove leftover switcher.json from the source tree.
+
+    Prevents Sphinx from copying a stale version switcher into the build
+    output when no version tags exist to populate it.
+    """
     if os.path.exists(SWITCHER_JSON):
         os.remove(SWITCHER_JSON)
         logging.info('Removed stale %s', SWITCHER_JSON)
-    if os.path.exists(DOCS_BUILD_DIR):
-        logging.info('Removing stale build directory %s', DOCS_BUILD_DIR)
-        shutil.rmtree(DOCS_BUILD_DIR)
+
+
+def _clean_multiversion_artifacts(build_output):
+    """Selectively remove multi-version artifacts from a previous build.
+
+    Removes vX.Y.Z/ directories, the latest/ alias, and the root redirect
+    index.html while preserving any single-version Sphinx output so that
+    incremental builds remain effective.
+    """
+    if not os.path.isdir(build_output):
+        return
+
+    removed = []
+
+    for item in os.listdir(build_output):
+        item_path = os.path.join(build_output, item)
+        if os.path.isdir(item_path) and _is_version_tag(item):
+            shutil.rmtree(item_path)
+            removed.append(item)
+
+    latest_path = os.path.join(build_output, 'latest')
+    if os.path.islink(latest_path):
+        os.unlink(latest_path)
+        removed.append('latest (symlink)')
+    elif os.path.isdir(latest_path):
+        shutil.rmtree(latest_path)
+        removed.append('latest')
+
+    redirect = os.path.join(build_output, 'index.html')
+    if os.path.isfile(redirect):
+        os.remove(redirect)
+        removed.append('index.html')
+
+    if removed:
+        logging.info(
+            'Cleaned multi-version artifacts from %s: %s', build_output, ', '.join(removed)
+        )
 
 
 # pylint: disable=R0912
@@ -602,7 +640,8 @@ def build_docs(
 
     if not incremental:
         logging.info('Removing existing Sphinx documentation...')
-        _clean_stale_docs()
+        if os.path.exists(DOCS_BUILD_DIR):
+            shutil.rmtree(DOCS_BUILD_DIR)
     else:
         logging.info('Incremental build mode: preserving existing documentation...')
 
@@ -624,7 +663,9 @@ def build_docs(
                 'No version tags matching vX.Y.Z found in the repository. '
                 'Falling back to a single-version documentation build.'
             )
-            _clean_stale_docs()
+            if not skip_switcher:
+                _remove_stale_switcher()
+            _clean_multiversion_artifacts(os.path.join(DOCS_BUILD_DIR, 'html'))
             _run_sphinx_build(target)
         else:
             if target == 'html' and not skip_switcher:
@@ -635,7 +676,7 @@ def build_docs(
                         'No version tags matching vX.Y.Z found in the repository. '
                         'Skipping switcher.json generation.'
                     )
-                    _clean_stale_docs()
+                    _remove_stale_switcher()
             _run_sphinx_build(target)
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
