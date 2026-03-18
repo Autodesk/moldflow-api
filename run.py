@@ -602,13 +602,19 @@ def build_docs(
             create_root_redirect(build_output)
         elif target == 'html' and not local and not has_version_tags:
             logging.warning(
-                'No version tags found in the repository. '
+                'No version tags starting with \'v\' found in the repository. '
                 'Falling back to a single-version documentation build.'
             )
             _run_sphinx_build(target)
         else:
             if target == 'html' and not skip_switcher:
-                generate_switcher(include_current=include_current)
+                if has_version_tags:
+                    generate_switcher(include_current=include_current)
+                else:
+                    logging.warning(
+                        'No version tags starting with \'v\' found in the repository. '
+                        'Skipping switcher.json generation.'
+                    )
             _run_sphinx_build(target)
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
