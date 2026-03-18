@@ -122,6 +122,7 @@ Then open http://localhost:8000 in your browser. The root automatically redirect
 - A `/latest/` directory points to the newest version
 - Root (`/`) automatically redirects to `/latest/`
 - Run `git fetch --tags` before building to ensure all version tags are available
+- If no version tags (tags starting with `v`) are found in the repository, the build automatically falls back to a single-version Sphinx build instead of attempting the multi-version build
 
 ### Running the Formatter
 

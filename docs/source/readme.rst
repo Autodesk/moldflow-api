@@ -1300,6 +1300,9 @@ Then open http://localhost:8000 in your browser.
 - A ``/latest/`` directory points to the newest version (symlink on Unix, copy on Windows)
 - Root (``/``) automatically redirects to ``/latest/`` for convenience
 - Version switcher dropdown in the navigation bar allows switching between versions
+- If no version tags (tags starting with ``v``) are found in the repository, the build
+  automatically falls back to a single-version Sphinx build instead of attempting the
+  multi-version build
 
 Contributing
 ============
