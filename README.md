@@ -68,7 +68,7 @@ python run.py build
 python run.py build-docs
 ```
 
-The documentation version switcher (`switcher.json`) is automatically generated from git tags during the build process. Only tagged versions are included by default to ensure all links work correctly.
+The documentation version switcher (`switcher.json`) is automatically generated from git tags matching the `vX.Y.Z` format during the build process. Only tagged versions are included by default to ensure all links work correctly.
 
 Options:
 - `--skip-build` (`-s`): Skip building before generating docs
@@ -118,11 +118,11 @@ python -m http.server 8000
 Then open http://localhost:8000 in your browser. The root automatically redirects to the latest version documentation.
 
 **Versioned Documentation:**
-- Each git tag creates a separate documentation version (e.g., `/v26.0.5/`)
+- Each git tag matching `vX.Y.Z` creates a separate documentation version (e.g., `/v26.0.5/`)
 - A `/latest/` directory points to the newest version
 - Root (`/`) automatically redirects to `/latest/`
 - Run `git fetch --tags` before building to ensure all version tags are available
-- If no version tags (tags starting with `v`) are found in the repository, the build automatically falls back to a single-version Sphinx build instead of attempting the multi-version build
+- If no version tags matching `vX.Y.Z` are found in the repository, the build automatically falls back to a single-version Sphinx build instead of attempting the multi-version build
 
 ### Running the Formatter
 

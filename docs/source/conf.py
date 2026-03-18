@@ -34,7 +34,7 @@ extensions = [
 ]
 
 templates_path = ['_templates']
-smv_tag_whitelist = r'^v?\d+\.\d+\.\d+$'
+smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'
 smv_branch_whitelist = r'^$'
 smv_remote_whitelist = r'^origin$'
 smv_latest_version = 'latest'

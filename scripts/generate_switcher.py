@@ -24,7 +24,7 @@ from packaging.version import InvalidVersion, Version
 
 
 # Must match smv_tag_whitelist in docs/source/conf.py
-SMV_TAG_PATTERN = re.compile(r'^v?\d+\.\d+\.\d+$')
+SMV_TAG_PATTERN = re.compile(r'^v\d+\.\d+\.\d+$')
 
 
 # Paths
