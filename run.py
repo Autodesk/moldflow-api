@@ -593,9 +593,9 @@ def _remove_stale_switcher():
 def _clean_multiversion_artifacts(build_output):
     """Selectively remove multi-version artifacts from a previous build.
 
-    Removes vX.Y.Z/ directories, the latest/ alias, and the root redirect
-    index.html while preserving any single-version Sphinx output so that
-    incremental builds remain effective.
+    Removes vX.Y.Z/ directories, the latest/ alias, the root redirect
+    index.html, and any distributed switcher.json copies while preserving
+    single-version Sphinx output so that incremental builds remain effective.
     """
     if not os.path.isdir(build_output):
         return
@@ -620,6 +620,12 @@ def _clean_multiversion_artifacts(build_output):
     if os.path.isfile(redirect):
         os.remove(redirect)
         removed.append('index.html')
+
+    for switcher in glob.glob(
+        os.path.join(build_output, '**', '_static', 'switcher.json'), recursive=True
+    ):
+        os.remove(switcher)
+        removed.append(os.path.relpath(switcher, build_output))
 
     if removed:
         logging.info(
