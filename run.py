@@ -570,6 +570,13 @@ def _run_sphinx_build(target):
     )
 
 
+def _remove_stale_switcher():
+    """Remove any leftover switcher.json so a single-version build doesn't ship stale data."""
+    if os.path.exists(SWITCHER_JSON):
+        os.remove(SWITCHER_JSON)
+        logging.info('Removed stale %s', SWITCHER_JSON)
+
+
 # pylint: disable=R0912
 def build_docs(
     target, skip_build, local=False, skip_switcher=False, include_current=False, incremental=False
@@ -606,6 +613,7 @@ def build_docs(
                 'No version tags starting with \'v\' found in the repository. '
                 'Falling back to a single-version documentation build.'
             )
+            _remove_stale_switcher()
             _run_sphinx_build(target)
         else:
             if target == 'html' and not skip_switcher:
@@ -616,6 +624,7 @@ def build_docs(
                         'No version tags starting with \'v\' found in the repository. '
                         'Skipping switcher.json generation.'
                     )
+                    _remove_stale_switcher()
             _run_sphinx_build(target)
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
