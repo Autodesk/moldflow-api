@@ -138,10 +138,12 @@ class TestGenerateSwitcherJsonStructure:
         result = generate_switcher_json(['v1.0.0'])
         assert result[0]['url'] == '../v1.0.0/'
 
-    @patch(MOCK_VERSION_JSON, return_value='v1.0.0')
-    def test_url_preserves_v_prefix(self, _):
-        result = generate_switcher_json(['v1.0.0'])
-        assert result[0]['url'] == '../v1.0.0/'
+    @patch(MOCK_VERSION_JSON, return_value='v2.0.0')
+    def test_non_latest_url_uses_tag_name(self, _):
+        result = generate_switcher_json(['v1.0.0', 'v2.0.0'])
+        older = [e for e in result if e['version'] == 'v1.0.0'][0]
+        assert older['url'] == '../v1.0.0/'
+        assert older['is_latest'] is False
 
     @patch(MOCK_VERSION_JSON, return_value='v2.0.0')
     def test_all_entries_have_required_keys(self, _):
