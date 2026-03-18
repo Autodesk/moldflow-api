@@ -455,8 +455,7 @@ def _get_missing_version_tags(build_output):
         for item in os.listdir(build_output):
             item_path = os.path.join(build_output, item)
             if os.path.isdir(item_path) and _is_version_tag(item):
-                if item != 'latest':
-                    existing_versions.add(item)
+                existing_versions.add(item)
 
     all_tags = {tag.name for tag in GIT_REPO.tags if _is_version_tag(tag.name)}
 
