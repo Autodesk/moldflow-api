@@ -570,6 +570,7 @@ def _run_sphinx_build(target):
     )
 
 
+# pylint: disable=R0912
 def build_docs(
     target, skip_build, local=False, skip_switcher=False, include_current=False, incremental=False
 ):
