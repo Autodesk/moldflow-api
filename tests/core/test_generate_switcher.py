@@ -37,19 +37,19 @@ MOCK_VERSION_JSON = 'generate_switcher.get_version_from_json'
 @pytest.mark.scripts
 @pytest.mark.generate_switcher
 class TestParseVersionTags:
-    """Tests for tag filtering against the sphinx-multiversion whitelist."""
+    """Tests for tag filtering against the vX.Y.Z version tag pattern."""
 
     def test_accepts_v_prefixed_tags(self):
         tags = ['v1.0.0', 'v2.3.4', 'v27.0.0']
         assert parse_version_tags(tags) == tags
 
-    def test_accepts_tags_without_v_prefix(self):
+    def test_rejects_tags_without_v_prefix(self):
         tags = ['1.0.0', '2.3.4', '27.0.0']
-        assert parse_version_tags(tags) == tags
+        assert parse_version_tags(tags) == []
 
-    def test_accepts_mixed_prefix_tags(self):
+    def test_filters_tags_without_v_prefix(self):
         tags = ['v1.0.0', '2.0.0', 'v3.1.2']
-        assert parse_version_tags(tags) == tags
+        assert parse_version_tags(tags) == ['v1.0.0', 'v3.1.2']
 
     def test_rejects_prerelease_tags(self):
         tags = ['v1.0.0rc1', 'v1.0.0a1', 'v1.0.0b2']
@@ -70,7 +70,7 @@ class TestParseVersionTags:
 
     def test_filters_mixed_valid_and_invalid(self):
         tags = ['v1.0.0', 'v2.0.0rc1', 'latest', '3.0.0', 'v4.0.0.dev1']
-        assert parse_version_tags(tags) == ['v1.0.0', '3.0.0']
+        assert parse_version_tags(tags) == ['v1.0.0']
 
     def test_empty_input(self):
         assert parse_version_tags([]) == []
@@ -95,9 +95,9 @@ class TestSortVersions:
         tags = ['v1.0.2', 'v1.0.0', 'v1.0.1']
         assert sort_versions(tags) == ['v1.0.2', 'v1.0.1', 'v1.0.0']
 
-    def test_mixed_prefix_ordering(self):
-        tags = ['1.0.0', 'v2.0.0', '3.0.0']
-        assert sort_versions(tags) == ['3.0.0', 'v2.0.0', '1.0.0']
+    def test_many_versions_ordering(self):
+        tags = ['v1.0.0', 'v2.0.0', 'v3.0.0']
+        assert sort_versions(tags) == ['v3.0.0', 'v2.0.0', 'v1.0.0']
 
     def test_single_tag(self):
         assert sort_versions(['v1.0.0']) == ['v1.0.0']
@@ -138,10 +138,12 @@ class TestGenerateSwitcherJsonStructure:
         result = generate_switcher_json(['v1.0.0'])
         assert result[0]['url'] == '../v1.0.0/'
 
-    @patch(MOCK_VERSION_JSON, return_value='1.0.0')
-    def test_url_preserves_no_v_prefix(self, _):
-        result = generate_switcher_json(['1.0.0'])
-        assert result[0]['url'] == '../1.0.0/'
+    @patch(MOCK_VERSION_JSON, return_value='v2.0.0')
+    def test_non_latest_url_uses_tag_name(self, _):
+        result = generate_switcher_json(['v1.0.0', 'v2.0.0'])
+        older = [e for e in result if e['version'] == 'v1.0.0'][0]
+        assert older['url'] == '../v1.0.0/'
+        assert older['is_latest'] is False
 
     @patch(MOCK_VERSION_JSON, return_value='v2.0.0')
     def test_all_entries_have_required_keys(self, _):

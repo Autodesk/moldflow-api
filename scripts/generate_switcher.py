@@ -24,7 +24,7 @@ from packaging.version import InvalidVersion, Version
 
 
 # Must match smv_tag_whitelist in docs/source/conf.py
-SMV_TAG_PATTERN = re.compile(r'^v?\d+\.\d+\.\d+$')
+SMV_TAG_PATTERN = re.compile(r'^v\d+\.\d+\.\d+$')
 
 
 # Paths
@@ -49,13 +49,13 @@ def get_git_tags():
 
 def parse_version_tags(tags):
     """
-    Filter tags to those matching strict X.Y.Z releases.
+    Filter tags to those matching the required vX.Y.Z format.
 
     Uses the same pattern as smv_tag_whitelist in docs/source/conf.py
     so that switcher.json stays in sync with the versions that
-    sphinx-multiversion actually builds.  Accepts both vX.Y.Z and X.Y.Z.
+    sphinx-multiversion actually builds.
 
-    Returns the original tag strings (preserving any 'v' prefix).
+    Returns the matching tag strings.
     """
     version_tags = []
 

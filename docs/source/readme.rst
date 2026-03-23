@@ -1254,8 +1254,9 @@ The project includes a ``run.py`` script with several useful commands:
 - ``python run.py test`` - Run tests
 - ``python run.py lint`` - Run code linting
 - ``python run.py format`` - Format code with black
-- ``python run.py build-docs`` - Build versioned documentation (HTML uses git tags for the
-  navigation dropdown; run ``git fetch --tags`` locally before building)
+- ``python run.py build-docs`` - Build versioned documentation (HTML uses git tags matching
+  ``vX.Y.Z`` for the navigation dropdown; run ``git fetch --tags`` locally before building).
+  Falls back to a single-version build when no matching version tags are found.
 
   - ``--skip-build`` (``-s``): Skip building the package before generating docs
   - ``--local`` (``-l``): Build documentation locally for a single version (skips multi-version build)
@@ -1265,9 +1266,9 @@ The project includes a ``run.py`` script with several useful commands:
 
 .. note::
    The documentation version switcher (``switcher.json``) is automatically generated from
-   git tags during the build process. Only tagged versions are included to ensure all
-   documentation links work correctly. If ``version.json`` is newer than the latest tag,
-   create a git tag to include it in the version switcher.
+   git tags matching the ``vX.Y.Z`` format during the build process. Only tagged versions
+   are included to ensure all documentation links work correctly. If ``version.json`` is
+   newer than the latest tag, create a git tag to include it in the version switcher.
 
 **Incremental Builds for Development:**
 
@@ -1296,10 +1297,13 @@ Then open http://localhost:8000 in your browser.
 
 **Versioned Documentation Features:**
 
-- Each git tag creates a separate documentation version (e.g., ``/v26.0.5/``)
+- Each git tag matching ``vX.Y.Z`` creates a separate documentation version (e.g., ``/v26.0.5/``)
 - A ``/latest/`` directory points to the newest version (symlink on Unix, copy on Windows)
 - Root (``/``) automatically redirects to ``/latest/`` for convenience
 - Version switcher dropdown in the navigation bar allows switching between versions
+- If no version tags matching ``vX.Y.Z`` are found in the repository, the build
+  automatically falls back to a single-version Sphinx build instead of attempting the
+  multi-version build
 
 Contributing
 ============

@@ -28,7 +28,7 @@ Commands:
     build-docs                      Build the documentation.
     format                          Format all Python files in the repository using black.
     generate-expected-data          Generate expected data for integration tests.
-    generate-switcher               Generate switcher.json from git tags.
+    generate-switcher               Generate switcher.json from git tags (vX.Y.Z format).
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
     lint                            Lint all Python files in the repository.
@@ -67,6 +67,7 @@ Options:
 """
 
 import os
+import re
 import sys
 import json
 import logging
@@ -117,6 +118,14 @@ VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
 PYTHON_FILES = [MOLDFLOW_DIR, DOCS_SOURCE_DIR, TEST_DIR, "run.py"]
 SWITCHER_JSON = os.path.join(DOCS_STATIC_DIR, 'switcher.json')
+
+# Must match smv_tag_whitelist in docs/source/conf.py
+VERSION_TAG_RE = re.compile(r'^v\d+\.\d+\.\d+$')
+
+
+def _is_version_tag(name):
+    """Return True if *name* matches the vX.Y.Z version tag format."""
+    return VERSION_TAG_RE.match(name) is not None
 
 
 def run_command(args, cwd=os.getcwd(), extra_env=None):
@@ -367,7 +376,7 @@ def create_root_redirect(build_output: str) -> None:
 
 def create_latest_alias(build_output: str) -> None:
     """Create a 'latest' alias pointing to the newest version using symlinks when possible."""
-    version_dirs = [d for d in os.listdir(build_output) if d.startswith('v')]
+    version_dirs = [d for d in os.listdir(build_output) if _is_version_tag(d)]
     if not version_dirs:
         return
 
@@ -429,9 +438,9 @@ def _build_html_docs_full(build_output, skip_switcher, include_current):
             "Failed to build documentation with "
             "sphinx_multiversion.\n"
             "This can happen if no Git tags or branches match "
-            "your version pattern.\n"
+            "the required vX.Y.Z version pattern.\n"
             "Try running 'git fetch --tags' and ensure version "
-            "tags exist in the repo.\n"
+            "tags (e.g. v1.2.3) exist in the repo.\n"
             "Underlying error: %s",
             str(err),
         )
@@ -445,11 +454,10 @@ def _get_missing_version_tags(build_output):
     if os.path.exists(build_output):
         for item in os.listdir(build_output):
             item_path = os.path.join(build_output, item)
-            if os.path.isdir(item_path) and item.startswith('v'):
-                if item != 'latest':
-                    existing_versions.add(item)
+            if os.path.isdir(item_path) and _is_version_tag(item):
+                existing_versions.add(item)
 
-    all_tags = {tag.name for tag in GIT_REPO.tags if tag.name.startswith('v')}
+    all_tags = {tag.name for tag in GIT_REPO.tags if _is_version_tag(tag.name)}
 
     missing = list(all_tags - existing_versions)
 
@@ -562,6 +570,69 @@ def _build_html_docs_incremental(build_output, skip_switcher, include_current):
 
 
 # pylint: disable=R0913, R0917
+def _run_sphinx_build(target):
+    """Run a standard single-version Sphinx build."""
+    run_command(
+        [sys.executable, '-m', 'sphinx', 'build', '-M', target, DOCS_SOURCE_DIR, DOCS_BUILD_DIR],
+        ROOT_DIR,
+    )
+
+
+def _remove_stale_switcher():
+    """Remove leftover switcher.json from the source tree.
+
+    Prevents Sphinx from copying a stale version switcher into the build
+    output when no version tags exist to populate it.
+    """
+    if os.path.exists(SWITCHER_JSON):
+        os.remove(SWITCHER_JSON)
+        logging.info('Removed stale %s', SWITCHER_JSON)
+
+
+def _clean_multiversion_artifacts(build_output):
+    """Selectively remove multi-version artifacts from a previous build.
+
+    Removes vX.Y.Z/ directories, the latest/ alias, the root redirect
+    index.html, and any distributed switcher.json copies while preserving
+    single-version Sphinx output so that incremental builds remain effective.
+    """
+    if not os.path.isdir(build_output):
+        return
+
+    removed = []
+
+    for item in os.listdir(build_output):
+        item_path = os.path.join(build_output, item)
+        if os.path.isdir(item_path) and _is_version_tag(item):
+            shutil.rmtree(item_path)
+            removed.append(item)
+
+    latest_path = os.path.join(build_output, 'latest')
+    if os.path.islink(latest_path):
+        os.unlink(latest_path)
+        removed.append('latest (symlink)')
+    elif os.path.isdir(latest_path):
+        shutil.rmtree(latest_path)
+        removed.append('latest')
+
+    redirect = os.path.join(build_output, 'index.html')
+    if os.path.isfile(redirect):
+        os.remove(redirect)
+        removed.append('index.html')
+
+    for switcher in glob.glob(
+        os.path.join(build_output, '**', '_static', 'switcher.json'), recursive=True
+    ):
+        os.remove(switcher)
+        removed.append(os.path.relpath(switcher, build_output))
+
+    if removed:
+        logging.info(
+            'Cleaned multi-version artifacts from %s: %s', build_output, ', '.join(removed)
+        )
+
+
+# pylint: disable=R0912
 def build_docs(
     target, skip_build, local=False, skip_switcher=False, include_current=False, incremental=False
 ):
@@ -580,7 +651,9 @@ def build_docs(
         logging.info('Incremental build mode: preserving existing documentation...')
 
     try:
-        if target == 'html' and not local:
+        has_version_tags = any(_is_version_tag(tag.name) for tag in GIT_REPO.tags)
+
+        if target == 'html' and not local and has_version_tags:
             build_output = os.path.join(DOCS_BUILD_DIR, 'html')
 
             if incremental:
@@ -590,22 +663,26 @@ def build_docs(
 
             create_latest_alias(build_output)
             create_root_redirect(build_output)
+        elif target == 'html' and not local and not has_version_tags:
+            logging.warning(
+                'No version tags matching vX.Y.Z found in the repository. '
+                'Falling back to a single-version documentation build.'
+            )
+            if not skip_switcher:
+                _remove_stale_switcher()
+            _clean_multiversion_artifacts(os.path.join(DOCS_BUILD_DIR, 'html'))
+            _run_sphinx_build(target)
         else:
             if target == 'html' and not skip_switcher:
-                generate_switcher(include_current=include_current)
-            run_command(
-                [
-                    sys.executable,
-                    '-m',
-                    'sphinx',
-                    'build',
-                    '-M',
-                    target,
-                    DOCS_SOURCE_DIR,
-                    DOCS_BUILD_DIR,
-                ],
-                ROOT_DIR,
-            )
+                if has_version_tags:
+                    generate_switcher(include_current=include_current)
+                else:
+                    logging.warning(
+                        'No version tags matching vX.Y.Z found in the repository. '
+                        'Skipping switcher.json generation.'
+                    )
+                    _remove_stale_switcher()
+            _run_sphinx_build(target)
         logging.info('Sphinx documentation built successfully.')
     except Exception as err:
         logging.error(
@@ -856,7 +933,7 @@ def _get_current_version_if_newer():
         )
 
         # Get latest git tag
-        tags = [tag.name for tag in GIT_REPO.tags if tag.name.startswith('v')]
+        tags = [tag.name for tag in GIT_REPO.tags if _is_version_tag(tag.name)]
 
         if not tags:
             return None
@@ -878,8 +955,8 @@ def _get_current_version_if_newer():
 
 
 def generate_switcher(include_current=False):
-    """Generate switcher.json from git tags"""
-    logging.info('Generating switcher.json from git tags')
+    """Generate switcher.json from git tags (vX.Y.Z format)."""
+    logging.info('Generating switcher.json from git tags (vX.Y.Z)')
     switcher_script = os.path.join(ROOT_DIR, 'scripts', 'generate_switcher.py')
     cmd = [sys.executable, switcher_script]
     if include_current:
