@@ -9,6 +9,7 @@ Usage:
 # pylint: disable=C0302
 
 from .logger import process_log
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .common import LogMessage, CurveInitPosition, LCSType
 from .helper import (
     check_is_non_negative,
@@ -143,6 +144,7 @@ class Modeler:
             return None
         return EntList(result)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates an empty EntList object

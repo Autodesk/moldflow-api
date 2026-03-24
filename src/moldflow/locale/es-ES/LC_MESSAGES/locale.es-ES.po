@@ -3,8 +3,155 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: es-ES\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n¿Quiso decir el paso '{step_name}'?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\nPara la entrada JSON en destinos de varios pasos, agrupe los parámetros por nombre de paso, por ejemplo {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nPara la entrada JSON, esta clave de paso debe corresponder a un objeto de nombres de parámetros, por ejemplo {example}"
+
+msgid " Did you mean '{parameter}'?"
+msgstr " ¿Quiso decir '{parameter}'?"
+
+msgid " Known parameters: {known_params}."
+msgstr " Parámetros conocidos: {known_params}."
+
+msgid "'{type_name}' no longer exposes adapter method '{method_name}'."
+msgstr "'{type_name}' ya no expone el método adaptador '{method_name}'."
+
+msgid "--yaml requested but PyYAML is not installed: {error}"
+msgstr "Se solicitó --yaml pero PyYAML no está instalado: {error}"
+
+msgid "--yaml requested but PyYAML is not installed: {exc}"
+msgstr "Se solicitó --yaml pero PyYAML no está instalado: {exc}"
+
+msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
+msgstr "Solo para casos avanzados. Use esta forma etiquetada cuando el contexto de anotación no esté disponible, cuando una carga anidada sea realmente genérica o cuando varias familias de wrappers puedan resultar ambiguas."
+
+msgid "Argument '{argument}' must specify a parameter name after the step (e.g., {step_name}.param=...).{extra}"
+msgstr "El argumento '{argument}' debe especificar un nombre de parámetro después del paso (por ejemplo, {step_name}.param=...).{extra}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}"
+msgstr "El argumento '{argument}' debe comenzar con uno de los siguientes: {valid_steps}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "El argumento '{argument}' debe comenzar con uno de los siguientes: {valid_steps}.{extra}"
+
+msgid "Argument '{step_name}' must start with one of: {names}"
+msgstr "El argumento '{step_name}' debe comenzar con uno de los siguientes: {names}"
+
+msgid "Argument error calling {target}{signature}: {error}"
+msgstr "Error de argumento al llamar a {target}{signature}: {error}"
+
+msgid "Arguments as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value. Duplicate or conflicting paths are rejected (for example param=1 with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "Argumentos como key=value o param.attr=value. Para destinos encadenados, anteponga al parámetro el nombre del método; por ejemplo, find_plot_by_name.plot_name=\"My Plot\". El enrutamiento anidado usa step.param.attr=value. Se rechazan las rutas duplicadas o en conflicto (por ejemplo param=1 con param.attr=2), y los métodos con parámetros solo posicionales no son compatibles con el enrutamiento por nombre de la CLI."
+
+msgid "Arguments for step '{step_name}' must be a JSON object of parameters."
+msgstr "Los argumentos para el paso '{step_name}' deben ser un objeto JSON con parámetros."
+
+msgid "Array"
+msgstr "Arreglo"
+
+msgid "Attribute '{matched_name}' on class '{class_name}' returns a non-wrapper value{continuation}"
+msgstr "El atributo '{matched_name}' de la clase '{class_name}' devuelve un valor que no es un wrapper{continuation}"
+
+msgid "Attribute '{matched_name}' on object '{type_name}' returns a non-wrapper value{continuation}"
+msgstr "El atributo '{matched_name}' del objeto '{type_name}' devuelve un valor que no es un wrapper{continuation}"
+
+msgid "Batch file must contain a JSON array of invoke call objects."
+msgstr "El archivo por lotes debe contener un arreglo JSON de objetos de llamada de invoke."
+
+msgid "Batch item field 'args' must be a list of strings."
+msgstr "El campo 'args' de un elemento del lote debe ser una lista de cadenas."
+
+msgid "Batch item field 'params_json_file' must be a string path."
+msgstr "El campo 'params_json_file' de un elemento del lote debe ser una cadena con una ruta."
+
+msgid "Batch item must be a JSON object."
+msgstr "Cada elemento del lote debe ser un objeto JSON."
+
+msgid "Batch item requires string field 'target'."
+msgstr "Cada elemento del lote requiere el campo de cadena 'target'."
+
+msgid "Batch item {index} error: {error}"
+msgstr "Error en el elemento del lote {index}: {error}"
+
+msgid "Batch results"
+msgstr "Resultados del lote"
+
+msgid "Batch summary: {succeeded}/{total} succeeded, {failed} failed."
+msgstr "Resumen del lote: {succeeded}/{total} correctos, {failed} fallidos."
+
+msgid "CLI argument: {value}"
+msgstr "Argumento de CLI: {value}"
+
 msgid "Cancel"
 msgstr "Cancelar"
+
+msgid "Cannot assign property '{property_name}' while resolving target '{target}' because the owner object resolved to None."
+msgstr "No se puede asignar la propiedad '{property_name}' al resolver el destino '{target}' porque el objeto propietario se resolvió como None."
+
+msgid "Cannot build instance for type 'EntList'. No create_entity_list provider found."
+msgstr "No se puede crear una instancia del tipo 'EntList'. No se encontró ningún proveedor de create_entity_list."
+
+msgid "Cannot build instance for type '{type_name}'. Not a known Synergy property or factory."
+msgstr "No se puede crear una instancia del tipo '{type_name}'. No es una propiedad ni una factoría conocida de Synergy."
+
+msgid "Cannot configure field '{key_name}' on '{type_name}': {error}"
+msgstr "No se puede configurar el campo '{key_name}' en '{type_name}': {error}"
+
+msgid "Cannot invoke method '{segment}' for target '{target}' because '{owner}' is unavailable in the current session (it resolved to None). This target only works when that object exists."
+msgstr "No se puede invocar el método '{segment}' para el destino '{target}' porque '{owner}' no está disponible en la sesión actual (se resolvió como None). Este destino solo funciona cuando ese objeto existe."
+
+msgid "Cannot read JSON file '{file}': {exc}"
+msgstr "No se puede leer el archivo JSON '{file}': {exc}"
+
+msgid "Cannot read JSON file '{path}': {error}"
+msgstr "No se puede leer el archivo JSON '{path}': {error}"
+
+msgid "Cannot read batch file '{path}': {error}"
+msgstr "No se puede leer el archivo por lotes '{path}': {error}"
+
+msgid "Cannot resolve '{first}' on moldflow for introspection"
+msgstr "No se puede resolver '{first}' en moldflow para la introspección"
+
+msgid "Cannot resolve attribute '{segment}' on '{class_name}' when executing target '{target}': {error}"
+msgstr "No se puede resolver el atributo '{segment}' en '{class_name}' al ejecutar el destino '{target}': {error}"
+
+msgid "Cannot resolve attribute '{segment}' without an object instance when resolving target '{target}'"
+msgstr "No se puede resolver el atributo '{segment}' sin una instancia de objeto al resolver el destino '{target}'"
+
+msgid "Cannot resolve segment '{segment}' in target '{target}' without a class context. Use a Synergy-rooted target such as 'synergy.some_method'."
+msgstr "No se puede resolver el segmento '{segment}' en el destino '{target}' sin un contexto de clase. Use un destino con raíz en Synergy, como 'synergy.some_method'."
+
+msgid "Cannot set nested argument '{path}': {error}"
+msgstr "No se puede establecer el argumento anidado '{path}': {error}"
+
+msgid "Cannot set nested attributes for '{param_name}' without signature info on '{step_name}'."
+msgstr "No se pueden establecer atributos anidados para '{param_name}' sin información de firma en '{step_name}'."
+
+msgid "Cannot set property '{property_name}' on target '{target}': {error}"
+msgstr "No se puede establecer la propiedad '{property_name}' en el destino '{target}': {error}"
+
+msgid "Cannot write JSON file '{path}': {error}"
+msgstr "No se puede escribir el archivo JSON '{path}': {error}"
+
+msgid "Canonical JSON field is derived from the reflected wrapper method signature for {method_name}()."
+msgstr "El campo JSON canónico se deriva de la firma reflejada del método wrapper {method_name}()."
+
+msgid "Canonical list field is derived from the reflected wrapper method {method_name}()."
+msgstr "El campo de lista canónico se deriva del método wrapper reflejado {method_name}()."
+
+msgid "Canonical triplet field is derived from the reflected wrapper method {method_name}()."
+msgstr "El campo de tripleta canónico se deriva del método wrapper reflejado {method_name}()."
+
+msgid "Canonical vector-array field is derived from the reflected wrapper method {method_name}()."
+msgstr "El campo canónico de arreglo de vectores se deriva del método wrapper reflejado {method_name}()."
+
+msgid "Chained targets with repeated method names are ambiguous for argument routing: {duplicate_names}. Please use an equivalent target path where each invoked step name is unique."
+msgstr "Los destinos encadenados con nombres de método repetidos son ambiguos para el enrutamiento de argumentos: {duplicate_names}. Use una ruta de destino equivalente en la que cada nombre de paso invocado sea único."
 
 msgid "Checking file extension {file_name}"
 msgstr "Comprobando la extensión del archivo {file_name}"
@@ -42,14 +189,140 @@ msgstr "Comprobando que {value} es positivo"
 msgid "Checking {value} is {name}"
 msgstr "Verificar {value} es {name}"
 
+msgid "Class '{class_name}' has no attribute '{attr_name}'"
+msgstr "La clase '{class_name}' no tiene el atributo '{attr_name}'"
+
+msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
+msgstr "No se permiten las rutas de argumentos en conflicto '{left_path}' y '{right_path}'."
+
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "No se pudo inicializar con el ID de instancia: {value}"
+
+msgid "Detail"
+msgstr "Detalle"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "La asignación directa de parámetros sigue siendo la forma no JSON preferida."
+
+msgid "Do not pass TARGET when --batch-file is used."
+msgstr "No pase TARGET cuando se use --batch-file."
+
+msgid "Do not pass positional args/JSON input with --batch-file."
+msgstr "No pase argumentos posicionales ni entrada JSON con --batch-file."
+
+msgid "Dotted path to a method or function, optionally chained, for example 'synergy.new_project' or 'synergy.plot_manager.find_plot_by_name'."
+msgstr "Ruta con puntos a un método o función, opcionalmente encadenada, por ejemplo 'synergy.new_project' o 'synergy.plot_manager.find_plot_by_name'."
+
+msgid "Dotted path, e.g., synergy.new_project"
+msgstr "Ruta con puntos, p. ej., synergy.new_project"
+
+msgid "Dry run for {target}"
+msgstr "Simulación para {target}"
+
+msgid "Duplicate argument path '{path}' is not allowed."
+msgstr "No se permite la ruta de argumento duplicada '{path}'."
+
+msgid "Emit a JSON schema-like representation of target parameters."
+msgstr "Emite una representación similar a un esquema JSON de los parámetros del destino."
+
+msgid "Emit line-delimited JSON trace events to stderr for target resolution and runtime invoke binding."
+msgstr "Emite eventos de rastreo JSON delimitados por líneas en stderr para la resolución del destino y el enlace de invoke en tiempo de ejecución."
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "Emita JSON estructurado para scripts o uso por agentes."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "Emita YAML estructurado para scripts o uso por agentes (requiere PyYAML)."
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "Emita JSON estructurado para scripts o uso por agentes."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "Emita YAML estructurado para scripts o uso por agentes (requiere PyYAML)."
+
+msgid "Emit the result as JSON to stdout (useful for automation/LLMs)."
+msgstr "Emite el resultado como JSON en stdout (útil para automatización/LLM)."
+
+msgid "Empty target"
+msgstr "Destino vacío"
+
+msgid "Empty type tag is not valid for '{primary_expected}'."
+msgstr "La etiqueta de tipo vacía no es válida para '{primary_expected}'."
+
+msgid "Example object shape: {shape}."
+msgstr "Forma de objeto de ejemplo: {shape}."
 
 msgid "Executing {name}"
 msgstr "Ejecutando {name}"
 
+msgid "Explicit field form: {value}"
+msgstr "Forma de campo explícita: {value}"
+
 msgid "Failed to initialize Synergy: Synergy not found"
 msgstr "Error al inicializar Synergy: Synergy no encontrada"
+
+msgid "Failed to render JSON output for {context}: {error}"
+msgstr "Error al generar la salida JSON para {context}: {error}"
+
+msgid "Failed to render JSON output for {context}: {exc}"
+msgstr "Error al generar la salida JSON para {context}: {exc}"
+
+msgid "Failed to render YAML output for {context}: {error}"
+msgstr "Error al generar la salida YAML para {context}: {error}"
+
+msgid "Failed to render YAML output for {context}: {exc}"
+msgstr "Error al generar la salida YAML para {context}: {exc}"
+
+msgid "Field '{key_name}' is not valid for '{type_name}'."
+msgstr "El campo '{key_name}' no es válido para '{type_name}'."
+
+msgid "Field '{key}' for '{type_name}' must be a 3-item numeric sequence like [0, 0, 1]."
+msgstr "El campo '{key}' para '{type_name}' debe ser una secuencia numérica de 3 elementos como [0, 0, 1]."
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "El campo '{key}' para '{type_name}' debe ser un arreglo JSON de tripletas o una lista separada por punto y coma como '0,0,0;1,0,0'."
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array or a comma-separated list."
+msgstr "El campo '{key}' para '{type_name}' debe ser un arreglo JSON o una lista separada por comas."
+
+msgid "Field '{key}' for '{type_name}' must be a comma-separated numeric triplet like '0,0,1'."
+msgstr "El campo '{key}' para '{type_name}' debe ser una tripleta numérica separada por comas como '0,0,1'."
+
+msgid "Field '{key}' for '{type_name}' must be a list of numeric triplets."
+msgstr "El campo '{key}' para '{type_name}' debe ser una lista de tripletas numéricas."
+
+msgid "Field '{key}' for '{type_name}' must be a string selection expression. Expected field: {preferred_field}."
+msgstr "El campo '{key}' para '{type_name}' debe ser una expresión de selección de cadena. Campo esperado: {preferred_field}."
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "El campo '{key}' para '{type_name}' debe ser un arreglo JSON válido de tripletas o una lista separada por punto y coma como '0,0,0;1,0,0'."
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array or a comma-separated list."
+msgstr "El campo '{key}' para '{type_name}' debe ser un arreglo JSON válido o una lista separada por comas."
+
+msgid "Field '{key}' for '{type_name}' must contain integer values."
+msgstr "El campo '{key}' para '{type_name}' debe contener valores enteros."
+
+msgid "Field '{key}' for '{type_name}' must contain numeric values."
+msgstr "El campo '{key}' para '{type_name}' debe contener valores numéricos."
+
+msgid "Fields '{previous_key}' and '{key}' both map to the same input for '{type_name}'. Provide only one of: {preferred_field} or direct parameter shorthand."
+msgstr "Los campos '{previous_key}' y '{key}' corresponden a la misma entrada para '{type_name}'. Proporcione solo uno de los siguientes: {preferred_field} o la forma abreviada directa del parámetro."
+
+msgid "Filter by substring or wildcard pattern (* and ?)."
+msgstr "Filtrar por subcadena o patrón comodín (* y ?)."
+
+msgid "Filter by substring or wildcard pattern (* and ?). Repeat to keep targets matching any filter."
+msgstr "Filtre por subcadena o patrón comodín (* y ?). Repita la opción para conservar los objetivos que coincidan con cualquiera de los filtros."
+
+msgid "Filtered matches:"
+msgstr "Coincidencias filtradas:"
+
+msgid "For JSON input, group parameters by step name. Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "Para la entrada JSON, agrupe los parámetros por nombre de paso. El argumento '{argument}' debe comenzar con uno de los siguientes: {valid_steps}.{extra}"
+
+msgid "For multi-step targets, group params-json fields by step name."
+msgstr "Para destinos de varios pasos, agrupe los campos de params-json por nombre de paso."
 
 msgid "Getting {name}"
 msgstr "Obteniendo {name}"
@@ -57,8 +330,20 @@ msgstr "Obteniendo {name}"
 msgid "Getting {name} at index {value}"
 msgstr "Obteniendo {name} en el índice {value}"
 
+msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
+msgstr "Si la entrada abreviada es ambigua, cambie a --params-json. {guidance}"
+
+msgid "In non-JSON mode, prefer direct shorthand like '{preferred_non_json}'."
+msgstr "En modo no JSON, prefiera la forma abreviada directa como '{preferred_non_json}'."
+
+msgid "Index"
+msgstr "Índice"
+
 msgid "Initializing {name}"
 msgstr "Inicializando {name}"
+
+msgid "Input hints:"
+msgstr "Sugerencias de entrada:"
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "Atributo no válido: {attribute} no es compatible"
@@ -69,17 +354,182 @@ msgstr "Tipo de archivo no válido: {file_name}, debe ser {extensions}"
 msgid "Invalid Index: out of range"
 msgstr "Índice no válido: fuera de rango"
 
+msgid "Invalid JSON payload for parameters: {error}"
+msgstr "Carga JSON inválida para parámetros: {error}"
+
+msgid "Invalid JSON payload for parameters: {exc}"
+msgstr "Carga JSON inválida para parámetros: {exc}"
+
+msgid "Invalid JSON value for parameter '{param_name}': {error}"
+msgstr "Valor JSON no válido para el parámetro '{param_name}': {error}"
+
 msgid "Invalid Type: must be {expected_types}, not {variable_type}"
 msgstr "Tipo no válido: debe ser {expected_types}, no {variable_type}"
 
 msgid "Invalid Value: {reason}"
 msgstr "Valor no válido: {reason}"
 
+msgid "Invalid argument '{item}'. Expected key=value or param.attr=value."
+msgstr "Argumento inválido '{item}'. Se esperaba key=value o param.attr=value."
+
+msgid "Invalid argument for step '{step_name}': missing parameter name."
+msgstr "Argumento no válido para el paso '{step_name}': falta el nombre del parámetro."
+
+msgid "Invalid nested argument path '{path}': attribute '{attr}' does not exist on '{obj_type}'."
+msgstr "Ruta de argumento anidado no válida '{path}': el atributo '{attr}' no existe en '{obj_type}'."
+
+msgid "Invalid nested argument path '{path}': cannot nest into non-object '{obj_type}'."
+msgstr "Ruta de argumento anidado no válida '{path}': no se puede anidar dentro de '{obj_type}', que no es un objeto."
+
+msgid "Invalid nested argument path '{path}': cannot set '{final_attr}' on non-object '{obj_type}'."
+msgstr "Ruta de argumento anidado no válida '{path}': no se puede establecer '{final_attr}' en '{obj_type}', que no es un objeto."
+
+msgid "Invalid value for parameter '{param_name}': {error}"
+msgstr "Valor no válido para el parámetro '{param_name}': {error}"
+
+msgid "Invalid {field_name} '{path_text}': empty path segment is not allowed."
+msgstr "Campo inválido {field_name} '{path_text}': no se permite segmento de ruta vacío."
+
+msgid "Invalid {field_name} '{path_text}': segment '{segment}' must be a valid identifier."
+msgstr "Valor no válido de {field_name} '{path_text}': el segmento '{segment}' debe ser un identificador válido."
+
+msgid "Invalid {field_name}: value cannot be empty."
+msgstr "Campo inválido {field_name}: el valor no puede estar vacío."
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "Ejecute un objetivo de Moldflow con parámetros con nombre o entrada JSON. Los objetivos sin prefijo se tratan como synergy.<target>."
+
+msgid "JSON example:"
+msgstr "Ejemplo JSON:"
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
+msgstr "Objeto JSON que contiene asignaciones de parámetros (anula los argumentos posicionales). No se permiten arreglos ni escalares de nivel superior."
+
+msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
+msgstr "Los parámetros JSON deben ser un objeto JSON con argumentos con nombre. Ejemplo: --params-json '{\"param\": 1}' o --params-json '{\"step\": {\"param\": 1}}' para destinos encadenados."
+
+msgid "JSON type tag '{type_tag}' does not match expected wrapper '{primary_expected}'."
+msgstr "La etiqueta de tipo JSON '{type_tag}' no coincide con el wrapper esperado '{primary_expected}'."
+
+msgid "JSON value:"
+msgstr "Valor JSON:"
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "Descubra los objetivos invocables y el siguiente comando que debe ejecutar para cada uno."
+
+msgid "List result:"
+msgstr "Resultado de la lista:"
+
 msgid "Logger was not setup"
 msgstr "Logger no estaba configurado"
 
+msgid "Missing required parameter '{parameter}' for {target}{signature}"
+msgstr "Falta el parámetro obligatorio '{parameter}' para {target}{signature}"
+
+msgid "Moldflow command-line interface.\n\nStart with 'list' to discover targets, 'describe <target>' to inspect usage, then 'invoke <target> ...' to run it."
+msgstr "Interfaz de línea de comandos de Moldflow.\n\nEmpiece con 'list' para descubrir objetivos, use 'describe <target>' para inspeccionar su uso y luego ejecute 'invoke <target> ...'."
+
+msgid "Moldflow invokable targets"
+msgstr "Destinos invocables de Moldflow"
+
+msgid "Nested argument '{path}' is not supported for **kwargs on step '{step_name}'. Use a single key (e.g., {example}=...)."
+msgstr "El argumento anidado '{path}' no es compatible con **kwargs en el paso '{step_name}'. Use una sola clave (por ejemplo, {example}=...)."
+
+msgid "No invokable targets matched these filters."
+msgstr "Ningún destino invocable coincide con estos filtros."
+
+msgid "No invokable targets matched this filter."
+msgstr "Ningún destino invocable coincide con este filtro."
+
+msgid "Non-public argument path '{key}' is not allowed."
+msgstr "La ruta de argumento no pública '{key}' no está permitida."
+
+msgid "Non-public argument path '{left}' is not allowed."
+msgstr "La ruta de argumento no pública '{left}' no está permitida."
+
+msgid "Non-public argument path '{path}' is not allowed."
+msgstr "No se permite la ruta de argumento no pública '{path}'."
+
+msgid "Non-public argument path '{step_name}' is not allowed."
+msgstr "La ruta de argumento no pública '{step_name}' no está permitida."
+
+msgid "Non-public argument path '{step}.{key}' is not allowed."
+msgstr "La ruta de argumento no pública '{step}.{key}' no está permitida."
+
+msgid "Non-public field '{key_name}' is not allowed when constructing '{type_name}' from JSON."
+msgstr "No se permite el campo no público '{key_name}' al construir '{type_name}' desde JSON."
+
+msgid "Non-public segment '{segment}' is not allowed in target '{target}'."
+msgstr "No se permite el segmento no público '{segment}' en el destino '{target}'."
+
+msgid "Non-public segment '{seg}' is not allowed in target '{target}'."
+msgstr "El segmento no público '{seg}' no está permitido en el destino '{target}'."
+
 msgid "OK"
 msgstr "Aceptar"
+
+msgid "Object"
+msgstr "Objeto"
+
+msgid "Object '{type_name}' has no attribute '{attr_name}'"
+msgstr "El objeto '{type_name}' no tiene el atributo '{attr_name}'"
+
+msgid "One or more dotted targets, for example synergy.new_project."
+msgstr "Uno o más objetivos con notación de puntos, por ejemplo synergy.new_project."
+
+msgid "Only one of --json or --yaml may be specified."
+msgstr "Solo se puede especificar uno de --json o --yaml."
+
+msgid "Only one of --json, --yaml, or --schema may be specified."
+msgstr "Solo se puede especificar uno de --json, --yaml o --schema."
+
+msgid "Only one of --params-json or --params-json-file may be specified."
+msgstr "Solo se puede especificar uno de --params-json o --params-json-file."
+
+msgid "Parameter '{param_name}' contains a null byte which is not allowed."
+msgstr "El parámetro '{param_name}' contiene un byte nulo, lo cual no está permitido."
+
+msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
+msgstr "El parámetro '{param_name}' contiene caracteres de control (nueva línea/tabulador/retorno de carro); proporcione un valor en una sola línea o use comillas/escape según sea necesario."
+
+msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
+msgstr "Analiza, valida y construye kwargs, y emite un plan de llamadas sin ejecutar los pasos de invoke."
+
+msgid "Path to a JSON file containing an array of invoke calls for batch execution."
+msgstr "Ruta a un archivo JSON que contiene un arreglo de llamadas de invoke para su ejecución por lotes."
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
+msgstr "Ruta a un archivo JSON que contiene asignaciones de parámetros (anula los argumentos posicionales). La carga de nivel superior debe ser un objeto."
+
+msgid "Planned steps:"
+msgstr "Pasos planificados:"
+
+msgid "Prefer chaining invoke targets so this parameter is produced by a previous step, instead of constructing it manually in JSON."
+msgstr "Prefiera encadenar destinos de invoke para que este parámetro lo produzca un paso anterior, en lugar de construirlo manualmente en JSON."
+
+msgid "Print the installed moldflow package version."
+msgstr "Imprime la versión instalada del paquete moldflow."
+
+msgid "Property assignment JSON must be an object with a single 'value' field."
+msgstr "El JSON de asignación de propiedades debe ser un objeto con un único campo 'value'."
+
+msgid "Property assignment requires exactly one 'value' argument (e.g., value=... or --params-json '{\"value\": ...}')."
+msgstr "La asignación de propiedades requiere exactamente un argumento 'value' (por ejemplo, value=... o --params-json '{\"value\": ...}')."
+
+msgid "Property {name} (id={id}, type={prop_type})"
+msgstr "Propiedad {name} (id={id}, tipo={prop_type})"
+
+msgid "Read current value:"
+msgstr "Leer valor actual:"
+
+msgid "Resolved assignment:"
+msgstr "Asignación resuelta:"
+
+msgid "Resolved kwargs:"
+msgstr "Kwargs resueltos:"
+
+msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
+msgstr "El objeto resuelto no tiene el atributo invocable '{segment}' al ejecutar el destino '{target}'"
 
 msgid "Save Error"
 msgstr "Error al guardar"
@@ -90,14 +540,134 @@ msgstr "Error al guardar: No se pudo guardar {saving} en {file_name}"
 msgid "Save Error: Failed to save {saving} to {file_name}"
 msgstr "Error al guardar: No se pudo guardar {saving} en {file_name}"
 
+msgid "Segment '{segment}' does not resolve as an attribute on class '{class_name}' when resolving target '{target}'"
+msgstr "El segmento '{segment}' no se resuelve como un atributo en la clase '{class_name}' al resolver el destino '{target}'"
+
+msgid "Segment '{segment}' is not a callable method on class '{class_name}' when resolving target '{target}'"
+msgstr "El segmento '{segment}' no es un método invocable en la clase '{class_name}' al resolver el destino '{target}'"
+
+msgid "Selection"
+msgstr "Selección"
+
+msgid "Set it with:"
+msgstr "Establézcalo con:"
+
 msgid "Setting {name} to {value}"
 msgstr "Configurar {name} a {value}"
+
+msgid "Shorter JSON example:"
+msgstr "Ejemplo JSON más corto:"
+
+msgid "Shorter form:"
+msgstr "Forma más corta:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "Inspeccione la firma, la documentación, los ejemplos y la plantilla estructurada de invoke de un objetivo."
+
+msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
+msgstr "Mostrando la tabla compacta para {count} coincidencias filtradas. Reduzca el filtro o use --json para obtener las cadenas de destino canónicas."
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Step '{step_name}' in target '{target}' has positional-only parameters ({parameters}), which are not supported by CLI named-argument routing. Use the Python API for this target."
+msgstr "El paso '{step_name}' del destino '{target}' tiene parámetros solo posicionales ({parameters}), que no son compatibles con el enrutamiento de argumentos con nombre de la CLI. Use la API de Python para este destino."
 
 msgid "Submit"
 msgstr "Aceptar"
 
+msgid "TARGET is required unless --batch-file is used."
+msgstr "TARGET es obligatorio salvo que se use --batch-file."
+
+msgid "Target"
+msgstr "Destino"
+
+msgid "Target '{target}' is hidden from the CLI because '{hidden_path}' only creates a transient {wrapper_type} wrapper. The CLI constructs these helper objects internally when needed, so they are not exposed as direct CLI targets."
+msgstr "El destino '{target}' está oculto en la CLI porque '{hidden_path}' solo crea un wrapper {wrapper_type} transitorio. La CLI construye estos objetos auxiliares internamente cuando los necesita, por lo que no se exponen como destinos directos de la CLI."
+
+msgid "Target '{target}' is hidden from the CLI by library metadata on '{hidden_path}'."
+msgstr "El destino '{target}' está oculto en la CLI por los metadatos de la biblioteca en '{hidden_path}'."
+
+msgid "Target '{target}' resolves to a property/attribute and does not accept arguments."
+msgstr "El destino '{target}' se resuelve en una propiedad/atributo y no acepta argumentos."
+
+msgid "Target '{target}' resolves to a {class_name} wrapper property. Continue to one of its members, for example 'describe {target}.<member>'."
+msgstr "El destino '{target}' se resuelve en una propiedad wrapper {class_name}. Continúe con uno de sus miembros, por ejemplo 'describe {target}.<member>'."
+
+msgid "Target '{target}' resolves to property '{property_name}' (getter) and does not accept arguments."
+msgstr "El destino '{target}' se resuelve en la propiedad '{property_name}' (getter) y no acepta argumentos."
+
+msgid "Target '{target}' resolves to write-only property '{property_name}' and cannot be read via invoke."
+msgstr "El destino '{target}' se resuelve en la propiedad de solo escritura '{property_name}' y no se puede leer mediante invoke."
+
+msgid "Target must include a class or function name"
+msgstr "El destino debe incluir un nombre de clase o función"
+
+msgid "Target must include at least one segment"
+msgstr "El destino debe incluir al menos un segmento"
+
+msgid "Target must start with 'synergy' (or 'moldflow.synergy'). All invocations are rooted on the Synergy COM object."
+msgstr "El destino debe comenzar con 'synergy' (o 'moldflow.synergy'). Todas las invocaciones están enraizadas en el objeto COM de Synergy."
+
+msgid "Target must start with 'synergy' after the optional 'moldflow.' prefix. Bare targets such as 'open_project' are accepted and are interpreted as 'synergy.open_project'."
+msgstr "El destino debe comenzar con 'synergy' después del prefijo opcional 'moldflow.'. Se aceptan destinos sin prefijo como 'open_project' y se interpretan como 'synergy.open_project'."
+
+msgid "Targets are shown without the leading 'synergy.' prefix. Describe and invoke accept either form."
+msgstr "Los destinos se muestran sin el prefijo inicial 'synergy.'. Describe e invoke aceptan cualquiera de las dos formas."
+
 msgid "Test String"
 msgstr "Cadena de prueba"
+
+msgid "The Moldflow CLI requires optional dependencies. Install them with: pip install 'moldflow[cli]'"
+msgstr "La CLI de Moldflow requiere dependencias opcionales. Instálelas con: pip install 'moldflow[cli]'"
+
+msgid "The target returned False, which indicates a business-level failure."
+msgstr "El destino devolvió False, lo que indica un error a nivel de negocio."
+
+msgid "This dry run validates a property assignment."
+msgstr "Esta simulación valida una asignación de propiedad."
+
+msgid "This parameter can be null to indicate no value."
+msgstr "Este parámetro puede ser null para indicar que no hay valor."
+
+msgid "This property is read-only and takes no arguments."
+msgstr "Esta propiedad es de solo lectura y no acepta argumentos."
+
+msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
+msgstr "Esta propiedad devuelve un wrapper {class_name}. Continúe con describe {target}.<member> o invoke {target}.<method>."
+
+msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
+msgstr "Trata los valores de retorno False como fallos de la CLI (salida 1). Esto está habilitado de forma predeterminada para un comportamiento adecuado para la automatización."
+
+msgid "Try this:"
+msgstr "Pruebe esto:"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Unknown batch item field(s): {fields}."
+msgstr "Campo(s) desconocido(s) en el elemento del lote: {fields}."
+
+msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
+msgstr "Parámetro desconocido '{parameter}' para {target}{signature}.{extra}"
+
+msgid "Use JSON field '{preferred_field}' for '{param_name}'."
+msgstr "Use el campo JSON '{preferred_field}' para '{param_name}'."
+
+msgid "Use JSON field '{preferred_field}'."
+msgstr "Use el campo JSON '{preferred_field}'."
+
+msgid "Use a comma-separated list for quick CLI input, or a JSON array string when values contain commas."
+msgstr "Use una lista separada por comas para una entrada rápida en la CLI, o una cadena de arreglo JSON cuando los valores contengan comas."
+
+msgid "Use a comma-separated triplet for vector shorthand."
+msgstr "Use una tripleta separada por comas como forma abreviada del vector."
+
+msgid "Use describe <target> to inspect parameters, examples, and property behavior before invoking."
+msgstr "Use describe <target> para inspeccionar parámetros, ejemplos y el comportamiento de la propiedad antes de invocar."
+
+msgid "Use semicolon-separated triplets for quick CLI input. Quote the value in shells that treat semicolons specially."
+msgstr "Use tripletas separadas por punto y coma para una entrada rápida en la CLI. Ponga el valor entre comillas en shells que traten el punto y coma de forma especial."
 
 msgid "Using prompts will use pop-up import options and will always show logs"
 msgstr "Al usar avisos, se usarán las opciones de importación emergentes y siempre se mostrarán los registros"
@@ -114,41 +684,65 @@ msgstr "Entrada válida"
 msgid "Valid Input Type"
 msgstr "Tipo de entrada válido"
 
+msgid "Vector"
+msgstr "Vector"
+
+msgid "When JSON input is provided via --params-json or --params-json-file, no positional key=value args may be given."
+msgstr "Cuando la entrada JSON se proporciona mediante --params-json o --params-json-file, no se pueden proporcionar argumentos posicionales key=value."
+
+msgid "Write JSON output to the given file path without changing stdout mode."
+msgstr "Escribe la salida JSON en la ruta de archivo indicada sin cambiar el modo de stdout."
+
+msgid "Wrote structured output to {path}."
+msgstr "Se escribió la salida estructurada en {path}."
+
 msgid "both {first} and {second} must be provided together"
 msgstr "Se deben proporcionar juntos {first} y {second}"
 
 msgid "cannot be empty"
 msgstr "no puede estar vacío"
 
+msgid "failed"
+msgstr "fallido"
+
 msgid "found {min_value} must be less than {max_value}"
 msgstr "encontrado {min_value}, debe ser menor que {max_value}"
 
 msgid "found {value}, must be between {min_value} and {max_value}"
-msgstr "encontrado {valor}, debe estar entre {min_value} y {max_value}"
+msgstr "encontrado {value}, debe estar entre {min_value} y {max_value}"
 
 msgid "found {value}, must be greater than or equal to {min_value}"
-msgstr "encontrado {valor}, debe ser mayor o igual a {min_value}"
+msgstr "encontrado {value}, debe ser mayor o igual a {min_value}"
 
 msgid "found {value}, must be greater than {min_value}"
-msgstr "encontrado {valor}, debe ser mayor que {min_value}"
+msgstr "encontrado {value}, debe ser mayor que {min_value}"
 
 msgid "found {value}, must be less than or equal to {max_value}"
-msgstr "encontrado {valor}, debe ser menor o igual a {max_value}"
+msgstr "encontrado {value}, debe ser menor o igual a {max_value}"
 
 msgid "found {value}, must be less than {max_value}"
-msgstr "encontrado {valor}, debe ser menor que {max_value}"
+msgstr "encontrado {value}, debe ser menor que {max_value}"
 
 msgid "found {value}, must be non-negative"
-msgstr "encontrado {valor}, debe ser no negativo"
+msgstr "encontrado {value}, debe ser no negativo"
 
 msgid "found {value}, must be non-zero"
-msgstr "encontrado {valor}, debe ser distinto de cero"
+msgstr "encontrado {value}, debe ser distinto de cero"
 
 msgid "found {value}, must be one of {expected_values}"
 msgstr "encontrado {value}, debe ser uno de {expected_values}"
 
 msgid "found {value}, must be positive"
-msgstr "encontrado {valor}, debe ser positivo"
+msgstr "encontrado {value}, debe ser positivo"
+
+msgid "ok"
+msgstr "correcto"
+
+msgid "settable"
+msgstr "asignable"
+
+msgid "the owning object"
+msgstr "el objeto propietario"
 
 msgid "{file_name} does not have a valid file extension, will use {default}"
 msgstr "{file_name} no tiene una extensión válida; se usará {default}"
@@ -158,6 +752,21 @@ msgstr "{name} es {value}"
 
 msgid "{name} parameter will be ignored"
 msgstr "El parámetro {name} se ignorará"
+
+msgid "{param} receives the Plot returned by find_plot_by_name"
+msgstr "{param} recibe el Plot devuelto por find_plot_by_name"
+
+msgid "{type_name} ({size} items): {value}"
+msgstr "{type_name} ({size} elementos): {value}"
+
+msgid "{type_name} attributes:"
+msgstr "Atributos de {type_name}:"
+
+msgid "{type_name} result:"
+msgstr "Resultado de {type_name}:"
+
+msgid "{type_name} values ({count} items):"
+msgstr "Valores de {type_name} ({count} elementos):"
 
 msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
 msgstr "El valor {value} no se encuentra documentado en {enum_name}; esto puede provocar un error en la llamada a la función"

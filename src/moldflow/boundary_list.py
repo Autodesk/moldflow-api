@@ -6,6 +6,7 @@ Usage:
     BoundaryList Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_SELECTION_TEXT, cli_input_adapter
 from .helper import check_type, check_index
 from .com_proxy import safe_com
 from .logger import process_log
@@ -27,6 +28,7 @@ class BoundaryList:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="BoundaryList")
         self.boundary_list = safe_com(_boundary_list)
 
+    @cli_input_adapter(value_kind=CLI_VALUE_KIND_SELECTION_TEXT, shorthand_supported=True)
     def select_from_string(self, value: str) -> None:
         """
         Selects a list of entities from a string

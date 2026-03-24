@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- N/A
+- Added a Moldflow CLI with `list`, `describe`, and `invoke` commands.
+- Added invoke planning and automation support, including dry-run plans, trace output, and batch execution.
+- Added machine-readable `describe` schema output and updated CLI documentation and examples.
+- Added CLI regression tests covering chaining, argument routing, and edge-case input handling.
 
 ### Changed
 - N/A

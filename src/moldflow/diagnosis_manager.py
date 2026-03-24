@@ -9,6 +9,7 @@ Usage:
 
 from .logger import process_log
 from .common import LogMessage
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .helper import check_type, check_min_max, coerce_optional_dispatch
 from .com_proxy import safe_com
 from .ent_list import EntList
@@ -96,6 +97,7 @@ class DiagnosisManager:
             min_value, max_value, std_ar, assign_layer, show_txt, visible
         )
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates an empty EntList object

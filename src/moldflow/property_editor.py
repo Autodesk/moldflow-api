@@ -7,6 +7,7 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .ent_list import EntList
 from .prop import Property
 from .helper import get_enum_value, check_type, coerce_optional_dispatch
@@ -124,6 +125,7 @@ class PropertyEditor:
             coerce_optional_dispatch(entities, "ent_list"), coerce_optional_dispatch(prop, "prop")
         )
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Create a new entity list.

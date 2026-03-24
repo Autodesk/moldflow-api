@@ -3,8 +3,155 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ja-JP\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\nステップ '{step_name}' のことですか?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n複数ステップのターゲットで JSON 入力を使う場合は、パラメータをステップ名ごとにまとめてください。例: {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nJSON 入力では、このステップキーはパラメータ名のオブジェクトに対応している必要があります。例: {example}"
+
+msgid " Did you mean '{parameter}'?"
+msgstr " '{parameter}' のことですか?"
+
+msgid " Known parameters: {known_params}."
+msgstr " 使用可能なパラメータ: {known_params}."
+
+msgid "'{type_name}' no longer exposes adapter method '{method_name}'."
+msgstr "'{type_name}' はアダプターメソッド '{method_name}' を公開しなくなりました。"
+
+msgid "--yaml requested but PyYAML is not installed: {error}"
+msgstr "--yaml が要求されましたが、PyYAML がインストールされていません: {error}"
+
+msgid "--yaml requested but PyYAML is not installed: {exc}"
+msgstr "--yaml が要求されましたが、PyYAML がインストールされていません: {exc}"
+
+msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
+msgstr "高度なフォールバック専用です。アノテーションコンテキストを利用できない場合、ネストしたペイロードが本当に汎用的な場合、または複数のラッパーファミリーで曖昧になる場合にのみ、このタグ付き形状を使用してください。"
+
+msgid "Argument '{argument}' must specify a parameter name after the step (e.g., {step_name}.param=...).{extra}"
+msgstr "引数 '{argument}' では、ステップ名の後にパラメータ名を指定する必要があります（例: {step_name}.param=...）。{extra}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}"
+msgstr "引数 '{argument}' は次のいずれかで始まる必要があります: {valid_steps}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "引数 '{argument}' は次のいずれかで始まる必要があります: {valid_steps}.{extra}"
+
+msgid "Argument '{step_name}' must start with one of: {names}"
+msgstr "引数 '{step_name}' は次のいずれかで始まる必要があります: {names}"
+
+msgid "Argument error calling {target}{signature}: {error}"
+msgstr "{target}{signature} の呼び出し中に引数エラーが発生しました: {error}"
+
+msgid "Arguments as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value. Duplicate or conflicting paths are rejected (for example param=1 with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "引数は key=value または param.attr=value の形式で指定します。チェインされたターゲットでは、たとえば find_plot_by_name.plot_name=\"My Plot\" のように、メソッド名をパラメータの接頭辞に付けてください。ネストしたルーティングには step.param.attr=value を使います。重複または競合するパス（例: param=1 と param.attr=2）は拒否され、位置専用パラメータを持つメソッドは名前付き CLI ルーティングではサポートされません。"
+
+msgid "Arguments for step '{step_name}' must be a JSON object of parameters."
+msgstr "ステップ '{step_name}' の引数はパラメータの JSON オブジェクトである必要があります。"
+
+msgid "Array"
+msgstr "配列"
+
+msgid "Attribute '{matched_name}' on class '{class_name}' returns a non-wrapper value{continuation}"
+msgstr "クラス '{class_name}' の属性 '{matched_name}' はラッパー以外の値を返します{continuation}"
+
+msgid "Attribute '{matched_name}' on object '{type_name}' returns a non-wrapper value{continuation}"
+msgstr "オブジェクト '{type_name}' の属性 '{matched_name}' はラッパー以外の値を返します{continuation}"
+
+msgid "Batch file must contain a JSON array of invoke call objects."
+msgstr "バッチファイルには invoke 呼び出しオブジェクトの JSON 配列が含まれている必要があります。"
+
+msgid "Batch item field 'args' must be a list of strings."
+msgstr "バッチ項目のフィールド 'args' は文字列のリストである必要があります。"
+
+msgid "Batch item field 'params_json_file' must be a string path."
+msgstr "バッチ項目のフィールド 'params_json_file' は文字列パスである必要があります。"
+
+msgid "Batch item must be a JSON object."
+msgstr "バッチ項目は JSON オブジェクトである必要があります。"
+
+msgid "Batch item requires string field 'target'."
+msgstr "バッチ項目には文字列フィールド 'target' が必要です。"
+
+msgid "Batch item {index} error: {error}"
+msgstr "バッチ項目 {index} エラー: {error}"
+
+msgid "Batch results"
+msgstr "バッチ結果"
+
+msgid "Batch summary: {succeeded}/{total} succeeded, {failed} failed."
+msgstr "バッチ概要: {succeeded}/{total} 件成功、{failed} 件失敗。"
+
+msgid "CLI argument: {value}"
+msgstr "CLI 引数: {value}"
+
 msgid "Cancel"
 msgstr "キャンセル"
+
+msgid "Cannot assign property '{property_name}' while resolving target '{target}' because the owner object resolved to None."
+msgstr "所有オブジェクトが None に解決されたため、ターゲット '{target}' の解決中にプロパティ '{property_name}' を割り当てられません。"
+
+msgid "Cannot build instance for type 'EntList'. No create_entity_list provider found."
+msgstr "型 'EntList' のインスタンスを構築できません。create_entity_list プロバイダーが見つかりません。"
+
+msgid "Cannot build instance for type '{type_name}'. Not a known Synergy property or factory."
+msgstr "型 '{type_name}' のインスタンスを構築できません。既知の Synergy プロパティまたはファクトリーではありません。"
+
+msgid "Cannot configure field '{key_name}' on '{type_name}': {error}"
+msgstr "'{type_name}' のフィールド '{key_name}' を設定できません: {error}"
+
+msgid "Cannot invoke method '{segment}' for target '{target}' because '{owner}' is unavailable in the current session (it resolved to None). This target only works when that object exists."
+msgstr "現在のセッションで '{owner}' を利用できないため（None に解決されました）、ターゲット '{target}' に対してメソッド '{segment}' を呼び出せません。このターゲットはそのオブジェクトが存在する場合にのみ動作します。"
+
+msgid "Cannot read JSON file '{file}': {exc}"
+msgstr "JSON ファイル '{file}' を読み取れません: {exc}"
+
+msgid "Cannot read JSON file '{path}': {error}"
+msgstr "JSON ファイル '{path}' を読み取れません: {error}"
+
+msgid "Cannot read batch file '{path}': {error}"
+msgstr "バッチファイル '{path}' を読み取れません: {error}"
+
+msgid "Cannot resolve '{first}' on moldflow for introspection"
+msgstr "イントロスペクションのために moldflow 上の '{first}' を解決できません"
+
+msgid "Cannot resolve attribute '{segment}' on '{class_name}' when executing target '{target}': {error}"
+msgstr "ターゲット '{target}' の実行時に '{class_name}' 上の属性 '{segment}' を解決できません: {error}"
+
+msgid "Cannot resolve attribute '{segment}' without an object instance when resolving target '{target}'"
+msgstr "ターゲット '{target}' の解決時に、オブジェクトインスタンスなしで属性 '{segment}' を解決できません"
+
+msgid "Cannot resolve segment '{segment}' in target '{target}' without a class context. Use a Synergy-rooted target such as 'synergy.some_method'."
+msgstr "クラスコンテキストがないため、ターゲット '{target}' のセグメント '{segment}' を解決できません。'synergy.some_method' のような Synergy ルートのターゲットを使用してください。"
+
+msgid "Cannot set nested argument '{path}': {error}"
+msgstr "ネストした引数 '{path}' を設定できません: {error}"
+
+msgid "Cannot set nested attributes for '{param_name}' without signature info on '{step_name}'."
+msgstr "シグネチャ情報がないため、'{step_name}' の '{param_name}' に対するネスト属性を設定できません。"
+
+msgid "Cannot set property '{property_name}' on target '{target}': {error}"
+msgstr "ターゲット '{target}' のプロパティ '{property_name}' を設定できません: {error}"
+
+msgid "Cannot write JSON file '{path}': {error}"
+msgstr "JSON ファイル '{path}' に書き込めません: {error}"
+
+msgid "Canonical JSON field is derived from the reflected wrapper method signature for {method_name}()."
+msgstr "正規の JSON フィールドは、{method_name}() の反映されたラッパーメソッドシグネチャから導出されます。"
+
+msgid "Canonical list field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規のリストフィールドは、反映されたラッパーメソッド {method_name}() から導出されます。"
+
+msgid "Canonical triplet field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規の三つ組フィールドは、反映されたラッパーメソッド {method_name}() から導出されます。"
+
+msgid "Canonical vector-array field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規のベクトル配列フィールドは、反映されたラッパーメソッド {method_name}() から導出されます。"
+
+msgid "Chained targets with repeated method names are ambiguous for argument routing: {duplicate_names}. Please use an equivalent target path where each invoked step name is unique."
+msgstr "同じメソッド名を繰り返すチェインターゲットは、引数ルーティングで曖昧になります: {duplicate_names}。呼び出す各ステップ名が一意になる等価なターゲットパスを使用してください。"
 
 msgid "Checking file extension {file_name}"
 msgstr "ファイル拡張子 {file_name} を確認しています"
@@ -42,14 +189,143 @@ msgstr "{value} が正であることを確認しています"
 msgid "Checking {value} is {name}"
 msgstr "{value} が {name} であることを確認しています"
 
+msgid "Class '{class_name}' has no attribute '{attr_name}'"
+msgstr "クラス '{class_name}' に属性 '{attr_name}' はありません"
+
+msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
+msgstr "競合する引数パス '{left_path}' と '{right_path}' は許可されていません。"
+
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "インスタンス ID {value} で初期化できませんでした"
+
+msgid "Detail"
+msgstr "詳細"
+
+msgid "Disable ANSI color/styling in CLI output."
+msgstr "CLI 出力で ANSI カラー/スタイリングを無効にします。"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "非 JSON 形式では、直接のパラメータ代入が引き続き推奨されます。"
+
+msgid "Do not pass TARGET when --batch-file is used."
+msgstr "--batch-file 使用時は TARGET を渡さないでください。"
+
+msgid "Do not pass positional args/JSON input with --batch-file."
+msgstr "--batch-file と位置引数/JSON 入力を併用しないでください。"
+
+msgid "Dotted path to a method or function, optionally chained, for example 'synergy.new_project' or 'synergy.plot_manager.find_plot_by_name'."
+msgstr "メソッドまたは関数へのドット区切りパスです。必要に応じてチェインでき、例: 'synergy.new_project' または 'synergy.plot_manager.find_plot_by_name'。"
+
+msgid "Dotted path, e.g., synergy.new_project"
+msgstr "ドット区切りパス。例: synergy.new_project"
+
+msgid "Dry run for {target}"
+msgstr "{target} のドライラン"
+
+msgid "Duplicate argument path '{path}' is not allowed."
+msgstr "重複する引数パス '{path}' は許可されていません。"
+
+msgid "Emit a JSON schema-like representation of target parameters."
+msgstr "ターゲットパラメータの JSON スキーマ風表現を出力します。"
+
+msgid "Emit line-delimited JSON trace events to stderr for target resolution and runtime invoke binding."
+msgstr "ターゲット解決と実行時 invoke バインディングのために、行区切り JSON トレースイベントを stderr に出力します。"
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "スクリプトまたはエージェント利用向けに構造化 JSON を出力します。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "スクリプトまたはエージェント利用向けに構造化 YAML を出力します（PyYAML が必要です）。"
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "スクリプトまたはエージェント利用向けに構造化 JSON を出力します。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "スクリプトまたはエージェント利用向けに構造化 YAML を出力します（PyYAML が必要です）。"
+
+msgid "Emit the structured result as JSON to stdout (useful for automation/LLMs)."
+msgstr "構造化された結果を JSON として stdout に出力します（自動化/LLM に有用です）。"
+
+msgid "Empty target"
+msgstr "ターゲットが空です"
+
+msgid "Empty type tag is not valid for '{primary_expected}'."
+msgstr "空の型タグは '{primary_expected}' では無効です。"
+
+msgid "Example object shape: {shape}."
+msgstr "オブジェクト形状の例: {shape}."
 
 msgid "Executing {name}"
 msgstr "{name} を実行しています"
 
+msgid "Explicit field form: {value}"
+msgstr "明示的なフィールド形式: {value}"
+
 msgid "Failed to initialize Synergy: Synergy not found"
 msgstr "Synergy の初期化に失敗しました: Synergy が見つかりません"
+
+msgid "Failed to render JSON output for {context}: {error}"
+msgstr "{context} の JSON 出力を生成できませんでした: {error}"
+
+msgid "Failed to render JSON output for {context}: {exc}"
+msgstr "{context} の JSON 出力の生成に失敗しました: {exc}"
+
+msgid "Failed to render YAML output for {context}: {error}"
+msgstr "{context} の YAML 出力を生成できませんでした: {error}"
+
+msgid "Failed to render YAML output for {context}: {exc}"
+msgstr "{context} の YAML 出力の生成に失敗しました: {exc}"
+
+msgid "Field '{key_name}' is not valid for '{type_name}'."
+msgstr "フィールド '{key_name}' は '{type_name}' では無効です。"
+
+msgid "Field '{key}' for '{type_name}' must be a 3-item numeric sequence like [0, 0, 1]."
+msgstr "'{type_name}' のフィールド '{key}' は [0, 0, 1] のような 3 項目の数値シーケンスである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "'{type_name}' のフィールド '{key}' は、三つ組の JSON 配列または '0,0,0;1,0,0' のようなセミコロン区切りリストである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array or a comma-separated list."
+msgstr "'{type_name}' のフィールド '{key}' は、JSON 配列またはカンマ区切りリストである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a comma-separated numeric triplet like '0,0,1'."
+msgstr "'{type_name}' のフィールド '{key}' は、'0,0,1' のようなカンマ区切りの数値三つ組である必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a list of numeric triplets."
+msgstr "'{type_name}' のフィールド '{key}' は、数値三つ組のリストである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a string selection expression. Expected field: {preferred_field}."
+msgstr "'{type_name}' のフィールド '{key}' は、文字列の選択式である必要があります。想定されるフィールド: {preferred_field}."
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "'{type_name}' のフィールド '{key}' は、有効な三つ組の JSON 配列または '0,0,0;1,0,0' のようなセミコロン区切りリストである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array or a comma-separated list."
+msgstr "'{type_name}' のフィールド '{key}' は、有効な JSON 配列またはカンマ区切りリストである必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must contain integer values."
+msgstr "'{type_name}' のフィールド '{key}' には整数値を含める必要があります。"
+
+msgid "Field '{key}' for '{type_name}' must contain numeric values."
+msgstr "'{type_name}' のフィールド '{key}' には数値を含める必要があります。"
+
+msgid "Fields '{previous_key}' and '{key}' both map to the same input for '{type_name}'. Provide only one of: {preferred_field} or direct parameter shorthand."
+msgstr "フィールド '{previous_key}' と '{key}' はどちらも '{type_name}' の同じ入力に対応しています。{preferred_field} または直接パラメータ短縮形のどちらか一方だけを指定してください。"
+
+msgid "Filter by substring or wildcard pattern (* and ?)."
+msgstr "部分文字列またはワイルドカードパターン（* と ?）で絞り込みます。"
+
+msgid "Filter by substring or wildcard pattern (* and ?). Repeat to keep targets matching any filter."
+msgstr "部分文字列またはワイルドカード パターン（* と ?）でフィルタリングします。いずれかのフィルターに一致するターゲットを残すには、このオプションを繰り返してください。"
+
+msgid "Filtered matches:"
+msgstr "絞り込み結果:"
+
+msgid "For JSON input, group parameters by step name. Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "JSON 入力では、パラメータをステップ名ごとにまとめてください。引数 '{argument}' は次のいずれかで始まる必要があります: {valid_steps}.{extra}"
+
+msgid "For multi-step targets, group params-json fields by step name."
+msgstr "複数ステップのターゲットでは、params-json のフィールドをステップ名ごとにまとめてください。"
 
 msgid "Getting {name}"
 msgstr "{name} を取得しています"
@@ -57,8 +333,20 @@ msgstr "{name} を取得しています"
 msgid "Getting {name} at index {value}"
 msgstr "インデックス {value} の {name} を取得しています"
 
+msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
+msgstr "短縮入力が曖昧な場合は、--params-json に切り替えてください。{guidance}"
+
+msgid "In non-JSON mode, prefer direct shorthand like '{preferred_non_json}'."
+msgstr "非 JSON モードでは、'{preferred_non_json}' のような直接の短縮形を優先してください。"
+
+msgid "Index"
+msgstr "インデックス"
+
 msgid "Initializing {name}"
 msgstr "{name} を初期化しています"
+
+msgid "Input hints:"
+msgstr "入力ヒント:"
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "無効な属性: {attribute} はサポートされていません"
@@ -69,17 +357,182 @@ msgstr "無効なファイルタイプ: {file_name}、{extensions} である必�
 msgid "Invalid Index: out of range"
 msgstr "無効なインデックス: 範囲外です"
 
+msgid "Invalid JSON payload for parameters: {error}"
+msgstr "パラメータの JSON ペイロードが無効です: {error}"
+
+msgid "Invalid JSON payload for parameters: {exc}"
+msgstr "パラメータの JSON ペイロードが無効です: {exc}"
+
+msgid "Invalid JSON value for parameter '{param_name}': {error}"
+msgstr "パラメータ '{param_name}' の JSON 値が無効です: {error}"
+
 msgid "Invalid Type: must be {expected_types}, not {variable_type}"
 msgstr "無効な型: {variable_type} ではなく {expected_types} である必要があります"
 
 msgid "Invalid Value: {reason}"
 msgstr "無効な値: {reason}"
 
+msgid "Invalid argument '{item}'. Expected key=value or param.attr=value."
+msgstr "無効な引数 '{item}'。key=value または param.attr=value を指定してください。"
+
+msgid "Invalid argument for step '{step_name}': missing parameter name."
+msgstr "ステップ '{step_name}' の引数が無効です: パラメータ名がありません。"
+
+msgid "Invalid nested argument path '{path}': attribute '{attr}' does not exist on '{obj_type}'."
+msgstr "ネストした引数パス '{path}' が無効です: 属性 '{attr}' は '{obj_type}' に存在しません。"
+
+msgid "Invalid nested argument path '{path}': cannot nest into non-object '{obj_type}'."
+msgstr "ネストした引数パス '{path}' が無効です: 非オブジェクト '{obj_type}' にはネストできません。"
+
+msgid "Invalid nested argument path '{path}': cannot set '{final_attr}' on non-object '{obj_type}'."
+msgstr "ネストした引数パス '{path}' が無効です: 非オブジェクト '{obj_type}' に '{final_attr}' を設定できません。"
+
+msgid "Invalid value for parameter '{param_name}': {error}"
+msgstr "パラメータ '{param_name}' の値が無効です: {error}"
+
+msgid "Invalid {field_name} '{path_text}': empty path segment is not allowed."
+msgstr "無効な {field_name} '{path_text}': 空のパスセグメントは許可されていません。"
+
+msgid "Invalid {field_name} '{path_text}': segment '{segment}' must be a valid identifier."
+msgstr "無効な {field_name} '{path_text}': セグメント '{segment}' は有効な識別子である必要があります。"
+
+msgid "Invalid {field_name}: value cannot be empty."
+msgstr "無効な {field_name}：値を空にすることはできません。"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "名前付きパラメーターまたは JSON 入力を使って Moldflow ターゲットを実行します。プレフィックスのないターゲットは synergy.<target> として扱われます。"
+
+msgid "JSON example:"
+msgstr "JSON の例:"
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
+msgstr "パラメータの対応付けを含む JSON オブジェクトです（位置引数を上書きします）。トップレベルの配列やスカラーは使用できません。"
+
+msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
+msgstr "JSON パラメータは名前付き引数の JSON オブジェクトである必要があります。例: --params-json '{\"param\": 1}' またはチェインされたターゲットの場合 --params-json '{\"step\": {\"param\": 1}}'"
+
+msgid "JSON type tag '{type_tag}' does not match expected wrapper '{primary_expected}'."
+msgstr "JSON 型タグ '{type_tag}' が想定されるラッパー '{primary_expected}' と一致しません。"
+
+msgid "JSON value:"
+msgstr "JSON 値:"
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "呼び出し可能なターゲットと、それぞれ次に実行すべきコマンドを確認します。"
+
+msgid "List result:"
+msgstr "一覧結果:"
+
 msgid "Logger was not setup"
 msgstr "ロガーが設定されていませんでした"
 
+msgid "Missing required parameter '{parameter}' for {target}{signature}"
+msgstr "{target}{signature} に必要なパラメータ '{parameter}' が不足しています"
+
+msgid "Moldflow command-line interface.\n\nStart with 'list' to discover targets, 'describe <target>' to inspect usage, then 'invoke <target> ...' to run it."
+msgstr "Moldflow コマンドライン インターフェース。\n\nまず 'list' でターゲットを見つけ、'describe <target>' で使い方を確認してから、'invoke <target> ...' を実行します。"
+
+msgid "Moldflow invokable targets"
+msgstr "Moldflow の呼び出し可能ターゲット"
+
+msgid "Nested argument '{path}' is not supported for **kwargs on step '{step_name}'. Use a single key (e.g., {example}=...)."
+msgstr "ネストした引数 '{path}' は、ステップ '{step_name}' の **kwargs ではサポートされていません。単一キーを使用してください（例: {example}=...）。"
+
+msgid "No invokable targets matched these filters."
+msgstr "これらのフィルターに一致する呼び出し可能ターゲットはありません。"
+
+msgid "No invokable targets matched this filter."
+msgstr "このフィルターに一致する呼び出し可能ターゲットはありません。"
+
+msgid "Non-public argument path '{key}' is not allowed."
+msgstr "非公開の引数パス '{key}' は許可されていません。"
+
+msgid "Non-public argument path '{left}' is not allowed."
+msgstr "非公開の引数パス '{left}' は許可されていません。"
+
+msgid "Non-public argument path '{path}' is not allowed."
+msgstr "非公開の引数パス '{path}' は許可されていません。"
+
+msgid "Non-public argument path '{step_name}' is not allowed."
+msgstr "非公開の引数パス '{step_name}' は許可されていません。"
+
+msgid "Non-public argument path '{step}.{key}' is not allowed."
+msgstr "非公開の引数パス '{step}.{key}' は許可されていません。"
+
+msgid "Non-public field '{key_name}' is not allowed when constructing '{type_name}' from JSON."
+msgstr "JSON から '{type_name}' を構築する際、非公開フィールド '{key_name}' は許可されていません。"
+
+msgid "Non-public segment '{segment}' is not allowed in target '{target}'."
+msgstr "ターゲット '{target}' に非公開セグメント '{segment}' は許可されていません。"
+
+msgid "Non-public segment '{seg}' is not allowed in target '{target}'."
+msgstr "ターゲット '{target}' に非公開のセグメント '{seg}' は許可されていません。"
+
 msgid "OK"
 msgstr "OK"
+
+msgid "Object"
+msgstr "オブジェクト"
+
+msgid "Object '{type_name}' has no attribute '{attr_name}'"
+msgstr "オブジェクト '{type_name}' に属性 '{attr_name}' はありません"
+
+msgid "One or more dotted targets, for example synergy.new_project."
+msgstr "1 つ以上のドット区切りターゲット。例: synergy.new_project。"
+
+msgid "Only one of --json or --yaml may be specified."
+msgstr "--json と --yaml は同時に指定できません。"
+
+msgid "Only one of --json, --yaml, or --schema may be specified."
+msgstr "--json、--yaml、--schema のうち一つだけ指定できます。"
+
+msgid "Only one of --params-json or --params-json-file may be specified."
+msgstr "--params-json と --params-json-file は同時に指定できません。"
+
+msgid "Parameter '{param_name}' contains a null byte which is not allowed."
+msgstr "パラメータ '{param_name}' にヌルバイトが含まれています（許可されていません）。"
+
+msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
+msgstr "パラメータ '{param_name}' に制御文字（改行/タブ/復帰）が含まれています。単一行の値を指定するか、必要に応じて引用/エスケープしてください。"
+
+msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
+msgstr "kwargs を解析、検証、構築し、invoke ステップを実行せずに呼び出し計画を出力します。"
+
+msgid "Path to a JSON file containing an array of invoke calls for batch execution."
+msgstr "バッチ実行用の invoke 呼び出し配列を含む JSON ファイルへのパスです。"
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
+msgstr "パラメータの対応付けを含む JSON ファイルへのパスです（位置引数を上書きします）。トップレベルのペイロードはオブジェクトである必要があります。"
+
+msgid "Planned steps:"
+msgstr "計画されたステップ:"
+
+msgid "Prefer chaining invoke targets so this parameter is produced by a previous step, instead of constructing it manually in JSON."
+msgstr "このパラメータを JSON で手動構築するのではなく、前のステップで生成されるように invoke ターゲットをチェインすることを推奨します。"
+
+msgid "Print the installed moldflow package version."
+msgstr "インストールされている moldflow パッケージのバージョンを表示します。"
+
+msgid "Property assignment JSON must be an object with a single 'value' field."
+msgstr "プロパティ代入用の JSON は、単一の 'value' フィールドを持つオブジェクトである必要があります。"
+
+msgid "Property assignment requires exactly one 'value' argument (e.g., value=... or --params-json '{\"value\": ...}')."
+msgstr "プロパティ代入には、ちょうど 1 つの 'value' 引数が必要です（例: value=... または --params-json '{\"value\": ...}'）。"
+
+msgid "Property {name} (id={id}, type={prop_type})"
+msgstr "プロパティ {name} (id={id}, type={prop_type})"
+
+msgid "Read current value:"
+msgstr "現在の値を読み取る:"
+
+msgid "Resolved assignment:"
+msgstr "解決された代入:"
+
+msgid "Resolved kwargs:"
+msgstr "解決された kwargs:"
+
+msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
+msgstr "ターゲット '{target}' の実行時に、解決されたオブジェクトには呼び出し可能な属性 '{segment}' がありません"
 
 msgid "Save Error"
 msgstr "保存エラー"
@@ -90,14 +543,134 @@ msgstr "保存エラー: {saving} を {file_name} に保存できませんでし
 msgid "Save Error: Failed to save {saving} to {file_name}"
 msgstr "保存エラー: {saving} を {file_name} に保存できませんでした"
 
+msgid "Segment '{segment}' does not resolve as an attribute on class '{class_name}' when resolving target '{target}'"
+msgstr "ターゲット '{target}' の解決時に、セグメント '{segment}' はクラス '{class_name}' の属性として解決されません"
+
+msgid "Segment '{segment}' is not a callable method on class '{class_name}' when resolving target '{target}'"
+msgstr "ターゲット '{target}' の解決時に、セグメント '{segment}' はクラス '{class_name}' 上の呼び出し可能メソッドではありません"
+
+msgid "Selection"
+msgstr "選択"
+
+msgid "Set it with:"
+msgstr "次で設定します:"
+
 msgid "Setting {name} to {value}"
 msgstr "{name} を {value} に設定しています"
+
+msgid "Shorter JSON example:"
+msgstr "短い JSON 例:"
+
+msgid "Shorter form:"
+msgstr "短縮形:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "ターゲットのシグネチャ、ドキュメント、例、および構造化された invoke テンプレートを確認します。"
+
+msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
+msgstr "絞り込み結果 {count} 件のコンパクトテーブルを表示しています。フィルターをさらに絞り込むか、正規のターゲット文字列を得るには --json を使用してください。"
+
+msgid "Status"
+msgstr "状態"
+
+msgid "Step '{step_name}' in target '{target}' has positional-only parameters ({parameters}), which are not supported by CLI named-argument routing. Use the Python API for this target."
+msgstr "ターゲット '{target}' のステップ '{step_name}' には位置専用パラメータ ({parameters}) があり、CLI の名前付き引数ルーティングではサポートされていません。このターゲットには Python API を使用してください。"
 
 msgid "Submit"
 msgstr "OK"
 
+msgid "TARGET is required unless --batch-file is used."
+msgstr "--batch-file を使用しない限り、TARGET は必須です。"
+
+msgid "Target"
+msgstr "ターゲット"
+
+msgid "Target '{target}' is hidden from the CLI because '{hidden_path}' only creates a transient {wrapper_type} wrapper. The CLI constructs these helper objects internally when needed, so they are not exposed as direct CLI targets."
+msgstr "'{hidden_path}' は一時的な {wrapper_type} ラッパーしか作成しないため、ターゲット '{target}' は CLI から隠されています。CLI は必要に応じてこれらのヘルパーオブジェクトを内部で構築するため、直接の CLI ターゲットとしては公開されません。"
+
+msgid "Target '{target}' is hidden from the CLI by library metadata on '{hidden_path}'."
+msgstr "ターゲット '{target}' は '{hidden_path}' 上のライブラリメタデータにより CLI から隠されています。"
+
+msgid "Target '{target}' resolves to a property/attribute and does not accept arguments."
+msgstr "ターゲット '{target}' はプロパティ/属性に解決されるため、引数を受け付けません。"
+
+msgid "Target '{target}' resolves to a {class_name} wrapper property. Continue to one of its members, for example 'describe {target}.<member>'."
+msgstr "ターゲット '{target}' は {class_name} ラッパープロパティに解決されます。そのメンバーのいずれかに進んでください。例: 'describe {target}.<member>'。"
+
+msgid "Target '{target}' resolves to property '{property_name}' (getter) and does not accept arguments."
+msgstr "ターゲット '{target}' はプロパティ '{property_name}'（getter）に解決されるため、引数を受け付けません。"
+
+msgid "Target '{target}' resolves to write-only property '{property_name}' and cannot be read via invoke."
+msgstr "ターゲット '{target}' は書き込み専用プロパティ '{property_name}' に解決されるため、invoke で読み取ることはできません。"
+
+msgid "Target must include a class or function name"
+msgstr "ターゲットにはクラス名または関数名を含める必要があります"
+
+msgid "Target must include at least one segment"
+msgstr "ターゲットには少なくとも1つのセグメントが必要です"
+
+msgid "Target must start with 'synergy' (or 'moldflow.synergy'). All invocations are rooted on the Synergy COM object."
+msgstr "ターゲットは 'synergy'（または 'moldflow.synergy'）で始まる必要があります。すべての呼び出しは Synergy の COM オブジェクトをルートとします。"
+
+msgid "Target must start with 'synergy' after the optional 'moldflow.' prefix. Bare targets such as 'open_project' are accepted and are interpreted as 'synergy.open_project'."
+msgstr "ターゲットは、任意の 'moldflow.' 接頭辞の後に 'synergy' で始まる必要があります。'open_project' のような裸のターゲットも受け付けられ、その場合は 'synergy.open_project' と解釈されます。"
+
+msgid "Targets are shown without the leading 'synergy.' prefix. Describe and invoke accept either form."
+msgstr "ターゲットは先頭の 'synergy.' 接頭辞を除いて表示されます。describe と invoke はどちらの形式も受け付けます。"
+
 msgid "Test String"
 msgstr "テスト文字列"
+
+msgid "The Moldflow CLI requires optional dependencies. Install them with: pip install 'moldflow[cli]'"
+msgstr "Moldflow CLI にはオプション依存関係が必要です。次のコマンドでインストールしてください: pip install 'moldflow[cli]'"
+
+msgid "The target returned False, which indicates a business-level failure."
+msgstr "ターゲットが False を返しました。これは業務レベルの失敗を示します。"
+
+msgid "This dry run validates a property assignment."
+msgstr "このドライランはプロパティ代入を検証します。"
+
+msgid "This parameter can be null to indicate no value."
+msgstr "このパラメータは、値がないことを示すために null にできます。"
+
+msgid "This property is read-only and takes no arguments."
+msgstr "このプロパティは読み取り専用で、引数を取りません。"
+
+msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
+msgstr "このプロパティは {class_name} ラッパーを返します。describe {target}.<member> または invoke {target}.<method> に進んでください。"
+
+msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
+msgstr "False の戻り値を CLI の失敗（終了コード 1）として扱います。これは自動化しやすい挙動として既定で有効です。"
+
+msgid "Try this:"
+msgstr "次を試してください:"
+
+msgid "Type"
+msgstr "型"
+
+msgid "Unknown batch item field(s): {fields}."
+msgstr "不明なバッチ項目フィールド: {fields}."
+
+msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
+msgstr "{target}{signature} に不明なパラメータ '{parameter}' があります。{extra}"
+
+msgid "Use JSON field '{preferred_field}' for '{param_name}'."
+msgstr "'{param_name}' には JSON フィールド '{preferred_field}' を使用してください。"
+
+msgid "Use JSON field '{preferred_field}'."
+msgstr "JSON フィールド '{preferred_field}' を使用してください。"
+
+msgid "Use a comma-separated list for quick CLI input, or a JSON array string when values contain commas."
+msgstr "CLI で素早く入力するにはカンマ区切りリストを使用し、値にカンマが含まれる場合は JSON 配列文字列を使用してください。"
+
+msgid "Use a comma-separated triplet for vector shorthand."
+msgstr "ベクトルの短縮形にはカンマ区切りの三つ組を使用してください。"
+
+msgid "Use describe <target> to inspect parameters, examples, and property behavior before invoking."
+msgstr "呼び出す前に、describe <target> を使ってパラメータ、例、およびプロパティの挙動を確認してください。"
+
+msgid "Use semicolon-separated triplets for quick CLI input. Quote the value in shells that treat semicolons specially."
+msgstr "CLI で素早く入力するにはセミコロン区切りの三つ組を使用してください。セミコロンを特別扱いするシェルでは値を引用してください。"
 
 msgid "Using prompts will use pop-up import options and will always show logs"
 msgstr "プロンプトを使用するとポップアップのインポートオプションが使用され、常にログが表示されます"
@@ -114,11 +687,26 @@ msgstr "有効な入力"
 msgid "Valid Input Type"
 msgstr "有効な入力タイプ"
 
+msgid "Vector"
+msgstr "ベクトル"
+
+msgid "When JSON input is provided via --params-json or --params-json-file, no positional key=value args may be given."
+msgstr "--params-json または --params-json-file による JSON 入力が提供されている場合、位置指定の key=value 引数は指定できません。"
+
+msgid "Write JSON output to the given file path without changing stdout mode."
+msgstr "stdout モードを変更せずに、指定されたファイルパスへ JSON 出力を書き込みます。"
+
+msgid "Wrote structured output to {path}."
+msgstr "構造化出力を {path} に書き込みました。"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} と {second} は同時に指定する必要があります"
 
 msgid "cannot be empty"
 msgstr "空にすることはできません"
+
+msgid "failed"
+msgstr "失敗"
 
 msgid "found {min_value} must be less than {max_value}"
 msgstr "見つかった {min_value} は {max_value} より小さくなければなりません"
@@ -150,6 +738,15 @@ msgstr "見つかった {value} は {expected_values} のいずれかでなけ�
 msgid "found {value}, must be positive"
 msgstr "見つかった {value} は正でなければなりません"
 
+msgid "ok"
+msgstr "成功"
+
+msgid "settable"
+msgstr "設定可"
+
+msgid "the owning object"
+msgstr "所有オブジェクト"
+
 msgid "{file_name} does not have a valid file extension, will use {default}"
 msgstr "{file_name} には有効なファイル拡張子がありません。{default} を使用します"
 
@@ -159,6 +756,21 @@ msgstr "{name} は {value} です"
 msgid "{name} parameter will be ignored"
 msgstr "パラメータ {name} は無視されます"
 
+msgid "{param} receives the Plot returned by find_plot_by_name"
+msgstr "{param} は find_plot_by_name が返した Plot を受け取ります"
+
+msgid "{type_name} ({size} items): {value}"
+msgstr "{type_name} ({size} 件): {value}"
+
+msgid "{type_name} attributes:"
+msgstr "{type_name} の属性:"
+
+msgid "{type_name} result:"
+msgstr "{type_name} の結果:"
+
+msgid "{type_name} values ({count} items):"
+msgstr "{type_name} の値（{count} 件）:"
+
 msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
 msgstr "{value} は {enum_name} に文書化されていません。これにより関数呼び出しが失敗する可能性があります"
 
@@ -166,4 +778,16 @@ msgid "{value} does not have a valid file extension, must be {extensions}"
 msgstr "{value} には有効なファイル拡張子がありません。{extensions} である必要があります"
 
 msgid "{value} is not a valid {enum_name}"
-msgstr "{value}は有効な{enum_name}ではありません"
+msgstr "{value} は有効な {enum_name} ではありません"
+
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "重複または競合するパスは拒否されます。引数は key=value または param.attr=value として渡します。チェインされたターゲットでは、たとえば find_plot_by_name.plot_name=\"My Plot\" のようにメソッド名を接頭辞として付けてください。ネストされたルーティングは step.param.attr=value を使用し（たとえば param=1 は param.attr=2 と競合します）、位置専用パラメータを持つメソッドは名前付き CLI ルーティングではサポートされません。"
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "パラメータ対応を含む JSON オブジェクトです（位置引数を上書きします）。トップレベルの配列/スカラーは許可されません。"
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "パラメータ対応を含む JSON ファイルへのパスです（位置引数を上書きします）。トップレベルのペイロードは配列/スカラーではなくオブジェクトである必要があります。"
+
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "invoke ステップを実行せずに、kwargs を解析・検証・構築し、テンプレート要約の呼び出し計画を出力します。"

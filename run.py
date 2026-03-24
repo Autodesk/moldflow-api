@@ -62,6 +62,7 @@ import platform
 import subprocess
 import shutil
 import glob
+from pathlib import Path
 from urllib.parse import urlparse
 import docopt
 from github import Github
@@ -99,6 +100,7 @@ SETUP_CONFIG_FILE = os.path.join(ROOT_DIR, 'setup.cfg')
 SETUP_CONFIG_IN_FILE = os.path.join(ROOT_DIR, 'setup.cfg.in')
 COVERAGE_FILE = os.path.join(ROOT_DIR, '.coverage')
 COVERAGE_CONFIG_FILE = os.path.join(ROOT_DIR, '.coverage-config')
+COVERAGE_CONFIG_CLI_FILE = os.path.join(ROOT_DIR, '.coverage-config-cli')
 COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
@@ -125,12 +127,21 @@ def run_command(args, cwd=os.getcwd(), extra_env=None):
             raise subprocess.CalledProcessError(proc.returncode, ' '.join(args))
 
 
+def python_module_command(*args):
+    """Build argv for ``python -m ...`` invocations without shell-style splitting."""
+    return [sys.executable, '-m', *[str(arg) for arg in args]]
+
+
 def build_package(install=True):
     """Build package"""
 
     logging.info('Attempting to build moldflow-api package')
 
     build_mo()
+
+    # NOTE: PO sources are maintained under the package-local locale directory
+    # (src/moldflow/locale). build_mo() will compile .po -> .mo in place so the
+    # package build (wheel/sdist) can include the generated catalogs.
 
     with open(SETUP_CONFIG_IN_FILE, 'r', encoding=ENCODING) as f:
         template = f.read()
@@ -141,7 +152,7 @@ def build_package(install=True):
         f.write(output)
 
     try:
-        run_command([sys.executable] + '-m build'.split(' '), ROOT_DIR)
+        run_command(python_module_command('build'), ROOT_DIR)
     except Exception as err:
         logging.error(
             "Failed to build package: '%s'.\n"
@@ -293,13 +304,42 @@ def install_package(target_path=None, build=False):
 
     logging.info('Attempting to install moldflow-api')
 
-    wheel_path = os.path.join(ROOT_DIR, 'dist', f'moldflow-{VERSION}-py3-none-any.whl')
+    dist_dir = os.path.join(ROOT_DIR, 'dist')
 
-    pip_args = f'install --force-reinstall --upgrade {wheel_path}'
+    # Install the locally built wheel (explicit path) including the optional CLI extra.
+    # Using an explicit wheel avoids resolving metadata from external indexes.
+    wheel_files = []
+    if os.path.isdir(dist_dir):
+        wheel_files = [
+            os.path.join(dist_dir, name)
+            for name in os.listdir(dist_dir)
+            if name.endswith('.whl') and name.startswith(f"moldflow-{VERSION}")
+        ]
+    wheel_path = max(wheel_files, key=os.path.getmtime) if wheel_files else None
+
+    package_spec = f"moldflow[cli]=={VERSION}"
+    if wheel_path:
+        # Use a direct file reference with extras; "<wheel>.whl[cli]" is invalid.
+        wheel_uri = Path(wheel_path).resolve().as_uri()
+        package_spec = f"moldflow[cli] @ {wheel_uri}"
+
+    args = [
+        sys.executable,
+        '-m',
+        'pip',
+        'install',
+        '--force-reinstall',
+        '--upgrade',
+        '--no-cache-dir',
+        package_spec,
+        '--find-links',
+        dist_dir,
+    ]
+
     if target_path:
-        pip_args = f'{pip_args} --target={target_path}'
+        args.append(f'--target={target_path}')
 
-    run_command([sys.executable] + f'-m pip {pip_args}'.split(' '), ROOT_DIR)
+    run_command(args, ROOT_DIR)
 
 
 def build_mo():
@@ -467,13 +507,16 @@ def format_code(check_only=False):
 
     logging.info('Attempting to format python files using black in repo')
 
-    check_args = '--check ' if check_only else ''
+    formatter_cmd = python_module_command(
+        'black',
+        *(['--check'] if check_only else []),
+        '--line-length=100',
+        '-S',
+        '-C',
+        *PYTHON_FILES,
+    )
 
-    python_files = ' '.join(PYTHON_FILES)
-
-    formatter_args = f'--line-length=100 -S -C {python_files}'
-
-    run_command([sys.executable] + f'-m black {check_args}{formatter_args}'.split(' '), ROOT_DIR)
+    run_command(formatter_cmd, ROOT_DIR)
 
 
 def lint(skip_build):
@@ -486,11 +529,11 @@ def lint(skip_build):
 
     logging.info('Attempting to lint python files in repo')
 
-    python_files = ' '.join(PYTHON_FILES)
+    pylint_cmd = python_module_command(
+        'pylint', '--rcfile', PYLINT_CONFIG_FILE, '--verbose', *PYTHON_FILES
+    )
 
-    pylint_args = f'--rcfile {PYLINT_CONFIG_FILE} --verbose {python_files}'
-
-    run_command([sys.executable] + f'-m pylint {pylint_args}'.split(' '), ROOT_DIR)
+    run_command(pylint_cmd, ROOT_DIR)
 
 
 class Report:
@@ -503,12 +546,20 @@ class Report:
     """
 
     coverage_config_file_arg = f"--rcfile={COVERAGE_CONFIG_FILE}"
+    coverage_cli_config_file_arg = f"--rcfile={COVERAGE_CONFIG_CLI_FILE}"
+
+    @staticmethod
+    def default():
+        """Generate default package coverage report."""
+        run_command(
+            python_module_command('coverage', 'report', Report.coverage_config_file_arg), ROOT_DIR
+        )
 
     @staticmethod
     def cli():
         """Generate CLI report"""
         run_command(
-            [sys.executable] + f'-m coverage report {Report.coverage_config_file_arg}'.split(' '),
+            python_module_command('coverage', 'report', Report.coverage_cli_config_file_arg),
             ROOT_DIR,
         )
 
@@ -516,18 +567,15 @@ class Report:
     def html():
         """Generate HTML report"""
         run_command(
-            [sys.executable] + f'-m coverage html {Report.coverage_config_file_arg}'.split(' '),
-            ROOT_DIR,
+            python_module_command('coverage', 'html', Report.coverage_config_file_arg), ROOT_DIR
         )
 
     @staticmethod
     def xml():
         """Generate XML report"""
-        coverage_xml_file_arg = f"-o {COVERAGE_XML_FILE_NAME}"
         run_command(
-            [sys.executable]
-            + f'-m coverage xml {coverage_xml_file_arg} {Report.coverage_config_file_arg}'.split(
-                ' '
+            python_module_command(
+                'coverage', 'xml', '-o', COVERAGE_XML_FILE_NAME, Report.coverage_config_file_arg
             ),
             ROOT_DIR,
         )
@@ -547,19 +595,21 @@ class Test:
     @staticmethod
     def _run_marker(marker, tests, quiet=False):
 
-        coverage_config_file_arg = f"--rcfile={COVERAGE_CONFIG_FILE}"
+        coverage_config = COVERAGE_CONFIG_CLI_FILE if marker == 'cli' else COVERAGE_CONFIG_FILE
+        coverage_config_file_arg = f"--rcfile={coverage_config}"
 
-        verbosity = '-v' if quiet else '-rA -vv'
-        pytest_options = f'{verbosity} --override-ini=console_output_style=count'
+        pytest_args = ['-v'] if quiet else ['-rA', '-vv']
+        pytest_args.append('--override-ini=console_output_style=count')
+        if marker:
+            pytest_args.extend(['-m', marker])
+        pytest_args.extend(tests if tests else [ROOT_DIR])
 
-        test_targets = " ".join(tests) if tests else ROOT_DIR
-        marker_option = f"-m {marker}" if marker else ""
-
-        pytest_args = f"{pytest_options} {marker_option} {test_targets}".strip()
-
-        coverage_args = f'coverage run -p {coverage_config_file_arg} -m pytest {pytest_args}'
-
-        run_command([sys.executable] + f'-m {coverage_args}'.split(' '), ROOT_DIR)
+        run_command(
+            python_module_command(
+                'coverage', 'run', '-p', coverage_config_file_arg, '-m', 'pytest', *pytest_args
+            ),
+            ROOT_DIR,
+        )
 
     @staticmethod
     def core_tests(tests, quiet=False):
@@ -634,10 +684,13 @@ def run_tests(
         Test.custom_tests(marker, tests, quiet)
 
     # Coverage Combine
-    run_command([sys.executable] + '-m coverage combine'.split(' '), ROOT_DIR)
+    run_command(python_module_command('coverage', 'combine'), ROOT_DIR)
 
     # Coverage
-    run_command([sys.executable] + '-m run report --cli'.split(' '), ROOT_DIR)
+    if marker == 'cli' and not any([unit, integration, core, all_tests]):
+        run_command(python_module_command('run', 'report', '--cli'), ROOT_DIR)
+    else:
+        run_command(python_module_command('run', 'report'), ROOT_DIR)
 
     # Keeping files
     if not keep_files:
@@ -750,6 +803,8 @@ def main():
 
             if cli_arg:
                 Report.cli()
+            else:
+                Report.default()
             if html_arg:
                 Report.html()
             if xml_arg:

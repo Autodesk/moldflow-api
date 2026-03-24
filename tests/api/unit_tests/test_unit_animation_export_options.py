@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 Autodesk, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Test for AnimationExportOptions Wrapper Class of moldflow-api module.
 Test Details:

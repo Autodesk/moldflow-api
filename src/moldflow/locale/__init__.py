@@ -2,5 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """
-Localization package (contains compiled message catalogs)
+Shared localization package (contains message catalogs).
+
+This directory is the canonical, repo-level location for localization files.
+It is used at runtime and during packaging/build steps.
 """

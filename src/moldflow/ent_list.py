@@ -6,6 +6,7 @@ Usage:
     EntList Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_SELECTION_TEXT, cli_input_adapter
 from .helper import check_index, check_type, coerce_optional_dispatch
 from .com_proxy import safe_com, expose_oleobj
 from .predicate import Predicate
@@ -45,6 +46,7 @@ class EntList:
         check_index(index, 0, self.size)
         return EntList(self.ent_list.Entity(index))
 
+    @cli_input_adapter(value_kind=CLI_VALUE_KIND_SELECTION_TEXT, shorthand_supported=True)
     def select_from_string(self, entity_string: str) -> None:
         """
         Converts a string to a list of entities

@@ -22,6 +22,7 @@ Focuses on user-facing messages sent through process_log calls and error handlin
 
 Usage:
   python scripts/check_localization.py [--path PATH] [--locale-path PATH]
+    python scripts/check_localization.py --path src/moldflow_cli
   python scripts/check_localization.py --check-only          # Only check, no fixes
   python scripts/check_localization.py --no-autofix         # Skip adding missing strings
   python scripts/check_localization.py --no-fix-gaps        # Skip fixing translation gaps
@@ -41,6 +42,7 @@ from typing import Dict, List, Tuple
 # Strings that are acceptable to remain identical across locales
 ALLOW_EQUAL_MSGSTR: set[str] = {
     "OK",
+    "Vector",
 }
 
 @dataclass
@@ -221,37 +223,236 @@ class LocalizationChecker:
                     # Create parser for new locale
                     self.po_files[locale_dir.name] = PoFileParser(po_file)
 
-    def _extract_strings_from_calls(self, node: ast.AST) -> List[Tuple[str, int, str]]:
-        """Extract string literals from _() function calls and process_log usage."""
-        strings = []
+    def _called_name(self, node: ast.AST) -> str | None:
+        """Return a simple function name when the call target is a bare identifier."""
+        if isinstance(node, ast.Name):
+            return node.id
+        return None
+
+    def _is_get_text_call(self, node: ast.AST) -> bool:
+        """Return True when an expression is a direct get_text() call."""
+        return isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "get_text"
+
+    def _iter_assigned_names(self, node: ast.AST) -> List[str]:
+        """Return simple variable names assigned by an assignment target."""
+        names: List[str] = []
+        if isinstance(node, ast.Name):
+            names.append(node.id)
+        elif isinstance(node, (ast.Tuple, ast.List)):
+            for element in node.elts:
+                names.extend(self._iter_assigned_names(element))
+        return names
+
+    def _function_param_names(self, node: ast.FunctionDef | ast.AsyncFunctionDef) -> List[str]:
+        """Return function parameter names in declaration order."""
+        names = [arg.arg for arg in node.args.posonlyargs]
+        names.extend(arg.arg for arg in node.args.args)
+        if node.args.vararg is not None:
+            names.append(node.args.vararg.arg)
+        names.extend(arg.arg for arg in node.args.kwonlyargs)
+        if node.args.kwarg is not None:
+            names.append(node.args.kwarg.arg)
+        return names
+
+    def _bind_call_arguments(
+        self,
+        node: ast.FunctionDef | ast.AsyncFunctionDef,
+        call: ast.Call,
+    ) -> Dict[str, ast.AST]:
+        """Best-effort binding of call arguments to function parameter names."""
+        bound: Dict[str, ast.AST] = {}
+        positional_params = [arg.arg for arg in node.args.posonlyargs]
+        positional_params.extend(arg.arg for arg in node.args.args)
+
+        for param_name, arg_value in zip(positional_params, call.args):
+            bound[param_name] = arg_value
+
+        for keyword in call.keywords:
+            if keyword.arg is not None:
+                bound[keyword.arg] = keyword.value
+
+        return bound
+
+    def _expr_is_translation_callable(self, node: ast.AST, callable_names: set[str]) -> bool:
+        """Return True when an expression refers to a known translation callable."""
+        if isinstance(node, ast.Name):
+            return node.id in callable_names
+        return self._is_get_text_call(node)
+
+    def _collect_function_defs(
+        self,
+        node: ast.AST,
+    ) -> Dict[str, ast.FunctionDef | ast.AsyncFunctionDef]:
+        """Return function definitions keyed by simple function name."""
+        function_defs: Dict[str, ast.FunctionDef | ast.AsyncFunctionDef] = {}
+        for child in ast.walk(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                function_defs[child.name] = child
+        return function_defs
+
+    def _collect_translation_names_from_assignments(self, node: ast.AST) -> set[str]:
+        """Return names bound directly to get_text() results."""
+        translation_names: set[str] = {"_"}
+        for child in ast.walk(node):
+            if isinstance(child, ast.Assign) and self._is_get_text_call(child.value):
+                for target in child.targets:
+                    translation_names.update(self._iter_assigned_names(target))
+                continue
+            if isinstance(child, ast.AnnAssign) and child.value is not None and self._is_get_text_call(child.value):
+                translation_names.update(self._iter_assigned_names(child.target))
+        return translation_names
+
+    def _update_translation_params_from_calls(
+        self,
+        node: ast.AST,
+        function_defs: Dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+        translation_names: set[str],
+        wrapper_names: set[str],
+        translation_params: Dict[str, set[str]],
+    ) -> bool:
+        """Propagate translation-callable arguments into callee parameter sets."""
+        changed = False
+        known_translation_callables = translation_names | wrapper_names
 
         for child in ast.walk(node):
-            if isinstance(child, ast.Call):
-                # Check for _() calls
-                if isinstance(child.func, ast.Name) and child.func.id == "_":
-                    if child.args and isinstance(child.args[0], ast.Constant) and isinstance(child.args[0].value, str):
-                        strings.append((child.args[0].value, child.lineno, "_() call"))
+            if not isinstance(child, ast.Call):
+                continue
+            callee_name = self._called_name(child.func)
+            func_def = function_defs.get(callee_name or "")
+            if func_def is None:
+                continue
 
-                # Check for get_text()() calls
-                elif (isinstance(child.func, ast.Call) and 
-                      isinstance(child.func.func, ast.Name) and 
-                      child.func.func.id == "get_text"):
+            bound_args = self._bind_call_arguments(func_def, child)
+            for param_name, arg_value in bound_args.items():
+                if not self._expr_is_translation_callable(arg_value, known_translation_callables):
+                    continue
+                if param_name in translation_params[func_def.name]:
+                    continue
+                translation_params[func_def.name].add(param_name)
+                changed = True
+
+        return changed
+
+    def _update_wrapper_names(
+        self,
+        function_defs: Dict[str, ast.FunctionDef | ast.AsyncFunctionDef],
+        translation_names: set[str],
+        wrapper_names: set[str],
+        translation_params: Dict[str, set[str]],
+    ) -> bool:
+        """Detect wrapper functions that forward translation callables."""
+        changed = False
+        known_translation_callables = translation_names | wrapper_names
+
+        for func_name, func_def in function_defs.items():
+            callable_names = known_translation_callables | translation_params[func_name]
+            param_names = set(self._function_param_names(func_def))
+            for child in ast.walk(func_def):
+                if not isinstance(child, ast.Call):
+                    continue
+                callee_name = self._called_name(child.func)
+                if callee_name not in callable_names:
+                    continue
+                if not child.args or not isinstance(child.args[0], ast.Name):
+                    continue
+                if child.args[0].id not in param_names:
+                    continue
+                if func_name in wrapper_names:
+                    break
+                wrapper_names.add(func_name)
+                changed = True
+                break
+
+        return changed
+
+    def _collect_translation_callables(self, node: ast.AST) -> Tuple[set[str], Dict[str, set[str]]]:
+        """Collect translation helper names and translation-callable parameters."""
+        translation_names = self._collect_translation_names_from_assignments(node)
+        wrapper_names: set[str] = set()
+        function_defs = self._collect_function_defs(node)
+
+        translation_params: Dict[str, set[str]] = {
+            func_name: set() for func_name in function_defs.keys()
+        }
+
+        changed = True
+        while changed:
+            params_changed = self._update_translation_params_from_calls(
+                node,
+                function_defs,
+                translation_names,
+                wrapper_names,
+                translation_params,
+            )
+            wrappers_changed = self._update_wrapper_names(
+                function_defs,
+                translation_names,
+                wrapper_names,
+                translation_params,
+            )
+            changed = params_changed or wrappers_changed
+
+        return translation_names | wrapper_names, translation_params
+
+    def _is_localization_call(self, node: ast.Call, callable_names: set[str]) -> bool:
+        """Return True when a call node should be treated as a translation lookup."""
+        callee_name = self._called_name(node.func)
+        if callee_name in callable_names:
+            return True
+        return (
+            isinstance(node.func, ast.Call)
+            and isinstance(node.func.func, ast.Name)
+            and node.func.func.id == "get_text"
+        )
+
+    def _extract_strings_from_calls(self, node: ast.AST) -> List[Tuple[str, int, str]]:
+        """Extract string literals from translation calls, including get_text aliases."""
+        strings: List[Tuple[str, int, str]] = []
+        translation_callables, translation_params = self._collect_translation_callables(node)
+
+        class _CallVisitor(ast.NodeVisitor):
+            def __init__(self, checker: LocalizationChecker):
+                self.checker = checker
+                self.function_stack: List[str] = []
+
+            def visit_FunctionDef(self, child: ast.FunctionDef) -> None:
+                self.function_stack.append(child.name)
+                self.generic_visit(child)
+                self.function_stack.pop()
+
+            def visit_AsyncFunctionDef(self, child: ast.AsyncFunctionDef) -> None:
+                self.function_stack.append(child.name)
+                self.generic_visit(child)
+                self.function_stack.pop()
+
+            def visit_Call(self, child: ast.Call) -> None:
+                active_callables = set(translation_callables)
+                if self.function_stack:
+                    active_callables.update(translation_params.get(self.function_stack[-1], set()))
+
+                if self.checker._is_localization_call(child, active_callables):
                     if child.args and isinstance(child.args[0], ast.Constant) and isinstance(child.args[0].value, str):
-                        strings.append((child.args[0].value, child.lineno, "get_text()() call"))
+                        callee_name = self.checker._called_name(child.func)
+                        if callee_name is None:
+                            context = "get_text()() call"
+                        else:
+                            context = f"{callee_name}() call"
+                        strings.append((child.args[0].value, child.lineno, context))
 
                 # Check for process_log calls to see which enum messages are actually used
                 elif isinstance(child.func, ast.Name) and child.func.id == "process_log":
                     if len(child.args) >= 2:
-                        # Second argument should be LogMessage enum
                         message_arg = child.args[1]
                         if isinstance(message_arg, ast.Attribute):
-                            # Look for LogMessage.SOME_MESSAGE pattern
-                            if (isinstance(message_arg.value, ast.Name) and 
-                                message_arg.value.id == "LogMessage"):
-                                # This indicates LogMessage.SOME_MESSAGE is being used
-                                # We'll catch the actual string value from the enum definition
+                            if (
+                                isinstance(message_arg.value, ast.Name)
+                                and message_arg.value.id == "LogMessage"
+                            ):
                                 pass
 
+                self.generic_visit(child)
+
+        _CallVisitor(self).visit(node)
         return strings
 
     def _extract_enum_strings(self, node: ast.AST) -> List[Tuple[str, int, str]]:
@@ -547,13 +748,36 @@ class LocalizationChecker:
         return removed_count
 
 
+def _default_source_paths() -> List[Path]:
+    """Return the default source roots to scan when no path is provided."""
+    default_paths = [Path("src/moldflow"), Path("src/moldflow_cli")]
+    existing_paths = [path for path in default_paths if path.exists()]
+    return existing_paths or default_paths
+
+
+def _collect_python_files(src_roots: List[Path]) -> List[Path]:
+    """Collect Python files from one or more source roots."""
+    py_files: List[Path] = []
+    for src_root in src_roots:
+        if src_root.is_file():
+            if src_root.suffix != ".py":
+                raise ValueError(f"File is not a Python file: {src_root}")
+            py_files.append(src_root)
+            continue
+        py_files.extend(p for p in src_root.rglob("*.py") if p.is_file())
+    return py_files
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--path",
         type=Path,
-        default=Path("src/moldflow"),
-        help="Root directory to scan for Python files containing message enums and localization calls",
+        action="append",
+        help=(
+            "Root directory or Python file to scan for message enums and localization calls. "
+            "Repeat to scan multiple roots. Defaults to src/moldflow and src/moldflow_cli."
+        ),
     )
     parser.add_argument(
         "--locale-path", 
@@ -588,7 +812,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    src_root: Path = args.path
+    src_roots: List[Path] = args.path or _default_source_paths()
     locale_root: Path = args.locale_path
 
     # Determine which operations to run (all enabled by default unless explicitly disabled)
@@ -597,15 +821,18 @@ def main() -> int:
     run_cleanup_orphaned = not args.check_only and not args.no_cleanup_orphaned
 
     # Only require source path if not just checking translation gaps
-    if not args.translation_gaps_only and not src_root.exists():
-        print(f"Source path not found: {src_root}", file=sys.stderr)
-        return 2
+    if not args.translation_gaps_only:
+        missing_paths = [src_root for src_root in src_roots if not src_root.exists()]
+        if missing_paths:
+            for src_root in missing_paths:
+                print(f"Source path not found: {src_root}", file=sys.stderr)
+            return 2
 
     if not locale_root.exists():
         print(f"Locale path not found: {locale_root}", file=sys.stderr)
         return 2
 
-    checker = LocalizationChecker(src_root, locale_root)
+    checker = LocalizationChecker(src_roots[0], locale_root)
 
     # Show what operations will be performed
     if not args.check_only:
@@ -628,15 +855,11 @@ def main() -> int:
 
     # Skip source code analysis if only checking translation gaps
     if not args.translation_gaps_only:
-        # Handle single file vs directory
-        if src_root.is_file():
-            if src_root.suffix == ".py":
-                py_files = [src_root]
-            else:
-                print(f"File is not a Python file: {src_root}", file=sys.stderr)
-                return 2
-        else:
-            py_files = [p for p in src_root.rglob("*.py") if p.is_file()]
+        try:
+            py_files = _collect_python_files(src_roots)
+        except ValueError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
 
         for py_file in py_files:
             violations, fixes = checker.check_file(py_file)

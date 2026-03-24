@@ -3,8 +3,155 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-TW\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n您是指步驟 '{step_name}' 嗎？"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n對於多步驟目標的 JSON 輸入，請依步驟名稱分組參數，例如 {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\n對於 JSON 輸入，此步驟鍵必須對應到參數名稱的物件，例如 {example}"
+
+msgid " Did you mean '{parameter}'?"
+msgstr " 您是指 '{parameter}' 嗎？"
+
+msgid " Known parameters: {known_params}."
+msgstr " 已知參數：{known_params}。"
+
+msgid "'{type_name}' no longer exposes adapter method '{method_name}'."
+msgstr "'{type_name}' 不再公開適配器方法 '{method_name}'。"
+
+msgid "--yaml requested but PyYAML is not installed: {error}"
+msgstr "已要求使用 --yaml，但尚未安裝 PyYAML：{error}"
+
+msgid "--yaml requested but PyYAML is not installed: {exc}"
+msgstr "請求了 --yaml，但未安裝 PyYAML：{exc}"
+
+msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
+msgstr "僅供進階回退使用。當無法取得註解內容、巢狀載荷確實為泛型，或多個包裝器家族會造成歧義時，請使用此帶標記的結構。"
+
+msgid "Argument '{argument}' must specify a parameter name after the step (e.g., {step_name}.param=...).{extra}"
+msgstr "參數 '{argument}' 必須在步驟後指定參數名稱（例如 {step_name}.param=...）。{extra}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}"
+msgstr "參數 '{argument}' 必須以下列之一開頭：{valid_steps}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "參數 '{argument}' 必須以下列之一開頭：{valid_steps}.{extra}"
+
+msgid "Argument '{step_name}' must start with one of: {names}"
+msgstr "參數 '{step_name}' 必須以下列之一開頭：{names}"
+
+msgid "Argument error calling {target}{signature}: {error}"
+msgstr "呼叫 {target}{signature} 時發生引數錯誤：{error}"
+
+msgid "Arguments as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value. Duplicate or conflicting paths are rejected (for example param=1 with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "參數可使用 key=value 或 param.attr=value。對於鏈式目標，請以前置方法名稱指定參數，例如 find_plot_by_name.plot_name=\"My Plot\"。巢狀路由使用 step.param.attr=value。重複或衝突的路徑會被拒絕（例如 param=1 與 param.attr=2），且具有僅限位置參數的方法不支援具名 CLI 路由。"
+
+msgid "Arguments for step '{step_name}' must be a JSON object of parameters."
+msgstr "步驟 '{step_name}' 的參數必須是參數的 JSON 物件。"
+
+msgid "Array"
+msgstr "陣列"
+
+msgid "Attribute '{matched_name}' on class '{class_name}' returns a non-wrapper value{continuation}"
+msgstr "類別 '{class_name}' 上的屬性 '{matched_name}' 會傳回非包裝器值{continuation}"
+
+msgid "Attribute '{matched_name}' on object '{type_name}' returns a non-wrapper value{continuation}"
+msgstr "物件 '{type_name}' 上的屬性 '{matched_name}' 會傳回非包裝器值{continuation}"
+
+msgid "Batch file must contain a JSON array of invoke call objects."
+msgstr "批次檔必須包含由 invoke 呼叫物件組成的 JSON 陣列。"
+
+msgid "Batch item field 'args' must be a list of strings."
+msgstr "批次項目的 'args' 欄位必須是字串清單。"
+
+msgid "Batch item field 'params_json_file' must be a string path."
+msgstr "批次項目的 'params_json_file' 欄位必須是字串路徑。"
+
+msgid "Batch item must be a JSON object."
+msgstr "批次項目必須是 JSON 物件。"
+
+msgid "Batch item requires string field 'target'."
+msgstr "批次項目必須包含字串欄位 'target'。"
+
+msgid "Batch item {index} error: {error}"
+msgstr "批次項目 {index} 錯誤：{error}"
+
+msgid "Batch results"
+msgstr "批次結果"
+
+msgid "Batch summary: {succeeded}/{total} succeeded, {failed} failed."
+msgstr "批次摘要：{succeeded}/{total} 成功，{failed} 失敗。"
+
+msgid "CLI argument: {value}"
+msgstr "CLI 引數：{value}"
+
 msgid "Cancel"
 msgstr "取消"
+
+msgid "Cannot assign property '{property_name}' while resolving target '{target}' because the owner object resolved to None."
+msgstr "解析目標 '{target}' 時無法指定屬性 '{property_name}'，因為擁有者物件解析為 None。"
+
+msgid "Cannot build instance for type 'EntList'. No create_entity_list provider found."
+msgstr "無法為類型 'EntList' 建立執行個體。找不到 create_entity_list 提供者。"
+
+msgid "Cannot build instance for type '{type_name}'. Not a known Synergy property or factory."
+msgstr "無法為類型 '{type_name}' 建立執行個體。這不是已知的 Synergy 屬性或工廠。"
+
+msgid "Cannot configure field '{key_name}' on '{type_name}': {error}"
+msgstr "無法設定 '{type_name}' 上的欄位 '{key_name}'：{error}"
+
+msgid "Cannot invoke method '{segment}' for target '{target}' because '{owner}' is unavailable in the current session (it resolved to None). This target only works when that object exists."
+msgstr "無法為目標 '{target}' 呼叫方法 '{segment}'，因為 '{owner}' 在目前工作階段中不可用（其解析結果為 None）。此目標僅在該物件存在時可用。"
+
+msgid "Cannot read JSON file '{file}': {exc}"
+msgstr "無法讀取 JSON 檔案 '{file}'：{exc}"
+
+msgid "Cannot read JSON file '{path}': {error}"
+msgstr "無法讀取 JSON 檔案 '{path}'：{error}"
+
+msgid "Cannot read batch file '{path}': {error}"
+msgstr "無法讀取批次檔 '{path}'：{error}"
+
+msgid "Cannot resolve '{first}' on moldflow for introspection"
+msgstr "無法在 moldflow 上解析 '{first}' 以進行內省"
+
+msgid "Cannot resolve attribute '{segment}' on '{class_name}' when executing target '{target}': {error}"
+msgstr "執行目標 '{target}' 時，無法在 '{class_name}' 上解析屬性 '{segment}'：{error}"
+
+msgid "Cannot resolve attribute '{segment}' without an object instance when resolving target '{target}'"
+msgstr "解析目標 '{target}' 時，若沒有物件執行個體，則無法解析屬性 '{segment}'"
+
+msgid "Cannot resolve segment '{segment}' in target '{target}' without a class context. Use a Synergy-rooted target such as 'synergy.some_method'."
+msgstr "無法在沒有類別內容的情況下解析目標 '{target}' 中的區段 '{segment}'。請使用以 Synergy 為根的目標，例如 'synergy.some_method'。"
+
+msgid "Cannot set nested argument '{path}': {error}"
+msgstr "無法設定巢狀引數 '{path}'：{error}"
+
+msgid "Cannot set nested attributes for '{param_name}' without signature info on '{step_name}'."
+msgstr "若 '{step_name}' 沒有簽章資訊，則無法為 '{param_name}' 設定巢狀屬性。"
+
+msgid "Cannot set property '{property_name}' on target '{target}': {error}"
+msgstr "無法在目標 '{target}' 上設定屬性 '{property_name}'：{error}"
+
+msgid "Cannot write JSON file '{path}': {error}"
+msgstr "無法寫入 JSON 檔案 '{path}'：{error}"
+
+msgid "Canonical JSON field is derived from the reflected wrapper method signature for {method_name}()."
+msgstr "正規 JSON 欄位是由 {method_name}() 的反映包裝器方法簽章推導而來。"
+
+msgid "Canonical list field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規清單欄位是由反映的包裝器方法 {method_name}() 推導而來。"
+
+msgid "Canonical triplet field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規三元組欄位是由反映的包裝器方法 {method_name}() 推導而來。"
+
+msgid "Canonical vector-array field is derived from the reflected wrapper method {method_name}()."
+msgstr "正規向量陣列欄位是由反映的包裝器方法 {method_name}() 推導而來。"
+
+msgid "Chained targets with repeated method names are ambiguous for argument routing: {duplicate_names}. Please use an equivalent target path where each invoked step name is unique."
+msgstr "對於引數路由而言，包含重複方法名稱的鏈式目標具有歧義：{duplicate_names}。請改用等效的目標路徑，讓每個呼叫步驟的名稱都唯一。"
 
 msgid "Checking file extension {file_name}"
 msgstr "正在檢查檔案副檔名 {file_name}"
@@ -42,14 +189,140 @@ msgstr "正在檢查 {value} 是否為正"
 msgid "Checking {value} is {name}"
 msgstr "正在檢查 {value} 是否為 {name}"
 
+msgid "Class '{class_name}' has no attribute '{attr_name}'"
+msgstr "類別 '{class_name}' 沒有屬性 '{attr_name}'"
+
+msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
+msgstr "不允許衝突的引數路徑 '{left_path}' 與 '{right_path}'。"
+
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "無法使用執行個體 ID {value} 進行初始化"
+
+msgid "Detail"
+msgstr "詳細資料"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "直接參數指定仍是非 JSON 形式的首選。"
+
+msgid "Do not pass TARGET when --batch-file is used."
+msgstr "使用 --batch-file 時，不要傳入 TARGET。"
+
+msgid "Do not pass positional args/JSON input with --batch-file."
+msgstr "使用 --batch-file 時，不要傳入位置引數或 JSON 輸入。"
+
+msgid "Dotted path to a method or function, optionally chained, for example 'synergy.new_project' or 'synergy.plot_manager.find_plot_by_name'."
+msgstr "方法或函式的點號路徑，可選擇鏈接，例如 'synergy.new_project' 或 'synergy.plot_manager.find_plot_by_name'。"
+
+msgid "Dotted path, e.g., synergy.new_project"
+msgstr "點號路徑，例如 synergy.new_project"
+
+msgid "Dry run for {target}"
+msgstr "{target} 的乾跑"
+
+msgid "Duplicate argument path '{path}' is not allowed."
+msgstr "不允許重複的引數路徑 '{path}'。"
+
+msgid "Emit a JSON schema-like representation of target parameters."
+msgstr "輸出目標參數的類似 JSON 結構描述表示。"
+
+msgid "Emit line-delimited JSON trace events to stderr for target resolution and runtime invoke binding."
+msgstr "將以逐行 JSON 追蹤事件輸出到 stderr，用於目標解析與執行階段 invoke 繫結。"
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "輸出供指令碼或代理使用的結構化 JSON。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "輸出供指令碼或代理使用的結構化 YAML（需要 PyYAML）。"
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "輸出供指令碼或代理使用的結構化 JSON。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "輸出供指令碼或代理使用的結構化 YAML（需要 PyYAML）。"
+
+msgid "Emit the result as JSON to stdout (useful for automation/LLMs)."
+msgstr "將結果以 JSON 輸出到 stdout（適用於自動化/LLM）。"
+
+msgid "Empty target"
+msgstr "目標為空"
+
+msgid "Empty type tag is not valid for '{primary_expected}'."
+msgstr "空的類型標記對 '{primary_expected}' 無效。"
+
+msgid "Example object shape: {shape}."
+msgstr "範例物件形狀：{shape}。"
 
 msgid "Executing {name}"
 msgstr "正在執行 {name}"
 
+msgid "Explicit field form: {value}"
+msgstr "明確欄位形式：{value}"
+
 msgid "Failed to initialize Synergy: Synergy not found"
 msgstr "初始化 Synergy 失敗：找不到 Synergy"
+
+msgid "Failed to render JSON output for {context}: {error}"
+msgstr "無法為 {context} 產生 JSON 輸出：{error}"
+
+msgid "Failed to render JSON output for {context}: {exc}"
+msgstr "無法為 {context} 產生 JSON 輸出：{exc}"
+
+msgid "Failed to render YAML output for {context}: {error}"
+msgstr "無法為 {context} 產生 YAML 輸出：{error}"
+
+msgid "Failed to render YAML output for {context}: {exc}"
+msgstr "無法為 {context} 產生 YAML 輸出：{exc}"
+
+msgid "Field '{key_name}' is not valid for '{type_name}'."
+msgstr "欄位 '{key_name}' 對 '{type_name}' 無效。"
+
+msgid "Field '{key}' for '{type_name}' must be a 3-item numeric sequence like [0, 0, 1]."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是像 [0, 0, 1] 這樣的 3 項數值序列。"
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是三元組的 JSON 陣列，或像 '0,0,0;1,0,0' 這樣以分號分隔的清單。"
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array or a comma-separated list."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是 JSON 陣列或逗號分隔清單。"
+
+msgid "Field '{key}' for '{type_name}' must be a comma-separated numeric triplet like '0,0,1'."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是像 '0,0,1' 這樣以逗號分隔的數值三元組。"
+
+msgid "Field '{key}' for '{type_name}' must be a list of numeric triplets."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是數值三元組清單。"
+
+msgid "Field '{key}' for '{type_name}' must be a string selection expression. Expected field: {preferred_field}."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是字串選取表示式。預期欄位：{preferred_field}。"
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是有效的三元組 JSON 陣列，或像 '0,0,0;1,0,0' 這樣以分號分隔的清單。"
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array or a comma-separated list."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須是有效的 JSON 陣列或逗號分隔清單。"
+
+msgid "Field '{key}' for '{type_name}' must contain integer values."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須包含整數值。"
+
+msgid "Field '{key}' for '{type_name}' must contain numeric values."
+msgstr "欄位 '{key}' 對 '{type_name}' 必須包含數值。"
+
+msgid "Fields '{previous_key}' and '{key}' both map to the same input for '{type_name}'. Provide only one of: {preferred_field} or direct parameter shorthand."
+msgstr "欄位 '{previous_key}' 與 '{key}' 都對應到 '{type_name}' 的相同輸入。請只提供以下其一：{preferred_field} 或直接參數簡寫。"
+
+msgid "Filter by substring or wildcard pattern (* and ?)."
+msgstr "依子字串或萬用字元模式（* 與 ?）篩選。"
+
+msgid "Filter by substring or wildcard pattern (* and ?). Repeat to keep targets matching any filter."
+msgstr "依子字串或萬用字元模式（* 和 ?）篩選。重複此選項可保留符合任一篩選條件的目標。"
+
+msgid "Filtered matches:"
+msgstr "篩選結果："
+
+msgid "For JSON input, group parameters by step name. Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "對於 JSON 輸入，請依步驟名稱分組參數。參數 '{argument}' 必須以下列之一開頭：{valid_steps}.{extra}"
+
+msgid "For multi-step targets, group params-json fields by step name."
+msgstr "對於多步驟目標，請依步驟名稱分組 params-json 欄位。"
 
 msgid "Getting {name}"
 msgstr "正在取得 {name}"
@@ -57,8 +330,20 @@ msgstr "正在取得 {name}"
 msgid "Getting {name} at index {value}"
 msgstr "正在於索引 {value} 取得 {name}"
 
+msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
+msgstr "如果簡寫輸入有歧義，請改用 --params-json。{guidance}"
+
+msgid "In non-JSON mode, prefer direct shorthand like '{preferred_non_json}'."
+msgstr "在非 JSON 模式下，請優先使用像 '{preferred_non_json}' 這樣的直接簡寫。"
+
+msgid "Index"
+msgstr "索引"
+
 msgid "Initializing {name}"
 msgstr "正在初始化 {name}"
+
+msgid "Input hints:"
+msgstr "輸入提示："
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "無效的屬性：不支援 {attribute}"
@@ -69,17 +354,182 @@ msgstr "無效的檔案類型：{file_name}，必須為 {extensions}"
 msgid "Invalid Index: out of range"
 msgstr "無效的索引：超出範圍"
 
+msgid "Invalid JSON payload for parameters: {error}"
+msgstr "參數的 JSON 載荷無效：{error}"
+
+msgid "Invalid JSON payload for parameters: {exc}"
+msgstr "參數的 JSON 載荷無效：{exc}"
+
+msgid "Invalid JSON value for parameter '{param_name}': {error}"
+msgstr "參數 '{param_name}' 的 JSON 值無效：{error}"
+
 msgid "Invalid Type: must be {expected_types}, not {variable_type}"
 msgstr "無效的型別：必須為 {expected_types}，而非 {variable_type}"
 
 msgid "Invalid Value: {reason}"
 msgstr "無效的值：{reason}"
 
+msgid "Invalid argument '{item}'. Expected key=value or param.attr=value."
+msgstr "無效的參數 '{item}'。預期為 key=value 或 param.attr=value。"
+
+msgid "Invalid argument for step '{step_name}': missing parameter name."
+msgstr "步驟 '{step_name}' 的參數無效：缺少參數名稱。"
+
+msgid "Invalid nested argument path '{path}': attribute '{attr}' does not exist on '{obj_type}'."
+msgstr "無效的巢狀引數路徑 '{path}'：'{obj_type}' 上不存在屬性 '{attr}'。"
+
+msgid "Invalid nested argument path '{path}': cannot nest into non-object '{obj_type}'."
+msgstr "無效的巢狀引數路徑 '{path}'：無法巢狀進入非物件 '{obj_type}'。"
+
+msgid "Invalid nested argument path '{path}': cannot set '{final_attr}' on non-object '{obj_type}'."
+msgstr "無效的巢狀引數路徑 '{path}'：無法在非物件 '{obj_type}' 上設定 '{final_attr}'。"
+
+msgid "Invalid value for parameter '{param_name}': {error}"
+msgstr "參數 '{param_name}' 的值無效：{error}"
+
+msgid "Invalid {field_name} '{path_text}': empty path segment is not allowed."
+msgstr "無效的 {field_name} '{path_text}'：不允許空的路徑段。"
+
+msgid "Invalid {field_name} '{path_text}': segment '{segment}' must be a valid identifier."
+msgstr "無效的 {field_name} '{path_text}'：區段 '{segment}' 必須是有效的識別字。"
+
+msgid "Invalid {field_name}: value cannot be empty."
+msgstr "無效的 {field_name}：值不能為空。"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "使用具名參數或 JSON 輸入執行 Moldflow 目標。未加前綴的目標會視為 synergy.<target>。"
+
+msgid "JSON example:"
+msgstr "JSON 範例："
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
+msgstr "包含參數對映的 JSON 物件（會覆蓋位置引數）。不允許最上層為陣列或純量。"
+
+msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
+msgstr "JSON 參數必須是命名參數的 JSON 物件。範例：--params-json '{\"param\": 1}' 或對於鏈式目標：--params-json '{\"step\": {\"param\": 1}}'"
+
+msgid "JSON type tag '{type_tag}' does not match expected wrapper '{primary_expected}'."
+msgstr "JSON 類型標記 '{type_tag}' 與預期的包裝器 '{primary_expected}' 不符。"
+
+msgid "JSON value:"
+msgstr "JSON 值："
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "找出可呼叫的目標，以及每個目標下一步要執行的命令。"
+
+msgid "List result:"
+msgstr "清單結果："
+
 msgid "Logger was not setup"
 msgstr "記錄器未設定"
 
+msgid "Missing required parameter '{parameter}' for {target}{signature}"
+msgstr "缺少 {target}{signature} 所需的必要參數 '{parameter}'"
+
+msgid "Moldflow command-line interface.\n\nStart with 'list' to discover targets, 'describe <target>' to inspect usage, then 'invoke <target> ...' to run it."
+msgstr "Moldflow 命令列介面。\n\n先用 'list' 找出目標，再用 'describe <target>' 查看用法，然後執行 'invoke <target> ...'。"
+
+msgid "Moldflow invokable targets"
+msgstr "Moldflow 可呼叫目標"
+
+msgid "Nested argument '{path}' is not supported for **kwargs on step '{step_name}'. Use a single key (e.g., {example}=...)."
+msgstr "步驟 '{step_name}' 的 **kwargs 不支援巢狀引數 '{path}'。請使用單一鍵（例如 {example}=...）。"
+
+msgid "No invokable targets matched these filters."
+msgstr "沒有可呼叫目標符合這些篩選條件。"
+
+msgid "No invokable targets matched this filter."
+msgstr "沒有可呼叫目標符合此篩選條件。"
+
+msgid "Non-public argument path '{key}' is not allowed."
+msgstr "不允許使用非公開的參數路徑 '{key}'。"
+
+msgid "Non-public argument path '{left}' is not allowed."
+msgstr "不允許使用非公開的參數路徑 '{left}'。"
+
+msgid "Non-public argument path '{path}' is not allowed."
+msgstr "不允許使用非公開的引數路徑 '{path}'。"
+
+msgid "Non-public argument path '{step_name}' is not allowed."
+msgstr "不允許使用非公開的參數路徑 '{step_name}'。"
+
+msgid "Non-public argument path '{step}.{key}' is not allowed."
+msgstr "不允許使用非公開的參數路徑 '{step}.{key}'。"
+
+msgid "Non-public field '{key_name}' is not allowed when constructing '{type_name}' from JSON."
+msgstr "從 JSON 建構 '{type_name}' 時，不允許使用非公開欄位 '{key_name}'。"
+
+msgid "Non-public segment '{segment}' is not allowed in target '{target}'."
+msgstr "目標 '{target}' 中不允許非公開區段 '{segment}'。"
+
+msgid "Non-public segment '{seg}' is not allowed in target '{target}'."
+msgstr "目標 '{target}' 中不允許出現非公開段 '{seg}'。"
+
 msgid "OK"
 msgstr "確定"
+
+msgid "Object"
+msgstr "物件"
+
+msgid "Object '{type_name}' has no attribute '{attr_name}'"
+msgstr "物件 '{type_name}' 沒有屬性 '{attr_name}'"
+
+msgid "One or more dotted targets, for example synergy.new_project."
+msgstr "一個或多個點分隔目標，例如 synergy.new_project。"
+
+msgid "Only one of --json or --yaml may be specified."
+msgstr "只能指定 --json 或 --yaml 其一。"
+
+msgid "Only one of --json, --yaml, or --schema may be specified."
+msgstr "只能指定 --json、--yaml 或 --schema 其一。"
+
+msgid "Only one of --params-json or --params-json-file may be specified."
+msgstr "只能指定 --params-json 或 --params-json-file 其一。"
+
+msgid "Parameter '{param_name}' contains a null byte which is not allowed."
+msgstr "參數 '{param_name}' 包含不允許的空位元組。"
+
+msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
+msgstr "參數 '{param_name}' 包含控制字元（換行/製表/回車）；請提供單行值或依需要引用/轉義。"
+
+msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
+msgstr "解析/驗證/建構 kwargs，並在不執行 invoke 步驟的情況下輸出呼叫計畫。"
+
+msgid "Path to a JSON file containing an array of invoke calls for batch execution."
+msgstr "包含供批次執行之 invoke 呼叫陣列的 JSON 檔案路徑。"
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
+msgstr "包含參數對映的 JSON 檔案路徑（會覆蓋位置引數）。最上層載荷必須是物件。"
+
+msgid "Planned steps:"
+msgstr "計畫步驟："
+
+msgid "Prefer chaining invoke targets so this parameter is produced by a previous step, instead of constructing it manually in JSON."
+msgstr "建議串接 invoke 目標，讓此參數由前一步產生，而不是在 JSON 中手動建構。"
+
+msgid "Print the installed moldflow package version."
+msgstr "列印已安裝的 moldflow 套件版本。"
+
+msgid "Property assignment JSON must be an object with a single 'value' field."
+msgstr "屬性指定的 JSON 必須是僅包含單一 'value' 欄位的物件。"
+
+msgid "Property assignment requires exactly one 'value' argument (e.g., value=... or --params-json '{\"value\": ...}')."
+msgstr "屬性指定必須且只能有一個 'value' 引數（例如 value=... 或 --params-json '{\"value\": ...}'）。"
+
+msgid "Property {name} (id={id}, type={prop_type})"
+msgstr "屬性 {name}（id={id}，type={prop_type}）"
+
+msgid "Read current value:"
+msgstr "讀取目前值："
+
+msgid "Resolved assignment:"
+msgstr "已解析的指定："
+
+msgid "Resolved kwargs:"
+msgstr "已解析的 kwargs："
+
+msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
+msgstr "已解析物件在執行目標 '{target}' 時沒有可呼叫屬性 '{segment}'"
 
 msgid "Save Error"
 msgstr "儲存錯誤"
@@ -90,14 +540,134 @@ msgstr "儲存錯誤：無法將 {saving} 儲存至 {file_name}"
 msgid "Save Error: Failed to save {saving} to {file_name}"
 msgstr "儲存錯誤：將 {saving} 儲存到 {file_name} 失敗"
 
+msgid "Segment '{segment}' does not resolve as an attribute on class '{class_name}' when resolving target '{target}'"
+msgstr "解析目標 '{target}' 時，區段 '{segment}' 無法解析為類別 '{class_name}' 上的屬性"
+
+msgid "Segment '{segment}' is not a callable method on class '{class_name}' when resolving target '{target}'"
+msgstr "解析目標 '{target}' 時，區段 '{segment}' 不是類別 '{class_name}' 上可呼叫的方法"
+
+msgid "Selection"
+msgstr "選取"
+
+msgid "Set it with:"
+msgstr "可用下列方式設定："
+
 msgid "Setting {name} to {value}"
 msgstr "正在將 {name} 設定為 {value}"
+
+msgid "Shorter JSON example:"
+msgstr "較短的 JSON 範例："
+
+msgid "Shorter form:"
+msgstr "較短形式："
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "檢視目標的簽章、文件、範例，以及結構化的 invoke 範本。"
+
+msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
+msgstr "正在顯示 {count} 筆篩選結果的精簡表格。請縮小篩選條件，或使用 --json 取得正規目標字串。"
+
+msgid "Status"
+msgstr "狀態"
+
+msgid "Step '{step_name}' in target '{target}' has positional-only parameters ({parameters}), which are not supported by CLI named-argument routing. Use the Python API for this target."
+msgstr "目標 '{target}' 中的步驟 '{step_name}' 具有僅限位置參數 ({parameters})，CLI 具名引數路由不支援此類參數。請改用此目標的 Python API。"
 
 msgid "Submit"
 msgstr "確定"
 
+msgid "TARGET is required unless --batch-file is used."
+msgstr "除非使用 --batch-file，否則必須提供 TARGET。"
+
+msgid "Target"
+msgstr "目標"
+
+msgid "Target '{target}' is hidden from the CLI because '{hidden_path}' only creates a transient {wrapper_type} wrapper. The CLI constructs these helper objects internally when needed, so they are not exposed as direct CLI targets."
+msgstr "目標 '{target}' 已從 CLI 隱藏，因為 '{hidden_path}' 只會建立暫時性的 {wrapper_type} 包裝器。CLI 會在需要時於內部建立這些輔助物件，因此不會將它們公開為直接 CLI 目標。"
+
+msgid "Target '{target}' is hidden from the CLI by library metadata on '{hidden_path}'."
+msgstr "目標 '{target}' 因 '{hidden_path}' 上的程式庫中繼資料而從 CLI 隱藏。"
+
+msgid "Target '{target}' resolves to a property/attribute and does not accept arguments."
+msgstr "目標 '{target}' 會解析為屬性/特性，不接受引數。"
+
+msgid "Target '{target}' resolves to a {class_name} wrapper property. Continue to one of its members, for example 'describe {target}.<member>'."
+msgstr "目標 '{target}' 會解析為 {class_name} 包裝器屬性。請繼續使用其成員之一，例如 'describe {target}.<member>'。"
+
+msgid "Target '{target}' resolves to property '{property_name}' (getter) and does not accept arguments."
+msgstr "目標 '{target}' 會解析為屬性 '{property_name}'（getter），不接受引數。"
+
+msgid "Target '{target}' resolves to write-only property '{property_name}' and cannot be read via invoke."
+msgstr "目標 '{target}' 會解析為唯寫屬性 '{property_name}'，無法透過 invoke 讀取。"
+
+msgid "Target must include a class or function name"
+msgstr "目標必須包含類別或函式名稱"
+
+msgid "Target must include at least one segment"
+msgstr "目標必須包含至少一個段"
+
+msgid "Target must start with 'synergy' (or 'moldflow.synergy'). All invocations are rooted on the Synergy COM object."
+msgstr "目標必須以 'synergy'（或 'moldflow.synergy'）開頭。所有呼叫皆以 Synergy COM 物件為根。"
+
+msgid "Target must start with 'synergy' after the optional 'moldflow.' prefix. Bare targets such as 'open_project' are accepted and are interpreted as 'synergy.open_project'."
+msgstr "在可選的 'moldflow.' 前綴之後，目標必須以 'synergy' 開頭。可接受像 'open_project' 這樣的裸目標，並會將其解讀為 'synergy.open_project'。"
+
+msgid "Targets are shown without the leading 'synergy.' prefix. Describe and invoke accept either form."
+msgstr "顯示目標時不包含前置的 'synergy.' 前綴。describe 與 invoke 兩種形式都可接受。"
+
 msgid "Test String"
 msgstr "測試字串"
+
+msgid "The Moldflow CLI requires optional dependencies. Install them with: pip install 'moldflow[cli]'"
+msgstr "Moldflow CLI 需要選用相依套件。請使用下列指令安裝：pip install 'moldflow[cli]'"
+
+msgid "The target returned False, which indicates a business-level failure."
+msgstr "目標回傳 False，這表示業務層級失敗。"
+
+msgid "This dry run validates a property assignment."
+msgstr "此乾跑會驗證屬性指定。"
+
+msgid "This parameter can be null to indicate no value."
+msgstr "此參數可為 null，以表示沒有值。"
+
+msgid "This property is read-only and takes no arguments."
+msgstr "此屬性為唯讀，不接受任何引數。"
+
+msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
+msgstr "此屬性會回傳 {class_name} 包裝器。請繼續使用 describe {target}.<member> 或 invoke {target}.<method>。"
+
+msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
+msgstr "將 False 回傳值視為 CLI 失敗（exit 1）。此行為預設啟用，以利自動化。"
+
+msgid "Try this:"
+msgstr "請試試："
+
+msgid "Type"
+msgstr "類型"
+
+msgid "Unknown batch item field(s): {fields}."
+msgstr "未知的批次項目欄位：{fields}。"
+
+msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
+msgstr "在 {target}{signature} 中發現未知參數 '{parameter}'。{extra}"
+
+msgid "Use JSON field '{preferred_field}' for '{param_name}'."
+msgstr "請為 '{param_name}' 使用 JSON 欄位 '{preferred_field}'。"
+
+msgid "Use JSON field '{preferred_field}'."
+msgstr "請使用 JSON 欄位 '{preferred_field}'。"
+
+msgid "Use a comma-separated list for quick CLI input, or a JSON array string when values contain commas."
+msgstr "若要快速輸入 CLI，請使用逗號分隔清單；若值本身包含逗號，請使用 JSON 陣列字串。"
+
+msgid "Use a comma-separated triplet for vector shorthand."
+msgstr "向量簡寫請使用逗號分隔的三元組。"
+
+msgid "Use describe <target> to inspect parameters, examples, and property behavior before invoking."
+msgstr "在呼叫前，請使用 describe <target> 檢查參數、範例與屬性行為。"
+
+msgid "Use semicolon-separated triplets for quick CLI input. Quote the value in shells that treat semicolons specially."
+msgstr "若要快速輸入 CLI，請使用分號分隔的三元組。在會特別處理分號的 shell 中，請為該值加上引號。"
 
 msgid "Using prompts will use pop-up import options and will always show logs"
 msgstr "使用提示將使用快顯匯入選項，並且一律顯示記錄"
@@ -114,11 +684,26 @@ msgstr "有效輸入"
 msgid "Valid Input Type"
 msgstr "有效的輸入型別"
 
+msgid "Vector"
+msgstr "向量"
+
+msgid "When JSON input is provided via --params-json or --params-json-file, no positional key=value args may be given."
+msgstr "當透過 --params-json 或 --params-json-file 提供 JSON 輸入時，不得提供位置參數 key=value。"
+
+msgid "Write JSON output to the given file path without changing stdout mode."
+msgstr "將 JSON 輸出寫入指定檔案路徑，而不變更 stdout 模式。"
+
+msgid "Wrote structured output to {path}."
+msgstr "已將結構化輸出寫入 {path}。"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} 與 {second} 必須一併提供"
 
 msgid "cannot be empty"
 msgstr "不能為空"
+
+msgid "failed"
+msgstr "失敗"
 
 msgid "found {min_value} must be less than {max_value}"
 msgstr "找到 {min_value}，必須小於 {max_value}"
@@ -150,6 +735,15 @@ msgstr "找到 {value}，必須為 {expected_values} 之一"
 msgid "found {value}, must be positive"
 msgstr "找到{value}，必須是積極的"
 
+msgid "ok"
+msgstr "正常"
+
+msgid "settable"
+msgstr "可設定"
+
+msgid "the owning object"
+msgstr "擁有該項的物件"
+
 msgid "{file_name} does not have a valid file extension, will use {default}"
 msgstr "{file_name} 沒有有效的副檔名，將使用 {default}"
 
@@ -158,6 +752,21 @@ msgstr "{name} 為 {value}"
 
 msgid "{name} parameter will be ignored"
 msgstr "將忽略參數 {name}"
+
+msgid "{param} receives the Plot returned by find_plot_by_name"
+msgstr "{param} 會接收 find_plot_by_name 傳回的 Plot"
+
+msgid "{type_name} ({size} items): {value}"
+msgstr "{type_name}（{size} 個項目）：{value}"
+
+msgid "{type_name} attributes:"
+msgstr "{type_name} 屬性："
+
+msgid "{type_name} result:"
+msgstr "{type_name} 結果："
+
+msgid "{type_name} values ({count} items):"
+msgstr "{type_name} 值（{count} 個項目）："
 
 msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
 msgstr "在 {enum_name} 中找不到 {value} 的記載，這可能會導致函式呼叫失敗"

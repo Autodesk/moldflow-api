@@ -6,6 +6,7 @@ Usage:
     Vector Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_VECTOR_TRIPLET, cli_input_adapter
 from .helper import check_type
 from .com_proxy import safe_com
 from .logger import process_log, LogMessage
@@ -26,6 +27,9 @@ class Vector:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="Vector")
         self.vector = safe_com(_vector)
 
+    @cli_input_adapter(
+        value_kind=CLI_VALUE_KIND_VECTOR_TRIPLET, preferred_field="xyz", shorthand_supported=True
+    )
     def set_xyz(self, x: float, y: float, z: float) -> None:
         """
         Set the x, y, z values of the vector.

@@ -9,6 +9,7 @@ Usage:
 # pylint: disable=C0302
 
 from .logger import process_log
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .helper import deprecated
 from .common import LogMessage
 from .ent_list import EntList
@@ -53,6 +54,7 @@ class MeshEditor:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="purge_nodes")
         return self.mesh_editor.PurgeNodes
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates a new entity list in the model.
