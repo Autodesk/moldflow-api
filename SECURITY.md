@@ -3,8 +3,13 @@
 ## Supported Versions
 
 We release security patches for the latest major release and the immediately
-previous 3 major releases. Supported versions are listed in the
-[repository releases](https://github.com/Autodesk/moldflow-api/releases).
+previous 3 major releases.
+
+To determine whether a release is supported, open the
+[repository releases](https://github.com/Autodesk/moldflow-api/releases) page
+and look at the release tag/version. Any release that belongs to the current
+major version or one of the previous 3 major versions is supported. Older major
+versions are no longer supported.
 
 ## Reporting a Vulnerability
 

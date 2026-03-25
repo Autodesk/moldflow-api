@@ -124,6 +124,15 @@ The general pattern is::
 
    method_name.parameter[.attribute] = value
 
+For humans and agents, grouped JSON is often easier to read and generate for
+multi-step targets with nested objects. The same chained probe-line call can be
+written as:
+
+.. code-block:: bash
+
+   moldflow invoke synergy.plot_manager.find_plot_by_name.get_probe_plot_probe_line \
+     --params-json '{"find_plot_by_name":{"plot_name":"My Plot"},"get_probe_plot_probe_line":{"index":0,"start_pt":{"x":0,"y":0,"z":0},"end_pt":{"x":10,"y":0,"z":0}}}'
+
 Structured output for `list`
 ---------------------------
 
@@ -266,6 +275,10 @@ Notes:
   and passed through as values). Single-step targets also accept an optional
   wrapper object keyed by the step name (case-insensitive), e.g.
   ``{"FIND_PLOT_BY_NAME": {"plot_name": "My Plot"}}``.
+- For more complex multi-step calls, include one object per step. For example,
+  ``synergy.plot_manager.find_plot_by_name.get_probe_plot_probe_line`` can be
+  invoked with
+  ``{"find_plot_by_name":{"plot_name":"My Plot"},"get_probe_plot_probe_line":{"index":0,"start_pt":{"x":0,"y":0,"z":0},"end_pt":{"x":10,"y":0,"z":0}}}``.
 - Methods with positional-only parameters are not supported by CLI named-argument routing.
 - Within a step, duplicate argument paths (for example ``param=1`` and ``param=2``)
   or conflicting paths (for example ``param=1`` and ``param.attr=2``) are rejected.

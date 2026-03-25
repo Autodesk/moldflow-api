@@ -8,6 +8,7 @@ Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
+    run.py cli-smoke [-s | --skip-build]
     run.py format [--check]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
@@ -22,6 +23,7 @@ Commands:
     clean-up                        Clean up build artifacts.
     build                           Build and optionally publish the moldflow-api package.
     build-docs                      Build the documentation.
+    cli-smoke                       Create a CLI smoke-test venv and verify basic CLI commands.
     format                          Format all Python files in the repository using black.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
@@ -93,6 +95,7 @@ DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
 DOCS_HTML_DIR = os.path.join(DOCS_BUILD_DIR, 'html')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
+CLI_SMOKE_VENV_DIR = os.path.join(ROOT_DIR, '.cli-smoke-venv')
 
 # Files
 PYLINT_CONFIG_FILE = os.path.join(ROOT_DIR, '.pylint.toml')
@@ -319,9 +322,7 @@ def install_package(target_path=None, build=False):
 
     package_spec = f"moldflow[cli]=={VERSION}"
     if wheel_path:
-        # Use a direct file reference with extras; "<wheel>.whl[cli]" is invalid.
-        wheel_uri = Path(wheel_path).resolve().as_uri()
-        package_spec = f"moldflow[cli] @ {wheel_uri}"
+        package_spec = wheel_package_spec(wheel_path)
 
     args = [
         sys.executable,
@@ -340,6 +341,90 @@ def install_package(target_path=None, build=False):
         args.append(f'--target={target_path}')
 
     run_command(args, ROOT_DIR)
+
+
+def wheel_package_spec(wheel_path: str) -> str:
+    """Return a PEP 508 direct reference for installing the local wheel with CLI extras."""
+
+    if not wheel_path:
+        raise ValueError('wheel_path must be a non-empty string.')
+    if Path(wheel_path).suffix.lower() != '.whl':
+        raise ValueError(f'wheel_path must point to a wheel file: {wheel_path}')
+
+    return f"moldflow[cli] @ {Path(wheel_path).resolve().as_uri()}"
+
+
+def _latest_dist_wheel() -> str:
+    """Return the newest built moldflow wheel from dist."""
+
+    wheel_files = glob.glob(os.path.join(DIST_DIR, 'moldflow-*.whl'))
+    if not wheel_files:
+        raise RuntimeError(
+            f'No moldflow wheel found in {DIST_DIR}. Run `python run.py build` first.'
+        )
+    return max(wheel_files, key=os.path.getmtime)
+
+
+def _venv_python_executable(venv_dir: str) -> str:
+    """Return the Python executable path for a virtual environment."""
+
+    if not venv_dir:
+        raise ValueError('venv_dir must be a non-empty string.')
+
+    scripts_dir = 'Scripts' if WINDOWS else 'bin'
+    executable_name = 'python.exe' if WINDOWS else 'python'
+    return os.path.join(venv_dir, scripts_dir, executable_name)
+
+
+def _remove_directory_if_present(path: str) -> None:
+    """Remove a directory when present, tolerating only concurrent deletion."""
+
+    if not path:
+        raise ValueError('path must be a non-empty string.')
+    if not os.path.exists(path):
+        return
+    if not os.path.isdir(path):
+        raise NotADirectoryError(f'Expected a directory path for cleanup, got: {path}')
+
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        pass
+
+
+def cli_smoke(skip_build=False):
+    """Create an isolated CLI smoke-test environment and verify core CLI commands."""
+
+    if not skip_build:
+        build_package(install=False)
+
+    wheel_path = _latest_dist_wheel()
+
+    _remove_directory_if_present(CLI_SMOKE_VENV_DIR)
+
+    run_command(python_module_command('venv', CLI_SMOKE_VENV_DIR), ROOT_DIR)
+
+    venv_python = _venv_python_executable(CLI_SMOKE_VENV_DIR)
+    completed = False
+    try:
+        if not os.path.isfile(venv_python):
+            raise RuntimeError(
+                'Virtual environment was created, but Python executable was not found: '
+                f'{venv_python}'
+            )
+
+        run_command([venv_python, '-m', 'pip', 'install', '--upgrade', 'pip'], ROOT_DIR)
+        run_command([venv_python, '-m', 'pip', 'install', wheel_package_spec(wheel_path)], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', '--help'], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', 'invoke', '--help'], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', 'list', '--json'], ROOT_DIR)
+        completed = True
+    finally:
+        if not completed:
+            try:
+                _remove_directory_if_present(CLI_SMOKE_VENV_DIR)
+            except NotADirectoryError as cleanup_error:
+                logging.warning('Failed to clean up CLI smoke venv: %s', cleanup_error)
 
 
 def build_mo():
@@ -822,6 +907,11 @@ def main():
             local = args.get('--local') or args.get('-l')
 
             build_docs(target=target, skip_build=skip_build, local=local)
+
+        elif args.get('cli-smoke'):
+            skip_build = args.get('--skip-build') or args.get('-s')
+
+            cli_smoke(skip_build=skip_build)
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))

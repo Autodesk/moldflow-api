@@ -3,14 +3,15 @@
 
 """This module contains the common test fixtures for the moldflow-api tests."""
 
-# pylint: disable=wrong-import-position
+# pylint: disable=wrong-import-position  # tests bootstrap repo/src onto sys.path before moldflow imports
 
+import logging
 import os
 import sys
-import logging
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 from unittest.mock import Mock
+
 import polib
 import pytest
 
@@ -22,9 +23,9 @@ if str(ROOT_DIR) not in sys.path:
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+from moldflow.constants import DEFAULT_THREE_LETTER_CODE
 from moldflow.localization import set_language
 from moldflow.logger import set_is_logging
-from moldflow.constants import DEFAULT_THREE_LETTER_CODE
 
 # Logging
 LOGGING = True

@@ -5,7 +5,8 @@
 # a customer-style workflow: write a small ASCII STL, import, mesh, place an injection NDBC (create_ndbc_at_xyz),
 # then analyze_now (solve) and probe plot/results APIs. Start-Process -Wait only waits for the CLI process;
 # Synergy's analyze_now/solve COM call is asynchronous, so after the STL solve invoke this script polls
-# study_doc.is_analysis_running until idle (see -AnalysisWaitMaxSeconds / -AnalysisPollSeconds).
+# study_doc.is_analysis_running until idle and then waits for result files to appear before exercising
+# result/plot/probe APIs (see -AnalysisWaitMaxSeconds / -AnalysisPollSeconds).
 # Use -SkipSTLWorkflow for mesh_type-only project checks.
 # (The old opt-in switch -STLWorkflow is unnecessary; use -SkipSTLWorkflow only when you want the slimmer path.)
 param(
@@ -16,7 +17,7 @@ param(
     [switch]$SkipProjectSmoke,
     [switch]$SkipSTLWorkflow,
 
-    # After STL analyze_now (solve), poll is_analysis_running until false (Synergy solve is async vs CLI exit).
+    # After STL analyze_now (solve), poll is_analysis_running until false and wait for result files.
     [int]$AnalysisWaitMaxSeconds = 7200,
     [int]$AnalysisPollSeconds = 5
 )
@@ -240,19 +241,19 @@ function Invoke-MoldflowCliCommand {
         Remove-Item -Path $stderrPath -Force
     }
 
-    # -Wait blocks until the CLI process exits. mesh_now may run for a long time while COM works.
-    # analyze_now can return before the solver finishes; the eval script polls is_analysis_running after STL solve.
-    $process = Start-Process `
-        -FilePath $script:Launcher.Executable `
-        -ArgumentList @($script:Launcher.FixedArgs + $Args) `
-        -WorkingDirectory $repoRoot `
-        -RedirectStandardOutput $stdoutPath `
-        -RedirectStandardError $stderrPath `
-        -PassThru `
-        -Wait `
-        -NoNewWindow
-
-    $exitCode = [int]$process.ExitCode
+    # Use PowerShell's native argv handling rather than Start-Process -ArgumentList.
+    # This preserves spaces inside single arguments and raw JSON payloads without
+    # re-joining them into a single command line string.
+    Push-Location $repoRoot
+    try {
+        # Wait blocks until the CLI process exits. mesh_now may run for a long time while COM works.
+        # analyze_now can return before the solver finishes; the eval script polls is_analysis_running after STL solve.
+        & $script:Launcher.Executable @($script:Launcher.FixedArgs + $Args) 1> $stdoutPath 2> $stderrPath
+        $exitCode = if ($null -ne $LASTEXITCODE) { [int]$LASTEXITCODE } else { 0 }
+    }
+    finally {
+        Pop-Location
+    }
 
     $stdout = @()
     if (Test-Path $stdoutPath) {
@@ -314,7 +315,7 @@ function Invoke-MoldflowCliCommand {
 function Wait-MoldflowCliAnalysisIdle {
     <#
     .SYNOPSIS
-        Poll study_doc.is_analysis_running until false or timeout.
+        Poll study_doc.is_analysis_running until false, then wait for result files.
 
     .NOTES
         Invoke JSON marks ok=false when result is boolean false, so polling uses --no-fail-on-false.
@@ -331,16 +332,22 @@ function Wait-MoldflowCliAnalysisIdle {
         return
     }
 
-    $pollArgs = @(
+    $analysisPollArgs = @(
         "invoke",
         "synergy.study_doc.is_analysis_running",
+        "--json-output",
+        "--no-fail-on-false"
+    )
+    $resultsPollArgs = @(
+        "invoke",
+        "synergy.plot_manager.get_number_of_results_files",
         "--json-output",
         "--no-fail-on-false"
     )
     $deadline = (Get-Date).AddSeconds($MaxWaitSeconds)
 
     Write-Output ""
-    Write-Output ("=== Wait for analysis to finish (poll is_analysis_running, max {0}s, interval {1}s) ===" -f $MaxWaitSeconds, $PollSeconds)
+    Write-Output ("=== Wait for analysis/results (max {0}s, interval {1}s) ===" -f $MaxWaitSeconds, $PollSeconds)
 
     while ($true) {
         if ((Get-Date) -gt $deadline) {
@@ -350,7 +357,7 @@ function Wait-MoldflowCliAnalysisIdle {
             )
         }
 
-        $poll = Invoke-MoldflowCliCommand -Title "poll is_analysis_running" -Args $pollArgs -Quiet
+        $poll = Invoke-MoldflowCliCommand -Title "poll is_analysis_running" -Args $analysisPollArgs -Quiet
         if ($poll.ExitCode -ne 0) {
             throw ("Poll is_analysis_running failed with exit code {0}." -f $poll.ExitCode)
         }
@@ -369,10 +376,44 @@ function Wait-MoldflowCliAnalysisIdle {
 
         if ($running -eq $false) {
             Write-Output "[pass] analysis idle (is_analysis_running is false)"
-            return
+            break
         }
 
         Write-Output ("[wait] analysis running (is_analysis_running=true), sleeping {0}s..." -f $PollSeconds)
+        Start-Sleep -Seconds $PollSeconds
+    }
+
+    while ($true) {
+        if ((Get-Date) -gt $deadline) {
+            throw (
+                "Timeout after {0}s: result files still unavailable after analysis became idle. " -f $MaxWaitSeconds +
+                "Inspect Synergy analysis completion and study results."
+            )
+        }
+
+        $poll = Invoke-MoldflowCliCommand -Title "poll get_number_of_results_files" -Args $resultsPollArgs -Quiet
+        if ($poll.ExitCode -ne 0) {
+            throw ("Poll get_number_of_results_files failed with exit code {0}." -f $poll.ExitCode)
+        }
+
+        $raw = ($poll.StdOut -join "").Trim()
+        if ([string]::IsNullOrWhiteSpace($raw)) {
+            Start-Sleep -Seconds $PollSeconds
+            continue
+        }
+
+        $envelope = $raw | ConvertFrom-Json
+        $count = $envelope.result
+        if ($null -eq $count) {
+            throw "Poll get_number_of_results_files: JSON envelope missing 'result'."
+        }
+
+        if ([int]$count -gt 0) {
+            Write-Output ("[pass] results ready (get_number_of_results_files={0})" -f $count)
+            return
+        }
+
+        Write-Output ("[wait] results not ready (get_number_of_results_files={0}), sleeping {1}s..." -f $count, $PollSeconds)
         Start-Sleep -Seconds $PollSeconds
     }
 }
@@ -891,8 +932,7 @@ function ConvertTo-NativeJsonArgument {
         [object]$Payload
     )
 
-    $jsonText = $Payload | ConvertTo-Json -Depth 20 -Compress
-    return ($jsonText -replace '"', '\"')
+    return ($Payload | ConvertTo-Json -Depth 20 -Compress)
 }
 
 function ConvertTo-CliPath {
@@ -1238,6 +1278,37 @@ try {
         $nestedStepJsonPayload = ConvertTo-NestedStepJsonPayload -Target $nestedTarget -Payload $nestedJsonPayload
     }
 
+    $probeChainTarget = "synergy.plot_manager.find_plot_by_name.get_probe_plot_probe_line"
+    $probeChainDescribe = Get-DescribePayload -Target $probeChainTarget
+    $probeChainCliArgs = @(
+        "find_plot_by_name.plot_name=My Plot"
+        "get_probe_plot_probe_line.index=0"
+        "get_probe_plot_probe_line.start_pt.x=0"
+        "get_probe_plot_probe_line.start_pt.y=0"
+        "get_probe_plot_probe_line.start_pt.z=0"
+        "get_probe_plot_probe_line.end_pt.x=10"
+        "get_probe_plot_probe_line.end_pt.y=0"
+        "get_probe_plot_probe_line.end_pt.z=0"
+    )
+    $probeChainJsonPayload = @{
+        find_plot_by_name = @{
+            plot_name = "My Plot"
+        }
+        get_probe_plot_probe_line = @{
+            index    = 0
+            start_pt = @{
+                x = 0
+                y = 0
+                z = 0
+            }
+            end_pt   = @{
+                x = 10
+                y = 0
+                z = 0
+            }
+        }
+    }
+
     $zeroArg = $selectedTargets["zero_arg_method"]
     $zeroArgTarget = $null
     if ($null -ne $zeroArg) {
@@ -1251,7 +1322,6 @@ try {
     }
 
     $settableProperty = $selectedTargets["settable_property"]
-    $settableInvokeExpectedOutcome = if (-not $SkipRealSmoke -and -not $SkipProjectSmoke) { "success" } else { "failure" }
     $settableTarget = $null
     $settableDescribe = $null
     $settableCliArgs = $null
@@ -1287,7 +1357,7 @@ try {
                 params_json = (Get-InvokeJsonPayload -DescribePayload $complex.Describe)
             }
         )
-        if ($null -ne $settableProperty -and $settableInvokeExpectedOutcome -eq "success") {
+        if ($null -ne $settableProperty) {
             $batchPayload += @{
                 target = $settableProperty.Row.target
                 params_json = (Get-InvokeJsonPayload -DescribePayload $settableProperty.Describe)
@@ -1351,8 +1421,8 @@ try {
     if ($null -ne $settableProperty) {
         Add-Case -Cases $cases -Group "mesh" -Name "describe mesh_type human" -WorkflowPhase $wfMesh -Args @("describe", $settableTarget)
         Add-Case -Cases $cases -Group "mesh" -Name "describe mesh_type json" -WorkflowPhase $wfMesh -Args @("describe", $settableTarget, "--json")
-        Add-Case -Cases $cases -Group "mesh" -Name "dry-run mesh_type args" -WorkflowPhase $wfMesh -Args (@("invoke", $settableTarget, "--dry-run") + $settableCliArgs) -ExpectedOutcome $settableInvokeExpectedOutcome
-        Add-Case -Cases $cases -Group "mesh" -Name "dry-run mesh_type params-json" -WorkflowPhase $wfMesh -Args @("invoke", $settableTarget, "--dry-run", "--params-json", (ConvertTo-NativeJsonArgument -Payload $settableJsonPayload)) -ExpectedOutcome $settableInvokeExpectedOutcome
+        Add-Case -Cases $cases -Group "mesh" -Name "dry-run mesh_type args" -WorkflowPhase $wfMesh -Args (@("invoke", $settableTarget, "--dry-run") + $settableCliArgs)
+        Add-Case -Cases $cases -Group "mesh" -Name "dry-run mesh_type params-json" -WorkflowPhase $wfMesh -Args @("invoke", $settableTarget, "--dry-run", "--params-json", (ConvertTo-NativeJsonArgument -Payload $settableJsonPayload))
     }
 
     if ($null -ne $primitive -and $null -ne $zeroArg) {
@@ -1379,6 +1449,10 @@ try {
         Add-Case -Cases $cases -Group "plots" -Name "dry-run find_plot direct args" -WorkflowPhase $wfPlots -Args (@("invoke", $nestedTarget, "--dry-run") + $nestedCliArgs)
         Add-Case -Cases $cases -Group "plots" -Name "dry-run find_plot step-prefixed args" -WorkflowPhase $wfPlots -Args (@("invoke", $nestedTarget, "--dry-run") + $nestedPrefixedCliArgs)
         Add-Case -Cases $cases -Group "plots" -Name "dry-run find_plot step json" -WorkflowPhase $wfPlots -Args @("invoke", $nestedTarget, "--dry-run", "--params-json", (ConvertTo-NativeJsonArgument -Payload $nestedStepJsonPayload))
+    }
+    if ($null -ne $probeChainDescribe) {
+        Add-Case -Cases $cases -Group "plots" -Name "dry-run probe plot probe line raw chain args" -WorkflowPhase $wfPlots -Args (@("invoke", $probeChainTarget, "--dry-run") + $probeChainCliArgs)
+        Add-Case -Cases $cases -Group "plots" -Name "dry-run probe plot probe line grouped params-json" -WorkflowPhase $wfPlots -Args @("invoke", $probeChainTarget, "--dry-run", "--params-json", (ConvertTo-NativeJsonArgument -Payload $probeChainJsonPayload))
     }
 
     if ($null -ne $readonlyProperty) {
@@ -1422,6 +1496,21 @@ try {
                     prop_type = 40000
                 }
                 $injNdbcJsonArg = ConvertTo-NativeJsonArgument -Payload $injNdbcPayload
+                $probePlotGetPayload = @{
+                    find_plot_by_name         = @{
+                        plot_name = "Title:Probe XYPlot"
+                    }
+                    get_probe_plot_probe_line = @{
+                        index    = 1
+                        start_pt = @{
+                            __type__ = "Vector"
+                        }
+                        end_pt   = @{
+                            __type__ = "Vector"
+                        }
+                    }
+                }
+                $probePlotGetJsonArg = ConvertTo-NativeJsonArgument -Payload $probePlotGetPayload
             }
 
             Add-Case -Cases $cases -Group "project_live" -Name "invoke new_project" -WorkflowPhase $wfProjectLive -Args @("invoke", "synergy.new_project", "name=$realProjectName", "path=$artifactDir", "--json-output")
@@ -1439,9 +1528,37 @@ try {
 
                 Add-Case -Cases $cases -Group "project_live" -Name "stl boundary_conditions create_ndbc_at_xyz injection" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.boundary_conditions.create_ndbc_at_xyz", "--params-json", $injNdbcJsonArg, "--json-output")
                 Add-Case -Cases $cases -Group "project_live" -Name "stl analyze_now solve" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.study_doc.analyze_now", "check=false", "solve=true", "prompts=false", "--json-output", "--no-fail-on-false")
+                Add-Case -Cases $cases -Group "project_live" -Name "stl plot_manager add_default_plots" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.plot_manager.add_default_plots", "--json-output", "--no-fail-on-false")
                 Add-Case -Cases $cases -Group "project_live" -Name "stl plot_manager get_number_of_results_files" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.plot_manager.get_number_of_results_files", "--json-output")
                 Add-Case -Cases $cases -Group "project_live" -Name "stl plot_manager get_results_file_name index 0" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.plot_manager.get_results_file_name", "index=0", "--json-output")
                 Add-Case -Cases $cases -Group "project_live" -Name "stl plot_manager get_first_plot" -WorkflowPhase $wfSTL -Args @("invoke", "synergy.plot_manager.get_first_plot", "--json-output")
+                Add-Case -Cases $cases -Group "project_live" -Name "stl delete existing probe xy plot" -WorkflowPhase $wfSTL -Args @(
+                    "invoke",
+                    "synergy.plot_manager.delete_plot_by_name",
+                    "plot_name=Title:Probe XYPlot",
+                    "--json-output",
+                    "--no-fail-on-false"
+                )
+                Add-Case -Cases $cases -Group "project_live" -Name "stl create probe xy plot add_probe_plot_probe_line" -WorkflowPhase $wfSTL -Args @(
+                    "invoke",
+                    "synergy.plot_manager.create_plot_by_ds_id.add_probe_plot_probe_line",
+                    "create_plot_by_ds_id.ds_id=1",
+                    "create_plot_by_ds_id.plot_type=21",
+                    "add_probe_plot_probe_line.start_pt.x=0",
+                    "add_probe_plot_probe_line.start_pt.y=0",
+                    "add_probe_plot_probe_line.start_pt.z=0",
+                    "add_probe_plot_probe_line.end_pt.x=10",
+                    "add_probe_plot_probe_line.end_pt.y=0",
+                    "add_probe_plot_probe_line.end_pt.z=0",
+                    "--json-output"
+                )
+                Add-Case -Cases $cases -Group "project_live" -Name "stl probe xy plot get_probe_plot_probe_line" -WorkflowPhase $wfSTL -Args @(
+                    "invoke",
+                    "synergy.plot_manager.find_plot_by_name.get_probe_plot_probe_line",
+                    "--params-json",
+                    $probePlotGetJsonArg,
+                    "--json-output"
+                )
             }
             else {
                 Add-Case -Cases $cases -Group "project_live" -Name "invoke study_doc mesh_type read" -WorkflowPhase $wfProjectLive -Args @("invoke", "synergy.study_doc.mesh_type", "--json-output")

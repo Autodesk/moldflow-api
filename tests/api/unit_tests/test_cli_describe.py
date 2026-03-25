@@ -17,12 +17,46 @@ from typer.testing import CliRunner
 import moldflow
 
 from moldflow_cli.commands import build_cli_app
+from moldflow_cli import target_resolution
 
 runner = CliRunner()
 
 
 def _has_yaml() -> bool:
     return importlib.util.find_spec("yaml") is not None
+
+
+@pytest.mark.cli
+@pytest.mark.unit
+def test_iter_static_members_falls_back_without_getmembers_static():
+    """Static member lookup should stay descriptor-safe on Python 3.10."""
+
+    class ExplosiveDescriptor:
+        """Descriptor used to verify the fallback does not execute descriptors."""
+
+        def __get__(self, obj, owner=None):
+            raise RuntimeError("descriptor should not execute during static lookup")
+
+    class CliExplosive:
+        """Class containing a descriptor and regular method for static lookup tests."""
+
+        danger = ExplosiveDescriptor()
+
+        def safe_method(self) -> str:
+            """Simple method used to confirm regular members are still returned."""
+            return "ok"
+
+    with patch.object(
+        target_resolution.inspect,
+        "getmembers_static",
+        create=True,
+        side_effect=AttributeError("getmembers_static unavailable"),
+    ):
+        members = dict(target_resolution.iter_static_members(CliExplosive))
+
+    assert "danger" in members
+    assert "safe_method" in members
+    assert isinstance(members["danger"], ExplosiveDescriptor)
 
 
 @pytest.mark.cli

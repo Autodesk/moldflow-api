@@ -95,11 +95,27 @@ def split_dotted_path(
 def public_static_attr_lookup(cls: type) -> dict[str, str]:
 	"""Build a case-insensitive lookup of a class's public static attributes."""
 	lookup: dict[str, str] = {}
-	for attr_name, _ in inspect.getmembers_static(cls):
+	for attr_name, _ in iter_static_members(cls):
 		if attr_name.startswith("_"):
 			continue
 		lookup.setdefault(attr_name.lower(), attr_name)
 	return lookup
+
+
+def iter_static_members(obj: Any) -> list[tuple[str, Any]]:
+	"""Return static members without invoking descriptors, including on Python 3.10."""
+	try:
+		return list(inspect.getmembers_static(obj))
+	except AttributeError:
+		pass
+
+	members: list[tuple[str, Any]] = []
+	for name in dir(obj):
+		try:
+			members.append((name, inspect.getattr_static(obj, name)))
+		except AttributeError:
+			continue
+	return members
 
 
 def canonicalize_describe_target_parts(

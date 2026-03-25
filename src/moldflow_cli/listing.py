@@ -13,7 +13,7 @@ from .constants import CLI_KIND_PROPERTY, CLI_KIND_SETTABLE_PROPERTY, CLI_ROOT_S
 from .factories import camel_to_snake
 from .introspection import is_cli_target_hidden, iter_public_classes, resolve_for_introspection
 from .invoke_resolution import _resolve_return_class
-from .target_resolution import public_static_attr_lookup
+from .target_resolution import iter_static_members, public_static_attr_lookup
 from .wrapper_registry import public_wrapper_classes_by_name
 
 
@@ -107,7 +107,7 @@ def _prefer_method_rows_over_settable_properties(cls: type) -> bool:
 	"""Return True for builder-style wrappers where settable knobs would drown out the action methods."""
 	method_count = 0
 	settable_property_count = 0
-	for attr_name, raw_attr in inspect.getmembers_static(cls):
+	for attr_name, raw_attr in iter_static_members(cls):
 		if attr_name.startswith("_"):
 			continue
 		if isinstance(raw_attr, property):
@@ -125,7 +125,7 @@ def _hide_config_only_property_surface(cls: type) -> bool:
 	"""Return True for rooted option-bag wrappers that expose only settable properties."""
 	method_count = 0
 	settable_property_count = 0
-	for attr_name, raw_attr in inspect.getmembers_static(cls):
+	for attr_name, raw_attr in iter_static_members(cls):
 		if attr_name.startswith("_"):
 			continue
 		if isinstance(raw_attr, property):
@@ -201,7 +201,7 @@ def collect_list_rows(filters: Sequence[str] | None) -> list[dict[str, Any]]:
 		cli_name = camel_to_snake(name)
 		suppress_settable = _prefer_method_rows_over_settable_properties(cls)
 		hide_config_only = _hide_config_only_property_surface(cls)
-		for attr_name, raw_attr in inspect.getmembers_static(cls):
+		for attr_name, raw_attr in iter_static_members(cls):
 			if attr_name.startswith("_"):
 				continue
 			target, rooted = _resolve_list_target(cli_name, attr_name)

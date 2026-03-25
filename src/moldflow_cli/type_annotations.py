@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from types import NoneType
-from typing import Annotated, Any, get_args, get_origin
+from types import NoneType, UnionType
+from typing import Annotated, Any, Union, get_args, get_origin
 import inspect
 import re
 
@@ -22,6 +22,14 @@ def _is_annotated_origin(origin: Any) -> bool:
 	if origin_name == "Annotated":
 		return True
 	return "Annotated" in str(origin)
+
+
+def _is_union_origin(origin: Any) -> bool:
+	if origin is None:
+		return False
+	if origin is UnionType:
+		return True
+	return origin is Union
 
 
 def _normalize_annotation_text(annotation_text: str) -> str:
@@ -178,12 +186,20 @@ def extract_non_none_type_names(annotation: Any) -> list[str]:
 		if annotated_args:
 			return extract_non_none_type_names(annotated_args[0])
 		return []
+	if origin is not None and not _is_union_origin(origin):
+		return []
 
 	args = get_args(annotation)
 	if args:
 		names: list[str] = []
 		for arg in args:
 			if arg in {NoneType, type(None)}:
+				continue
+			arg_origin = get_origin(arg)
+			if _is_annotated_origin(arg_origin) or _is_union_origin(arg_origin):
+				names.extend(extract_non_none_type_names(arg))
+				continue
+			if arg_origin is not None:
 				continue
 			if isinstance(arg, type):
 				names.append(arg.__name__)

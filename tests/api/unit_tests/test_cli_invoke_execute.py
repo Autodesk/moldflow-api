@@ -320,6 +320,35 @@ def test_invoke_chained_call_with_vectors_uses_factories_and_synergy_chain():
 
 @pytest.mark.cli
 @pytest.mark.unit
+def test_invoke_chained_call_accepts_grouped_params_json():
+    """Chained invoke should accept grouped --params-json payloads keyed by step name."""
+    app = build_cli_app()
+
+    fake = FakeSynergy()
+    with patch("moldflow_cli.context.get_synergy", return_value=fake) as mock_ctx_synergy, patch(
+        "moldflow_cli.factories.get_synergy", return_value=fake
+    ) as mock_fact_synergy:
+        result = runner.invoke(
+            app,
+            [
+                "invoke",
+                "synergy.plot_manager.find_plot_by_name.get_probe_plot_probe_line",
+                "--params-json",
+                '{"find_plot_by_name":{"plot_name":"My Plot"},'
+                '"get_probe_plot_probe_line":{"index":0,"start_pt":{"x":1.0,"y":2.0,"z":3.0},'
+                '"end_pt":{"x":4.0,"y":5.0,"z":6.0}}}',
+            ],
+        )
+
+    assert result.exit_code == 0
+    assert mock_ctx_synergy.call_count >= 1 or mock_fact_synergy.call_count >= 1
+    assert "probe_line(index=0" in result.stdout
+    assert "FakeVector(x=1.0" in result.stdout
+    assert "FakeVector(x=4.0" in result.stdout
+
+
+@pytest.mark.cli
+@pytest.mark.unit
 def test_invoke_single_step_param_routing_equivalence():
     """Single-step invoke accepts both param=value and method.param=value forms."""
     app = build_cli_app()
