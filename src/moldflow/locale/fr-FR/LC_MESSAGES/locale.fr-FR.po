@@ -3,15 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: fr-FR\n"
 
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\nVouliez-vous dire l'étape '{step_name}' ?"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\nPour une entrée JSON sur des cibles à plusieurs étapes, regroupez les paramètres par nom d'étape, par ex. {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\nPour une entrée JSON, cette clé d'étape doit correspondre à un objet de noms de paramètres, par ex. {example}"
-
 msgid " Did you mean '{parameter}'?"
 msgstr " Vouliez-vous dire '{parameter}' ?"
 
@@ -26,6 +17,9 @@ msgstr "L'option --yaml a été demandée mais PyYAML n'est pas installé : {err
 
 msgid "--yaml requested but PyYAML is not installed: {exc}"
 msgstr "L'option --yaml a été demandée mais PyYAML n'est pas installé : {exc}"
+
+msgid "Aborted."
+msgstr "Abandonné."
 
 msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
 msgstr "Repli avancé uniquement. Utilisez cette forme balisée lorsque le contexte d'annotation n'est pas disponible, lorsqu'une charge utile imbriquée est réellement générique ou lorsque plusieurs familles de wrappers seraient ambiguës."
@@ -192,17 +186,35 @@ msgstr "Vérification que {value} est {name}"
 msgid "Class '{class_name}' has no attribute '{attr_name}'"
 msgstr "La classe '{class_name}' n'a pas d'attribut '{attr_name}'"
 
+msgid "Clear the screen"
+msgstr "Effacer l'écran"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "Efface l'écran du terminal et redessine la bannière."
+
+msgid "Command exited with status {code}"
+msgstr "La commande s'est terminée avec le statut {code}"
+
+msgid "Commands:"
+msgstr "Commandes :"
+
 msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 msgstr "Les chemins d'argument en conflit '{left_path}' et '{right_path}' ne sont pas autorisés."
 
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "Impossible d'initialiser avec l'ID d'instance : {value}"
 
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D permet également de quitter."
+
 msgid "Detail"
 msgstr "Détail"
 
 msgid "Direct parameter assignment remains the preferred non-JSON form."
 msgstr "L'affectation directe de paramètres reste la forme non JSON privilégiée."
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "Découvrez les cibles invocables et la prochaine commande à exécuter pour chacune."
 
 msgid "Do not pass TARGET when --batch-file is used."
 msgstr "Ne transmettez pas TARGET lorsque --batch-file est utilisé."
@@ -231,11 +243,11 @@ msgstr "Produire des événements de trace JSON délimités par des lignes sur s
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "Produit du JSON structuré pour les scripts ou l'utilisation par des agents."
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "Produit du YAML structuré pour les scripts ou l'utilisation par des agents (PyYAML requis)."
-
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "Produit du JSON structuré pour les scripts ou l'utilisation par des agents."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "Produit du YAML structuré pour les scripts ou l'utilisation par des agents (PyYAML requis)."
 
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "Produit du YAML structuré pour les scripts ou l'utilisation par des agents (PyYAML requis)."
@@ -249,11 +261,20 @@ msgstr "Cible vide"
 msgid "Empty type tag is not valid for '{primary_expected}'."
 msgstr "Une balise de type vide n'est pas valide pour '{primary_expected}'."
 
+msgid "Error:"
+msgstr "Erreur :"
+
 msgid "Example object shape: {shape}."
 msgstr "Exemple de forme d'objet : {shape}."
 
 msgid "Executing {name}"
 msgstr "Exécution de {name}"
+
+msgid "Exit the REPL"
+msgstr "Quitter le REPL"
+
+msgid "Exits the REPL."
+msgstr "Quitte le REPL."
 
 msgid "Explicit field form: {value}"
 msgstr "Forme de champ explicite : {value}"
@@ -272,6 +293,9 @@ msgstr "Impossible de générer la sortie YAML pour {context} : {error}"
 
 msgid "Failed to render YAML output for {context}: {exc}"
 msgstr "Impossible de générer la sortie YAML pour {context} : {exc}"
+
+msgid "Failed to reset session:"
+msgstr "Échec de la réinitialisation de la session :"
 
 msgid "Field '{key_name}' is not valid for '{type_name}'."
 msgstr "Le champ '{key_name}' n'est pas valide pour '{type_name}'."
@@ -330,6 +354,9 @@ msgstr "Récupération de {name}"
 msgid "Getting {name} at index {value}"
 msgstr "Récupération de {name} à l'index {value}"
 
+msgid "Goodbye!"
+msgstr "Au revoir !"
+
 msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 msgstr "Si la saisie abrégée est ambiguë, passez à --params-json. {guidance}"
 
@@ -344,6 +371,12 @@ msgstr "Initialisation de {name}"
 
 msgid "Input hints:"
 msgstr "Indications de saisie :"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "Inspectez la signature, la documentation, les exemples et le modèle structuré d'invoke d'une cible."
+
+msgid "Interrupted."
+msgstr "Interrompu."
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "Attribut non valide : {attribute} n'est pas pris en charge"
@@ -396,9 +429,6 @@ msgstr "Champ {field_name} invalide '{path_text}' : le segment '{segment}' doit 
 msgid "Invalid {field_name}: value cannot be empty."
 msgstr "Champ {field_name} invalide : la valeur ne peut pas être vide."
 
-msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-msgstr "Exécutez une cible Moldflow avec des paramètres nommés ou une entrée JSON. Les cibles non préfixées sont traitées comme synergy.<target>."
-
 msgid "JSON example:"
 msgstr "Exemple JSON :"
 
@@ -413,9 +443,6 @@ msgstr "La balise de type JSON '{type_tag}' ne correspond pas au wrapper attendu
 
 msgid "JSON value:"
 msgstr "Valeur JSON :"
-
-msgid "Discover invokable targets and the next command to run for each one."
-msgstr "Découvrez les cibles invocables et la prochaine commande à exécuter pour chacune."
 
 msgid "List result:"
 msgstr "Résultat de la liste :"
@@ -492,6 +519,9 @@ msgstr "Le paramètre '{param_name}' contient un octet nul, ce qui n'est pas aut
 msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 msgstr "Le paramètre '{param_name}' contient des caractères de contrôle (nouvelle ligne/tabulation/retour chariot) ; veuillez fournir une valeur sur une seule ligne ou échapper/mettre entre guillemets si nécessaire."
 
+msgid "Parse error:"
+msgstr "Erreur d'analyse :"
+
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "Analyser/valider/construire les kwargs et produire un plan d'appel sans exécuter les étapes invoke."
 
@@ -522,6 +552,12 @@ msgstr "Propriété {name} (id={id}, type={prop_type})"
 msgid "Read current value:"
 msgstr "Valeur actuelle :"
 
+msgid "Close Synergy and reset the session"
+msgstr "Fermer Synergy et réinitialiser la session"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Ferme Synergy et réinitialise la session pour repartir à zéro."
+
 msgid "Resolved assignment:"
 msgstr "Affectation résolue :"
 
@@ -530,6 +566,9 @@ msgstr "Kwargs résolus :"
 
 msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
 msgstr "L'objet résolu n'a pas d'attribut appelable '{segment}' lors de l'exécution de la cible '{target}'"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "Exécutez une cible Moldflow avec des paramètres nommés ou une entrée JSON. Les cibles non préfixées sont traitées comme synergy.<target>."
 
 msgid "Save Error"
 msgstr "Erreur d'enregistrement"
@@ -549,6 +588,9 @@ msgstr "Le segment '{segment}' n'est pas une méthode appelable de la classe '{c
 msgid "Selection"
 msgstr "Sélection"
 
+msgid "Session:"
+msgstr "Session :"
+
 msgid "Set it with:"
 msgstr "Définissez-la avec :"
 
@@ -561,11 +603,23 @@ msgstr "Exemple JSON plus court :"
 msgid "Shorter form:"
 msgstr "Forme plus courte :"
 
-msgid "Inspect a target's signature, docs, examples, and structured invoke template."
-msgstr "Inspectez la signature, la documentation, les exemples et le modèle structuré d'invoke d'une cible."
+msgid "Show detailed help for a command"
+msgstr "Afficher l'aide détaillée pour une commande"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "Afficher les traces complètes en cas d'erreur au lieu de messages courts."
+
+msgid "Show this help message"
+msgstr "Afficher ce message d'aide"
 
 msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
 msgstr "Affichage du tableau compact pour {count} correspondances filtrées. Affinez le filtre ou utilisez --json pour les chaînes de cible canoniques."
+
+msgid "Shows available commands and usage information."
+msgstr "Affiche les commandes disponibles et les informations d'utilisation."
+
+msgid "Start an interactive moldflow shell session."
+msgstr "Démarrer une session interactive du shell moldflow."
 
 msgid "Status"
 msgstr "Statut"
@@ -576,8 +630,14 @@ msgstr "L'étape '{step_name}' de la cible '{target}' possède des paramètres u
 msgid "Submit"
 msgstr "Valider"
 
+msgid "Synergy session reset."
+msgstr "Session Synergy réinitialisée."
+
 msgid "TARGET is required unless --batch-file is used."
 msgstr "TARGET est requis sauf si --batch-file est utilisé."
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "Les cibles de complétion par tabulation sont actualisées automatiquement."
 
 msgid "Target"
 msgstr "Cible"
@@ -636,6 +696,9 @@ msgstr "Cette propriété est en lecture seule et ne prend aucun argument."
 msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 msgstr "Cette propriété renvoie un wrapper {class_name}. Continuez avec describe {target}.<member> ou invoke {target}.<method>."
 
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "Astuce : installez pyreadline3 pour la complétion par tabulation sous Windows."
+
 msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 msgstr "Traitez les valeurs de retour False comme des échecs CLI (code de sortie 1). Ce comportement est activé par défaut pour être compatible avec l'automatisation."
 
@@ -645,11 +708,23 @@ msgstr "Essayez ceci :"
 msgid "Type"
 msgstr "Catégorie"
 
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "Tapez 'help' pour les commandes disponibles, 'exit' pour quitter."
+
+msgid "Type help to see available commands."
+msgstr "Tapez help pour voir les commandes disponibles."
+
 msgid "Unknown batch item field(s): {fields}."
 msgstr "Champ(s) d'élément batch inconnu(s) : {fields}."
 
+msgid "Unknown command:"
+msgstr "Commande inconnue :"
+
 msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
 msgstr "Paramètre inconnu '{parameter}' pour {target}{signature}.{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "Utilisez 'help <commande>' pour obtenir l'aide détaillée d'une commande spécifique."
 
 msgid "Use JSON field '{preferred_field}' for '{param_name}'."
 msgstr "Utilisez le champ JSON '{preferred_field}' pour '{param_name}'."
@@ -696,6 +771,18 @@ msgstr "Écrire la sortie JSON dans le chemin de fichier donné sans modifier le
 msgid "Wrote structured output to {path}."
 msgstr "Sortie structurée écrite dans {path}."
 
+msgid "You are already in the REPL."
+msgstr "Vous êtes déjà dans le REPL."
+
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\nVouliez-vous dire l'étape '{step_name}' ?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\nPour une entrée JSON sur des cibles à plusieurs étapes, regroupez les paramètres par nom d'étape, par ex. {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nPour une entrée JSON, cette clé d'étape doit correspondre à un objet de noms de paramètres, par ex. {example}"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} et {second} doivent être fournis ensemble"
 
@@ -734,6 +821,9 @@ msgstr "trouvé {value}, doit être l'un des {expected_values}"
 
 msgid "found {value}, must be positive"
 msgstr "trouvé {value}, doit être positif"
+
+msgid "interactive shell"
+msgstr "shell interactif"
 
 msgid "ok"
 msgstr "succès"

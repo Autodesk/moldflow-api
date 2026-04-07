@@ -40,6 +40,7 @@ The main commands are:
 * ``list`` – discover invokable targets and the next command to run for each one
 * ``describe`` – inspect a target's signature, docs, examples, and structured invoke template
 * ``invoke`` – run a Moldflow target with named parameters or JSON input
+* ``repl`` – start an interactive shell session with tab completion
 
 The top-level help guides first-time users through the intended flow:
 start with ``list`` to discover targets, use ``describe <target>`` to inspect
@@ -53,6 +54,55 @@ listed target is emitted in the same Synergy-rooted form that ``invoke`` accepts
 
 ``list --filter`` can be repeated, and repeated filters are additive: a target
 is included when it matches any provided filter value.
+
+Interactive REPL
+----------------
+
+The CLI includes an interactive shell (REPL) that provides a persistent session
+with tab completion:
+
+.. code-block:: bash
+
+   moldflow repl
+
+Inside the REPL you can type any CLI command without the ``moldflow`` prefix:
+
+.. code-block:: text
+
+   moldflow> list
+   moldflow> describe synergy.open_project
+   moldflow> invoke synergy.new_project name="My Project" path="C:/mf/MyProject.mfproj"
+
+Built-in session commands:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Command
+     - Description
+   * - ``help``
+     - Show available commands
+   * - ``help <command>``
+     - Show detailed help for a specific command
+   * - ``clear``
+     - Clear the terminal screen and redraw the banner
+   * - ``reset``
+     - Reset the Synergy session (tab-completion targets are refreshed automatically)
+   * - ``exit`` / ``quit``
+     - Exit the REPL (Ctrl+D also works)
+
+Tab completion works for all registered commands as well as for invokable
+target names when the current command is ``describe`` or ``invoke``. On
+Windows, tab completion requires the ``pyreadline3`` package, which is
+installed automatically with ``pip install "moldflow[cli]"``.
+
+Use ``--debug`` to display full Python tracebacks instead of short error
+messages:
+
+.. code-block:: bash
+
+   moldflow repl --debug
 
 Invoking simple methods
 -----------------------

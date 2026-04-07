@@ -3,15 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko-KR\n"
 
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\n'{step_name}' 단계를 말씀하신 건가요?"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\n다단계 대상에 JSON 입력을 사용할 때는 매개변수를 단계 이름별로 묶으세요. 예: {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\nJSON 입력에서는 이 단계 키가 매개변수 이름 객체에 매핑되어야 합니다. 예: {example}"
-
 msgid " Did you mean '{parameter}'?"
 msgstr " '{parameter}'을(를) 말씀하신 건가요?"
 
@@ -26,6 +17,9 @@ msgstr "--yaml 옵션이 요청되었지만 PyYAML이 설치되어 있지 않습
 
 msgid "--yaml requested but PyYAML is not installed: {exc}"
 msgstr "--yaml 옵션이 요청되었으나 PyYAML이 설치되어 있지 않습니다: {exc}"
+
+msgid "Aborted."
+msgstr "중단되었습니다."
 
 msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
 msgstr "고급 대체 방식 전용입니다. 주석 컨텍스트를 사용할 수 없거나, 중첩 페이로드가 실제로 제네릭이거나, 여러 래퍼 계열이 모호할 때 이 태그된 형태를 사용하세요."
@@ -192,17 +186,35 @@ msgstr "{value}가 {name}인지 확인 중"
 msgid "Class '{class_name}' has no attribute '{attr_name}'"
 msgstr "클래스 '{class_name}'에 속성 '{attr_name}'이(가) 없습니다"
 
+msgid "Clear the screen"
+msgstr "화면 지우기"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "터미널 화면을 지우고 배너를 다시 그립니다."
+
+msgid "Command exited with status {code}"
+msgstr "명령이 상태 {code}(으)로 종료되었습니다"
+
+msgid "Commands:"
+msgstr "명령어:"
+
 msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 msgstr "충돌하는 인수 경로 '{left_path}'와 '{right_path}'는 허용되지 않습니다."
 
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "인스턴스 ID {value}로 초기화할 수 없습니다"
 
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D로도 종료할 수 있습니다."
+
 msgid "Detail"
 msgstr "세부 정보"
 
 msgid "Direct parameter assignment remains the preferred non-JSON form."
 msgstr "직접 매개변수 할당이 여전히 기본으로 권장되는 비 JSON 형식입니다."
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "호출 가능한 대상과 각 대상에 대해 다음에 실행할 명령을 확인합니다."
 
 msgid "Do not pass TARGET when --batch-file is used."
 msgstr "--batch-file을 사용할 때는 TARGET을 전달하지 마세요."
@@ -231,11 +243,11 @@ msgstr "대상 확인 및 런타임 invoke 바인딩을 위해 줄 단위 JSON �
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "스크립트나 에이전트 사용을 위해 구조화된 JSON을 출력합니다."
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "스크립트나 에이전트 사용을 위해 구조화된 YAML을 출력합니다(PyYAML 필요)."
-
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "스크립트나 에이전트 사용을 위해 구조화된 JSON을 출력합니다."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "스크립트나 에이전트 사용을 위해 구조화된 YAML을 출력합니다(PyYAML 필요)."
 
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "스크립트나 에이전트 사용을 위해 구조화된 YAML을 출력합니다(PyYAML 필요)."
@@ -249,11 +261,20 @@ msgstr "대상 비어 있음"
 msgid "Empty type tag is not valid for '{primary_expected}'."
 msgstr "빈 타입 태그는 '{primary_expected}'에 유효하지 않습니다."
 
+msgid "Error:"
+msgstr "오류:"
+
 msgid "Example object shape: {shape}."
 msgstr "예시 객체 형태: {shape}."
 
 msgid "Executing {name}"
 msgstr "{name} 실행 중"
+
+msgid "Exit the REPL"
+msgstr "REPL 종료"
+
+msgid "Exits the REPL."
+msgstr "REPL을 종료합니다."
 
 msgid "Explicit field form: {value}"
 msgstr "명시적 필드 형식: {value}"
@@ -272,6 +293,9 @@ msgstr "{context}에 대한 YAML 출력 렌더링에 실패했습니다: {error}
 
 msgid "Failed to render YAML output for {context}: {exc}"
 msgstr "{context}에 대한 YAML 출력 생성에 실패했습니다: {exc}"
+
+msgid "Failed to reset session:"
+msgstr "세션 재설정에 실패했습니다:"
 
 msgid "Field '{key_name}' is not valid for '{type_name}'."
 msgstr "필드 '{key_name}'은(는) '{type_name}'에 유효하지 않습니다."
@@ -330,6 +354,9 @@ msgstr "{name} 가져오는 중"
 msgid "Getting {name} at index {value}"
 msgstr "인덱스 {value}에서 {name} 가져오는 중"
 
+msgid "Goodbye!"
+msgstr "안녕히 가세요!"
+
 msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 msgstr "축약 입력이 모호하면 --params-json으로 전환하세요. {guidance}"
 
@@ -344,6 +371,12 @@ msgstr "{name} 초기화 중"
 
 msgid "Input hints:"
 msgstr "입력 힌트:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "대상의 시그니처, 문서, 예제 및 구조화된 invoke 템플릿을 확인합니다."
+
+msgid "Interrupted."
+msgstr "중단되었습니다."
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "잘못된 속성: {attribute}는 지원되지 않습니다"
@@ -396,9 +429,6 @@ msgstr "잘못된 {field_name} '{path_text}': 세그먼트 '{segment}'는 유효
 msgid "Invalid {field_name}: value cannot be empty."
 msgstr "잘못된 {field_name}: 값은 비어 있을 수 없습니다."
 
-msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-msgstr "이름이 지정된 매개변수 또는 JSON 입력으로 Moldflow 대상을 실행합니다. 접두사가 없는 대상은 synergy.<target>으로 처리됩니다."
-
 msgid "JSON example:"
 msgstr "JSON 예:"
 
@@ -413,9 +443,6 @@ msgstr "JSON 타입 태그 '{type_tag}'가 예상 래퍼 '{primary_expected}'와
 
 msgid "JSON value:"
 msgstr "JSON 값:"
-
-msgid "Discover invokable targets and the next command to run for each one."
-msgstr "호출 가능한 대상과 각 대상에 대해 다음에 실행할 명령을 확인합니다."
 
 msgid "List result:"
 msgstr "목록 결과:"
@@ -492,6 +519,9 @@ msgstr "매개변수 '{param_name}'에 널 바이트가 포함되어 있습니�
 msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 msgstr "매개변수 '{param_name}'에 제어 문자(줄바꿈/탭/캐리지 리턴)가 포함되어 있습니다. 한 줄 값으로 제공하거나 필요에 따라 따옴표/이스케이프하세요."
 
+msgid "Parse error:"
+msgstr "구문 분석 오류:"
+
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "invoke 단계를 실행하지 않고 kwargs를 구문 분석/검증/구성한 뒤 호출 계획을 출력합니다."
 
@@ -522,6 +552,12 @@ msgstr "속성 {name} (id={id}, 유형={prop_type})"
 msgid "Read current value:"
 msgstr "현재 값 읽기:"
 
+msgid "Close Synergy and reset the session"
+msgstr "Synergy를 종료하고 세션 재설정"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Synergy를 종료하고 세션을 재설정하여 새로 시작합니다."
+
 msgid "Resolved assignment:"
 msgstr "확인된 할당:"
 
@@ -530,6 +566,9 @@ msgstr "확인된 kwargs:"
 
 msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
 msgstr "대상 '{target}'을(를) 실행할 때 확인된 객체에 호출 가능한 속성 '{segment}'이(가) 없습니다"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "이름이 지정된 매개변수 또는 JSON 입력으로 Moldflow 대상을 실행합니다. 접두사가 없는 대상은 synergy.<target>으로 처리됩니다."
 
 msgid "Save Error"
 msgstr "저장 오류"
@@ -549,6 +588,9 @@ msgstr "대상 '{target}'을(를) 확인할 때 세그먼트 '{segment}'는 클�
 msgid "Selection"
 msgstr "선택"
 
+msgid "Session:"
+msgstr "세션:"
+
 msgid "Set it with:"
 msgstr "다음으로 설정하세요:"
 
@@ -561,11 +603,23 @@ msgstr "더 짧은 JSON 예:"
 msgid "Shorter form:"
 msgstr "더 짧은 형식:"
 
-msgid "Inspect a target's signature, docs, examples, and structured invoke template."
-msgstr "대상의 시그니처, 문서, 예제 및 구조화된 invoke 템플릿을 확인합니다."
+msgid "Show detailed help for a command"
+msgstr "명령에 대한 자세한 도움말 표시"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "오류 시 짧은 메시지 대신 전체 트레이스백을 표시합니다."
+
+msgid "Show this help message"
+msgstr "이 도움말 메시지 표시"
 
 msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
 msgstr "필터된 일치 항목 {count}개에 대해 축약 표를 표시합니다. 필터를 더 좁히거나 정식 대상 문자열을 보려면 --json을 사용하세요."
+
+msgid "Shows available commands and usage information."
+msgstr "사용 가능한 명령어 및 사용법을 표시합니다."
+
+msgid "Start an interactive moldflow shell session."
+msgstr "대화형 moldflow 셸 세션을 시작합니다."
 
 msgid "Status"
 msgstr "상태"
@@ -576,8 +630,14 @@ msgstr "대상 '{target}'의 단계 '{step_name}'에는 위치 전용 매개변�
 msgid "Submit"
 msgstr "확인"
 
+msgid "Synergy session reset."
+msgstr "Synergy 세션이 재설정되었습니다."
+
 msgid "TARGET is required unless --batch-file is used."
 msgstr "--batch-file을 사용하지 않는 한 TARGET이 필요합니다."
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "탭 완성 대상이 자동으로 새로 고침됩니다."
 
 msgid "Target"
 msgstr "대상"
@@ -636,6 +696,9 @@ msgstr "이 속성은 읽기 전용이며 인수를 받지 않습니다."
 msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 msgstr "이 속성은 {class_name} 래퍼를 반환합니다. describe {target}.<member> 또는 invoke {target}.<method>로 계속 진행하세요."
 
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "팁: Windows에서 탭 완성을 사용하려면 pyreadline3을 설치하세요."
+
 msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 msgstr "False 반환값을 CLI 실패(exit 1)로 처리합니다. 자동화 친화적 동작을 위해 기본적으로 활성화되어 있습니다."
 
@@ -645,11 +708,23 @@ msgstr "다음을 시도해 보세요:"
 msgid "Type"
 msgstr "유형"
 
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "사용 가능한 명령어는 'help', 종료하려면 'exit'를 입력하세요."
+
+msgid "Type help to see available commands."
+msgstr "사용 가능한 명령어를 보려면 help를 입력하세요."
+
 msgid "Unknown batch item field(s): {fields}."
 msgstr "알 수 없는 배치 항목 필드: {fields}."
 
+msgid "Unknown command:"
+msgstr "알 수 없는 명령어:"
+
 msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
 msgstr "{target}{signature}에 알 수 없는 매개변수 '{parameter}'이(가) 있습니다.{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "특정 명령어에 대한 자세한 도움말은 'help <명령어>'를 사용하세요."
 
 msgid "Use JSON field '{preferred_field}' for '{param_name}'."
 msgstr "'{param_name}'에는 JSON 필드 '{preferred_field}'를 사용하세요."
@@ -696,6 +771,18 @@ msgstr "stdout 모드를 변경하지 않고 JSON 출력을 지정된 파일 경
 msgid "Wrote structured output to {path}."
 msgstr "구조화된 출력을 {path}에 기록했습니다."
 
+msgid "You are already in the REPL."
+msgstr "이미 REPL 안에 있습니다."
+
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n'{step_name}' 단계를 말씀하신 건가요?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n다단계 대상에 JSON 입력을 사용할 때는 매개변수를 단계 이름별로 묶으세요. 예: {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nJSON 입력에서는 이 단계 키가 매개변수 이름 객체에 매핑되어야 합니다. 예: {example}"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first}와 {second}는 함께 제공되어야 합니다"
 
@@ -734,6 +821,9 @@ msgstr "찾은 {value}는 {expected_values} 중 하나여야 합니다"
 
 msgid "found {value}, must be positive"
 msgstr "찾은 {value}는 양수여야 합니다"
+
+msgid "interactive shell"
+msgstr "대화형 셸"
 
 msgid "ok"
 msgstr "정상"

@@ -56,6 +56,7 @@ _T = get_text()
 
 __all__ = [
 	"build_cli_app",
+	"collect_list_rows",
 	"describe_cmd",
 	"invoke_cmd",
 	"list_public_cmd",
@@ -641,5 +642,9 @@ def build_cli_app():
 			"Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
 		),
 	)(invoke_cmd)
+
+	from .repl import repl_cmd
+
+	app.command("repl", help=_T("Start an interactive moldflow shell session."))(repl_cmd)
 	return app
 

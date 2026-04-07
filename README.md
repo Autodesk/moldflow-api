@@ -86,6 +86,42 @@ and agent-oriented outputs. `list --with-describe` embeds the structured
 `describe` payload for each listed target, and `--max-results` lets callers cap
 the result set after filtering.
 
+### Interactive REPL
+
+Start an interactive shell session with tab completion and built-in session
+commands:
+
+```sh
+moldflow repl
+```
+
+Inside the REPL you can run any CLI command without the `moldflow` prefix:
+
+```
+moldflow> list
+moldflow> describe synergy.open_project
+moldflow> invoke synergy.new_project name="My Project" path="C:/mf/MyProject.mfproj"
+```
+
+Built-in session commands:
+
+| Command          | Description                               |
+|------------------|-------------------------------------------|
+| `help`           | Show available commands                   |
+| `help <command>` | Show detailed help for a specific command |
+| `clear`          | Clear the screen                          |
+| `reset`          | Reset the Synergy session                 |
+| `exit` / `quit`  | Exit the REPL (Ctrl+D also works)         |
+
+Tab completion is available for all commands and for invokable targets when
+using `describe` or `invoke`. Pass `--debug` to show full tracebacks on errors:
+
+```sh
+moldflow repl --debug
+```
+
+### Invoking methods
+
 You can invoke methods directly:
 
 ```sh

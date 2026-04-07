@@ -3,15 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: en-US\n"
 
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\nDid you mean step '{step_name}'?"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-
 msgid " Did you mean '{parameter}'?"
 msgstr " Did you mean '{parameter}'?"
 
@@ -26,6 +17,9 @@ msgstr "--yaml requested but PyYAML is not installed: {error}"
 
 msgid "--yaml requested but PyYAML is not installed: {exc}"
 msgstr "--yaml requested but PyYAML is not installed: {exc}"
+
+msgid "Aborted."
+msgstr "Aborted."
 
 msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
 msgstr "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
@@ -192,20 +186,38 @@ msgstr "Checking {value} is {name}"
 msgid "Class '{class_name}' has no attribute '{attr_name}'"
 msgstr "Class '{class_name}' has no attribute '{attr_name}'"
 
+msgid "Clear the screen"
+msgstr "Clear the screen"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "Clears the terminal screen and redraws the banner."
+
+msgid "Command exited with status {code}"
+msgstr "Command exited with status {code}"
+
+msgid "Commands:"
+msgstr "Commands:"
+
 msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 msgstr "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "Could not initialize with Instance ID: {value}"
 
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D also exits."
+
 msgid "Detail"
 msgstr "Detail"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "Direct parameter assignment remains the preferred non-JSON form."
 
 msgid "Disable ANSI color/styling in CLI output."
 msgstr "Disable ANSI color/styling in CLI output."
 
-msgid "Direct parameter assignment remains the preferred non-JSON form."
-msgstr "Direct parameter assignment remains the preferred non-JSON form."
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "Discover invokable targets and the next command to run for each one."
 
 msgid "Do not pass TARGET when --batch-file is used."
 msgstr "Do not pass TARGET when --batch-file is used."
@@ -225,6 +237,9 @@ msgstr "Dry run for {target}"
 msgid "Duplicate argument path '{path}' is not allowed."
 msgstr "Duplicate argument path '{path}' is not allowed."
 
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+
 msgid "Emit a JSON schema-like representation of target parameters."
 msgstr "Emit a JSON schema-like representation of target parameters."
 
@@ -234,11 +249,11 @@ msgstr "Emit line-delimited JSON trace events to stderr for target resolution an
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "Emit structured JSON for scripting or agent use."
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "Emit structured YAML for scripting or agent use (requires PyYAML)."
-
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "Emit structured JSON for scripting or agent use."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "Emit structured YAML for scripting or agent use (requires PyYAML)."
 
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "Emit structured YAML for scripting or agent use (requires PyYAML)."
@@ -252,11 +267,20 @@ msgstr "Empty target"
 msgid "Empty type tag is not valid for '{primary_expected}'."
 msgstr "Empty type tag is not valid for '{primary_expected}'."
 
+msgid "Error:"
+msgstr "Error:"
+
 msgid "Example object shape: {shape}."
 msgstr "Example object shape: {shape}."
 
 msgid "Executing {name}"
 msgstr "Executing {name}"
+
+msgid "Exit the REPL"
+msgstr "Exit the REPL"
+
+msgid "Exits the REPL."
+msgstr "Exits the REPL."
 
 msgid "Explicit field form: {value}"
 msgstr "Explicit field form: {value}"
@@ -275,6 +299,9 @@ msgstr "Failed to render YAML output for {context}: {error}"
 
 msgid "Failed to render YAML output for {context}: {exc}"
 msgstr "Failed to render YAML output for {context}: {exc}"
+
+msgid "Failed to reset session:"
+msgstr "Failed to reset session:"
 
 msgid "Field '{key_name}' is not valid for '{type_name}'."
 msgstr "Field '{key_name}' is not valid for '{type_name}'."
@@ -333,6 +360,9 @@ msgstr "Getting {name}"
 msgid "Getting {name} at index {value}"
 msgstr "Getting {name} at index {value}"
 
+msgid "Goodbye!"
+msgstr "Goodbye!"
+
 msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 msgstr "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 
@@ -347,6 +377,12 @@ msgstr "Initializing {name}"
 
 msgid "Input hints:"
 msgstr "Input hints:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "Inspect a target's signature, docs, examples, and structured invoke template."
+
+msgid "Interrupted."
+msgstr "Interrupted."
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "Invalid Attribute: {attribute} is not supported"
@@ -399,14 +435,14 @@ msgstr "Invalid {field_name} '{path_text}': segment '{segment}' must be a valid 
 msgid "Invalid {field_name}: value cannot be empty."
 msgstr "Invalid {field_name}: value cannot be empty."
 
-msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-msgstr "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-
 msgid "JSON example:"
 msgstr "JSON example:"
 
 msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
 msgstr "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
 
 msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
 msgstr "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
@@ -416,9 +452,6 @@ msgstr "JSON type tag '{type_tag}' does not match expected wrapper '{primary_exp
 
 msgid "JSON value:"
 msgstr "JSON value:"
-
-msgid "Discover invokable targets and the next command to run for each one."
-msgstr "Discover invokable targets and the next command to run for each one."
 
 msgid "List result:"
 msgstr "List result:"
@@ -495,11 +528,20 @@ msgstr "Parameter '{param_name}' contains a null byte which is not allowed."
 msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 msgstr "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 
+msgid "Parse error:"
+msgstr "Parse error:"
+
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+
 msgid "Path to a JSON file containing an array of invoke calls for batch execution."
 msgstr "Path to a JSON file containing an array of invoke calls for batch execution."
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
 
 msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
 msgstr "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
@@ -525,6 +567,12 @@ msgstr "Property {name} (id={id}, type={prop_type})"
 msgid "Read current value:"
 msgstr "Read current value:"
 
+msgid "Close Synergy and reset the session"
+msgstr "Close Synergy and reset the session"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Closes Synergy and resets the session for a fresh start."
+
 msgid "Resolved assignment:"
 msgstr "Resolved assignment:"
 
@@ -533,6 +581,9 @@ msgstr "Resolved kwargs:"
 
 msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
 msgstr "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
 
 msgid "Save Error"
 msgstr "Save Error"
@@ -552,6 +603,9 @@ msgstr "Segment '{segment}' is not a callable method on class '{class_name}' whe
 msgid "Selection"
 msgstr "Selection"
 
+msgid "Session:"
+msgstr "Session:"
+
 msgid "Set it with:"
 msgstr "Set it with:"
 
@@ -564,11 +618,23 @@ msgstr "Shorter JSON example:"
 msgid "Shorter form:"
 msgstr "Shorter form:"
 
-msgid "Inspect a target's signature, docs, examples, and structured invoke template."
-msgstr "Inspect a target's signature, docs, examples, and structured invoke template."
+msgid "Show detailed help for a command"
+msgstr "Show detailed help for a command"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "Show full tracebacks on errors instead of short messages."
+
+msgid "Show this help message"
+msgstr "Show this help message"
 
 msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
 msgstr "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
+
+msgid "Shows available commands and usage information."
+msgstr "Shows available commands and usage information."
+
+msgid "Start an interactive moldflow shell session."
+msgstr "Start an interactive moldflow shell session."
 
 msgid "Status"
 msgstr "Status"
@@ -579,8 +645,14 @@ msgstr "Step '{step_name}' in target '{target}' has positional-only parameters (
 msgid "Submit"
 msgstr "Submit"
 
+msgid "Synergy session reset."
+msgstr "Synergy session reset."
+
 msgid "TARGET is required unless --batch-file is used."
 msgstr "TARGET is required unless --batch-file is used."
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "Tab completion targets are refreshed automatically."
 
 msgid "Target"
 msgstr "Target"
@@ -639,6 +711,9 @@ msgstr "This property is read-only and takes no arguments."
 msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 msgstr "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "Tip: install pyreadline3 for tab completion support on Windows."
+
 msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 msgstr "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 
@@ -648,11 +723,23 @@ msgstr "Try this:"
 msgid "Type"
 msgstr "Type"
 
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "Type 'help' for available commands, 'exit' to quit."
+
+msgid "Type help to see available commands."
+msgstr "Type help to see available commands."
+
 msgid "Unknown batch item field(s): {fields}."
 msgstr "Unknown batch item field(s): {fields}."
 
+msgid "Unknown command:"
+msgstr "Unknown command:"
+
 msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
 msgstr "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "Use 'help <command>' for detailed help on a specific command."
 
 msgid "Use JSON field '{preferred_field}' for '{param_name}'."
 msgstr "Use JSON field '{preferred_field}' for '{param_name}'."
@@ -699,6 +786,18 @@ msgstr "Write JSON output to the given file path without changing stdout mode."
 msgid "Wrote structured output to {path}."
 msgstr "Wrote structured output to {path}."
 
+msgid "You are already in the REPL."
+msgstr "You are already in the REPL."
+
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\nDid you mean step '{step_name}'?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "both {first} and {second} must be provided together"
 
@@ -737,6 +836,9 @@ msgstr "found {value}, must be one of {expected_values}"
 
 msgid "found {value}, must be positive"
 msgstr "found {value}, must be positive"
+
+msgid "interactive shell"
+msgstr "interactive shell"
 
 msgid "ok"
 msgstr "ok"
@@ -779,15 +881,3 @@ msgstr "{value} does not have a valid file extension, must be {extensions}"
 
 msgid "{value} is not a valid {enum_name}"
 msgstr "{value} is not a valid {enum_name}"
-
-msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
-msgstr "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
-
-msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
-msgstr "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
-
-msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
-msgstr "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
-
-msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
-msgstr "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."

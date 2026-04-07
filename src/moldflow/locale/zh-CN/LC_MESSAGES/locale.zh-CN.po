@@ -3,15 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-CN\n"
 
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\n您是指步骤 '{step_name}' 吗？"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\n对于多步骤目标的 JSON 输入，请按步骤名称对参数进行分组，例如 {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\n对于 JSON 输入，此步骤键必须映射到参数名称对象，例如 {example}"
-
 msgid " Did you mean '{parameter}'?"
 msgstr " 您是指 '{parameter}' 吗？"
 
@@ -26,6 +17,9 @@ msgstr "已请求 --yaml，但未安装 PyYAML：{error}"
 
 msgid "--yaml requested but PyYAML is not installed: {exc}"
 msgstr "请求了 --yaml，但未安装 PyYAML：{exc}"
+
+msgid "Aborted."
+msgstr "已中止。"
 
 msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
 msgstr "仅供高级回退使用。当注解上下文不可用、嵌套负载确实是通用结构，或多个包装器族会产生歧义时，请使用此带标签的形状。"
@@ -192,17 +186,35 @@ msgstr "检查{value}是{name}"
 msgid "Class '{class_name}' has no attribute '{attr_name}'"
 msgstr "类 '{class_name}' 没有属性 '{attr_name}'。"
 
+msgid "Clear the screen"
+msgstr "清除屏幕"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "清除终端屏幕并重新绘制横幅。"
+
+msgid "Command exited with status {code}"
+msgstr "命令以状态 {code} 退出"
+
+msgid "Commands:"
+msgstr "命令："
+
 msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 msgstr "不允许冲突的参数路径 '{left_path}' 和 '{right_path}'。"
 
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "无法使用实例ID: {value} 进行初始化"
 
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D 也可以退出。"
+
 msgid "Detail"
 msgstr "详情"
 
 msgid "Direct parameter assignment remains the preferred non-JSON form."
 msgstr "直接参数赋值仍然是首选的非 JSON 形式。"
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "发现可调用的目标以及每个目标下一步要运行的命令。"
 
 msgid "Do not pass TARGET when --batch-file is used."
 msgstr "使用 --batch-file 时，请勿传入 TARGET。"
@@ -231,11 +243,11 @@ msgstr "将用于目标解析和运行时 invoke 绑定的逐行 JSON 跟踪事�
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "输出供脚本或代理使用的结构化 JSON。"
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "输出供脚本或代理使用的结构化 YAML（需要 PyYAML）。"
-
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "输出供脚本或代理使用的结构化 JSON。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "输出供脚本或代理使用的结构化 YAML（需要 PyYAML）。"
 
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "输出供脚本或代理使用的结构化 YAML（需要 PyYAML）。"
@@ -249,11 +261,20 @@ msgstr "目标为空"
 msgid "Empty type tag is not valid for '{primary_expected}'."
 msgstr "空类型标签对 '{primary_expected}' 无效。"
 
+msgid "Error:"
+msgstr "错误："
+
 msgid "Example object shape: {shape}."
 msgstr "对象示例形状：{shape}。"
 
 msgid "Executing {name}"
 msgstr "执行{name}"
+
+msgid "Exit the REPL"
+msgstr "退出 REPL"
+
+msgid "Exits the REPL."
+msgstr "退出 REPL。"
 
 msgid "Explicit field form: {value}"
 msgstr "显式字段形式：{value}"
@@ -272,6 +293,9 @@ msgstr "无法为 {context} 生成 YAML 输出：{error}"
 
 msgid "Failed to render YAML output for {context}: {exc}"
 msgstr "无法为 {context} 生成 YAML 输出：{exc}"
+
+msgid "Failed to reset session:"
+msgstr "重置会话失败："
 
 msgid "Field '{key_name}' is not valid for '{type_name}'."
 msgstr "字段 '{key_name}' 对 '{type_name}' 无效。"
@@ -330,6 +354,9 @@ msgstr "获取{name}"
 msgid "Getting {name} at index {value}"
 msgstr "在索引{value}获取{name}"
 
+msgid "Goodbye!"
+msgstr "再见！"
+
 msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 msgstr "如果简写输入有歧义，请改用 --params-json。{guidance}"
 
@@ -344,6 +371,12 @@ msgstr "初始化{name}"
 
 msgid "Input hints:"
 msgstr "输入提示："
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "检查目标的签名、文档、示例以及结构化 invoke 模板。"
+
+msgid "Interrupted."
+msgstr "已中断。"
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "无效属性：不支持{attribute}"
@@ -396,9 +429,6 @@ msgstr "无效的 {field_name} '{path_text}'：段 '{segment}' 必须是有效�
 msgid "Invalid {field_name}: value cannot be empty."
 msgstr "无效的 {field_name}：值不能为空。"
 
-msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-msgstr "使用命名参数或 JSON 输入运行 Moldflow 目标。未加前缀的目标会按 synergy.<target> 处理。"
-
 msgid "JSON example:"
 msgstr "JSON 示例："
 
@@ -413,9 +443,6 @@ msgstr "JSON 类型标签 '{type_tag}' 与预期的包装器 '{primary_expected}
 
 msgid "JSON value:"
 msgstr "JSON 值："
-
-msgid "Discover invokable targets and the next command to run for each one."
-msgstr "发现可调用的目标以及每个目标下一步要运行的命令。"
 
 msgid "List result:"
 msgstr "列表结果："
@@ -492,6 +519,9 @@ msgstr "参数 '{param_name}' 包含不允许的空字节。"
 msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 msgstr "参数 '{param_name}' 包含控制字符（换行/制表/回车）；请提供单行值或根据需要引用/转义。"
 
+msgid "Parse error:"
+msgstr "解析错误："
+
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "解析/验证/构建 kwargs，并在不执行 invoke 步骤的情况下输出调用计划。"
 
@@ -522,6 +552,12 @@ msgstr "属性 {name}（id={id}，类型={prop_type}）"
 msgid "Read current value:"
 msgstr "读取当前值："
 
+msgid "Close Synergy and reset the session"
+msgstr "关闭 Synergy 并重置会话"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "关闭 Synergy 并重置会话，以便重新开始。"
+
 msgid "Resolved assignment:"
 msgstr "已解析的赋值："
 
@@ -530,6 +566,9 @@ msgstr "已解析的 kwargs："
 
 msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
 msgstr "执行目标 '{target}' 时，已解析对象没有可调用属性 '{segment}'。"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "使用命名参数或 JSON 输入运行 Moldflow 目标。未加前缀的目标会按 synergy.<target> 处理。"
 
 msgid "Save Error"
 msgstr "保存错误"
@@ -549,6 +588,9 @@ msgstr "解析目标 '{target}' 时，段 '{segment}' 不是类 '{class_name}' �
 msgid "Selection"
 msgstr "选择"
 
+msgid "Session:"
+msgstr "会话："
+
 msgid "Set it with:"
 msgstr "可使用以下方式设置："
 
@@ -561,11 +603,23 @@ msgstr "更简短的 JSON 示例："
 msgid "Shorter form:"
 msgstr "更简短的形式："
 
-msgid "Inspect a target's signature, docs, examples, and structured invoke template."
-msgstr "检查目标的签名、文档、示例以及结构化 invoke 模板。"
+msgid "Show detailed help for a command"
+msgstr "显示命令的详细帮助"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "出错时显示完整的回溯信息，而不是简短的错误消息。"
+
+msgid "Show this help message"
+msgstr "显示此帮助信息"
 
 msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
 msgstr "正在显示 {count} 个过滤匹配项的紧凑表格。请缩小过滤范围，或使用 --json 查看规范目标字符串。"
+
+msgid "Shows available commands and usage information."
+msgstr "显示可用命令和使用信息。"
+
+msgid "Start an interactive moldflow shell session."
+msgstr "启动一个交互式 moldflow shell 会话。"
 
 msgid "Status"
 msgstr "状态"
@@ -576,8 +630,14 @@ msgstr "目标 '{target}' 中的步骤 '{step_name}' 包含仅限位置参数 ({
 msgid "Submit"
 msgstr "确定"
 
+msgid "Synergy session reset."
+msgstr "Synergy 会话已重置。"
+
 msgid "TARGET is required unless --batch-file is used."
 msgstr "除非使用 --batch-file，否则 TARGET 为必填项。"
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "Tab 补全目标会自动刷新。"
 
 msgid "Target"
 msgstr "目标"
@@ -636,6 +696,9 @@ msgstr "此属性为只读，不接受参数。"
 msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 msgstr "此属性返回一个 {class_name} 包装器。请继续使用 describe {target}.<member> 或 invoke {target}.<method>。"
 
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "提示：在 Windows 上安装 pyreadline3 以获得 Tab 补全支持。"
+
 msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 msgstr "将返回值 False 视为 CLI 失败（退出码 1）。默认启用此行为以便于自动化。"
 
@@ -645,11 +708,23 @@ msgstr "试试这个："
 msgid "Type"
 msgstr "类型"
 
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "输入 'help' 查看可用命令，输入 'exit' 退出。"
+
+msgid "Type help to see available commands."
+msgstr "输入 help 查看可用命令。"
+
 msgid "Unknown batch item field(s): {fields}."
 msgstr "未知的批处理项字段：{fields}。"
 
+msgid "Unknown command:"
+msgstr "未知命令："
+
 msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
 msgstr "目标 {target}{signature} 的参数 '{parameter}' 未知。{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "使用 'help <命令>' 查看特定命令的详细帮助。"
 
 msgid "Use JSON field '{preferred_field}' for '{param_name}'."
 msgstr "请为 '{param_name}' 使用 JSON 字段 '{preferred_field}'。"
@@ -696,6 +771,18 @@ msgstr "在不更改 stdout 模式的情况下，将 JSON 输出写入给定文�
 msgid "Wrote structured output to {path}."
 msgstr "已将结构化输出写入 {path}。"
 
+msgid "You are already in the REPL."
+msgstr "您已在 REPL 中。"
+
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n您是指步骤 '{step_name}' 吗？"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n对于多步骤目标的 JSON 输入，请按步骤名称对参数进行分组，例如 {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\n对于 JSON 输入，此步骤键必须映射到参数名称对象，例如 {example}"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} 和 {second} 必须一起提供"
 
@@ -734,6 +821,9 @@ msgstr "找到{value}，必须是{expected_values}之一"
 
 msgid "found {value}, must be positive"
 msgstr "找到{value}，必须是积极的"
+
+msgid "interactive shell"
+msgstr "交互式 shell"
 
 msgid "ok"
 msgstr "成功"

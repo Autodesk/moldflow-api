@@ -3,15 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ja-JP\n"
 
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\nステップ '{step_name}' のことですか?"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\n複数ステップのターゲットで JSON 入力を使う場合は、パラメータをステップ名ごとにまとめてください。例: {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\nJSON 入力では、このステップキーはパラメータ名のオブジェクトに対応している必要があります。例: {example}"
-
 msgid " Did you mean '{parameter}'?"
 msgstr " '{parameter}' のことですか?"
 
@@ -26,6 +17,9 @@ msgstr "--yaml が要求されましたが、PyYAML がインストールされ�
 
 msgid "--yaml requested but PyYAML is not installed: {exc}"
 msgstr "--yaml が要求されましたが、PyYAML がインストールされていません: {exc}"
+
+msgid "Aborted."
+msgstr "中止されました。"
 
 msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
 msgstr "高度なフォールバック専用です。アノテーションコンテキストを利用できない場合、ネストしたペイロードが本当に汎用的な場合、または複数のラッパーファミリーで曖昧になる場合にのみ、このタグ付き形状を使用してください。"
@@ -192,20 +186,38 @@ msgstr "{value} が {name} であることを確認しています"
 msgid "Class '{class_name}' has no attribute '{attr_name}'"
 msgstr "クラス '{class_name}' に属性 '{attr_name}' はありません"
 
+msgid "Clear the screen"
+msgstr "画面をクリアする"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "ターミナル画面をクリアしてバナーを再描画します。"
+
+msgid "Command exited with status {code}"
+msgstr "コマンドがステータス {code} で終了しました"
+
+msgid "Commands:"
+msgstr "コマンド:"
+
 msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
 msgstr "競合する引数パス '{left_path}' と '{right_path}' は許可されていません。"
 
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "インスタンス ID {value} で初期化できませんでした"
 
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D でも終了できます。"
+
 msgid "Detail"
 msgstr "詳細"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "非 JSON 形式では、直接のパラメータ代入が引き続き推奨されます。"
 
 msgid "Disable ANSI color/styling in CLI output."
 msgstr "CLI 出力で ANSI カラー/スタイリングを無効にします。"
 
-msgid "Direct parameter assignment remains the preferred non-JSON form."
-msgstr "非 JSON 形式では、直接のパラメータ代入が引き続き推奨されます。"
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "呼び出し可能なターゲットと、それぞれ次に実行すべきコマンドを確認します。"
 
 msgid "Do not pass TARGET when --batch-file is used."
 msgstr "--batch-file 使用時は TARGET を渡さないでください。"
@@ -225,6 +237,9 @@ msgstr "{target} のドライラン"
 msgid "Duplicate argument path '{path}' is not allowed."
 msgstr "重複する引数パス '{path}' は許可されていません。"
 
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "重複または競合するパスは拒否されます。引数は key=value または param.attr=value として渡します。チェインされたターゲットでは、たとえば find_plot_by_name.plot_name=\"My Plot\" のようにメソッド名を接頭辞として付けてください。ネストされたルーティングは step.param.attr=value を使用し（たとえば param=1 は param.attr=2 と競合します）、位置専用パラメータを持つメソッドは名前付き CLI ルーティングではサポートされません。"
+
 msgid "Emit a JSON schema-like representation of target parameters."
 msgstr "ターゲットパラメータの JSON スキーマ風表現を出力します。"
 
@@ -234,11 +249,11 @@ msgstr "ターゲット解決と実行時 invoke バインディングのため�
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "スクリプトまたはエージェント利用向けに構造化 JSON を出力します。"
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "スクリプトまたはエージェント利用向けに構造化 YAML を出力します（PyYAML が必要です）。"
-
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "スクリプトまたはエージェント利用向けに構造化 JSON を出力します。"
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "スクリプトまたはエージェント利用向けに構造化 YAML を出力します（PyYAML が必要です）。"
 
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "スクリプトまたはエージェント利用向けに構造化 YAML を出力します（PyYAML が必要です）。"
@@ -252,11 +267,20 @@ msgstr "ターゲットが空です"
 msgid "Empty type tag is not valid for '{primary_expected}'."
 msgstr "空の型タグは '{primary_expected}' では無効です。"
 
+msgid "Error:"
+msgstr "エラー:"
+
 msgid "Example object shape: {shape}."
 msgstr "オブジェクト形状の例: {shape}."
 
 msgid "Executing {name}"
 msgstr "{name} を実行しています"
+
+msgid "Exit the REPL"
+msgstr "REPL を終了する"
+
+msgid "Exits the REPL."
+msgstr "REPL を終了します。"
 
 msgid "Explicit field form: {value}"
 msgstr "明示的なフィールド形式: {value}"
@@ -275,6 +299,9 @@ msgstr "{context} の YAML 出力を生成できませんでした: {error}"
 
 msgid "Failed to render YAML output for {context}: {exc}"
 msgstr "{context} の YAML 出力の生成に失敗しました: {exc}"
+
+msgid "Failed to reset session:"
+msgstr "セッションのリセットに失敗しました:"
 
 msgid "Field '{key_name}' is not valid for '{type_name}'."
 msgstr "フィールド '{key_name}' は '{type_name}' では無効です。"
@@ -333,6 +360,9 @@ msgstr "{name} を取得しています"
 msgid "Getting {name} at index {value}"
 msgstr "インデックス {value} の {name} を取得しています"
 
+msgid "Goodbye!"
+msgstr "さようなら！"
+
 msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
 msgstr "短縮入力が曖昧な場合は、--params-json に切り替えてください。{guidance}"
 
@@ -347,6 +377,12 @@ msgstr "{name} を初期化しています"
 
 msgid "Input hints:"
 msgstr "入力ヒント:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "ターゲットのシグネチャ、ドキュメント、例、および構造化された invoke テンプレートを確認します。"
+
+msgid "Interrupted."
+msgstr "中断されました。"
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "無効な属性: {attribute} はサポートされていません"
@@ -399,14 +435,14 @@ msgstr "無効な {field_name} '{path_text}': セグメント '{segment}' は有
 msgid "Invalid {field_name}: value cannot be empty."
 msgstr "無効な {field_name}：値を空にすることはできません。"
 
-msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
-msgstr "名前付きパラメーターまたは JSON 入力を使って Moldflow ターゲットを実行します。プレフィックスのないターゲットは synergy.<target> として扱われます。"
-
 msgid "JSON example:"
 msgstr "JSON の例:"
 
 msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
 msgstr "パラメータの対応付けを含む JSON オブジェクトです（位置引数を上書きします）。トップレベルの配列やスカラーは使用できません。"
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "パラメータ対応を含む JSON オブジェクトです（位置引数を上書きします）。トップレベルの配列/スカラーは許可されません。"
 
 msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
 msgstr "JSON パラメータは名前付き引数の JSON オブジェクトである必要があります。例: --params-json '{\"param\": 1}' またはチェインされたターゲットの場合 --params-json '{\"step\": {\"param\": 1}}'"
@@ -416,9 +452,6 @@ msgstr "JSON 型タグ '{type_tag}' が想定されるラッパー '{primary_exp
 
 msgid "JSON value:"
 msgstr "JSON 値:"
-
-msgid "Discover invokable targets and the next command to run for each one."
-msgstr "呼び出し可能なターゲットと、それぞれ次に実行すべきコマンドを確認します。"
 
 msgid "List result:"
 msgstr "一覧結果:"
@@ -495,11 +528,20 @@ msgstr "パラメータ '{param_name}' にヌルバイトが含まれていま�
 msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
 msgstr "パラメータ '{param_name}' に制御文字（改行/タブ/復帰）が含まれています。単一行の値を指定するか、必要に応じて引用/エスケープしてください。"
 
+msgid "Parse error:"
+msgstr "解析エラー:"
+
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "kwargs を解析、検証、構築し、invoke ステップを実行せずに呼び出し計画を出力します。"
 
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "invoke ステップを実行せずに、kwargs を解析・検証・構築し、テンプレート要約の呼び出し計画を出力します。"
+
 msgid "Path to a JSON file containing an array of invoke calls for batch execution."
 msgstr "バッチ実行用の invoke 呼び出し配列を含む JSON ファイルへのパスです。"
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "パラメータ対応を含む JSON ファイルへのパスです（位置引数を上書きします）。トップレベルのペイロードは配列/スカラーではなくオブジェクトである必要があります。"
 
 msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
 msgstr "パラメータの対応付けを含む JSON ファイルへのパスです（位置引数を上書きします）。トップレベルのペイロードはオブジェクトである必要があります。"
@@ -525,6 +567,12 @@ msgstr "プロパティ {name} (id={id}, type={prop_type})"
 msgid "Read current value:"
 msgstr "現在の値を読み取る:"
 
+msgid "Close Synergy and reset the session"
+msgstr "Synergy を終了してセッションをリセット"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Synergy を終了し、セッションをリセットして最初からやり直します。"
+
 msgid "Resolved assignment:"
 msgstr "解決された代入:"
 
@@ -533,6 +581,9 @@ msgstr "解決された kwargs:"
 
 msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
 msgstr "ターゲット '{target}' の実行時に、解決されたオブジェクトには呼び出し可能な属性 '{segment}' がありません"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "名前付きパラメーターまたは JSON 入力を使って Moldflow ターゲットを実行します。プレフィックスのないターゲットは synergy.<target> として扱われます。"
 
 msgid "Save Error"
 msgstr "保存エラー"
@@ -552,6 +603,9 @@ msgstr "ターゲット '{target}' の解決時に、セグメント '{segment}'
 msgid "Selection"
 msgstr "選択"
 
+msgid "Session:"
+msgstr "セッション:"
+
 msgid "Set it with:"
 msgstr "次で設定します:"
 
@@ -564,11 +618,23 @@ msgstr "短い JSON 例:"
 msgid "Shorter form:"
 msgstr "短縮形:"
 
-msgid "Inspect a target's signature, docs, examples, and structured invoke template."
-msgstr "ターゲットのシグネチャ、ドキュメント、例、および構造化された invoke テンプレートを確認します。"
+msgid "Show detailed help for a command"
+msgstr "コマンドの詳細なヘルプを表示する"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "エラー時に短いメッセージではなく完全なトレースバックを表示します。"
+
+msgid "Show this help message"
+msgstr "このヘルプメッセージを表示する"
 
 msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
 msgstr "絞り込み結果 {count} 件のコンパクトテーブルを表示しています。フィルターをさらに絞り込むか、正規のターゲット文字列を得るには --json を使用してください。"
+
+msgid "Shows available commands and usage information."
+msgstr "利用可能なコマンドと使用方法を表示します。"
+
+msgid "Start an interactive moldflow shell session."
+msgstr "対話型の moldflow シェルセッションを開始します。"
 
 msgid "Status"
 msgstr "状態"
@@ -579,8 +645,14 @@ msgstr "ターゲット '{target}' のステップ '{step_name}' には位置専
 msgid "Submit"
 msgstr "OK"
 
+msgid "Synergy session reset."
+msgstr "Synergy セッションがリセットされました。"
+
 msgid "TARGET is required unless --batch-file is used."
 msgstr "--batch-file を使用しない限り、TARGET は必須です。"
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "タブ補完のターゲットは自動的に更新されます。"
 
 msgid "Target"
 msgstr "ターゲット"
@@ -639,6 +711,9 @@ msgstr "このプロパティは読み取り専用で、引数を取りません
 msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
 msgstr "このプロパティは {class_name} ラッパーを返します。describe {target}.<member> または invoke {target}.<method> に進んでください。"
 
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "ヒント: Windows でタブ補完を使用するには pyreadline3 をインストールしてください。"
+
 msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
 msgstr "False の戻り値を CLI の失敗（終了コード 1）として扱います。これは自動化しやすい挙動として既定で有効です。"
 
@@ -648,11 +723,23 @@ msgstr "次を試してください:"
 msgid "Type"
 msgstr "型"
 
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "'help' で利用可能なコマンドを表示、'exit' で終了します。"
+
+msgid "Type help to see available commands."
+msgstr "help と入力して利用可能なコマンドを確認してください。"
+
 msgid "Unknown batch item field(s): {fields}."
 msgstr "不明なバッチ項目フィールド: {fields}."
 
+msgid "Unknown command:"
+msgstr "不明なコマンド:"
+
 msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
 msgstr "{target}{signature} に不明なパラメータ '{parameter}' があります。{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "'help <コマンド>' で特定のコマンドの詳細なヘルプを表示できます。"
 
 msgid "Use JSON field '{preferred_field}' for '{param_name}'."
 msgstr "'{param_name}' には JSON フィールド '{preferred_field}' を使用してください。"
@@ -699,6 +786,18 @@ msgstr "stdout モードを変更せずに、指定されたファイルパス�
 msgid "Wrote structured output to {path}."
 msgstr "構造化出力を {path} に書き込みました。"
 
+msgid "You are already in the REPL."
+msgstr "すでに REPL 内にいます。"
+
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\nステップ '{step_name}' のことですか?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n複数ステップのターゲットで JSON 入力を使う場合は、パラメータをステップ名ごとにまとめてください。例: {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nJSON 入力では、このステップキーはパラメータ名のオブジェクトに対応している必要があります。例: {example}"
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} と {second} は同時に指定する必要があります"
 
@@ -737,6 +836,9 @@ msgstr "見つかった {value} は {expected_values} のいずれかでなけ�
 
 msgid "found {value}, must be positive"
 msgstr "見つかった {value} は正でなければなりません"
+
+msgid "interactive shell"
+msgstr "対話型シェル"
 
 msgid "ok"
 msgstr "成功"
@@ -779,15 +881,3 @@ msgstr "{value} には有効なファイル拡張子がありません。{extens
 
 msgid "{value} is not a valid {enum_name}"
 msgstr "{value} は有効な {enum_name} ではありません"
-
-msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
-msgstr "重複または競合するパスは拒否されます。引数は key=value または param.attr=value として渡します。チェインされたターゲットでは、たとえば find_plot_by_name.plot_name=\"My Plot\" のようにメソッド名を接頭辞として付けてください。ネストされたルーティングは step.param.attr=value を使用し（たとえば param=1 は param.attr=2 と競合します）、位置専用パラメータを持つメソッドは名前付き CLI ルーティングではサポートされません。"
-
-msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
-msgstr "パラメータ対応を含む JSON オブジェクトです（位置引数を上書きします）。トップレベルの配列/スカラーは許可されません。"
-
-msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
-msgstr "パラメータ対応を含む JSON ファイルへのパスです（位置引数を上書きします）。トップレベルのペイロードは配列/スカラーではなくオブジェクトである必要があります。"
-
-msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
-msgstr "invoke ステップを実行せずに、kwargs を解析・検証・構築し、テンプレート要約の呼び出し計画を出力します。"
