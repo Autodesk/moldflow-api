@@ -5,12 +5,14 @@
 Test helper.py
 """
 
+import os
 from unittest.mock import Mock
 from enum import Enum
 import inspect
 import pytest
 from moldflow.helper import (
     check_file_extension,
+    check_folder_path,
     check_index,
     check_is_non_negative,
     check_is_non_zero,
@@ -31,6 +33,7 @@ from tests.conftest import (
     VALID_BOOL,
     VALID_INT,
     VALID_FLOAT,
+    INVALID_STR,
     list_intersection,
 )
 
@@ -277,6 +280,60 @@ class TestHelper:
         """
         check_file_extension(file_name, extensions)
         assert _("default") in caplog.text
+
+    def test_check_file_extension_creates_parent_dir(self, _, caplog, tmp_path):
+        """
+        When the path includes a parent, check_file_extension creates intermediate directories.
+        """
+        file_path = os.path.join(str(tmp_path), "exports", "nested", "data.xml")
+        assert check_file_extension(file_path, ".xml") == file_path
+        assert (tmp_path / "exports" / "nested").is_dir()
+        assert _("Valid") in caplog.text
+
+    def test_check_file_extension_without_parent_directory(self, _, caplog, tmp_path, monkeypatch):
+        """
+        With no directory component (bare filename), no directories are created.
+        """
+        monkeypatch.chdir(tmp_path)
+        assert check_file_extension("data.xml", ".xml") == "data.xml"
+        assert not list(tmp_path.iterdir())
+        assert _("Valid") in caplog.text
+
+    @pytest.mark.parametrize(
+        "folder_path", ["SupportBeam-API-All", os.path.join("ExportFormat", "TestFolder")]
+    )
+    def test_check_folder_path(self, folder_path, _, caplog):
+        """
+        Test check_folder_path returns the path unchanged and does not append an extension.
+        """
+        assert check_folder_path(folder_path) == folder_path
+        assert _("Valid") in caplog.text
+
+    def test_check_folder_path_creates_parent_dir(self, _, caplog, tmp_path):
+        """
+        When the path includes a parent, check_folder_path creates intermediate directories.
+        """
+        folder_path = os.path.join(str(tmp_path), "vtk_out", "run1")
+        assert check_folder_path(folder_path) == folder_path
+        assert (tmp_path / "vtk_out").is_dir()
+        assert _("Valid") in caplog.text
+
+    def test_check_folder_path_without_parent_directory(self, _, caplog, tmp_path, monkeypatch):
+        """
+        With no directory component (bare folder name), no directories are created.
+        """
+        monkeypatch.chdir(tmp_path)
+        assert check_folder_path("export_root") == "export_root"
+        assert not list(tmp_path.iterdir())
+        assert _("Valid") in caplog.text
+
+    @pytest.mark.parametrize("bad", INVALID_STR)
+    def test_check_folder_path_invalid_type(self, bad):
+        """
+        Test check_folder_path rejects non-str paths.
+        """
+        with pytest.raises(TypeError):
+            check_folder_path(bad)
 
     @pytest.mark.parametrize("value, expected_values", [(x, (1, 2, 3)) for x in tuple(range(1, 3))])
     def test_check_expected_values(self, value, expected_values, _, caplog):
