@@ -299,14 +299,22 @@ class TestHelper:
         assert not list(tmp_path.iterdir())
         assert _("Valid") in caplog.text
 
-    @pytest.mark.parametrize(
-        "folder_path", ["SupportBeam-API-All", os.path.join("ExportFormat", "TestFolder")]
-    )
-    def test_check_folder_path(self, folder_path, _, caplog):
+    def test_check_folder_path_bare_name(self, _, caplog, tmp_path, monkeypatch):
         """
         Test check_folder_path returns the path unchanged and does not append an extension.
         """
-        assert check_folder_path(folder_path) == folder_path
+        monkeypatch.chdir(tmp_path)
+        assert check_folder_path("SupportBeam-API-All") == "SupportBeam-API-All"
+        assert _("Valid") in caplog.text
+
+    def test_check_folder_path_relative_with_parent(self, _, caplog, tmp_path, monkeypatch):
+        """
+        Relative paths with a parent segment stay under cwd (isolated via tmp_path).
+        """
+        monkeypatch.chdir(tmp_path)
+        rel = os.path.join("ExportFormat", "TestFolder")
+        assert check_folder_path(rel) == rel
+        assert (tmp_path / "ExportFormat").is_dir()
         assert _("Valid") in caplog.text
 
     def test_check_folder_path_creates_parent_dir(self, _, caplog, tmp_path):
@@ -316,6 +324,16 @@ class TestHelper:
         folder_path = os.path.join(str(tmp_path), "vtk_out", "run1")
         assert check_folder_path(folder_path) == folder_path
         assert (tmp_path / "vtk_out").is_dir()
+        assert _("Valid") in caplog.text
+
+    def test_check_folder_path_trailing_sep_creates_parents_only(self, _, caplog, tmp_path):
+        """
+        Trailing path separators must not make makedirs target the export root itself.
+        """
+        folder_path = os.path.join(str(tmp_path), "vtk", "run1") + os.sep
+        assert check_folder_path(folder_path) == folder_path
+        assert (tmp_path / "vtk").is_dir()
+        assert not (tmp_path / "vtk" / "run1").exists()
         assert _("Valid") in caplog.text
 
     def test_check_folder_path_without_parent_directory(self, _, caplog, tmp_path, monkeypatch):

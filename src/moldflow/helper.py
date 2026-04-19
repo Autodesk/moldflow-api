@@ -240,10 +240,14 @@ def check_index(index: int, min_value: int, max_value: int):
 def _create_required_parent_directories(path: str):
     """
     Create parent directories for a given path.
+
+    Trailing separators are normalized first so ``dirname`` resolves to the
+    parent of the final path component (never the export root / file leaf).
+
     Args:
         path (str): The path to create parent directories for.
     """
-    directory = os.path.dirname(path)
+    directory = os.path.dirname(os.path.normpath(path))
     if not directory:
         return
     os.makedirs(directory, exist_ok=True)
