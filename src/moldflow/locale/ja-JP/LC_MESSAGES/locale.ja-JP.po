@@ -9,6 +9,9 @@ msgstr "キャンセル"
 msgid "Checking file extension {file_name}"
 msgstr "ファイル拡張子 {file_name} を確認しています"
 
+msgid "Checking folder path {folder_path}"
+msgstr "フォルダー パス {folder_path} を確認しています"
+
 msgid "Checking index {index} is in range"
 msgstr "インデックス {index} が範囲内であることを確認しています"
 

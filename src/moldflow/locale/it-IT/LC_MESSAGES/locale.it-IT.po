@@ -9,6 +9,9 @@ msgstr "Annulla"
 msgid "Checking file extension {file_name}"
 msgstr "Verifica dell'estensione del file {file_name}"
 
+msgid "Checking folder path {folder_path}"
+msgstr "Verifica del percorso della cartella {folder_path}"
+
 msgid "Checking index {index} is in range"
 msgstr "Verifica che l'indice {index} sia nell'intervallo"
 
