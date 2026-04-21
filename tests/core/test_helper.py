@@ -12,7 +12,7 @@ import inspect
 import pytest
 from moldflow.helper import (
     check_file_extension,
-    check_folder_path,
+    prepare_folder_path,
     check_index,
     check_is_non_negative,
     check_is_non_zero,
@@ -299,59 +299,59 @@ class TestHelper:
         assert not list(tmp_path.iterdir())
         assert _("Valid") in caplog.text
 
-    def test_check_folder_path_bare_name(self, _, caplog, tmp_path, monkeypatch):
+    def test_prepare_folder_path_bare_name(self, _, caplog, tmp_path, monkeypatch):
         """
-        Test check_folder_path returns the path unchanged and does not append an extension.
+        Test prepare_folder_path returns the path unchanged and does not append an extension.
         """
         monkeypatch.chdir(tmp_path)
-        assert check_folder_path("SupportBeam-API-All") == "SupportBeam-API-All"
+        assert prepare_folder_path("SupportBeam-API-All") == "SupportBeam-API-All"
         assert _("Valid") in caplog.text
 
-    def test_check_folder_path_relative_with_parent(self, _, caplog, tmp_path, monkeypatch):
+    def test_prepare_folder_path_relative_with_parent(self, _, caplog, tmp_path, monkeypatch):
         """
         Relative paths with a parent segment stay under cwd (isolated via tmp_path).
         """
         monkeypatch.chdir(tmp_path)
         rel = os.path.join("ExportFormat", "TestFolder")
-        assert check_folder_path(rel) == rel
+        assert prepare_folder_path(rel) == rel
         assert (tmp_path / "ExportFormat").is_dir()
         assert _("Valid") in caplog.text
 
-    def test_check_folder_path_creates_parent_dir(self, _, caplog, tmp_path):
+    def test_prepare_folder_path_creates_parent_dir(self, _, caplog, tmp_path):
         """
-        When the path includes a parent, check_folder_path creates intermediate directories.
+        When the path includes a parent, prepare_folder_path creates intermediate directories.
         """
         folder_path = os.path.join(str(tmp_path), "vtk_out", "run1")
-        assert check_folder_path(folder_path) == folder_path
+        assert prepare_folder_path(folder_path) == folder_path
         assert (tmp_path / "vtk_out").is_dir()
         assert _("Valid") in caplog.text
 
-    def test_check_folder_path_trailing_sep_creates_parents_only(self, _, caplog, tmp_path):
+    def test_prepare_folder_path_trailing_sep_creates_parents_only(self, _, caplog, tmp_path):
         """
         Trailing path separators must not make makedirs target the export root itself.
         """
         folder_path = os.path.join(str(tmp_path), "vtk", "run1") + os.sep
-        assert check_folder_path(folder_path) == folder_path
+        assert prepare_folder_path(folder_path) == folder_path
         assert (tmp_path / "vtk").is_dir()
         assert not (tmp_path / "vtk" / "run1").exists()
         assert _("Valid") in caplog.text
 
-    def test_check_folder_path_without_parent_directory(self, _, caplog, tmp_path, monkeypatch):
+    def test_prepare_folder_path_without_parent_directory(self, _, caplog, tmp_path, monkeypatch):
         """
         With no directory component (bare folder name), no directories are created.
         """
         monkeypatch.chdir(tmp_path)
-        assert check_folder_path("export_root") == "export_root"
+        assert prepare_folder_path("export_root") == "export_root"
         assert not list(tmp_path.iterdir())
         assert _("Valid") in caplog.text
 
     @pytest.mark.parametrize("bad", INVALID_STR)
-    def test_check_folder_path_invalid_type(self, bad):
+    def test_prepare_folder_path_invalid_type(self, bad):
         """
-        Test check_folder_path rejects non-str paths.
+        Test prepare_folder_path rejects non-str paths.
         """
         with pytest.raises(TypeError):
-            check_folder_path(bad)
+            prepare_folder_path(bad)
 
     @pytest.mark.parametrize("value, expected_values", [(x, (1, 2, 3)) for x in tuple(range(1, 3))])
     def test_check_expected_values(self, value, expected_values, _, caplog):

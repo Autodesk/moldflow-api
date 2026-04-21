@@ -40,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
-- `PlotManager.export_to_vtk()` no longer appends a `.vtk` suffix to the export path; the path is treated as a VTK export **folder** root, matching Synergy UI behavior. Uses `check_folder_path()` in `helper.py` to validate the path and create parent directories only.
+- `PlotManager.export_to_vtk()` no longer appends a `.vtk` suffix to the export path; the path is treated as a VTK export **folder** root, matching Synergy UI behavior. Uses `prepare_folder_path()` in `helper.py` to validate the path and create parent directories only.
 
 ### Security
 - N/A

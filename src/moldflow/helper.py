@@ -277,7 +277,7 @@ def check_file_extension(file_name: str, extensions: tuple | str):
     return file_name
 
 
-def check_folder_path(folder_path: str) -> str:
+def prepare_folder_path(folder_path: str) -> str:
     """
     Validate and prepare a folder-style export path.
 

@@ -20,7 +20,7 @@ from .helper import (
     check_type,
     get_enum_value,
     check_file_extension,
-    check_folder_path,
+    prepare_folder_path,
     coerce_optional_dispatch,
 )
 from .com_proxy import safe_com
@@ -1029,7 +1029,7 @@ class PlotManager:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="export_to_vtk")
         check_type(file_name, str)
         check_type(binary_format, bool)
-        file_name = check_folder_path(file_name)
+        file_name = prepare_folder_path(file_name)
         result = self.plot_manager.ExportToVTK(file_name, binary_format)
         if not result:
             raise_save_error(saving="Results", file_name=file_name)
