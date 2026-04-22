@@ -237,6 +237,22 @@ def check_index(index: int, min_value: int, max_value: int):
     process_log(__name__, LogMessage.VALID_INPUT)
 
 
+def _create_required_parent_directories(path: str):
+    """
+    Create parent directories for a given path.
+
+    Trailing separators are normalized first so ``dirname`` resolves to the
+    parent of the final path component (never the export root / file leaf).
+
+    Args:
+        path (str): The path to create parent directories for.
+    """
+    directory = os.path.dirname(os.path.normpath(path))
+    if not directory:
+        return
+    os.makedirs(directory, exist_ok=True)
+
+
 def check_file_extension(file_name: str, extensions: tuple | str):
     """
     Check if the file name has a valid extension.
@@ -247,9 +263,7 @@ def check_file_extension(file_name: str, extensions: tuple | str):
     process_log(__name__, LogMessage.CHECK_FILE_EXTENSION, locals(), file_name=file_name)
     check_type(file_name, str)
     check_type(extensions, (str, tuple))
-    directory = os.path.dirname(file_name)
-    if directory:
-        os.makedirs(directory, exist_ok=True)
+    _create_required_parent_directories(file_name)
     default = extensions if isinstance(extensions, str) else extensions[0]
     if not file_name.endswith(extensions):
         process_log(
@@ -261,6 +275,25 @@ def check_file_extension(file_name: str, extensions: tuple | str):
         )
         file_name = file_name + default
     return file_name
+
+
+def prepare_folder_path(folder_path: str) -> str:
+    """
+    Validate and prepare a folder-style export path.
+
+    Ensures parent directories exist. Does not modify the path or append a file extension.
+
+    Args:
+        folder_path (str): Full path to the export root folder (bare name, relative path,
+            or absolute path).
+
+    Returns:
+        str: The same path, unchanged.
+    """
+    process_log(__name__, LogMessage.CHECK_FOLDER_PATH, locals(), folder_path=folder_path)
+    check_type(folder_path, str)
+    _create_required_parent_directories(folder_path)
+    return folder_path
 
 
 def check_expected_values(value, expected_values: tuple):

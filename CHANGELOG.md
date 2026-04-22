@@ -25,6 +25,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
+## [27.0.1] - 2026-04-18
+
+### Added
+- N/A
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- `PlotManager.export_to_vtk()` no longer appends a `.vtk` suffix to the export path; the path is treated as a VTK export **folder** root, matching Synergy UI behavior. Uses `prepare_folder_path()` in `helper.py` to validate the path and create parent directories only.
+
+### Security
+- N/A
+
 ## [27.0.0] - 2026-01-21
 
 ### Added
@@ -170,7 +190,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial version aligned with Moldflow Synergy 2026.0.1
 - Python 3.10-3.13 compatibility
 
-[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v26.0.5...HEAD
+[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v27.0.1...HEAD
+[27.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v27.0.1
+[27.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v27.0.0
 [26.0.5]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.5
 [26.0.4]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.4
 [26.0.3]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.3

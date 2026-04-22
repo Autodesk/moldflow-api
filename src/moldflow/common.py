@@ -175,6 +175,7 @@ class LogMessage(Enum):
     CHECK_NEGATIVE = ("Checking {value} is negative", logging.DEBUG)
     CHECK_INDEX_IN_RANGE = ("Checking index {index} is in range", logging.DEBUG)
     CHECK_FILE_EXTENSION = ("Checking file extension {file_name}", logging.DEBUG)
+    CHECK_FOLDER_PATH = ("Checking folder path {folder_path}", logging.DEBUG)
     CHECK_EXPECTED_VALUES = ("Checking {value} is in expected values", logging.DEBUG)
     FAIL_INIT_WITH_ENV = (
         "Could not initialize with Instance ID: {value}",

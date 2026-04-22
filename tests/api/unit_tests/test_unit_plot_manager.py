@@ -1273,7 +1273,8 @@ class TestUnitPlotManager:
         + [
             ("ExportToVTK", "export_to_vtk", ("sample.vtk", x), ("sample.vtk", x))
             for x in VALID_BOOL
-        ],
+        ]
+        + [("ExportToVTK", "export_to_vtk", ("vtk_out", x), ("vtk_out", x)) for x in VALID_BOOL],
     )
     # pylint: disable-next=R0913, R0917
     def test_save_functions(
@@ -1321,7 +1322,8 @@ class TestUnitPlotManager:
                 SystemUnits,
             )
         ]
-        + [("ExportToVTK", "export_to_vtk", ("sample.vtk", x)) for x in VALID_BOOL],
+        + [("ExportToVTK", "export_to_vtk", ("sample.vtk", x)) for x in VALID_BOOL]
+        + [("ExportToVTK", "export_to_vtk", ("SupportBeam-API-All", x)) for x in VALID_BOOL],
     )
     # pylint: disable-next=R0913, R0917
     def test_save_functions_save_error(

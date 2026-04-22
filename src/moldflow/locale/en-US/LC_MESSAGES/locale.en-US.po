@@ -9,6 +9,9 @@ msgstr "Cancel"
 msgid "Checking file extension {file_name}"
 msgstr "Checking file extension {file_name}"
 
+msgid "Checking folder path {folder_path}"
+msgstr "Checking folder path {folder_path}"
+
 msgid "Checking index {index} is in range"
 msgstr "Checking index {index} is in range"
 

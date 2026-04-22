@@ -9,6 +9,9 @@ msgstr "취소"
 msgid "Checking file extension {file_name}"
 msgstr "파일 확장자 {file_name} 확인 중"
 
+msgid "Checking folder path {folder_path}"
+msgstr "폴더 경로 {folder_path} 확인 중"
+
 msgid "Checking index {index} is in range"
 msgstr "인덱스 {index}가 범위 내에 있는지 확인 중"
 
