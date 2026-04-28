@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added `transparent_background` property to `ImageExportOptions` — when set to `True` with a `.png` output path, the exported image uses a transparent background instead of the renderer's opaque fill colour. Defaults to `False`; silently ignored for non-PNG formats ([IM-9583](https://jira.autodesk.com/browse/IM-9583)).
 - Added a Moldflow CLI with `list`, `describe`, and `invoke` commands.
 - Added invoke planning and automation support, including dry-run plans, trace output, and batch execution.
 - Added machine-readable `describe` schema output and updated CLI documentation and examples.

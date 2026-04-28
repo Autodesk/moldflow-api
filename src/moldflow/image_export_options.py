@@ -394,6 +394,41 @@ class ImageExportOptions:
         self.image_export_options.FitToScreen = value
 
     @property
+    def transparent_background(self) -> bool:
+        """
+        Whether to render with a transparent background.
+
+        Only applicable when the output file has a .png extension;
+        ignored for all other formats.
+
+        .. note::
+            Setting this to ``True`` has no effect unless the :attr:`file_name`
+            ends with ``.png``. For JPEG, BMP, TIFF and other formats the flag
+            is silently ignored and the image is saved with an opaque background.
+
+        :default: False
+        :getter: Get transparent_background.
+        :setter: Set transparent_background.
+        :type: bool
+        """
+        process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="transparent_background")
+        return self.image_export_options.ShowTransparentBg
+
+    @transparent_background.setter
+    def transparent_background(self, value: bool) -> None:
+        """
+        Set whether to render with a transparent background.
+
+        Args:
+            value (bool): Use transparent background or not.
+        """
+        process_log(
+            __name__, LogMessage.PROPERTY_SET, locals(), name="transparent_background", value=value
+        )
+        check_type(value, bool)
+        self.image_export_options.ShowTransparentBg = value
+
+    @property
     def capture_mode(self) -> int:
         """
         The capture mode.
