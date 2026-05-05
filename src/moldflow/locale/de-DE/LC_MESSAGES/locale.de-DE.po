@@ -9,6 +9,9 @@ msgstr "Abbrechen"
 msgid "Checking file extension {file_name}"
 msgstr "Überprüfen der Dateierweiterung {file_name}"
 
+msgid "Checking folder path {folder_path}"
+msgstr "Überprüfen des Ordnerpfads {folder_path}"
+
 msgid "Checking index {index} is in range"
 msgstr "Überprüfen, ob der Index {index} im Bereich liegt"
 
