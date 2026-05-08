@@ -2,7 +2,7 @@ black==26.3.1
 build==1.2.2.post1
 coverage==7.6.12
 docopt==0.6.2
-gitpython==3.1.47
+gitpython==3.1.49
 packaging==24.2
 pathspec==1.0.4
 polib==1.2.0
