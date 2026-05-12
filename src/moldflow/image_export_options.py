@@ -412,7 +412,7 @@ class ImageExportOptions:
         :type: bool
         """
         process_log(__name__, LogMessage.PROPERTY_GET, locals(), name="transparent_background")
-        return self.image_export_options.ShowTransparentBg
+        return self.image_export_options.TransparentBackground
 
     @transparent_background.setter
     def transparent_background(self, value: bool) -> None:
@@ -426,7 +426,7 @@ class ImageExportOptions:
             __name__, LogMessage.PROPERTY_SET, locals(), name="transparent_background", value=value
         )
         check_type(value, bool)
-        self.image_export_options.ShowTransparentBg = value
+        self.image_export_options.TransparentBackground = value
 
     @property
     def capture_mode(self) -> int:
