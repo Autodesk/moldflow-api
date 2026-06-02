@@ -192,7 +192,9 @@ class TestIntegrationSynergy:
         std = proj.get_first_study_name()
         assert std == STUDY_FILES[study_project_name][0]
 
-    def test_open_project_path_without_extension_gets_mpi_appended(self, synergy: Synergy, temp_dir):
+    def test_open_project_path_without_extension_gets_mpi_appended(
+        self, synergy: Synergy, temp_dir
+    ):
         """
         Regression test: passing a project file path without the .mpi extension
         to open_project should still succeed because the Python API validation

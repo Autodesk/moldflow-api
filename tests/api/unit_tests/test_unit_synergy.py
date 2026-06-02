@@ -149,9 +149,7 @@ class TestUnitSynergy:
             ("OpenProject", "open_project", (x,), (x + MPI_FILE_EXT,), bool, y)
             for x, y in pad_and_zip(VALID_STR, VALID_BOOL)
         ]
-        + [
-            ("OpenProject", "open_project", ("Test.mpi",), ("Test.mpi",), bool, True)
-        ]
+        + [("OpenProject", "open_project", ("Test.mpi",), ("Test.mpi",), bool, True)]
         + [
             ("ExportLMVSharedViews", "export_lmv_shared_views", (x,), (x,), str, y)
             for x, y in pad_and_zip(VALID_STR, VALID_STR)
