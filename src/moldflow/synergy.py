@@ -45,7 +45,6 @@ from .constants import DEFAULT_LOG_FILE, MPI_FILE_EXT
 from .helper import (
     check_type,
     check_range,
-    check_file_extension,
     get_enum_value,
     check_is_positive,
     check_is_non_negative,
@@ -138,7 +137,8 @@ class Synergy:
         """
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="open_project")
         check_type(path, str)
-        path = check_file_extension(path, MPI_FILE_EXT)
+        if not path.endswith(MPI_FILE_EXT):
+            path = path + MPI_FILE_EXT
         return self.synergy.OpenProject(path)
 
     def export_lmv_shared_views(self, collaboration_view_name: str) -> str:

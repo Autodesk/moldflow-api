@@ -179,7 +179,11 @@ class TestIntegrationSynergy:
         Test import file functionality.
         """
         project_name = TEST_PROJECT_NAME
-        project_file = Path(temp_dir, project_name, f"{project_name}{PROJECT_EXTENSION}")
+        project_dir = Path(temp_dir, project_name)
+        project_file = Path(project_dir, f"{project_name}{PROJECT_EXTENSION}")
+        if not project_file.exists():
+            assert synergy.new_project(project_name, str(project_dir))
+            synergy.project.close(False)
         result = synergy.open_project(str(project_file))
         assert result
         study_project_name = FileSet.MESHED.value
@@ -203,10 +207,9 @@ class TestIntegrationSynergy:
         project_name = TEST_PROJECT_NAME
         project_dir = Path(temp_dir, project_name)
         project_file = Path(project_dir, f"{project_name}{PROJECT_EXTENSION}")
-        assert project_file.exists(), (
-            f"Expected .mpi file at {project_file}; "
-            "test_new_project_open_project_open_recent_project must run first."
-        )
+        if not project_file.exists():
+            assert synergy.new_project(project_name, str(project_dir))
+            synergy.project.close(False)
 
         proj = synergy.project
         if proj is not None:
