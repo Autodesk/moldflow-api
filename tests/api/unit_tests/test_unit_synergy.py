@@ -49,6 +49,7 @@ from moldflow import (
     Synergy,
     SystemUnits,
 )
+from moldflow.constants import MPI_FILE_EXT
 from moldflow.exceptions import SynergyError
 from moldflow.logger import set_is_logging
 from tests.api.unit_tests.conftest import VALID_MOCK
@@ -145,8 +146,11 @@ class TestUnitSynergy:
             for x, y, z in pad_and_zip(VALID_STR, VALID_STR, VALID_BOOL)
         ]
         + [
-            ("OpenProject", "open_project", (x,), (x,), bool, y)
+            ("OpenProject", "open_project", (x,), (x + MPI_FILE_EXT,), bool, y)
             for x, y in pad_and_zip(VALID_STR, VALID_BOOL)
+        ]
+        + [
+            ("OpenProject", "open_project", ("Test.mpi",), ("Test.mpi",), bool, True)
         ]
         + [
             ("ExportLMVSharedViews", "export_lmv_shared_views", (x,), (x,), str, y)

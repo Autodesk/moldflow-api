@@ -58,6 +58,7 @@ from tests.api.integration_tests.constants import (
     DEFAULT_WINDOW_SIZE_Y,
     STUDY_FILES_DIR,
     STUDY_FILE_EXTENSION,
+    PROJECT_EXTENSION,
     PROJECT_PREFIX,
 )
 
@@ -144,18 +145,19 @@ class TestIntegrationSynergy:
         Test new project functionality.
         """
         project_name = TEST_PROJECT_NAME
-        project_path = Path(temp_dir, project_name)
+        project_dir = Path(temp_dir, project_name)
+        project_file = Path(project_dir, f"{project_name}{PROJECT_EXTENSION}")
 
-        result = synergy.new_project(project_name, str(project_path))
+        result = synergy.new_project(project_name, str(project_dir))
         assert result
         proj = synergy.project
         assert proj is not None
-        assert os.path.exists(project_path)
+        assert project_file.exists()
 
         proj.close(False)
         assert proj.project is None
 
-        result = synergy.open_project(str(project_path))
+        result = synergy.open_project(str(project_file))
         assert result
         proj = synergy.project
         assert proj is not None
@@ -177,8 +179,8 @@ class TestIntegrationSynergy:
         Test import file functionality.
         """
         project_name = TEST_PROJECT_NAME
-        project_path = Path(temp_dir, project_name)
-        result = synergy.open_project(str(project_path))
+        project_file = Path(temp_dir, project_name, f"{project_name}{PROJECT_EXTENSION}")
+        result = synergy.open_project(str(project_file))
         assert result
         study_project_name = FileSet.MESHED.value
         project_path = Path(STUDY_FILES_DIR, f"{PROJECT_PREFIX}{study_project_name}")
@@ -189,6 +191,30 @@ class TestIntegrationSynergy:
         proj = synergy.project
         std = proj.get_first_study_name()
         assert std == STUDY_FILES[study_project_name][0]
+
+    def test_open_project_path_without_extension_gets_mpi_appended(self, synergy: Synergy, temp_dir):
+        """
+        Regression test: passing a project file path without the .mpi extension
+        to open_project should still succeed because the Python API validation
+        layer auto-appends the .mpi extension. Guards against IMQA-517.
+        """
+        project_name = TEST_PROJECT_NAME
+        project_dir = Path(temp_dir, project_name)
+        project_file = Path(project_dir, f"{project_name}{PROJECT_EXTENSION}")
+        assert project_file.exists(), (
+            f"Expected .mpi file at {project_file}; "
+            "test_new_project_open_project_open_recent_project must run first."
+        )
+
+        proj = synergy.project
+        if proj is not None:
+            proj.close(False)
+
+        result = synergy.open_project(str(project_file.with_suffix("")))
+        assert result
+        proj = synergy.project
+        assert proj is not None
+        proj.close(False)
 
     def test_synergy_units_property(self, synergy: Synergy):
         """
