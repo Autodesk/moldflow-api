@@ -1,32 +1,22 @@
-# Release steps (minimal)
+# Release steps
 
-This file documents the minimal, explicit steps to bump the version and publish a release for moldflow-api.
+This file documents how to create a release and publish to PyPI for moldflow-api.
 
-Summary (short):
+The process is split into two independent stages:
+1. **Create a GitHub Release** (produces the wheel and attaches it to a tagged release)
+2. **Publish to PyPI** (uploads the wheel from the GitHub Release to PyPI)
 
-- Edit the root `version.json` (only this file).
-- Commit on a branch named `release/MAJOR.MINOR.PATCH` and push.
-- Wait for CI to pass on that branch.
-- Trigger the manual "Publish package (manual)" workflow in GitHub Actions and confirm.
+You can create the GitHub Release first and publish to PyPI when ready.
 
-Why this works (important notes):
+## Prerequisites
 
-- The canonical version source for releases is the root `version.json` in the repository root.
-- The `run.py` script (used for building and releasing locally and by many repo commands)
-  reads the `patch` value directly from the root `version.json` and will raise a
-  RuntimeError if `patch` is missing.
-- The workflow only publishes when run on a branch whose name starts with `release/` and when
-  you confirm the manual workflow dispatch.
-- The release workflow checks PyPI for an existing version and will skip publishing if that
-  exact version already exists.
+- The canonical version source is the root `version.json` in the repository root.
+- All release workflows only run on branches whose name starts with `release/`.
+- CI (`ci.yml`) must pass before either workflow can proceed.
 
-Minimal step-by-step
+## Step 1: Bump the version
 
-1. Decide the new major/minor/patch values.
-
-   - Always set a numeric `patch` value in the root `version.json`.
-
-2. Edit `version.json` at the repository root. Example (bumping to MAJOR.MINOR.PATCH, e.g. 1.2.0):
+1. Edit `version.json` at the repository root:
 
 ```json
 {
@@ -36,74 +26,106 @@ Minimal step-by-step
 }
 ```
 
-3. Commit and push on a `release/` branch. Example (use the placeholder branch name below and replace with your version):
+2. Commit and push on a `release/` branch:
 
 ```bash
-# create branch using the target version (branch name must start with 'release/')
-# use a placeholder like 'release/MAJOR.MINOR.PATCH' and replace with your values
-git checkout -b release/MAJOR.MINOR.PATCH  # e.g. release/1.2.0
+git checkout -b release/MAJOR  # e.g. release/27
 git add version.json
-git commit -m "Bump version to MAJOR.MINOR.PATCH"  # e.g. "Bump version to 1.2.0"
-git push -u origin release/MAJOR.MINOR.PATCH
+git commit -m "Bump version to MAJOR.MINOR.PATCH"
+git push -u origin release/MAJOR
 ```
 
-4. Wait for CI to pass on that branch.
+3. Wait for CI to pass on that branch.
 
-   - The publish workflow has a guard that requires the `ci.yml` workflow to have completed
-     successfully for the same commit before allowing publish.
+## Step 2: Create a GitHub Release
 
-5. Trigger the publish workflow manually in the GitHub Actions UI for the repository.
+Trigger the **"Create GitHub Release (manual)"** workflow:
 
-   - Open the `Publish package (manual)` workflow, choose `Run workflow`, set `confirm` to
-     `true`, and run it on your `release/MAJOR.MINOR.PATCH` branch (replace the placeholder
-     with the actual version).
-   - Alternatively, you can use the GitHub CLI (if you have it configured). Example using a
-     placeholder branch name (replace with your actual branch):
+- Open the workflow in GitHub Actions UI, choose `Run workflow`
+- Set `confirm` to `true`
+- Run on your `release/` branch
+
+Or via GitHub CLI:
+
 ```bash
-# example (replace with the correct workflow file name and branch if needed)
-# gh workflow run publish.yml --ref release/MAJOR.MINOR.PATCH -f confirm=true
-# e.g. --ref release/1.2.0
+gh workflow run github-release.yml --ref release/MAJOR -f confirm=true
 ```
 
-6. What the workflow does (high level):
+This will:
+- Ensure CI passed for the commit
+- Build the package (`python run.py build`)
+- Create a GitHub Release with tag `vMAJOR.MINOR.PATCH`
+- Attach the wheel (`.whl`) and source distribution (`.tar.gz`) as release assets
 
-- Ensures CI (`ci.yml`) passed for the commit.
-- Computes the release version using `version.json`.
-- If the computed version already exists on PyPI the workflow will skip the publish.
-- If not present, it builds the package, uploads to PyPI (requires the repo to have
-  `PYPI_API_TOKEN` in secrets), creates a GitHub release (tag `vMAJOR.MINOR.PATCH`) and
-  deploys documentation to GitHub Pages.
+The wheel is now available from the GitHub Release assets.
 
-Local testing and notes
+## Step 3: Publish to PyPI
 
-- You can build the package locally to smoke test the build step:
+When ready to make the package publicly available, trigger the **"Publish to PyPI (manual)"** workflow:
+
+- Open the workflow in GitHub Actions UI, choose `Run workflow`
+- Set `tag` to the GitHub Release tag (e.g. `v27.0.0`)
+- Set `confirm` to `true`
+- Run on your `release/` branch
+
+Or via GitHub CLI:
+
+```bash
+gh workflow run pypi-publish.yml --ref release/MAJOR -f tag=v27.0.0 -f confirm=true
+```
+
+This will:
+- Validate the release tag exists
+- Check if the version already exists on PyPI (skip if it does)
+- Download the wheel from the GitHub Release assets
+- Upload to PyPI using `twine`
+- Build and deploy documentation to GitHub Pages
+
+## PyPI publish ordering
+
+Creating a GitHub Release does **not** require older releases to be on PyPI — multiple
+GitHub Releases can exist during development.
+
+When you run **Publish to PyPI**, the workflow checks that every **older** GitHub
+Release (by version number) is already on PyPI before uploading the tag you selected.
+Draft and prerelease GitHub Releases are ignored.
+
+Example — GitHub Releases: `v26.1.0`, `v27.0.0`, `v27.1.0`, `v27.1.1`; PyPI: `26.1.0`, `27.0.0`:
+
+| Publish tag | Result |
+|---|---|
+| `v27.1.0` | Allowed (older releases are on PyPI) |
+| `v27.1.1` | **Blocked** (`v27.1.0` is older and not on PyPI) |
+
+Publish in order. If an intermediate build had issues, publish it to PyPI anyway and
+follow with the fix — `pip install --upgrade` resolves to the latest version, so users
+are not left on the bad release.
+
+## Local testing
+
+Build the package locally to smoke test:
 
 ```bash
 python run.py build
 ```
 
-- Publishing to PyPI is intentionally restricted to the manual GitHub Actions workflow.
-  If you need to test publishing to TestPyPI locally, you can use `python -m twine upload`
-  with TestPyPI credentials, but this is separate from the CI-based publish flow.
+Publishing to PyPI is restricted to the GitHub Actions workflows. Use `--testpypi`
+for local testing if needed:
 
-Edge cases and tips
+```bash
+python run.py publish --testpypi
+```
 
-- `run.py` now requires a `patch` value in the root `version.json`. It will raise a
-  RuntimeError if that key is missing. Do not rely on `run.py` falling back to any
-  environment variable.
-- If you want CI to inject a monotonic build number into the patch segment, make the CI
-  step explicitly update `version.json` (or generate a temporary `version.json`) with the
-  desired `patch` before running the build and publish steps. That keeps `run.py` and the
-  workflow in agreement.
-- The `run.py` script will write a package-local `src/moldflow/version.json` at build time;
-  you do not need to edit that file directly (it is generated and typically ignored by Git).
+## Notes
 
-Cleanup (optional)
+- `run.py` requires a `patch` value in the root `version.json`. It will raise a
+  RuntimeError if that key is missing.
+- The `run.py` script writes a package-local `src/moldflow/version.json` at build
+  time; you do not need to edit that file directly.
+- After a successful release and publish, you may merge the `release/` branch back
+  to `main` and delete the branch.
 
-- After a successful release you may merge the `release/` branch to `main` (if you use merge
-  workflow) and delete the `release/` branch.
+## Contact
 
-Contact
-
-If anything in CI behaves unexpectedly, check the logs for the `publish` workflow and the
-`ci` workflow; feel free to open an issue or ask a maintainer.
+If anything behaves unexpectedly, check the logs for the `github-release` and
+`pypi-publish` workflows; feel free to open an issue or ask a maintainer.
