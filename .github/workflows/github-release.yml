@@ -23,8 +23,9 @@ jobs:
         run: |
           $ownerRepo = $env:GITHUB_REPOSITORY
           $sha = $env:GITHUB_SHA
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
@@ -87,8 +88,9 @@ jobs:
           $ownerRepo = $env:GITHUB_REPOSITORY
           $versionJson = Get-Content -Raw -Path version.json | ConvertFrom-Json
           $tag = "v$($versionJson.major).$($versionJson.minor).$($versionJson.patch)"
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }

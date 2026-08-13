@@ -32,8 +32,9 @@ jobs:
         run: |
           $ownerRepo = $env:GITHUB_REPOSITORY
           $sha = $env:GITHUB_SHA
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
@@ -100,8 +101,9 @@ jobs:
         run: |
           $tag = "${{ github.event.inputs.tag }}"
           $ownerRepo = $env:GITHUB_REPOSITORY
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
@@ -155,8 +157,9 @@ jobs:
           $targetSemVer = [version]$targetVersion
           $ownerRepo = $env:GITHUB_REPOSITORY
           $packageName = 'moldflow'
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
@@ -219,14 +222,15 @@ jobs:
           $tag = "${{ github.event.inputs.tag }}"
           $version = "${{ steps.validate_tag.outputs.version }}"
           $ownerRepo = $env:GITHUB_REPOSITORY
+          $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/octet-stream'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
 
           $apiHeaders = @{
-            Authorization = "token $env:GITHUB_TOKEN"
+            Authorization = $authValue
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
