@@ -8,6 +8,8 @@ on:
         required: true
         type: boolean
 
+permissions: {}
+
 jobs:
   guard-ci-success:
     runs-on: windows-2022
@@ -25,7 +27,7 @@ jobs:
           $sha = $env:GITHUB_SHA
           $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = $authValue
+            Authorization = $authValue #gitleaks:allow
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
@@ -90,7 +92,7 @@ jobs:
           $tag = "v$($versionJson.major).$($versionJson.minor).$($versionJson.patch)"
           $authValue = "token $env:GITHUB_TOKEN"
           $headers = @{
-            Authorization = $authValue
+            Authorization = $authValue #gitleaks:allow
             Accept = 'application/vnd.github+json'
             'X-GitHub-Api-Version' = '2022-11-28'
           }
