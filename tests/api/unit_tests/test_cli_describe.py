@@ -823,7 +823,7 @@ def test_list_human_output_shows_explicit_message_for_empty_filtered_results():
 def test_list_with_describe_requires_structured_output():
     """Expanded list metadata should stay opt-in for JSON/YAML flows only."""
     app = build_cli_app()
-    result = runner.invoke(app, ["list", "--with-describe"])
+    result = runner.invoke(app, ["--no-color", "list", "--with-describe"])
     assert result.exit_code != 0
     combined = (result.stdout or "") + (getattr(result, "stderr", "") or "")
     assert "--with-describe requires --json or --yaml" in combined
@@ -855,7 +855,7 @@ def test_list_json_allows_zero_max_results():
 def test_list_rejects_negative_max_results():
     """List should reject negative result caps explicitly."""
     app = build_cli_app()
-    result = runner.invoke(app, ["list", "--json", "--max-results", "-1"])
+    result = runner.invoke(app, ["--no-color", "list", "--json", "--max-results", "-1"])
     assert result.exit_code != 0
     combined = (result.stdout or "") + (getattr(result, "stderr", "") or "")
     assert "--max-results must be greater than or equal to 0" in combined

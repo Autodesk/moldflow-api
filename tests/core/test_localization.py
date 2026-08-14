@@ -127,10 +127,13 @@ class TestLocalization:
         assert _(TEST_STRING) == TEST_TRANSLATION_DICT[locale]
         del os.environ[LOCALE_ENVIRONMENT_VARIABLE_NAME]
 
+    @pytest.mark.usefixtures("environment_locale")
     def test_set_language_windows_locale_fallback(self):
         """
         Test set_language falls back to the Windows user locale.
         """
-        with patch("moldflow.localization._get_windows_locale_name", return_value="ja-JP"):
+        with patch("moldflow.localization.winreg.OpenKey", side_effect=FileNotFoundError), patch(
+            "moldflow.localization._get_windows_locale_name", return_value="ja-JP"
+        ):
             _ = set_language(version=TEST_VERSION)
         assert _(TEST_STRING) == "テスト文字列"

@@ -27,7 +27,7 @@ class TestUnitCLI:
         with patch("moldflow_cli.context.get_synergy") as mock_ctx_synergy, patch(
             "moldflow_cli.factories.get_synergy"
         ) as mock_fact_synergy:
-            result = runner.invoke(app, ["--help"])
+            result = runner.invoke(app, ["--no-color", "--help"])
         assert result.exit_code == 0
         # Help should not need to touch Synergy/COM at all.
         mock_ctx_synergy.assert_not_called()
@@ -40,7 +40,7 @@ class TestUnitCLI:
     def test_help_shows_global_no_color_option(self):
         """Global help should advertise the output-styling toggle."""
         app = build_cli_app()
-        result = runner.invoke(app, ["--help"])
+        result = runner.invoke(app, ["--no-color", "--help"])
         assert result.exit_code == 0
         assert "--no-color" in result.stdout
 
@@ -50,9 +50,9 @@ class TestUnitCLI:
         with patch("moldflow_cli.context.get_synergy") as mock_ctx_synergy, patch(
             "moldflow_cli.factories.get_synergy"
         ) as mock_fact_synergy:
-            list_help = runner.invoke(app, ["list", "--help"])
-            describe_help = runner.invoke(app, ["describe", "--help"])
-            invoke_help = runner.invoke(app, ["invoke", "--help"])
+            list_help = runner.invoke(app, ["--no-color", "list", "--help"])
+            describe_help = runner.invoke(app, ["--no-color", "describe", "--help"])
+            invoke_help = runner.invoke(app, ["--no-color", "invoke", "--help"])
 
         assert list_help.exit_code == 0
         assert describe_help.exit_code == 0

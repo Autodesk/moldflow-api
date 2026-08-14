@@ -697,7 +697,7 @@ def test_invoke_invalid_single_positional_json_shorthand_has_actionable_error():
         with patch("moldflow_cli.context.get_synergy") as mock_ctx_synergy, patch(
             "moldflow_cli.factories.get_synergy"
         ) as mock_fact_synergy:
-            r = runner.invoke(app, ["invoke", "synergy.cli_echo", '{"value":'])
+            r = runner.invoke(app, ["--no-color", "invoke", "synergy.cli_echo", '{"value":'])
 
         assert r.exit_code != 0
         combined = (
@@ -1856,7 +1856,7 @@ def test_invoke_error_exit_codes():
 def test_invoke_help_shows_arg_syntax():
     """Invoke --help should demonstrate the step.param.attr=value routing syntax."""
     app = build_cli_app()
-    result = runner.invoke(app, ["invoke", "--help"])
+    result = runner.invoke(app, ["--no-color", "invoke", "--help"])
     help_text = result.stdout.lower()
     assert result.exit_code == 0
     assert "find_plot_by_name.plot_name" in help_text or "step.param.attr" in help_text

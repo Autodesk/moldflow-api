@@ -90,7 +90,7 @@ def test_invoke_wrapper_property_target_is_rejected_as_terminal_read():
     setattr(moldflow, "CLITestManager", CLITestManager)
     setattr(moldflow.Synergy, "cli_test_manager", property(_get_cli_test_manager))
     try:
-        result = runner.invoke(app, ["invoke", "cli_test_manager"])
+        result = runner.invoke(app, ["--no-color", "invoke", "cli_test_manager"])
         assert result.exit_code != 0
         combined = (result.stdout or "") + (getattr(result, "stderr", "") or "")
         lowered = combined.lower()
