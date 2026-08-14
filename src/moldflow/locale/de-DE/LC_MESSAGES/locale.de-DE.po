@@ -3,6 +3,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: de-DE\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\nMeinten Sie den Schritt '{step_name}'?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\nBei JSON-Eingaben für mehrstufige Ziele gruppieren Sie Parameter nach Schrittnamen, z. B. {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nBei JSON-Eingaben muss dieser Schritt-Schlüssel einem Objekt mit Parameternamen zugeordnet sein, z. B. {example}"
+
 msgid " Did you mean '{parameter}'?"
 msgstr " Meinten Sie '{parameter}'?"
 
@@ -192,6 +201,12 @@ msgstr "Bildschirm löschen"
 msgid "Clears the terminal screen and redraws the banner."
 msgstr "Löscht den Terminalbildschirm und zeichnet das Banner neu."
 
+msgid "Close Synergy and reset the session"
+msgstr "Synergy schließen und Sitzung zurücksetzen"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Schließt Synergy und setzt die Sitzung zurück, um einen Neustart zu ermöglichen."
+
 msgid "Command exited with status {code}"
 msgstr "Befehl wurde mit Status {code} beendet"
 
@@ -212,6 +227,9 @@ msgstr "Details"
 
 msgid "Direct parameter assignment remains the preferred non-JSON form."
 msgstr "Die direkte Parameterzuweisung bleibt die bevorzugte Nicht-JSON-Form."
+
+msgid "Disable ANSI color/styling in CLI output."
+msgstr "ANSI-Farben/-Formatierung in der CLI-Ausgabe deaktivieren."
 
 msgid "Discover invokable targets and the next command to run for each one."
 msgstr "Ermittelt aufrufbare Ziele und den jeweils nächsten auszuführenden Befehl."
@@ -234,6 +252,9 @@ msgstr "Probelauf für {target}"
 msgid "Duplicate argument path '{path}' is not allowed."
 msgstr "Doppelter Argumentpfad '{path}' ist nicht zulässig."
 
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "Doppelte/konfliktierende Pfade werden abgelehnt. Argumente werden als key=value oder param.attr=value übergeben. Für verkettete Ziele wird der Parameter mit dem Methodennamen versehen, z. B. find_plot_by_name.plot_name=\"My Plot\". Verschachteltes Routing verwendet step.param.attr=value (z. B. param=1 steht in Konflikt mit param.attr=2), und Methoden mit rein positionsbasierten Parametern werden durch benanntes CLI-Routing nicht unterstützt."
+
 msgid "Emit a JSON schema-like representation of target parameters."
 msgstr "Gibt eine JSON-Schema-ähnliche Darstellung der Zielparameter aus."
 
@@ -243,17 +264,11 @@ msgstr "Gibt zeilengetrennte JSON-Trace-Ereignisse für Zielauflösung und Laufz
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "Gibt strukturiertes JSON für Skripte oder Agenten aus."
 
-msgid "Emit structured JSON for scripting or agent use."
-msgstr "Gibt strukturiertes JSON für Skripte oder Agenten aus."
-
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "Gibt strukturiertes YAML für Skripte oder Agenten aus (PyYAML erforderlich)."
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "Gibt strukturiertes YAML für Skripte oder Agenten aus (PyYAML erforderlich)."
-
-msgid "Emit the result as JSON to stdout (useful for automation/LLMs)."
-msgstr "Gibt das Ergebnis als JSON auf stdout aus (nützlich für Automatisierung/LLMs)."
+msgid "Emit the structured result as JSON to stdout (useful for automation/LLMs)."
+msgstr "Gibt das strukturierte Ergebnis als JSON auf stdout aus (nützlich für Automatisierung/LLMs)."
 
 msgid "Empty target"
 msgstr "Leeres Ziel"
@@ -435,6 +450,9 @@ msgstr "JSON-Beispiel:"
 msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
 msgstr "JSON-Objekt mit Parameterzuordnungen (überschreibt positionsbezogene Argumente). Arrays und Skalare auf oberster Ebene sind nicht zulässig."
 
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "JSON-Objekt mit Parameterzuordnungen (überschreibt positionsbezogene Argumente). Arrays und Skalare auf oberster Ebene sind nicht zulässig."
+
 msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
 msgstr "JSON‑Parameter müssen ein JSON‑Objekt benannter Argumente sein. Beispiel: --params-json '{\"param\": 1}' oder --params-json '{\"step\": {\"param\": 1}}' für verkettete Ziele."
 
@@ -525,8 +543,14 @@ msgstr "Analysefehler:"
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "Parst/validiert/erstellt kwargs und gibt einen Aufrufplan aus, ohne Invoke-Schritte auszuführen."
 
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "Parst/validiert/erstellt kwargs und gibt einen Vorlagen-Zusammenfassungs-Aufrufplan aus, ohne Invoke-Schritte auszuführen."
+
 msgid "Path to a JSON file containing an array of invoke calls for batch execution."
 msgstr "Pfad zu einer JSON-Datei, die ein Array von Invoke-Aufrufen für die Batch-Ausführung enthält."
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "Pfad zu einer JSON-Datei mit Parameterzuordnungen (überschreibt positionsbezogene Argumente). Die Nutzlast auf oberster Ebene muss ein Objekt sein."
 
 msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
 msgstr "Pfad zu einer JSON-Datei mit Parameterzuordnungen (überschreibt positionsbezogene Argumente). Die Nutzlast auf oberster Ebene muss ein Objekt sein."
@@ -551,12 +575,6 @@ msgstr "Eigenschaft {name} (id={id}, Typ={prop_type})"
 
 msgid "Read current value:"
 msgstr "Aktuellen Wert lesen:"
-
-msgid "Close Synergy and reset the session"
-msgstr "Synergy schließen und Sitzung zurücksetzen"
-
-msgid "Closes Synergy and resets the session for a fresh start."
-msgstr "Schließt Synergy und setzt die Sitzung zurück, um einen Neustart zu ermöglichen."
 
 msgid "Resolved assignment:"
 msgstr "Aufgelöste Zuweisung:"
@@ -773,15 +791,6 @@ msgstr "Strukturierte Ausgabe wurde nach {path} geschrieben."
 
 msgid "You are already in the REPL."
 msgstr "Sie befinden sich bereits in der REPL."
-
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\nMeinten Sie den Schritt '{step_name}'?"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\nBei JSON-Eingaben für mehrstufige Ziele gruppieren Sie Parameter nach Schrittnamen, z. B. {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\nBei JSON-Eingaben muss dieser Schritt-Schlüssel einem Objekt mit Parameternamen zugeordnet sein, z. B. {example}"
 
 msgid "both {first} and {second} must be provided together"
 msgstr "Sowohl {first} als auch {second} müssen gemeinsam angegeben werden"

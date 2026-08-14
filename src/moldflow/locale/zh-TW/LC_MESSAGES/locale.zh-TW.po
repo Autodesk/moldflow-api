@@ -3,6 +3,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: zh-TW\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n您是指步驟 '{step_name}' 嗎？"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n對於多步驟目標的 JSON 輸入，請依步驟名稱分組參數，例如 {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\n對於 JSON 輸入，此步驟鍵必須對應到參數名稱的物件，例如 {example}"
+
 msgid " Did you mean '{parameter}'?"
 msgstr " 您是指 '{parameter}' 嗎？"
 
@@ -192,6 +201,12 @@ msgstr "清除螢幕"
 msgid "Clears the terminal screen and redraws the banner."
 msgstr "清除終端機螢幕並重新繪製橫幅。"
 
+msgid "Close Synergy and reset the session"
+msgstr "關閉 Synergy 並重設工作階段"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "關閉 Synergy 並重設工作階段，以便重新開始。"
+
 msgid "Command exited with status {code}"
 msgstr "命令以狀態 {code} 結束"
 
@@ -212,6 +227,9 @@ msgstr "詳細資料"
 
 msgid "Direct parameter assignment remains the preferred non-JSON form."
 msgstr "直接參數指定仍是非 JSON 形式的首選。"
+
+msgid "Disable ANSI color/styling in CLI output."
+msgstr "停用 CLI 輸出中的 ANSI 色彩/樣式。"
 
 msgid "Discover invokable targets and the next command to run for each one."
 msgstr "找出可呼叫的目標，以及每個目標下一步要執行的命令。"
@@ -234,6 +252,9 @@ msgstr "{target} 的乾跑"
 msgid "Duplicate argument path '{path}' is not allowed."
 msgstr "不允許重複的引數路徑 '{path}'。"
 
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "拒絕重複/衝突路徑。引數以 key=value 或 param.attr=value 形式傳遞。對於鏈式目標，請在參數前加上方法名稱，例如 find_plot_by_name.plot_name=\"My Plot\"。巢狀路由使用 step.param.attr=value（例如 param=1 與 param.attr=2 衝突），不支援僅含位置參數的方法的命名 CLI 路由。"
+
 msgid "Emit a JSON schema-like representation of target parameters."
 msgstr "輸出目標參數的類似 JSON 結構描述表示。"
 
@@ -243,17 +264,11 @@ msgstr "將以逐行 JSON 追蹤事件輸出到 stderr，用於目標解析與�
 msgid "Emit structured JSON for scripting or agent use."
 msgstr "輸出供指令碼或代理使用的結構化 JSON。"
 
-msgid "Emit structured JSON for scripting or agent use."
-msgstr "輸出供指令碼或代理使用的結構化 JSON。"
-
 msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
 msgstr "輸出供指令碼或代理使用的結構化 YAML（需要 PyYAML）。"
 
-msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
-msgstr "輸出供指令碼或代理使用的結構化 YAML（需要 PyYAML）。"
-
-msgid "Emit the result as JSON to stdout (useful for automation/LLMs)."
-msgstr "將結果以 JSON 輸出到 stdout（適用於自動化/LLM）。"
+msgid "Emit the structured result as JSON to stdout (useful for automation/LLMs)."
+msgstr "將結構化結果以 JSON 輸出到 stdout（適用於自動化/LLM）。"
 
 msgid "Empty target"
 msgstr "目標為空"
@@ -435,6 +450,9 @@ msgstr "JSON 範例："
 msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
 msgstr "包含參數對映的 JSON 物件（會覆蓋位置引數）。不允許最上層為陣列或純量。"
 
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "包含參數對映的 JSON 物件（會覆蓋位置引數）。不允許最上層為陣列或純量。"
+
 msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
 msgstr "JSON 參數必須是命名參數的 JSON 物件。範例：--params-json '{\"param\": 1}' 或對於鏈式目標：--params-json '{\"step\": {\"param\": 1}}'"
 
@@ -525,8 +543,14 @@ msgstr "解析錯誤："
 msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
 msgstr "解析/驗證/建構 kwargs，並在不執行 invoke 步驟的情況下輸出呼叫計畫。"
 
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "解析/驗證/建構 kwargs，並在不執行 invoke 步驟的情況下輸出範本摘要呼叫計畫。"
+
 msgid "Path to a JSON file containing an array of invoke calls for batch execution."
 msgstr "包含供批次執行之 invoke 呼叫陣列的 JSON 檔案路徑。"
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "包含參數對映的 JSON 檔案路徑（會覆蓋位置引數）。最上層載荷必須是物件。"
 
 msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
 msgstr "包含參數對映的 JSON 檔案路徑（會覆蓋位置引數）。最上層載荷必須是物件。"
@@ -551,12 +575,6 @@ msgstr "屬性 {name}（id={id}，type={prop_type}）"
 
 msgid "Read current value:"
 msgstr "讀取目前值："
-
-msgid "Close Synergy and reset the session"
-msgstr "關閉 Synergy 並重設工作階段"
-
-msgid "Closes Synergy and resets the session for a fresh start."
-msgstr "關閉 Synergy 並重設工作階段，以便重新開始。"
 
 msgid "Resolved assignment:"
 msgstr "已解析的指定："
@@ -773,15 +791,6 @@ msgstr "已將結構化輸出寫入 {path}。"
 
 msgid "You are already in the REPL."
 msgstr "您已在 REPL 中。"
-
-msgid "\nDid you mean step '{step_name}'?"
-msgstr "\n您是指步驟 '{step_name}' 嗎？"
-
-msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
-msgstr "\n對於多步驟目標的 JSON 輸入，請依步驟名稱分組參數，例如 {example}"
-
-msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
-msgstr "\n對於 JSON 輸入，此步驟鍵必須對應到參數名稱的物件，例如 {example}"
 
 msgid "both {first} and {second} must be provided together"
 msgstr "{first} 與 {second} 必須一併提供"
