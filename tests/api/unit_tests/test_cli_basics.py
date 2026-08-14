@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 import moldflow
 
 from moldflow_cli.commands import build_cli_app
+from tests.api.unit_tests.conftest import strip_ansi
 
 runner = CliRunner()
 
@@ -32,17 +33,18 @@ class TestUnitCLI:
         # Help should not need to touch Synergy/COM at all.
         mock_ctx_synergy.assert_not_called()
         mock_fact_synergy.assert_not_called()
-        assert "Moldflow command-line interface" in result.stdout
-        assert "Start with 'list' to discover targets" in result.stdout
-        assert "describe <target>" in result.stdout
-        assert "invoke <target>" in result.stdout
+        output = strip_ansi(result.stdout)
+        assert "Moldflow command-line interface" in output
+        assert "Start with 'list' to discover targets" in output
+        assert "describe <target>" in output
+        assert "invoke <target>" in output
 
     def test_help_shows_global_no_color_option(self):
         """Global help should advertise the output-styling toggle."""
         app = build_cli_app()
         result = runner.invoke(app, ["--no-color", "--help"])
         assert result.exit_code == 0
-        assert "--no-color" in result.stdout
+        assert "--no-color" in strip_ansi(result.stdout)
 
     def test_subcommand_help_runs_without_synergy(self):
         """Subcommand help should be available without creating Synergy/COM objects."""
@@ -59,17 +61,20 @@ class TestUnitCLI:
         assert invoke_help.exit_code == 0
         mock_ctx_synergy.assert_not_called()
         mock_fact_synergy.assert_not_called()
+        list_output = strip_ansi(list_help.stdout)
+        describe_output = strip_ansi(describe_help.stdout)
+        invoke_output = strip_ansi(invoke_help.stdout)
         assert (
             "Discover invokable targets and the next command to run for each one"
-            in list_help.stdout
+            in list_output
         )
-        assert "--json" in list_help.stdout
-        assert "--with-describe" in list_help.stdout
+        assert "--json" in list_output
+        assert "--with-describe" in list_output
         assert (
             "Inspect a target's signature, docs, examples, and structured invoke template"
-            in describe_help.stdout
+            in describe_output
         )
-        assert "Run a Moldflow target with named parameters or JSON input" in invoke_help.stdout
+        assert "Run a Moldflow target with named parameters or JSON input" in invoke_output
 
     def test_global_no_color_option_configures_cli_output(self):
         """Global --no-color should reconfigure shared console output before dispatch."""

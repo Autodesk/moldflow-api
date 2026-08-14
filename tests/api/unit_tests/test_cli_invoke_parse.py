@@ -19,6 +19,7 @@ from moldflow.cli_input_metadata import cli_input_adapter
 
 from moldflow_cli.commands import build_cli_app
 from moldflow_cli.invoke_binding import _bucket_items_by_step, _coerce_final_value
+from tests.api.unit_tests.conftest import strip_ansi
 
 runner = CliRunner()
 
@@ -1857,7 +1858,7 @@ def test_invoke_help_shows_arg_syntax():
     """Invoke --help should demonstrate the step.param.attr=value routing syntax."""
     app = build_cli_app()
     result = runner.invoke(app, ["--no-color", "invoke", "--help"])
-    help_text = result.stdout.lower()
+    help_text = strip_ansi(result.stdout).lower()
     assert result.exit_code == 0
     assert "find_plot_by_name.plot_name" in help_text or "step.param.attr" in help_text
     assert "duplicate/conflicting paths" in help_text
