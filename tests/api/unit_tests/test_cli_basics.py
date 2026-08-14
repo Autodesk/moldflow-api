@@ -64,10 +64,7 @@ class TestUnitCLI:
         list_output = strip_ansi(list_help.stdout)
         describe_output = strip_ansi(describe_help.stdout)
         invoke_output = strip_ansi(invoke_help.stdout)
-        assert (
-            "Discover invokable targets and the next command to run for each one"
-            in list_output
-        )
+        assert "Discover invokable targets and the next command to run for each one" in list_output
         assert "--json" in list_output
         assert "--with-describe" in list_output
         assert (
