@@ -28,9 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [27.1.0] - 2026-08-14
 
 ### Added
-- Added `transparent_background` property to `ImageExportOptions` — when set to `True` with a `.png` output path, the exported image uses a transparent background instead of the renderer's opaque fill colour. Defaults to `False`; silently ignored for non-PNG formats ([IM-9583](https://jira.autodesk.com/browse/IM-9583)).
+- Added `transparent_background` property to `ImageExportOptions` — when set to `True` with a `.png` output path, the exported image uses a transparent background instead of the renderer's opaque fill colour. Defaults to `False`; silently ignored for non-PNG formats.
 - Added a Moldflow CLI with `list`, `describe`, and `invoke` commands.
-- Added an interactive REPL for the Moldflow CLI ([IM-12365](https://jira.autodesk.com/browse/IM-12365)).
+- Added an interactive REPL for the Moldflow CLI.
 - Added invoke planning and automation support, including dry-run plans, trace output, and batch execution.
 - Added machine-readable `describe` schema output and updated CLI documentation and examples.
 - Added CLI regression tests covering chaining, argument routing, and edge-case input handling.
@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - N/A
 
 ### Fixed
-- CLI shell now displays localized messages correctly ([IM-12364](https://jira.autodesk.com/browse/IM-12364)).
+- N/A
 
 ### Security
 - N/A
