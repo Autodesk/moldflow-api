@@ -10,4 +10,5 @@
    :caption: Moldflow Synergy
 
    moldflow
+   cli
    enums

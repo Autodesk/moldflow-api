@@ -3,8 +3,158 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Language: ko-KR\n"
 
+msgid "\nDid you mean step '{step_name}'?"
+msgstr "\n'{step_name}' 단계를 말씀하신 건가요?"
+
+msgid "\nFor JSON input on multi-step targets, group parameters by step name, e.g. {example}"
+msgstr "\n다단계 대상에 JSON 입력을 사용할 때는 매개변수를 단계 이름별로 묶으세요. 예: {example}"
+
+msgid "\nFor JSON input, this step key must map to an object of parameter names, e.g. {example}"
+msgstr "\nJSON 입력에서는 이 단계 키가 매개변수 이름 객체에 매핑되어야 합니다. 예: {example}"
+
+msgid " Did you mean '{parameter}'?"
+msgstr " '{parameter}'을(를) 말씀하신 건가요?"
+
+msgid " Known parameters: {known_params}."
+msgstr " 알려진 매개변수: {known_params}."
+
+msgid "'{type_name}' no longer exposes adapter method '{method_name}'."
+msgstr "'{type_name}'은(는) 더 이상 어댑터 메서드 '{method_name}'을(를) 노출하지 않습니다."
+
+msgid "--yaml requested but PyYAML is not installed: {error}"
+msgstr "--yaml 옵션이 요청되었지만 PyYAML이 설치되어 있지 않습니다: {error}"
+
+msgid "--yaml requested but PyYAML is not installed: {exc}"
+msgstr "--yaml 옵션이 요청되었으나 PyYAML이 설치되어 있지 않습니다: {exc}"
+
+msgid "Aborted."
+msgstr "중단되었습니다."
+
+msgid "Advanced fallback only. Use this tagged shape when annotation context is unavailable, when a nested payload is truly generic, or when multiple wrapper families would be ambiguous."
+msgstr "고급 대체 방식 전용입니다. 주석 컨텍스트를 사용할 수 없거나, 중첩 페이로드가 실제로 제네릭이거나, 여러 래퍼 계열이 모호할 때 이 태그된 형태를 사용하세요."
+
+msgid "Argument '{argument}' must specify a parameter name after the step (e.g., {step_name}.param=...).{extra}"
+msgstr "인수 '{argument}'는 단계 뒤에 매개변수 이름을 지정해야 합니다(예: {step_name}.param=...).{extra}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}"
+msgstr "인수 '{argument}'는 다음 중 하나로 시작해야 합니다: {valid_steps}"
+
+msgid "Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "인수 '{argument}'는 다음 중 하나로 시작해야 합니다: {valid_steps}.{extra}"
+
+msgid "Argument '{step_name}' must start with one of: {names}"
+msgstr "인수 '{step_name}'는 다음 중 하나로 시작해야 합니다: {names}"
+
+msgid "Argument error calling {target}{signature}: {error}"
+msgstr "{target}{signature} 호출 중 인수 오류: {error}"
+
+msgid "Arguments as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value. Duplicate or conflicting paths are rejected (for example param=1 with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "인수는 key=value 또는 param.attr=value 형식으로 지정합니다. 체인 대상의 경우 예를 들어 find_plot_by_name.plot_name=\"My Plot\"처럼 메서드 이름을 매개변수 앞에 붙이세요. 중첩 라우팅은 step.param.attr=value를 사용합니다. 중복되거나 충돌하는 경로(예: param=1과 param.attr=2)는 거부되며, 위치 전용 매개변수가 있는 메서드는 이름 기반 CLI 라우팅을 지원하지 않습니다."
+
+msgid "Arguments for step '{step_name}' must be a JSON object of parameters."
+msgstr "단계 '{step_name}'의 인수는 매개변수의 JSON 객체여야 합니다."
+
+msgid "Array"
+msgstr "배열"
+
+msgid "Attribute '{matched_name}' on class '{class_name}' returns a non-wrapper value{continuation}"
+msgstr "클래스 '{class_name}'의 속성 '{matched_name}'은(는) 래퍼가 아닌 값을 반환합니다{continuation}"
+
+msgid "Attribute '{matched_name}' on object '{type_name}' returns a non-wrapper value{continuation}"
+msgstr "객체 '{type_name}'의 속성 '{matched_name}'은(는) 래퍼가 아닌 값을 반환합니다{continuation}"
+
+msgid "Batch file must contain a JSON array of invoke call objects."
+msgstr "배치 파일에는 invoke 호출 객체의 JSON 배열이 포함되어야 합니다."
+
+msgid "Batch item field 'args' must be a list of strings."
+msgstr "배치 항목 필드 'args'는 문자열 목록이어야 합니다."
+
+msgid "Batch item field 'params_json_file' must be a string path."
+msgstr "배치 항목 필드 'params_json_file'은 문자열 경로여야 합니다."
+
+msgid "Batch item must be a JSON object."
+msgstr "배치 항목은 JSON 객체여야 합니다."
+
+msgid "Batch item requires string field 'target'."
+msgstr "배치 항목에는 문자열 필드 'target'이 필요합니다."
+
+msgid "Batch item {index} error: {error}"
+msgstr "배치 항목 {index} 오류: {error}"
+
+msgid "Batch results"
+msgstr "배치 결과"
+
+msgid "Batch summary: {succeeded}/{total} succeeded, {failed} failed."
+msgstr "배치 요약: 총 {total}개 중 {succeeded}개 성공, {failed}개 실패."
+
+msgid "CLI argument: {value}"
+msgstr "CLI 인수: {value}"
+
 msgid "Cancel"
 msgstr "취소"
+
+msgid "Cannot assign property '{property_name}' while resolving target '{target}' because the owner object resolved to None."
+msgstr "소유자 객체가 None으로 확인되었기 때문에 대상 '{target}'을(를) 확인하는 동안 속성 '{property_name}'을(를) 할당할 수 없습니다."
+
+msgid "Cannot build instance for type 'EntList'. No create_entity_list provider found."
+msgstr "유형 'EntList'의 인스턴스를 만들 수 없습니다. create_entity_list 제공자를 찾지 못했습니다."
+
+msgid "Cannot build instance for type '{type_name}'. Not a known Synergy property or factory."
+msgstr "유형 '{type_name}'의 인스턴스를 만들 수 없습니다. 알려진 Synergy 속성 또는 팩토리가 아닙니다."
+
+msgid "Cannot configure field '{key_name}' on '{type_name}': {error}"
+msgstr "'{type_name}'에서 필드 '{key_name}'을(를) 구성할 수 없습니다: {error}"
+
+msgid "Cannot invoke method '{segment}' for target '{target}' because '{owner}' is unavailable in the current session (it resolved to None). This target only works when that object exists."
+msgstr "현재 세션에서 '{owner}'을(를) 사용할 수 없어(None으로 확인됨) 대상 '{target}'에 대해 메서드 '{segment}'을(를) 호출할 수 없습니다. 이 대상은 해당 객체가 존재할 때만 작동합니다."
+
+msgid "Cannot read JSON file '{file}': {exc}"
+msgstr "JSON 파일 '{file}'을(를) 읽을 수 없습니다: {exc}"
+
+msgid "Cannot read JSON file '{path}': {error}"
+msgstr "JSON 파일 '{path}'을(를) 읽을 수 없습니다: {error}"
+
+msgid "Cannot read batch file '{path}': {error}"
+msgstr "배치 파일 '{path}'을(를) 읽을 수 없습니다: {error}"
+
+msgid "Cannot resolve '{first}' on moldflow for introspection"
+msgstr "인트로스펙션을 위해 moldflow에서 '{first}'을(를) 확인할 수 없습니다"
+
+msgid "Cannot resolve attribute '{segment}' on '{class_name}' when executing target '{target}': {error}"
+msgstr "대상 '{target}'을(를) 실행할 때 '{class_name}'에서 속성 '{segment}'을(를) 확인할 수 없습니다: {error}"
+
+msgid "Cannot resolve attribute '{segment}' without an object instance when resolving target '{target}'"
+msgstr "대상 '{target}'을(를) 확인할 때 객체 인스턴스 없이 속성 '{segment}'을(를) 확인할 수 없습니다"
+
+msgid "Cannot resolve segment '{segment}' in target '{target}' without a class context. Use a Synergy-rooted target such as 'synergy.some_method'."
+msgstr "클래스 컨텍스트 없이 대상 '{target}'의 세그먼트 '{segment}'을(를) 확인할 수 없습니다. 'synergy.some_method'와 같은 Synergy 루트 대상을 사용하세요."
+
+msgid "Cannot set nested argument '{path}': {error}"
+msgstr "중첩 인수 '{path}'을(를) 설정할 수 없습니다: {error}"
+
+msgid "Cannot set nested attributes for '{param_name}' without signature info on '{step_name}'."
+msgstr "'{step_name}'의 시그니처 정보 없이 '{param_name}'의 중첩 속성을 설정할 수 없습니다."
+
+msgid "Cannot set property '{property_name}' on target '{target}': {error}"
+msgstr "대상 '{target}'에 속성 '{property_name}'을(를) 설정할 수 없습니다: {error}"
+
+msgid "Cannot write JSON file '{path}': {error}"
+msgstr "JSON 파일 '{path}'에 쓸 수 없습니다: {error}"
+
+msgid "Canonical JSON field is derived from the reflected wrapper method signature for {method_name}()."
+msgstr "정규 JSON 필드는 반영된 래퍼 메서드 {method_name}()의 시그니처에서 파생됩니다."
+
+msgid "Canonical list field is derived from the reflected wrapper method {method_name}()."
+msgstr "정규 목록 필드는 반영된 래퍼 메서드 {method_name}()에서 파생됩니다."
+
+msgid "Canonical triplet field is derived from the reflected wrapper method {method_name}()."
+msgstr "정규 3중값 필드는 반영된 래퍼 메서드 {method_name}()에서 파생됩니다."
+
+msgid "Canonical vector-array field is derived from the reflected wrapper method {method_name}()."
+msgstr "정규 벡터 배열 필드는 반영된 래퍼 메서드 {method_name}()에서 파생됩니다."
+
+msgid "Chained targets with repeated method names are ambiguous for argument routing: {duplicate_names}. Please use an equivalent target path where each invoked step name is unique."
+msgstr "반복된 메서드 이름이 있는 체인 대상은 인수 라우팅이 모호합니다: {duplicate_names}. 호출되는 각 단계 이름이 고유한 동등한 대상 경로를 사용하세요."
 
 msgid "Checking file extension {file_name}"
 msgstr "파일 확장자 {file_name} 확인 중"
@@ -42,14 +192,176 @@ msgstr "{value}가 양수인지 확인 중"
 msgid "Checking {value} is {name}"
 msgstr "{value}가 {name}인지 확인 중"
 
+msgid "Class '{class_name}' has no attribute '{attr_name}'"
+msgstr "클래스 '{class_name}'에 속성 '{attr_name}'이(가) 없습니다"
+
+msgid "Clear the screen"
+msgstr "화면 지우기"
+
+msgid "Clears the terminal screen and redraws the banner."
+msgstr "터미널 화면을 지우고 배너를 다시 그립니다."
+
+msgid "Close Synergy and reset the session"
+msgstr "Synergy를 종료하고 세션 재설정"
+
+msgid "Closes Synergy and resets the session for a fresh start."
+msgstr "Synergy를 종료하고 세션을 재설정하여 새로 시작합니다."
+
+msgid "Command exited with status {code}"
+msgstr "명령이 상태 {code}(으)로 종료되었습니다"
+
+msgid "Commands:"
+msgstr "명령어:"
+
+msgid "Conflicting argument paths '{left_path}' and '{right_path}' are not allowed."
+msgstr "충돌하는 인수 경로 '{left_path}'와 '{right_path}'는 허용되지 않습니다."
+
 msgid "Could not initialize with Instance ID: {value}"
 msgstr "인스턴스 ID {value}로 초기화할 수 없습니다"
+
+msgid "Ctrl+D also exits."
+msgstr "Ctrl+D로도 종료할 수 있습니다."
+
+msgid "Detail"
+msgstr "세부 정보"
+
+msgid "Direct parameter assignment remains the preferred non-JSON form."
+msgstr "직접 매개변수 할당이 여전히 기본으로 권장되는 비 JSON 형식입니다."
+
+msgid "Disable ANSI color/styling in CLI output."
+msgstr "CLI 출력에서 ANSI 색상/스타일을 비활성화합니다."
+
+msgid "Discover invokable targets and the next command to run for each one."
+msgstr "호출 가능한 대상과 각 대상에 대해 다음에 실행할 명령을 확인합니다."
+
+msgid "Do not pass TARGET when --batch-file is used."
+msgstr "--batch-file을 사용할 때는 TARGET을 전달하지 마세요."
+
+msgid "Do not pass positional args/JSON input with --batch-file."
+msgstr "--batch-file과 함께 위치 인수/JSON 입력을 전달하지 마세요."
+
+msgid "Dotted path to a method or function, optionally chained, for example 'synergy.new_project' or 'synergy.plot_manager.find_plot_by_name'."
+msgstr "메서드 또는 함수까지의 점 표기 경로입니다. 선택적으로 체인할 수 있으며, 예를 들면 'synergy.new_project' 또는 'synergy.plot_manager.find_plot_by_name'입니다."
+
+msgid "Dotted path, e.g., synergy.new_project"
+msgstr "점 표기 경로, 예: synergy.new_project"
+
+msgid "Dry run for {target}"
+msgstr "{target}에 대한 드라이런"
+
+msgid "Duplicate argument path '{path}' is not allowed."
+msgstr "중복된 인수 경로 '{path}'는 허용되지 않습니다."
+
+msgid "Duplicate/conflicting paths are rejected. Arguments are passed as key=value or param.attr=value. For chained targets, prefix the parameter with the method name, for example find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value (for example param=1 conflicts with param.attr=2), and methods with positional-only parameters are not supported by named CLI routing."
+msgstr "중복/충돌 경로는 거부됩니다. 인수는 key=value 또는 param.attr=value로 전달됩니다. 연결된 대상의 경우 find_plot_by_name.plot_name=\"My Plot\"처럼 매개변수 앞에 메서드 이름을 붙입니다. 중첩 라우팅은 step.param.attr=value를 사용하며(예: param=1은 param.attr=2와 충돌), 위치 전용 매개변수를 가진 메서드는 명명된 CLI 라우팅에서 지원되지 않습니다."
+
+msgid "Emit a JSON schema-like representation of target parameters."
+msgstr "대상 매개변수의 JSON 스키마 유사 표현을 출력합니다."
+
+msgid "Emit line-delimited JSON trace events to stderr for target resolution and runtime invoke binding."
+msgstr "대상 확인 및 런타임 invoke 바인딩을 위해 줄 단위 JSON 추적 이벤트를 stderr로 출력합니다."
+
+msgid "Emit structured JSON for scripting or agent use."
+msgstr "스크립트나 에이전트 사용을 위해 구조화된 JSON을 출력합니다."
+
+msgid "Emit structured YAML for scripting or agent use (requires PyYAML)."
+msgstr "스크립트나 에이전트 사용을 위해 구조화된 YAML을 출력합니다(PyYAML 필요)."
+
+msgid "Emit the structured result as JSON to stdout (useful for automation/LLMs)."
+msgstr "구조화된 결과를 stdout으로 JSON 출력합니다(자동화/LLM에 유용)."
+
+msgid "Empty target"
+msgstr "대상 비어 있음"
+
+msgid "Empty type tag is not valid for '{primary_expected}'."
+msgstr "빈 타입 태그는 '{primary_expected}'에 유효하지 않습니다."
+
+msgid "Error:"
+msgstr "오류:"
+
+msgid "Example object shape: {shape}."
+msgstr "예시 객체 형태: {shape}."
 
 msgid "Executing {name}"
 msgstr "{name} 실행 중"
 
+msgid "Exit the REPL"
+msgstr "REPL 종료"
+
+msgid "Exits the REPL."
+msgstr "REPL을 종료합니다."
+
+msgid "Explicit field form: {value}"
+msgstr "명시적 필드 형식: {value}"
+
 msgid "Failed to initialize Synergy: Synergy not found"
 msgstr "Synergy 초기화 실패: Synergy를 찾을 수 없음"
+
+msgid "Failed to render JSON output for {context}: {error}"
+msgstr "{context}에 대한 JSON 출력 렌더링에 실패했습니다: {error}"
+
+msgid "Failed to render JSON output for {context}: {exc}"
+msgstr "{context}에 대한 JSON 출력 생성에 실패했습니다: {exc}"
+
+msgid "Failed to render YAML output for {context}: {error}"
+msgstr "{context}에 대한 YAML 출력 렌더링에 실패했습니다: {error}"
+
+msgid "Failed to render YAML output for {context}: {exc}"
+msgstr "{context}에 대한 YAML 출력 생성에 실패했습니다: {exc}"
+
+msgid "Failed to reset session:"
+msgstr "세션 재설정에 실패했습니다:"
+
+msgid "Field '{key_name}' is not valid for '{type_name}'."
+msgstr "필드 '{key_name}'은(는) '{type_name}'에 유효하지 않습니다."
+
+msgid "Field '{key}' for '{type_name}' must be a 3-item numeric sequence like [0, 0, 1]."
+msgstr "'{type_name}'의 필드 '{key}'은(는) [0, 0, 1]과 같은 3개 항목의 숫자 시퀀스여야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 3중값의 JSON 배열이거나 '0,0,0;1,0,0' 같은 세미콜론 구분 목록이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a JSON array or a comma-separated list."
+msgstr "'{type_name}'의 필드 '{key}'은(는) JSON 배열 또는 쉼표로 구분된 목록이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a comma-separated numeric triplet like '0,0,1'."
+msgstr "'{type_name}'의 필드 '{key}'은(는) '0,0,1'과 같은 쉼표로 구분된 숫자 3중값이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a list of numeric triplets."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 숫자 3중값 목록이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a string selection expression. Expected field: {preferred_field}."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 문자열 선택 식이어야 합니다. 예상 필드: {preferred_field}."
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array of triplets or a semicolon-separated list like '0,0,0;1,0,0'."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 유효한 3중값 JSON 배열이거나 '0,0,0;1,0,0' 같은 세미콜론 구분 목록이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must be a valid JSON array or a comma-separated list."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 유효한 JSON 배열 또는 쉼표로 구분된 목록이어야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must contain integer values."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 정수 값을 포함해야 합니다."
+
+msgid "Field '{key}' for '{type_name}' must contain numeric values."
+msgstr "'{type_name}'의 필드 '{key}'은(는) 숫자 값을 포함해야 합니다."
+
+msgid "Fields '{previous_key}' and '{key}' both map to the same input for '{type_name}'. Provide only one of: {preferred_field} or direct parameter shorthand."
+msgstr "필드 '{previous_key}'와 '{key}'은(는) 모두 '{type_name}'의 동일한 입력에 매핑됩니다. {preferred_field} 또는 직접 매개변수 축약형 중 하나만 제공하세요."
+
+msgid "Filter by substring or wildcard pattern (* and ?)."
+msgstr "부분 문자열 또는 와일드카드 패턴(* 및 ?)으로 필터링합니다."
+
+msgid "Filter by substring or wildcard pattern (* and ?). Repeat to keep targets matching any filter."
+msgstr "부분 문자열 또는 와일드카드 패턴(* 및 ?)으로 필터링합니다. 필터 중 하나라도 일치하는 대상을 유지하려면 이 옵션을 반복하세요."
+
+msgid "Filtered matches:"
+msgstr "필터된 일치 항목:"
+
+msgid "For JSON input, group parameters by step name. Argument '{argument}' must start with one of: {valid_steps}.{extra}"
+msgstr "JSON 입력에서는 매개변수를 단계 이름별로 묶으세요. 인수 '{argument}'는 다음 중 하나로 시작해야 합니다: {valid_steps}.{extra}"
+
+msgid "For multi-step targets, group params-json fields by step name."
+msgstr "다단계 대상의 경우 params-json 필드를 단계 이름별로 묶으세요."
 
 msgid "Getting {name}"
 msgstr "{name} 가져오는 중"
@@ -57,8 +369,29 @@ msgstr "{name} 가져오는 중"
 msgid "Getting {name} at index {value}"
 msgstr "인덱스 {value}에서 {name} 가져오는 중"
 
+msgid "Goodbye!"
+msgstr "안녕히 가세요!"
+
+msgid "If shorthand input is ambiguous, switch to --params-json. {guidance}"
+msgstr "축약 입력이 모호하면 --params-json으로 전환하세요. {guidance}"
+
+msgid "In non-JSON mode, prefer direct shorthand like '{preferred_non_json}'."
+msgstr "비 JSON 모드에서는 '{preferred_non_json}'과 같은 직접 축약형을 우선 사용하세요."
+
+msgid "Index"
+msgstr "인덱스"
+
 msgid "Initializing {name}"
 msgstr "{name} 초기화 중"
+
+msgid "Input hints:"
+msgstr "입력 힌트:"
+
+msgid "Inspect a target's signature, docs, examples, and structured invoke template."
+msgstr "대상의 시그니처, 문서, 예제 및 구조화된 invoke 템플릿을 확인합니다."
+
+msgid "Interrupted."
+msgstr "중단되었습니다."
 
 msgid "Invalid Attribute: {attribute} is not supported"
 msgstr "잘못된 속성: {attribute}는 지원되지 않습니다"
@@ -69,17 +402,191 @@ msgstr "잘못된 파일 형식: {file_name}, {extensions}여야 합니다"
 msgid "Invalid Index: out of range"
 msgstr "잘못된 인덱스: 범위를 벗어났습니다"
 
+msgid "Invalid JSON payload for parameters: {error}"
+msgstr "매개변수에 대한 JSON 페이로드가 유효하지 않습니다: {error}"
+
+msgid "Invalid JSON payload for parameters: {exc}"
+msgstr "매개변수에 대한 JSON 페이로드가 유효하지 않습니다: {exc}"
+
+msgid "Invalid JSON value for parameter '{param_name}': {error}"
+msgstr "매개변수 '{param_name}'의 JSON 값이 유효하지 않습니다: {error}"
+
 msgid "Invalid Type: must be {expected_types}, not {variable_type}"
 msgstr "잘못된 유형: {variable_type}가 아닌 {expected_types}여야 합니다"
 
 msgid "Invalid Value: {reason}"
 msgstr "잘못된 값: {reason}"
 
+msgid "Invalid argument '{item}'. Expected key=value or param.attr=value."
+msgstr "잘못된 인수 '{item}'입니다. key=value 또는 param.attr=value를 지정하세요."
+
+msgid "Invalid argument for step '{step_name}': missing parameter name."
+msgstr "단계 '{step_name}'의 인수가 잘못되었습니다: 매개변수 이름이 없습니다."
+
+msgid "Invalid nested argument path '{path}': attribute '{attr}' does not exist on '{obj_type}'."
+msgstr "중첩 인수 경로 '{path}'가 잘못되었습니다: '{obj_type}'에 속성 '{attr}'이(가) 없습니다."
+
+msgid "Invalid nested argument path '{path}': cannot nest into non-object '{obj_type}'."
+msgstr "중첩 인수 경로 '{path}'가 잘못되었습니다: 객체가 아닌 '{obj_type}' 안으로 중첩할 수 없습니다."
+
+msgid "Invalid nested argument path '{path}': cannot set '{final_attr}' on non-object '{obj_type}'."
+msgstr "중첩 인수 경로 '{path}'가 잘못되었습니다: 객체가 아닌 '{obj_type}'에 '{final_attr}'을(를) 설정할 수 없습니다."
+
+msgid "Invalid value for parameter '{param_name}': {error}"
+msgstr "매개변수 '{param_name}'의 값이 유효하지 않습니다: {error}"
+
+msgid "Invalid {field_name} '{path_text}': empty path segment is not allowed."
+msgstr "잘못된 {field_name} '{path_text}': 빈 경로 세그먼트는 허용되지 않습니다."
+
+msgid "Invalid {field_name} '{path_text}': segment '{segment}' must be a valid identifier."
+msgstr "잘못된 {field_name} '{path_text}': 세그먼트 '{segment}'는 유효한 식별자여야 합니다."
+
+msgid "Invalid {field_name}: value cannot be empty."
+msgstr "잘못된 {field_name}: 값은 비어 있을 수 없습니다."
+
+msgid "JSON example:"
+msgstr "JSON 예:"
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays and scalars are not allowed."
+msgstr "매개변수 매핑을 포함하는 JSON 객체입니다(위치 인수를 재정의함). 최상위 배열과 스칼라는 허용되지 않습니다."
+
+msgid "JSON object containing parameter mappings (overrides positional args). Top-level arrays/scalars are not allowed."
+msgstr "매개변수 매핑을 포함하는 JSON 객체입니다(위치 인수를 재정의함). 최상위 배열과 스칼라는 허용되지 않습니다."
+
+msgid "JSON parameters must be a JSON object of named arguments. Example: --params-json '{\"param\": 1}' or --params-json '{\"step\": {\"param\": 1}}' for chained targets."
+msgstr "JSON 매개변수는 이름이 지정된 인수의 JSON 객체여야 합니다. 예: --params-json '{\"param\": 1}' 또는 체인된 대상의 경우 --params-json '{\"step\": {\"param\": 1}}'"
+
+msgid "JSON type tag '{type_tag}' does not match expected wrapper '{primary_expected}'."
+msgstr "JSON 타입 태그 '{type_tag}'가 예상 래퍼 '{primary_expected}'와 일치하지 않습니다."
+
+msgid "JSON value:"
+msgstr "JSON 값:"
+
+msgid "List result:"
+msgstr "목록 결과:"
+
 msgid "Logger was not setup"
 msgstr "로거가 설정되지 않았습니다"
 
+msgid "Missing required parameter '{parameter}' for {target}{signature}"
+msgstr "{target}{signature}에 필요한 매개변수 '{parameter}'이(가) 없습니다"
+
+msgid "Moldflow command-line interface.\n\nStart with 'list' to discover targets, 'describe <target>' to inspect usage, then 'invoke <target> ...' to run it."
+msgstr "Moldflow 명령줄 인터페이스입니다.\n\n먼저 'list'로 대상을 찾고, 'describe <target>'로 사용법을 확인한 다음, 'invoke <target> ...'를 실행하세요."
+
+msgid "Moldflow invokable targets"
+msgstr "Moldflow 호출 가능한 대상"
+
+msgid "Nested argument '{path}' is not supported for **kwargs on step '{step_name}'. Use a single key (e.g., {example}=...)."
+msgstr "중첩 인수 '{path}'은(는) 단계 '{step_name}'의 **kwargs에서 지원되지 않습니다. 단일 키를 사용하세요(예: {example}=...)."
+
+msgid "No invokable targets matched these filters."
+msgstr "이 필터들과 일치하는 호출 가능 대상이 없습니다."
+
+msgid "No invokable targets matched this filter."
+msgstr "이 필터와 일치하는 호출 가능 대상이 없습니다."
+
+msgid "Non-public argument path '{key}' is not allowed."
+msgstr "비공개 인수 경로 '{key}'는 허용되지 않습니다."
+
+msgid "Non-public argument path '{left}' is not allowed."
+msgstr "비공개 인수 경로 '{left}'는 허용되지 않습니다."
+
+msgid "Non-public argument path '{path}' is not allowed."
+msgstr "비공개 인수 경로 '{path}'는 허용되지 않습니다."
+
+msgid "Non-public argument path '{step_name}' is not allowed."
+msgstr "비공개 인수 경로 '{step_name}'는 허용되지 않습니다."
+
+msgid "Non-public argument path '{step}.{key}' is not allowed."
+msgstr "비공개 인수 경로 '{step}.{key}'는 허용되지 않습니다."
+
+msgid "Non-public field '{key_name}' is not allowed when constructing '{type_name}' from JSON."
+msgstr "JSON에서 '{type_name}'을(를) 구성할 때 비공개 필드 '{key_name}'는 허용되지 않습니다."
+
+msgid "Non-public segment '{segment}' is not allowed in target '{target}'."
+msgstr "대상 '{target}'에서 비공개 세그먼트 '{segment}'는 허용되지 않습니다."
+
+msgid "Non-public segment '{seg}' is not allowed in target '{target}'."
+msgstr "대상 '{target}'에 비공개 세그먼트 '{seg}'는 허용되지 않습니다."
+
 msgid "OK"
 msgstr "확인"
+
+msgid "Object"
+msgstr "객체"
+
+msgid "Object '{type_name}' has no attribute '{attr_name}'"
+msgstr "객체 '{type_name}'에 속성 '{attr_name}'이(가) 없습니다"
+
+msgid "One or more dotted targets, for example synergy.new_project."
+msgstr "점으로 구분된 대상 하나 이상(예: synergy.new_project)."
+
+msgid "Only one of --json or --yaml may be specified."
+msgstr "--json 또는 --yaml 중 하나만 지정할 수 있습니다."
+
+msgid "Only one of --json, --yaml, or --schema may be specified."
+msgstr "--json, --yaml 또는 --schema 중 하나만 지정할 수 있습니다."
+
+msgid "Only one of --params-json or --params-json-file may be specified."
+msgstr "--params-json 또는 --params-json-file 중 하나만 지정할 수 있습니다."
+
+msgid "Parameter '{param_name}' contains a null byte which is not allowed."
+msgstr "매개변수 '{param_name}'에 널 바이트가 포함되어 있습니다. 허용되지 않습니다."
+
+msgid "Parameter '{param_name}' contains control characters (newline/tab/carriage return); please provide a single-line value or quote/escape as needed."
+msgstr "매개변수 '{param_name}'에 제어 문자(줄바꿈/탭/캐리지 리턴)가 포함되어 있습니다. 한 줄 값으로 제공하거나 필요에 따라 따옴표/이스케이프하세요."
+
+msgid "Parse error:"
+msgstr "구문 분석 오류:"
+
+msgid "Parse/validate/build kwargs and emit a call plan without executing invoke steps."
+msgstr "invoke 단계를 실행하지 않고 kwargs를 구문 분석/검증/구성한 뒤 호출 계획을 출력합니다."
+
+msgid "Parse/validate/build kwargs and emit a template summary call plan without executing invoke steps."
+msgstr "invoke 단계를 실행하지 않고 kwargs를 구문 분석/검증/구성한 뒤 템플릿 요약 호출 계획을 출력합니다."
+
+msgid "Path to a JSON file containing an array of invoke calls for batch execution."
+msgstr "배치 실행용 invoke 호출 배열이 들어 있는 JSON 파일 경로입니다."
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object, not arrays/scalars."
+msgstr "매개변수 매핑이 들어 있는 JSON 파일 경로입니다(위치 인수를 재정의함). 최상위 페이로드는 객체여야 합니다."
+
+msgid "Path to a JSON file containing parameter mappings (overrides positional args). The top-level payload must be an object."
+msgstr "매개변수 매핑이 들어 있는 JSON 파일 경로입니다(위치 인수를 재정의함). 최상위 페이로드는 객체여야 합니다."
+
+msgid "Planned steps:"
+msgstr "계획된 단계:"
+
+msgid "Prefer chaining invoke targets so this parameter is produced by a previous step, instead of constructing it manually in JSON."
+msgstr "이 매개변수를 JSON에서 수동으로 구성하는 대신, 이전 단계에서 생성되도록 invoke 대상을 체인하는 방식을 권장합니다."
+
+msgid "Print the installed moldflow package version."
+msgstr "설치된 moldflow 패키지 버전을 출력합니다."
+
+msgid "Property assignment JSON must be an object with a single 'value' field."
+msgstr "속성 할당 JSON은 단일 'value' 필드가 있는 객체여야 합니다."
+
+msgid "Property assignment requires exactly one 'value' argument (e.g., value=... or --params-json '{\"value\": ...}')."
+msgstr "속성 할당에는 정확히 하나의 'value' 인수가 필요합니다(예: value=... 또는 --params-json '{\"value\": ...}')."
+
+msgid "Property {name} (id={id}, type={prop_type})"
+msgstr "속성 {name} (id={id}, 유형={prop_type})"
+
+msgid "Read current value:"
+msgstr "현재 값 읽기:"
+
+msgid "Resolved assignment:"
+msgstr "확인된 할당:"
+
+msgid "Resolved kwargs:"
+msgstr "확인된 kwargs:"
+
+msgid "Resolved object has no callable attribute '{segment}' when executing target '{target}'"
+msgstr "대상 '{target}'을(를) 실행할 때 확인된 객체에 호출 가능한 속성 '{segment}'이(가) 없습니다"
+
+msgid "Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+msgstr "이름이 지정된 매개변수 또는 JSON 입력으로 Moldflow 대상을 실행합니다. 접두사가 없는 대상은 synergy.<target>으로 처리됩니다."
 
 msgid "Save Error"
 msgstr "저장 오류"
@@ -90,14 +597,170 @@ msgstr "저장 오류: {saving}을(를) {file_name}에 저장할 수 없습니�
 msgid "Save Error: Failed to save {saving} to {file_name}"
 msgstr "저장 오류: {saving}을(를) {file_name}에 저장하지 못했습니다"
 
+msgid "Segment '{segment}' does not resolve as an attribute on class '{class_name}' when resolving target '{target}'"
+msgstr "대상 '{target}'을(를) 확인할 때 세그먼트 '{segment}'는 클래스 '{class_name}'의 속성으로 확인되지 않습니다"
+
+msgid "Segment '{segment}' is not a callable method on class '{class_name}' when resolving target '{target}'"
+msgstr "대상 '{target}'을(를) 확인할 때 세그먼트 '{segment}'는 클래스 '{class_name}'에서 호출 가능한 메서드가 아닙니다"
+
+msgid "Selection"
+msgstr "선택"
+
+msgid "Session:"
+msgstr "세션:"
+
+msgid "Set it with:"
+msgstr "다음으로 설정하세요:"
+
 msgid "Setting {name} to {value}"
 msgstr "{name}을(를) {value}(으)로 설정 중"
+
+msgid "Shorter JSON example:"
+msgstr "더 짧은 JSON 예:"
+
+msgid "Shorter form:"
+msgstr "더 짧은 형식:"
+
+msgid "Show detailed help for a command"
+msgstr "명령에 대한 자세한 도움말 표시"
+
+msgid "Show full tracebacks on errors instead of short messages."
+msgstr "오류 시 짧은 메시지 대신 전체 트레이스백을 표시합니다."
+
+msgid "Show this help message"
+msgstr "이 도움말 메시지 표시"
+
+msgid "Showing the compact table for {count} filtered matches. Narrow the filter or use --json for canonical target strings."
+msgstr "필터된 일치 항목 {count}개에 대해 축약 표를 표시합니다. 필터를 더 좁히거나 정식 대상 문자열을 보려면 --json을 사용하세요."
+
+msgid "Shows available commands and usage information."
+msgstr "사용 가능한 명령어 및 사용법을 표시합니다."
+
+msgid "Start an interactive moldflow shell session."
+msgstr "대화형 moldflow 셸 세션을 시작합니다."
+
+msgid "Status"
+msgstr "상태"
+
+msgid "Step '{step_name}' in target '{target}' has positional-only parameters ({parameters}), which are not supported by CLI named-argument routing. Use the Python API for this target."
+msgstr "대상 '{target}'의 단계 '{step_name}'에는 위치 전용 매개변수({parameters})가 있으며, 이는 CLI 이름 기반 인수 라우팅에서 지원되지 않습니다. 이 대상에는 Python API를 사용하세요."
 
 msgid "Submit"
 msgstr "확인"
 
+msgid "Synergy session reset."
+msgstr "Synergy 세션이 재설정되었습니다."
+
+msgid "TARGET is required unless --batch-file is used."
+msgstr "--batch-file을 사용하지 않는 한 TARGET이 필요합니다."
+
+msgid "Tab completion targets are refreshed automatically."
+msgstr "탭 완성 대상이 자동으로 새로 고침됩니다."
+
+msgid "Target"
+msgstr "대상"
+
+msgid "Target '{target}' is hidden from the CLI because '{hidden_path}' only creates a transient {wrapper_type} wrapper. The CLI constructs these helper objects internally when needed, so they are not exposed as direct CLI targets."
+msgstr "'{hidden_path}'는 일시적인 {wrapper_type} 래퍼만 생성하므로 대상 '{target}'은(는) CLI에서 숨겨집니다. CLI는 필요할 때 이러한 도우미 객체를 내부적으로 구성하므로 직접 CLI 대상으로 노출되지 않습니다."
+
+msgid "Target '{target}' is hidden from the CLI by library metadata on '{hidden_path}'."
+msgstr "'{hidden_path}'의 라이브러리 메타데이터에 의해 대상 '{target}'은(는) CLI에서 숨겨집니다."
+
+msgid "Target '{target}' resolves to a property/attribute and does not accept arguments."
+msgstr "대상 '{target}'은(는) 속성/어트리뷰트로 확인되며 인수를 받지 않습니다."
+
+msgid "Target '{target}' resolves to a {class_name} wrapper property. Continue to one of its members, for example 'describe {target}.<member>'."
+msgstr "대상 '{target}'은(는) {class_name} 래퍼 속성으로 확인됩니다. 예를 들어 'describe {target}.<member>'처럼 해당 멤버 중 하나로 계속 진행하세요."
+
+msgid "Target '{target}' resolves to property '{property_name}' (getter) and does not accept arguments."
+msgstr "대상 '{target}'은(는) 속성 '{property_name}'(getter)으로 확인되며 인수를 받지 않습니다."
+
+msgid "Target '{target}' resolves to write-only property '{property_name}' and cannot be read via invoke."
+msgstr "대상 '{target}'은(는) 쓰기 전용 속성 '{property_name}'으로 확인되며 invoke로 읽을 수 없습니다."
+
+msgid "Target must include a class or function name"
+msgstr "대상에는 클래스 또는 함수 이름이 포함되어야 합니다"
+
+msgid "Target must include at least one segment"
+msgstr "대상에는 적어도 하나의 세그먼트가 포함되어야 합니다"
+
+msgid "Target must start with 'synergy' (or 'moldflow.synergy'). All invocations are rooted on the Synergy COM object."
+msgstr "대상은 'synergy'(또는 'moldflow.synergy')로 시작해야 합니다. 모든 호출은 Synergy COM 객체를 루트로 합니다."
+
+msgid "Target must start with 'synergy' after the optional 'moldflow.' prefix. Bare targets such as 'open_project' are accepted and are interpreted as 'synergy.open_project'."
+msgstr "선택적 'moldflow.' 접두사 뒤에서 대상은 'synergy'로 시작해야 합니다. 'open_project'와 같은 루트 없는 대상도 허용되며 'synergy.open_project'로 해석됩니다."
+
+msgid "Targets are shown without the leading 'synergy.' prefix. Describe and invoke accept either form."
+msgstr "대상은 앞의 'synergy.' 접두사 없이 표시됩니다. describe와 invoke는 두 형식을 모두 허용합니다."
+
 msgid "Test String"
 msgstr "테스트 문자열"
+
+msgid "The Moldflow CLI requires optional dependencies. Install them with: pip install 'moldflow[cli]'"
+msgstr "Moldflow CLI에는 선택적 종속성이 필요합니다. 다음으로 설치하세요: pip install 'moldflow[cli]'"
+
+msgid "The target returned False, which indicates a business-level failure."
+msgstr "대상이 False를 반환했습니다. 이는 비즈니스 수준 실패를 의미합니다."
+
+msgid "This dry run validates a property assignment."
+msgstr "이 드라이런은 속성 할당을 검증합니다."
+
+msgid "This parameter can be null to indicate no value."
+msgstr "이 매개변수는 값이 없음을 나타내기 위해 null일 수 있습니다."
+
+msgid "This property is read-only and takes no arguments."
+msgstr "이 속성은 읽기 전용이며 인수를 받지 않습니다."
+
+msgid "This property returns a {class_name} wrapper. Continue with describe {target}.<member> or invoke {target}.<method>."
+msgstr "이 속성은 {class_name} 래퍼를 반환합니다. describe {target}.<member> 또는 invoke {target}.<method>로 계속 진행하세요."
+
+msgid "Tip: install pyreadline3 for tab completion support on Windows."
+msgstr "팁: Windows에서 탭 완성을 사용하려면 pyreadline3을 설치하세요."
+
+msgid "Treat False return values as CLI failures (exit 1). This is enabled by default for automation-friendly behavior."
+msgstr "False 반환값을 CLI 실패(exit 1)로 처리합니다. 자동화 친화적 동작을 위해 기본적으로 활성화되어 있습니다."
+
+msgid "Try this:"
+msgstr "다음을 시도해 보세요:"
+
+msgid "Type"
+msgstr "유형"
+
+msgid "Type 'help' for available commands, 'exit' to quit."
+msgstr "사용 가능한 명령어는 'help', 종료하려면 'exit'를 입력하세요."
+
+msgid "Type help to see available commands."
+msgstr "사용 가능한 명령어를 보려면 help를 입력하세요."
+
+msgid "Unknown batch item field(s): {fields}."
+msgstr "알 수 없는 배치 항목 필드: {fields}."
+
+msgid "Unknown command:"
+msgstr "알 수 없는 명령어:"
+
+msgid "Unknown parameter '{parameter}' for {target}{signature}.{extra}"
+msgstr "{target}{signature}에 알 수 없는 매개변수 '{parameter}'이(가) 있습니다.{extra}"
+
+msgid "Use 'help <command>' for detailed help on a specific command."
+msgstr "특정 명령어에 대한 자세한 도움말은 'help <명령어>'를 사용하세요."
+
+msgid "Use JSON field '{preferred_field}' for '{param_name}'."
+msgstr "'{param_name}'에는 JSON 필드 '{preferred_field}'를 사용하세요."
+
+msgid "Use JSON field '{preferred_field}'."
+msgstr "JSON 필드 '{preferred_field}'를 사용하세요."
+
+msgid "Use a comma-separated list for quick CLI input, or a JSON array string when values contain commas."
+msgstr "빠른 CLI 입력에는 쉼표로 구분된 목록을 사용하고, 값에 쉼표가 포함되면 JSON 배열 문자열을 사용하세요."
+
+msgid "Use a comma-separated triplet for vector shorthand."
+msgstr "벡터 축약형에는 쉼표로 구분된 3중값을 사용하세요."
+
+msgid "Use describe <target> to inspect parameters, examples, and property behavior before invoking."
+msgstr "invoke 전에 describe <target>을 사용해 매개변수, 예제, 속성 동작을 확인하세요."
+
+msgid "Use semicolon-separated triplets for quick CLI input. Quote the value in shells that treat semicolons specially."
+msgstr "빠른 CLI 입력에는 세미콜론으로 구분된 3중값을 사용하세요. 세미콜론을 특별하게 처리하는 셸에서는 값을 인용하세요."
 
 msgid "Using prompts will use pop-up import options and will always show logs"
 msgstr "프롬프트를 사용하면 팝업 가져오기 옵션이 사용되며 항상 로그가 표시됩니다"
@@ -114,14 +777,32 @@ msgstr "유효한 입력"
 msgid "Valid Input Type"
 msgstr "유효한 입력 유형"
 
+msgid "Vector"
+msgstr "벡터"
+
+msgid "When JSON input is provided via --params-json or --params-json-file, no positional key=value args may be given."
+msgstr "--params-json 또는 --params-json-file로 JSON 입력이 제공된 경우 위치 기반 key=value 인수를 사용할 수 없습니다."
+
+msgid "Write JSON output to the given file path without changing stdout mode."
+msgstr "stdout 모드를 변경하지 않고 JSON 출력을 지정된 파일 경로에 씁니다."
+
+msgid "Wrote structured output to {path}."
+msgstr "구조화된 출력을 {path}에 기록했습니다."
+
+msgid "You are already in the REPL."
+msgstr "이미 REPL 안에 있습니다."
+
 msgid "both {first} and {second} must be provided together"
 msgstr "{first}와 {second}는 함께 제공되어야 합니다"
 
 msgid "cannot be empty"
 msgstr "비워 둘 수 없습니다"
 
+msgid "failed"
+msgstr "실패"
+
 msgid "found {min_value} must be less than {max_value}"
-msgstr "찾은 {min_value}는 {max_value}보다 작아야 합니다"
+msgstr "찾은 {min_value는 {max_value}보다 작아야 합니다"
 
 msgid "found {value}, must be between {min_value} and {max_value}"
 msgstr "찾은 {value}는 {min_value}와 {max_value} 사이여야 합니다"
@@ -150,6 +831,18 @@ msgstr "찾은 {value}는 {expected_values} 중 하나여야 합니다"
 msgid "found {value}, must be positive"
 msgstr "찾은 {value}는 양수여야 합니다"
 
+msgid "interactive shell"
+msgstr "대화형 셸"
+
+msgid "ok"
+msgstr "정상"
+
+msgid "settable"
+msgstr "설정 가능"
+
+msgid "the owning object"
+msgstr "소유 객체"
+
 msgid "{file_name} does not have a valid file extension, will use {default}"
 msgstr "{file_name}에는 유효한 파일 확장자가 없습니다. {default}를 사용합니다"
 
@@ -159,6 +852,21 @@ msgstr "{name}은(는) {value}입니다"
 msgid "{name} parameter will be ignored"
 msgstr "{name} 매개변수는 무시됩니다"
 
+msgid "{param} receives the Plot returned by find_plot_by_name"
+msgstr "{param}은(는) find_plot_by_name이 반환한 Plot을 받습니다"
+
+msgid "{type_name} ({size} items): {value}"
+msgstr "{type_name} ({size}개 항목): {value}"
+
+msgid "{type_name} attributes:"
+msgstr "{type_name} 속성:"
+
+msgid "{type_name} result:"
+msgstr "{type_name} 결과:"
+
+msgid "{type_name} values ({count} items):"
+msgstr "{type_name} 값 ({count}개 항목):"
+
 msgid "{value} cannot be found documented in {enum_name}, this may cause function call to fail"
 msgstr "{value}는 {enum_name}에 문서화되어 있지 않습니다. 이로 인해 함수 호출이 실패할 수 있습니다"
 
@@ -166,4 +874,4 @@ msgid "{value} does not have a valid file extension, must be {extensions}"
 msgstr "{value}에는 유효한 파일 확장자가 없습니다. {extensions}여야 합니다"
 
 msgid "{value} is not a valid {enum_name}"
-msgstr "{value}는 유효한 {enum_name}이 아닙니다"
+msgstr "{value}은(는) 유효한 {enum_name}이(가) 아닙니다"

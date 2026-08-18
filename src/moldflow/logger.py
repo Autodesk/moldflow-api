@@ -134,6 +134,19 @@ def get_logger(name) -> logging.Logger | None:
     return None
 
 
+def _prune_unusable_moldflow_handlers() -> None:
+    """Remove handlers bound to closed streams and restore propagation when needed."""
+    moldflow_logger = logging.getLogger("moldflow")
+    removed_handler = False
+    for handler in list(moldflow_logger.handlers):
+        stream = getattr(handler, "stream", None)
+        if stream is not None and getattr(stream, "closed", False):
+            moldflow_logger.removeHandler(handler)
+            removed_handler = True
+    if removed_handler and not moldflow_logger.handlers:
+        moldflow_logger.propagate = True
+
+
 def process_log(logger_name: str, message_log: LogMessage | str, dump=None, **kwargs):
     """
     Processes a log entry with the message_log.
@@ -145,7 +158,10 @@ def process_log(logger_name: str, message_log: LogMessage | str, dump=None, **kw
         **kwargs: The keyword arguments to format the message.
     """
     if _IS_LOGGING:
+        _prune_unusable_moldflow_handlers()
         logger = get_logger(logger_name)
+        if logger is None:
+            return
         _ = get_text()
 
         message = message_log

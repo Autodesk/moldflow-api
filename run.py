@@ -8,6 +8,7 @@ Usage:
     run.py clean-up
     run.py build [-P | --publish] [-i | --install]
     run.py build-docs [-t <target> | --target=<target>] [-s | --skip-build] [-l | --local]
+    run.py cli-smoke [-s | --skip-build]
     run.py format [--check]
     run.py install [-s | --skip-build]
     run.py install-package-requirements
@@ -22,6 +23,7 @@ Commands:
     clean-up                        Clean up build artifacts.
     build                           Build and optionally publish the moldflow-api package.
     build-docs                      Build the documentation.
+    cli-smoke                       Create a CLI smoke-test venv and verify basic CLI commands.
     format                          Format all Python files in the repository using black.
     install                         Install the moldflow-api package.
     install-package-requirements    Install package dependencies.
@@ -62,6 +64,7 @@ import platform
 import subprocess
 import shutil
 import glob
+from pathlib import Path
 from urllib.parse import urlparse
 import docopt
 from github import Github
@@ -92,6 +95,7 @@ DOCS_BUILD_DIR = os.path.join(DOCS_DIR, 'build')
 DOCS_HTML_DIR = os.path.join(DOCS_BUILD_DIR, 'html')
 COVERAGE_HTML_DIR = os.path.join(ROOT_DIR, 'htmlcov')
 DIST_DIR = os.path.join(ROOT_DIR, 'dist')
+CLI_SMOKE_VENV_DIR = os.path.join(ROOT_DIR, '.cli-smoke-venv')
 
 # Files
 PYLINT_CONFIG_FILE = os.path.join(ROOT_DIR, '.pylint.toml')
@@ -99,6 +103,7 @@ SETUP_CONFIG_FILE = os.path.join(ROOT_DIR, 'setup.cfg')
 SETUP_CONFIG_IN_FILE = os.path.join(ROOT_DIR, 'setup.cfg.in')
 COVERAGE_FILE = os.path.join(ROOT_DIR, '.coverage')
 COVERAGE_CONFIG_FILE = os.path.join(ROOT_DIR, '.coverage-config')
+COVERAGE_CONFIG_CLI_FILE = os.path.join(ROOT_DIR, '.coverage-config-cli')
 COVERAGE_XML_FILE_NAME = 'coverage.xml'
 VERSION_FILE = os.path.join(ROOT_DIR, VERSION_JSON)
 DIST_FILES = os.path.join(ROOT_DIR, 'dist', '*')
@@ -125,12 +130,21 @@ def run_command(args, cwd=os.getcwd(), extra_env=None):
             raise subprocess.CalledProcessError(proc.returncode, ' '.join(args))
 
 
+def python_module_command(*args):
+    """Build argv for ``python -m ...`` invocations without shell-style splitting."""
+    return [sys.executable, '-m', *[str(arg) for arg in args]]
+
+
 def build_package(install=True):
     """Build package"""
 
     logging.info('Attempting to build moldflow-api package')
 
     build_mo()
+
+    # NOTE: PO sources are maintained under the package-local locale directory
+    # (src/moldflow/locale). build_mo() will compile .po -> .mo in place so the
+    # package build (wheel/sdist) can include the generated catalogs.
 
     with open(SETUP_CONFIG_IN_FILE, 'r', encoding=ENCODING) as f:
         template = f.read()
@@ -141,7 +155,7 @@ def build_package(install=True):
         f.write(output)
 
     try:
-        run_command([sys.executable] + '-m build'.split(' '), ROOT_DIR)
+        run_command(python_module_command('build'), ROOT_DIR)
     except Exception as err:
         logging.error(
             "Failed to build package: '%s'.\n"
@@ -293,13 +307,124 @@ def install_package(target_path=None, build=False):
 
     logging.info('Attempting to install moldflow-api')
 
-    wheel_path = os.path.join(ROOT_DIR, 'dist', f'moldflow-{VERSION}-py3-none-any.whl')
+    dist_dir = os.path.join(ROOT_DIR, 'dist')
 
-    pip_args = f'install --force-reinstall --upgrade {wheel_path}'
+    # Install the locally built wheel (explicit path) including the optional CLI extra.
+    # Using an explicit wheel avoids resolving metadata from external indexes.
+    wheel_files = []
+    if os.path.isdir(dist_dir):
+        wheel_files = [
+            os.path.join(dist_dir, name)
+            for name in os.listdir(dist_dir)
+            if name.endswith('.whl') and name.startswith(f"moldflow-{VERSION}")
+        ]
+    wheel_path = max(wheel_files, key=os.path.getmtime) if wheel_files else None
+
+    package_spec = f"moldflow[cli]=={VERSION}"
+    if wheel_path:
+        package_spec = wheel_package_spec(wheel_path)
+
+    args = [
+        sys.executable,
+        '-m',
+        'pip',
+        'install',
+        '--force-reinstall',
+        '--upgrade',
+        '--no-cache-dir',
+        package_spec,
+        '--find-links',
+        dist_dir,
+    ]
+
     if target_path:
-        pip_args = f'{pip_args} --target={target_path}'
+        args.append(f'--target={target_path}')
 
-    run_command([sys.executable] + f'-m pip {pip_args}'.split(' '), ROOT_DIR)
+    run_command(args, ROOT_DIR)
+
+
+def wheel_package_spec(wheel_path: str) -> str:
+    """Return a PEP 508 direct reference for installing the local wheel with CLI extras."""
+
+    if not wheel_path:
+        raise ValueError('wheel_path must be a non-empty string.')
+    if Path(wheel_path).suffix.lower() != '.whl':
+        raise ValueError(f'wheel_path must point to a wheel file: {wheel_path}')
+
+    return f"moldflow[cli] @ {Path(wheel_path).resolve().as_uri()}"
+
+
+def _latest_dist_wheel() -> str:
+    """Return the newest built moldflow wheel from dist."""
+
+    wheel_files = glob.glob(os.path.join(DIST_DIR, 'moldflow-*.whl'))
+    if not wheel_files:
+        raise RuntimeError(
+            f'No moldflow wheel found in {DIST_DIR}. Run `python run.py build` first.'
+        )
+    return max(wheel_files, key=os.path.getmtime)
+
+
+def _venv_python_executable(venv_dir: str) -> str:
+    """Return the Python executable path for a virtual environment."""
+
+    if not venv_dir:
+        raise ValueError('venv_dir must be a non-empty string.')
+
+    scripts_dir = 'Scripts' if WINDOWS else 'bin'
+    executable_name = 'python.exe' if WINDOWS else 'python'
+    return os.path.join(venv_dir, scripts_dir, executable_name)
+
+
+def _remove_directory_if_present(path: str) -> None:
+    """Remove a directory when present, tolerating only concurrent deletion."""
+
+    if not path:
+        raise ValueError('path must be a non-empty string.')
+    if not os.path.exists(path):
+        return
+    if not os.path.isdir(path):
+        raise NotADirectoryError(f'Expected a directory path for cleanup, got: {path}')
+
+    try:
+        shutil.rmtree(path)
+    except FileNotFoundError:
+        pass
+
+
+def cli_smoke(skip_build=False):
+    """Create an isolated CLI smoke-test environment and verify core CLI commands."""
+
+    if not skip_build:
+        build_package(install=False)
+
+    wheel_path = _latest_dist_wheel()
+
+    _remove_directory_if_present(CLI_SMOKE_VENV_DIR)
+
+    run_command(python_module_command('venv', CLI_SMOKE_VENV_DIR), ROOT_DIR)
+
+    venv_python = _venv_python_executable(CLI_SMOKE_VENV_DIR)
+    completed = False
+    try:
+        if not os.path.isfile(venv_python):
+            raise RuntimeError(
+                'Virtual environment was created, but Python executable was not found: '
+                f'{venv_python}'
+            )
+
+        run_command([venv_python, '-m', 'pip', 'install', '--upgrade', 'pip'], ROOT_DIR)
+        run_command([venv_python, '-m', 'pip', 'install', wheel_package_spec(wheel_path)], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', '--help'], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', 'invoke', '--help'], ROOT_DIR)
+        run_command([venv_python, '-m', 'moldflow_cli', 'list', '--json'], ROOT_DIR)
+        completed = True
+    finally:
+        if not completed:
+            try:
+                _remove_directory_if_present(CLI_SMOKE_VENV_DIR)
+            except NotADirectoryError as cleanup_error:
+                logging.warning('Failed to clean up CLI smoke venv: %s', cleanup_error)
 
 
 def build_mo():
@@ -467,13 +592,16 @@ def format_code(check_only=False):
 
     logging.info('Attempting to format python files using black in repo')
 
-    check_args = '--check ' if check_only else ''
+    formatter_cmd = python_module_command(
+        'black',
+        *(['--check'] if check_only else []),
+        '--line-length=100',
+        '-S',
+        '-C',
+        *PYTHON_FILES,
+    )
 
-    python_files = ' '.join(PYTHON_FILES)
-
-    formatter_args = f'--line-length=100 -S -C {python_files}'
-
-    run_command([sys.executable] + f'-m black {check_args}{formatter_args}'.split(' '), ROOT_DIR)
+    run_command(formatter_cmd, ROOT_DIR)
 
 
 def lint(skip_build):
@@ -486,11 +614,11 @@ def lint(skip_build):
 
     logging.info('Attempting to lint python files in repo')
 
-    python_files = ' '.join(PYTHON_FILES)
+    pylint_cmd = python_module_command(
+        'pylint', '--rcfile', PYLINT_CONFIG_FILE, '--verbose', *PYTHON_FILES
+    )
 
-    pylint_args = f'--rcfile {PYLINT_CONFIG_FILE} --verbose {python_files}'
-
-    run_command([sys.executable] + f'-m pylint {pylint_args}'.split(' '), ROOT_DIR)
+    run_command(pylint_cmd, ROOT_DIR)
 
 
 class Report:
@@ -503,12 +631,20 @@ class Report:
     """
 
     coverage_config_file_arg = f"--rcfile={COVERAGE_CONFIG_FILE}"
+    coverage_cli_config_file_arg = f"--rcfile={COVERAGE_CONFIG_CLI_FILE}"
+
+    @staticmethod
+    def default():
+        """Generate default package coverage report."""
+        run_command(
+            python_module_command('coverage', 'report', Report.coverage_config_file_arg), ROOT_DIR
+        )
 
     @staticmethod
     def cli():
         """Generate CLI report"""
         run_command(
-            [sys.executable] + f'-m coverage report {Report.coverage_config_file_arg}'.split(' '),
+            python_module_command('coverage', 'report', Report.coverage_cli_config_file_arg),
             ROOT_DIR,
         )
 
@@ -516,18 +652,15 @@ class Report:
     def html():
         """Generate HTML report"""
         run_command(
-            [sys.executable] + f'-m coverage html {Report.coverage_config_file_arg}'.split(' '),
-            ROOT_DIR,
+            python_module_command('coverage', 'html', Report.coverage_config_file_arg), ROOT_DIR
         )
 
     @staticmethod
     def xml():
         """Generate XML report"""
-        coverage_xml_file_arg = f"-o {COVERAGE_XML_FILE_NAME}"
         run_command(
-            [sys.executable]
-            + f'-m coverage xml {coverage_xml_file_arg} {Report.coverage_config_file_arg}'.split(
-                ' '
+            python_module_command(
+                'coverage', 'xml', '-o', COVERAGE_XML_FILE_NAME, Report.coverage_config_file_arg
             ),
             ROOT_DIR,
         )
@@ -547,19 +680,21 @@ class Test:
     @staticmethod
     def _run_marker(marker, tests, quiet=False):
 
-        coverage_config_file_arg = f"--rcfile={COVERAGE_CONFIG_FILE}"
+        coverage_config = COVERAGE_CONFIG_CLI_FILE if marker == 'cli' else COVERAGE_CONFIG_FILE
+        coverage_config_file_arg = f"--rcfile={coverage_config}"
 
-        verbosity = '-v' if quiet else '-rA -vv'
-        pytest_options = f'{verbosity} --override-ini=console_output_style=count'
+        pytest_args = ['-v'] if quiet else ['-rA', '-vv']
+        pytest_args.append('--override-ini=console_output_style=count')
+        if marker:
+            pytest_args.extend(['-m', marker])
+        pytest_args.extend(tests if tests else [ROOT_DIR])
 
-        test_targets = " ".join(tests) if tests else ROOT_DIR
-        marker_option = f"-m {marker}" if marker else ""
-
-        pytest_args = f"{pytest_options} {marker_option} {test_targets}".strip()
-
-        coverage_args = f'coverage run -p {coverage_config_file_arg} -m pytest {pytest_args}'
-
-        run_command([sys.executable] + f'-m {coverage_args}'.split(' '), ROOT_DIR)
+        run_command(
+            python_module_command(
+                'coverage', 'run', '-p', coverage_config_file_arg, '-m', 'pytest', *pytest_args
+            ),
+            ROOT_DIR,
+        )
 
     @staticmethod
     def core_tests(tests, quiet=False):
@@ -634,10 +769,13 @@ def run_tests(
         Test.custom_tests(marker, tests, quiet)
 
     # Coverage Combine
-    run_command([sys.executable] + '-m coverage combine'.split(' '), ROOT_DIR)
+    run_command(python_module_command('coverage', 'combine'), ROOT_DIR)
 
     # Coverage
-    run_command([sys.executable] + '-m run report --cli'.split(' '), ROOT_DIR)
+    if marker == 'cli' and not any([unit, integration, core, all_tests]):
+        run_command(python_module_command('run', 'report', '--cli'), ROOT_DIR)
+    else:
+        run_command(python_module_command('run', 'report'), ROOT_DIR)
 
     # Keeping files
     if not keep_files:
@@ -750,6 +888,8 @@ def main():
 
             if cli_arg:
                 Report.cli()
+            else:
+                Report.default()
             if html_arg:
                 Report.html()
             if xml_arg:
@@ -767,6 +907,11 @@ def main():
             local = args.get('--local') or args.get('-l')
 
             build_docs(target=target, skip_build=skip_build, local=local)
+
+        elif args.get('cli-smoke'):
+            skip_build = args.get('--skip-build') or args.get('-s')
+
+            cli_smoke(skip_build=skip_build)
 
         elif args.get('install-package-requirements'):
             install_package(target_path=os.path.join(ROOT_DIR, SITE_PACKAGES))

@@ -1,6 +1,6 @@
 black==25.1.0
 build==1.2.2.post1
-coverage==7.6.12
+coverage==7.15.4
 docopt==0.6.2
 packaging==24.2
 pathspec==0.12.1

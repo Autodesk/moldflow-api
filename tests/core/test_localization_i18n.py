@@ -38,3 +38,23 @@ class TestLocalizationI18N:
             set_language(locale="deu")
             args, _ = mocked.call_args
             assert args[2] == ["de-DE"]
+
+    def test_set_language_accepts_bcp47_locale_tags(self):
+        """
+        Test set_language accepts direct BCP-47 locale tags.
+        """
+        with patch("moldflow.localization.install_translation") as mocked:
+            set_language(locale="ja-JP")
+            args, _ = mocked.call_args
+            assert args[0] == "locale.ja-JP"
+            assert args[2] == ["ja-JP"]
+
+    def test_set_language_normalizes_underscored_locale_tags(self):
+        """
+        Test set_language normalizes locale tags that use underscores.
+        """
+        with patch("moldflow.localization.install_translation") as mocked:
+            set_language(locale="ja_jp")
+            args, _ = mocked.call_args
+            assert args[0] == "locale.ja-JP"
+            assert args[2] == ["ja-JP"]

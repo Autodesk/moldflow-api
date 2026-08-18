@@ -10,6 +10,7 @@ from .helper import coerce_optional_dispatch
 from .common import LogMessage, AnalysisType, ConstraintType
 from .helper import check_type, get_enum_value
 from .com_proxy import safe_com
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .logger import process_log
 from .ent_list import EntList
 from .vector import Vector
@@ -52,6 +53,7 @@ class BoundaryConditions:
             vector.z = get_enum_value(int(vector.z), ConstraintType)
         return vector
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates a new entity list.

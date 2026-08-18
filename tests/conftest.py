@@ -3,14 +3,29 @@
 
 """This module contains the common test fixtures for the moldflow-api tests."""
 
-import os
+# pylint: disable=wrong-import-position  # tests bootstrap repo/src onto sys.path before moldflow imports
+
 import logging
+import os
+import sys
 from enum import Enum
+from pathlib import Path
 from unittest.mock import Mock
+
+import polib
 import pytest
+
+ROOT_DIR = Path(__file__).resolve().parents[1]
+SRC_DIR = ROOT_DIR / "src"
+LOCALE_PO_FILES = tuple(sorted((SRC_DIR / "moldflow" / "locale").glob("**/*.po")))
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+from moldflow.constants import DEFAULT_THREE_LETTER_CODE
 from moldflow.localization import set_language
 from moldflow.logger import set_is_logging
-from moldflow.constants import DEFAULT_THREE_LETTER_CODE
 
 # Logging
 LOGGING = True
@@ -79,12 +94,22 @@ def list_intersection(list1, list2):
     return list(set(list1) & set(list2))
 
 
+def _compile_test_translations() -> None:
+    """Compile locale catalogs in-place so gettext-based tests work from source."""
+    for po_path in LOCALE_PO_FILES:
+        mo_path = po_path.with_suffix(".mo")
+        if mo_path.exists() and mo_path.stat().st_mtime >= po_path.stat().st_mtime:
+            continue
+        polib.pofile(str(po_path)).save_as_mofile(str(mo_path))
+
+
 # Fixtures
 @pytest.fixture(scope="session")
 def _():
     """
     A pytest fixture that provides a mock object for the gettext translation function.
     """
+    _compile_test_translations()
     return set_language(version=TEST_VERSION, locale=DEFAULT_THREE_LETTER_CODE)
 
 

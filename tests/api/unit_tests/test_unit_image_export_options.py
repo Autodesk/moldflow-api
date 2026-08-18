@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 Autodesk, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Test for ImageExportOptions Wrapper Class of moldflow-api module.
 Test Details:
@@ -59,6 +62,7 @@ class TestUnitImageExportOptions:
         + [("ShowHistogram", "show_histogram", x) for x in VALID_BOOL]
         + [("ShowMinMax", "show_min_max", x) for x in VALID_BOOL]
         + [("FitToScreen", "fit_to_screen", x) for x in VALID_BOOL]
+        + [("TransparentBackground", "transparent_background", x) for x in VALID_BOOL]
         + [("CaptureMode", "capture_mode", x.value) for x in CaptureModes],
     )
     # pylint: disable-next=R0913, R0917
@@ -103,6 +107,7 @@ class TestUnitImageExportOptions:
         + [("ShowHistogram", "show_histogram", x, x) for x in VALID_BOOL]
         + [("ShowMinMax", "show_min_max", x, x) for x in VALID_BOOL]
         + [("FitToScreen", "fit_to_screen", x, x) for x in VALID_BOOL]
+        + [("TransparentBackground", "transparent_background", x, x) for x in VALID_BOOL]
         + [("CaptureMode", "capture_mode", x, x.value) for x in CaptureModes],
     )
     # pylint: disable-next=R0913, R0917
@@ -145,6 +150,7 @@ class TestUnitImageExportOptions:
         + [("ShowHistogram", "show_histogram", x) for x in INVALID_BOOL]
         + [("ShowMinMax", "show_min_max", x) for x in INVALID_BOOL]
         + [("FitToScreen", "fit_to_screen", x) for x in INVALID_BOOL]
+        + [("TransparentBackground", "transparent_background", x) for x in INVALID_BOOL]
         + [("CaptureMode", "capture_mode", x) for x in INVALID_INT],
     )
     # pylint: disable-next=R0913, R0917

@@ -6,6 +6,7 @@ Usage:
     StringArray Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_LIST_VALUES, cli_input_adapter
 from .logger import process_log
 from .helper import check_type, _mf_array_to_list
 from .com_proxy import safe_com, flag_com_method
@@ -63,6 +64,7 @@ class StringArray:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="to_list")
         return _mf_array_to_list(self)
 
+    @cli_input_adapter(value_kind=CLI_VALUE_KIND_LIST_VALUES, shorthand_supported=True)
     def from_list(self, values: list[str]) -> int:
         """
         Convert a list of strings to a string array.

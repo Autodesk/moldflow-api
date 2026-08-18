@@ -7,6 +7,7 @@ Usage:
 """
 
 from .logger import process_log, LogMessage
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .ent_list import EntList
 from .common import EntityType, DisplayOption
 from .helper import get_enum_value, check_type, check_range, coerce_optional_dispatch
@@ -112,6 +113,7 @@ class FolderManager:
             coerce_optional_dispatch(objects, "ent_list")
         )
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Create an entity list.

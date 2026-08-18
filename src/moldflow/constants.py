@@ -13,6 +13,9 @@ COLOR_BAND_RANGE = tuple(range(1, 257))
 DEFAULT_THREE_LETTER_CODE = "enu"
 LOCALE_FILE_NAME = "locale"
 MOLDFLOW_DIR = os.path.dirname(os.path.abspath(__file__))
+# Use package-local locale directory so translations live inside the
+# installed moldflow package (src/moldflow/locale). This is the canonical
+# location used at runtime and for packaging.
 LOCALE_DIR = os.path.join(MOLDFLOW_DIR, "locale")
 
 # Registry constants
@@ -27,7 +30,7 @@ LOCALE_REGISTRY_VARIABLE_NAME = "MFSYN_LOCALE"
 # Animation speed constants
 ANIMATION_SPEED_CONVERTER = {"Slow": 0, "Medium": 1, "Fast": 2}
 
-# BCP-47 standard constants
+# BCP-47 standard constants (MSI/registry use three-letter codes only)
 THREE_LETTER_TO_BCP_47 = {
     "chs": "zh-CN",
     "cht": "zh-TW",

@@ -1,9 +1,13 @@
+# SPDX-FileCopyrightText: 2025 Autodesk, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 """
 Usage:
     CADDiagnostic Class API Wrapper
 """
 
 from .logger import process_log, LogMessage
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .double_array import DoubleArray
 from .ent_list import EntList
 from .integer_array import IntegerArray
@@ -25,6 +29,7 @@ class CADDiagnostic:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="CADDiagnostic")
         self.cad_diagnostic = _cad_diagnostic
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates an empty EntList object

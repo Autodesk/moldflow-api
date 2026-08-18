@@ -6,6 +6,7 @@ Usage:
     IntegerArray Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_LIST_VALUES, cli_input_adapter
 from .logger import process_log
 from .helper import check_type
 from .com_proxy import safe_com, flag_com_method
@@ -67,6 +68,7 @@ class IntegerArray:
         vb_array = self.integer_array.ToVBSArray()
         return list(vb_array)
 
+    @cli_input_adapter(value_kind=CLI_VALUE_KIND_LIST_VALUES, shorthand_supported=True)
     def from_list(self, values: list[int]) -> int:
         """
         Convert a list of integers to an integer array.

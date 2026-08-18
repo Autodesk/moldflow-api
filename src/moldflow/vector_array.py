@@ -6,6 +6,7 @@ Usage:
     VectorArray Class API Wrapper
 """
 
+from .cli_input_metadata import CLI_VALUE_KIND_VECTOR_ARRAY_VALUES, cli_input_adapter
 from .helper import check_type, check_index
 from .com_proxy import safe_com
 from .logger import process_log, LogMessage
@@ -33,6 +34,11 @@ class VectorArray:
         process_log(__name__, LogMessage.FUNCTION_CALL, locals(), name="clear")
         self.vector_array.Clear()
 
+    @cli_input_adapter(
+        value_kind=CLI_VALUE_KIND_VECTOR_ARRAY_VALUES,
+        preferred_field="xyz",
+        shorthand_supported=True,
+    )
     def add_xyz(self, x: float, y: float, z: float) -> None:
         """
         Add a vector to the array with x, y, z values.

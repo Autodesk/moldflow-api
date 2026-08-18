@@ -7,6 +7,7 @@ Usage:
 """
 
 from .ent_list import EntList
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .common import EntityType, DisplayOption
 from .logger import process_log, LogMessage
 from .helper import check_type, check_range, get_enum_value, coerce_optional_dispatch
@@ -68,6 +69,7 @@ class LayerManager:
             check_type(layer, EntList)
         return self.layer_manager.ActivateLayer(coerce_optional_dispatch(layer, "ent_list"))
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates a new entity list.

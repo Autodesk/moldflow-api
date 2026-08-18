@@ -7,6 +7,7 @@ Usage:
 """
 
 from .ent_list import EntList
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .import_options import ImportOptions
 from .logger import process_log
 from .helper import (
@@ -39,6 +40,7 @@ class StudyDoc:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="StudyDoc")
         self.study_doc = safe_com(_study_doc)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates a new entity list.

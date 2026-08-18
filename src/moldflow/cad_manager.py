@@ -8,6 +8,7 @@ Usage:
 
 from .ent_list import EntList
 from .vector import Vector
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .logger import process_log, LogMessage
 from .helper import check_type, coerce_optional_dispatch
 from .com_proxy import safe_com
@@ -28,6 +29,7 @@ class CADManager:
         process_log(__name__, LogMessage.CLASS_INIT, locals(), name="CADManager")
         self.cad_manager = safe_com(_cad_manager)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_entity_list(self) -> EntList:
         """
         Creates an empty EntList object

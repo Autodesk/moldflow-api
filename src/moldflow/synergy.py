@@ -8,6 +8,7 @@ Usage:
 
 import os
 import win32com.client
+from .cli_input_metadata import CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY, cli_hidden
 from .boundary_conditions import BoundaryConditions
 from .cad_diagnostic import CADDiagnostic
 from .cad_manager import CADManager
@@ -216,6 +217,7 @@ class Synergy:
             file, import_options.import_options, show_logs, show_prompts
         )
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_vector(self) -> Vector:
         """
         Create a Vector object.
@@ -229,6 +231,7 @@ class Synergy:
             return None
         return Vector(result)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_vector_array(self) -> VectorArray:
         """
         Create a VectorArray object.
@@ -242,6 +245,7 @@ class Synergy:
             return None
         return VectorArray(result)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_double_array(self) -> DoubleArray:
         """
         Create a DoubleArray object.
@@ -255,6 +259,7 @@ class Synergy:
             return None
         return DoubleArray(result)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_integer_array(self) -> IntegerArray:
         """
         Create a IntegerArray object.
@@ -268,6 +273,7 @@ class Synergy:
             return None
         return IntegerArray(result)
 
+    @cli_hidden(reason=CLI_HIDDEN_REASON_TRANSIENT_WRAPPER_FACTORY)
     def create_string_array(self) -> StringArray:
         """
         Create a StringArray instance.

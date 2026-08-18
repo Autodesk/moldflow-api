@@ -25,6 +25,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
+## [27.1.0] - 2026-08-14
+
+### Added
+- Added `transparent_background` property to `ImageExportOptions` — when set to `True` with a `.png` output path, the exported image uses a transparent background instead of the renderer's opaque fill colour. Defaults to `False`; silently ignored for non-PNG formats.
+- Added a Moldflow CLI with `list`, `describe`, and `invoke` commands.
+- Added an interactive REPL for the Moldflow CLI.
+- Added invoke planning and automation support, including dry-run plans, trace output, and batch execution.
+- Added machine-readable `describe` schema output and updated CLI documentation and examples.
+- Added CLI regression tests covering chaining, argument routing, and edge-case input handling.
+
+### Changed
+- N/A
+
+### Deprecated
+- N/A
+
+### Removed
+- N/A
+
+### Fixed
+- N/A
+
+### Security
+- N/A
+
 ## [27.0.1] - 2026-04-18
 
 ### Added
@@ -190,7 +215,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial version aligned with Moldflow Synergy 2026.0.1
 - Python 3.10-3.13 compatibility
 
-[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v27.0.1...HEAD
+[Unreleased]: https://github.com/Autodesk/moldflow-api/compare/v27.1.0...HEAD
+[27.1.0]: https://github.com/Autodesk/moldflow-api/compare/v27.0.1...v27.1.0
 [27.0.1]: https://github.com/Autodesk/moldflow-api/releases/tag/v27.0.1
 [27.0.0]: https://github.com/Autodesk/moldflow-api/releases/tag/v27.0.0
 [26.0.5]: https://github.com/Autodesk/moldflow-api/releases/tag/v26.0.5
