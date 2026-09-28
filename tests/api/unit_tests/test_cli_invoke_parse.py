@@ -16,6 +16,7 @@ import pytest
 from typer.testing import CliRunner
 import moldflow
 from moldflow.cli_input_metadata import cli_input_adapter
+from moldflow.localization import set_language
 
 from moldflow_cli.commands import build_cli_app
 from moldflow_cli.invoke_binding import _bucket_items_by_step, _coerce_final_value
@@ -1854,10 +1855,14 @@ def test_invoke_error_exit_codes():
 
 @pytest.mark.cli
 @pytest.mark.unit
-def test_invoke_help_shows_arg_syntax():
+def test_invoke_help_shows_arg_syntax(_):
     """Invoke --help should demonstrate the step.param.attr=value routing syntax."""
+    # Other tests (e.g. test_localization.py) install non-English locales via the
+    # real gettext machinery and leave builtins._ set process-wide with no teardown;
+    # force English here so this assertion is independent of pytest run order.
+    set_language(locale="enu")
     app = build_cli_app()
-    result = runner.invoke(app, ["--no-color", "invoke", "--help"])
+    result = runner.invoke(app, ["--no-color", "invoke", "--help"], env={"COLUMNS": "300"})
     help_text = strip_ansi(result.stdout).lower()
     assert result.exit_code == 0
     assert "find_plot_by_name.plot_name" in help_text or "step.param.attr" in help_text
