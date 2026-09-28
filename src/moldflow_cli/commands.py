@@ -634,12 +634,22 @@ def build_cli_app():
 	)
 	app.command(
 		"describe",
-		help=_T("Inspect a target's signature, docs, examples, and structured invoke template."),
+		help=_T(
+			"Inspect a target's signature, docs, examples, and structured invoke template. "
+			"One or more dotted targets, for example synergy.new_project."
+		),
 	)(describe_cmd)
 	app.command(
 		"invoke",
 		help=_T(
-			"Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>."
+			"Run a Moldflow target with named parameters or JSON input. Bare targets are treated as synergy.<target>.\n\n"
+			"Dotted path to a method or function, optionally chained, for example "
+			"'synergy.new_project' or 'synergy.plot_manager.find_plot_by_name'.\n\n"
+			"Duplicate/conflicting paths are rejected. Arguments are passed as key=value or "
+			"param.attr=value. For chained targets, prefix the parameter with the method name, "
+			"e.g. find_plot_by_name.plot_name=\"My Plot\". Nested routing uses step.param.attr=value "
+			"(param=1 conflicts with param.attr=2). Methods with positional-only parameters are "
+			"not supported by named CLI routing."
 		),
 	)(invoke_cmd)
 

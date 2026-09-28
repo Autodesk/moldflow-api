@@ -16,8 +16,10 @@ import pytest
 from typer.testing import CliRunner
 import moldflow
 
+from moldflow.localization import set_language
 from moldflow_cli.commands import build_cli_app
 from moldflow_cli import target_resolution
+from tests.api.unit_tests.conftest import strip_ansi
 
 runner = CliRunner()
 
@@ -90,13 +92,18 @@ def test_describe_multi_step_signature_rendering():
 
 @pytest.mark.cli
 @pytest.mark.unit
-def test_help_and_describe_show_snake_case_targets():
+def test_help_and_describe_show_snake_case_targets(_):
     """Ensure help for `describe` shows snake_case example targets."""
+    # Other tests (e.g. test_localization.py) install non-English locales via the
+    # real gettext machinery and leave builtins._ set process-wide with no teardown;
+    # force English here so this assertion is independent of pytest run order.
+    set_language(locale="enu")
     app = build_cli_app()
-    result = runner.invoke(app, ["describe", "--help"])
+    result = runner.invoke(app, ["--no-color", "describe", "--help"], env={"COLUMNS": "300"})
     assert result.exit_code == 0
-    assert "synergy.new_project" in result.stdout
-    lowered = result.stdout.lower()
+    help_text = strip_ansi(result.stdout)
+    assert "synergy.new_project" in help_text
+    lowered = help_text.lower()
     assert "structured invoke template" in lowered or "examples" in lowered
 
 
