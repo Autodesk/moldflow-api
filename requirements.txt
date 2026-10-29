@@ -1,4 +1,4 @@
-black==26.3.1
+black==26.10.1
 build==1.2.2.post1
 coverage==7.6.12
 docopt==0.6.2
